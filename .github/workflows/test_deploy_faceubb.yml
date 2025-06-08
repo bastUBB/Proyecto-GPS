@@ -1,0 +1,108 @@
+name: Despliegue a produccion
+
+on:
+  pull_request: 
+    branches:
+      - main # Se ejecuta en cada pull request a la rama main
+
+jobs:
+  tests: # Job para ejecutar pruebas
+    runs-on: ubuntu-latest # Crea un entorno virtual en Ubuntu
+    steps:
+      - name: Checkout código # Clona el repositorio en el entorno virtual
+        uses: actions/checkout@v4 # Usa una acción de GitHub
+
+      - name: Instalar Node.js # Instala Node.js en el entorno virtual
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.0"
+
+      - name: Instalar dependencias # Instala las dependencias del proyecto
+        run: npm install
+
+      - name: Ejecutar pruebas # Ejecuta las pruebas del proyecto
+        run: npm test
+
+  # CUIDADO: Las conexiones SSH y OpenVPN pueden ser peligrosas si no se protegen correctamente.
+  # Asegúrate de que todas las credenciales estén protegidas usando los secretos del repositorio.
+  # EN NINGÚN CASO SE DEBEN DEJAR CREDENCIALES EXPUESTAS EN ESTE ARCHIVO NI EN NINGÚN OTRO.
+  # Si no sabes cómo proteger tus credenciales, consulta la documentación de GitHub o pregunta a un profesor.
+  # https://docs.github.com/es/actions/security-guides/encrypted-secrets
+
+  deploy: # Job para desplegar el proyecto
+    needs: tests # Este job depende del job de pruebas, por lo que no se ejecutará si el job de pruebas falla
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar dependencias (OpenVPN, SSH y sshpass)
+        run: |
+          sudo apt update -qq > /dev/null 2>&1
+          sudo apt install -y -qq openvpn openvpn-systemd-resolved openssh-client sshpass
+
+      - name: Crear archivo de configuración OpenVPN # Crea el archivo de configuración de OpenVPN en memoria
+        run: echo "${{ secrets.OPENVPN_CONFIG }}" > /dev/shm/face-ubb.ovpn
+
+        # Conecta a la VPN de la UBB usando un action de GitHub del usuario kota65535.
+        # Tambien se podría usar el cliente de OpenVPN directamente.
+        # La ventaja de usar el action es que se encarga de crear el cliente y manejar la conexión por nosotros.
+        # Más información en https://github.com/kota65535/github-openvpn-connect-action/tree/v3.1.0/
+      - name: Conexion a la VPN de la UBB
+        uses: kota65535/github-openvpn-connect-action@v3.1.0
+        timeout-minutes: 2
+        continue-on-error: false
+        with:
+          config_file: /dev/shm/face-ubb.ovpn
+          username: ${{ secrets.OPENVPN_USERNAME }}
+          password: ${{ secrets.OPENVPN_PASSWORD }}
+
+      - name: Eliminar archivo de configuración OpenVPN # Limpia el archivo de configuración de OpenVPN
+        if: always()
+        run: rm -f /dev/shm/face-ubb.ovpn
+
+      # La siguiente sección es para conectarse al servidor y desplegar el código
+      # Este ejemplo usa sshpass para conectarse al servidor usando SSH.
+      # Es recomendable usar claves SSH en lugar de contraseñas para mayor seguridad, evitando el uso de contraseñas.
+      # Hay muchas formas de hacer esto, este es solo un ejemplo sencillo con Node. Debe ser adaptado a tu proyecto.
+
+      - name: Conexión SSH y Despliegue
+        timeout-minutes: 3
+        # 1. Conexión SSH al servidor
+        # 2. Ir al directorio del proyecto
+        # 3. Actualizar el código fuente desde el repositorio remoto
+        # 4. Instalar dependencias del proyecto
+        # 5. Verificar el estado de pm2 y reiniciar el servicio si es necesario
+        # 6. Reiniciar el servicio de pm2
+        run: |
+          sshpass -p "${{ secrets.PROD_PASSWORD }}" ssh \
+            -q \
+            -o StrictHostKeyChecking=no \
+            -p ${{ secrets.PROD_PORT }} \
+            ${{ secrets.PROD_USER }}@${{ secrets.PROD_HOST }} << 'EOF'
+              # comando para detener el script si hay un error, si se usa una variable no definida o si un comando falla
+              set -euo pipefail
+
+              # acceder al directorio del proyecto
+              echo "Conectando al servidor..."
+              echo "Accediendo al directorio del proyecto..."
+              cd ${{ secrets.PROD_ROUTE }} || { echo "No se pudo acceder al directorio del proyecto"; exit 1; }
+
+              # actualizar el código fuente, instalar dependencias y reiniciar servicios
+              echo "Actualizando el código fuente..."
+              git fetch origin main
+              git reset --hard origin/main
+
+              # instalar dependencias del BACKEND
+              echo "Instalando dependencias del backend..."
+              cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
+              npm ci
+
+               # instalar dependencias del FRONTEND
+              echo "=== Instalando y construyendo el frontend... ==="
+              cd frontend || { echo "No se pudo acceder al directorio del frontend"; exit 1; }
+              npm ci
+              npm run build 
+              cd ..
+
+              # 5. Reiniciar servicios con PM2 (asumiendo que ya están configurados)
+              echo "=== Reiniciando procesos con PM2... ==="
+              pm2 restart all 
+          EOF
