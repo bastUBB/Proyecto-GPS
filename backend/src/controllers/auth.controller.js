@@ -12,8 +12,8 @@ export const test = (req, res) => {
 // endpoint registro
 export const registerUser = async (req, res) => {
     try {
-        const { name, email, password, role} = req.body;
-        if (!name || !email || !password || !role) {
+        const { name, rut, email, password, role} = req.body;
+        if (!name || !rut || !email || !password || !role) {
             return res.json({
                 error: 'Todos los campos son obligatorios'
             })
@@ -36,6 +36,7 @@ export const registerUser = async (req, res) => {
 
         const user = await User.create({
             name,
+            rut,
             email,
             password: hashedPassword,
             role

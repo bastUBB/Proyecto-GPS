@@ -7,6 +7,7 @@ export default function Register() {
     const navigate = useNavigate();
     const [data, setData] = useState({
         name: "",
+        rut: "",
         email: "",
         password: "",
         role: ""
@@ -14,10 +15,11 @@ export default function Register() {
 
     const registerUser = async (e) => {
         e.preventDefault();
-        const { name, email, password, role } = data;
+        const { name, rut, email, password, role } = data;
         try {
             const {data} = await axios.post('/register', {
                 name,
+                rut,
                 email,
                 password,
                 role
@@ -39,6 +41,8 @@ export default function Register() {
             <form onSubmit={registerUser}>
                 <label>Nombre</label>
                 <input type="text" placeholder="Escribe tu nombre" value={data.name} onChange={(e) => setData({...data, name: e.target.value})}/>
+                <label>RUT</label>
+                <input type="text" placeholder="Escribe tu RUT" value={data.rut} onChange={(e) => setData({...data, rut: e.target.value})} />
                 <label>Email</label>
                 <input type="text" placeholder="Escribe tu correo" value={data.email} onChange={(e) => setData({...data, email: e.target.value})} />
                 <label>Contraseña</label>
