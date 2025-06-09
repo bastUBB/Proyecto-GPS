@@ -21,7 +21,6 @@ export default function Login() {
             if (data.error) {
                 toast.error(data.error);
             } else {
-                toast.success('Inicio de sesión exitoso');
                 setData({});
                 navigate('/');
             }

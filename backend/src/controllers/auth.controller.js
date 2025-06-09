@@ -103,4 +103,3 @@ export const getProfile = (req, res) => {
     } else {
         res.json(null);
     }
-}
