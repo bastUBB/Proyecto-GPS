@@ -11,6 +11,8 @@ export const getProducts = async (req, res) => {
     }
 }
 
+// esta es una linea de codigo de prueba
+
 export const createProduct = async (req, res) => {
     const product = req.body;
 
