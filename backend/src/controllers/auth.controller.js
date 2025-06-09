@@ -12,8 +12,8 @@ export const test = (req, res) => {
 // endpoint registro
 export const registerUser = async (req, res) => {
     try {
-        const { name, rut, email, password, role} = req.body;
-        if (!name || !rut || !email || !password || !role) {
+        const { name, email, password, role} = req.body;
+        if (!name || !email || !password || !role) {
             return res.json({
                 error: 'Todos los campos son obligatorios'
             })
@@ -36,7 +36,6 @@ export const registerUser = async (req, res) => {
 
         const user = await User.create({
             name,
-            rut,
             email,
             password: hashedPassword,
             role
@@ -52,31 +51,45 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Buscar usuario por email
         const user = await User.findOne({ email });
         if (!user) {
-            return res.json({
+            return res.status(400).json({
                 error: 'Usuario no encontrado'
             });
         }
+
+        // Comparar contraseñas
         const match = await comparePassword(password, user.password);
-        // Si la contraseña coincide, generar un token JWT
-        if (match) {
-            jwt.sign({
-                email: user.email,
-                id: user._id,
-                role: user.role
-            }, process.env.JWT_SECRET, {}, (err, token) => {
-                if(err) throw err;
-                res.cookie('token', token).json(user)
-            })
-        }
         if (!match) {
-            return res.json({
+            return res.status(400).json({
                 error: 'Contraseña incorrecta'
             });
         }
+
+        // Generar token JWT
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET || 'TU_SECRET_KEY',
+            { expiresIn: '1d' }
+        );
+
+        // Enviar token como cookie HttpOnly
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Solo HTTPS en producción
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60 * 24, // 1 día
+            path: '/'
+        });
+
+        // Responder con datos del usuario (opcional)
+        res.json({ message: 'Login exitoso', user });
+
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({ error: 'Error en el servidor' });
     }
 }
 
@@ -90,4 +103,3 @@ export const getProfile = (req, res) => {
     } else {
         res.json(null);
     }
-}
