@@ -1,4 +1,5 @@
 import { hashPassword, comparePassword } from '../helpers/bcrypt.helper.js';
+import { registerValidation } from '../validations/auth.validation.js';
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -12,23 +13,12 @@ export const test = (req, res) => {
 // endpoint registro
 export const registerUser = async (req, res) => {
     try {
-        const { name, rut, email, password, role} = req.body;
-        if (!name || !rut || !email || !password || !role) {
+        const { name, rut, email, password, role } = req.body;
+        
+        const { error } = registerValidation.validate(req.body);
+        if (error) {
             return res.json({
-                error: 'Todos los campos son obligatorios'
-            })
-        }
-
-        if (password.length < 6) {
-            return res.json({
-                error: 'La contraseña debe tener al menos 6 caracteres'
-            });
-        }
-
-        const existe = await User.findOne({email});
-        if (existe) {
-            return res.json({
-                error: 'El usuario ya existe'
+                error: error.details[0].message
             });
         }
         
