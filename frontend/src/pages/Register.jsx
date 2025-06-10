@@ -9,13 +9,20 @@ export default function Register() {
         name: "",
         rut: "",
         email: "",
-        password: "",
-        role: ""
+        password: ""
     });
 
     const registerUser = async (e) => {
         e.preventDefault();
-        const { name, rut, email, password, role } = data;
+        const { name, rut, email, password } = data;
+
+        let role = "";
+        if (email.endsWith('@alumnos.ubiobio.cl')) {
+            role = "estudiante";
+        } else if (email.endsWith('@ubiobio.cl')) {
+            role = "profesor";
+        }
+
         try {
             const {data} = await axios.post('/register', {
                 name,
@@ -47,8 +54,6 @@ export default function Register() {
                 <input type="text" placeholder="Escribe tu correo" value={data.email} onChange={(e) => setData({...data, email: e.target.value})} />
                 <label>Contraseña</label>
                 <input type="text" placeholder="Escribe tu contraseña" value={data.password} onChange={(e) => setData({...data, password: e.target.value})} />
-                <label>Rol</label>
-                <input type="text" placeholder="¿Que eres?" value={data.role} onChange={(e) => setData({...data, role: e.target.value})} />
                 <button type="submit">Registrarse</button>
             </form>
         </div>
