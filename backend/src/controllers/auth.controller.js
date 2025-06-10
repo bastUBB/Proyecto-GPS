@@ -1,5 +1,5 @@
 import { hashPassword, comparePassword } from '../helpers/bcrypt.helper.js';
-import { registerValidation } from '../validations/auth.validation.js';
+import { registerValidation, loginValidation } from '../validations/auth.validation.js';
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -42,6 +42,12 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const { error } = loginValidation.validate(req.body);
+        if (error) {
+            return res.status(400).json({
+                error: error.details[0].message
+            });
+        }
         const user = await User.findOne({ email });
         if (!user) {
             return res.json({

@@ -65,3 +65,35 @@ export const registerValidation = Joi.object({
         }),
 })
     .unknown(true)
+
+
+export const loginValidation = Joi.object({
+    email: Joi.string()
+        .min(15)
+        .max(50)
+        .email()
+        .required()
+        .messages({
+            'string.base': 'El correo electrónico debe ser una cadena de texto',
+            'string.empty': 'El correo electrónico no puede estar vacío',
+            'string.min': 'El correo electrónico debe tener al menos 15 caracteres',
+            'string.max': 'El correo electrónico no puede tener más de 50 caracteres',
+            'any.required': 'El correo electrónico es obligatorio',
+            'string.email': 'El correo electrónico no es válido',
+        })
+        .custom(domainEmailValidator, 'Domain Email Validator'),
+    password: Joi.string()
+        .min(8)
+        .max(30)
+        .pattern(/^[a-zA-Z0-9]+$/)
+        .required()
+        .messages({
+            'string.base': 'La contraseña debe ser una cadena de texto',
+            'string.empty': 'La contraseña no puede estar vacía',
+            'string.min': 'La contraseña debe tener al menos 8 caracteres',
+            'string.max': 'La contraseña no puede tener más de 30 caracteres',
+            'any.required': 'La contraseña es obligatoria',
+            'string.pattern.base': 'La contraseña solo puede contener letras y números',
+        }),
+})
+    .unknown(true);
