@@ -18,6 +18,7 @@ async function createInitialUsers() {
         await User.create({
             name: 'Administrador',
             email: 'admin@example.com',
+            rut: '12345678-9',
             password: hashedPassword,
             role: 'admin'
         });
