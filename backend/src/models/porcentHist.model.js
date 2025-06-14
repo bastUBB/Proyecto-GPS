@@ -1,4 +1,4 @@
-// Modelo para almacenar los promedios historicos de cada asignatiras y profesores 
+// Modelo para almacenar los promedios historicos de cada asignatiras y profesor, exraidos de DGAI
 
 import mongoose from "mongoose";
 
