@@ -1,43 +1,50 @@
-import { useState } from 'react'
-import axios from 'axios';
-import {toast} from 'react-hot-toast';
+import React, { useState } from 'react';
+import './Login.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 export default function Login() {
-    const navigate = useNavigate();
-    const [data, setData] = useState({
-        email: "",
-        password: ""
-    });
+  const navigate = useNavigate();
+  const [data, setData] = useState({ email: "", password: "" });
 
-    const loginUser = async (e) => {
-        e.preventDefault();
-        const { email, password } = data;
-        try {
-            const {data} = await axios.post('/login', {
-                email,
-                password
-            });
-            if (data.error) {
-                toast.error(data.error);
-            } else {
-                setData({});
-                navigate('/');
-            }
-        } catch (error) {
-            
-        }
-    };
+  const loginUser = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/login', data);
+      if (response.data.error) {
+        toast.error(response.data.error);
+      } else {
+        setData({ email: "", password: "" });
+        navigate('/');
+      }
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+    }
+  };
 
-    return (
-        <div>
-            <form onSubmit={loginUser}>
-                <label>Email</label>
-                <input type="text" name="email" placeholder="Escribe tu correo" value={data.email} onChange={(e) => setData({...data, email: e.target.value})} />
-                <label>Contraseña</label>
-                <input type="password" name="password" placeholder="Escribe tu contraseña" value={data.password} onChange={(e) => setData({...data, password: e.target.value})} />
-                <button type="submit">Iniciar Sesión</button>
-            </form>
-        </div>
-    )
+  return (
+    <div className="login-container">
+      <div className="login-box">
+        <div className="avatar"></div>
+        <form onSubmit={loginUser} className="form">
+          <input
+            type="email"
+            placeholder="Correo institucional"
+            value={data.email}
+            onChange={(e) => setData({ ...data, email: e.target.value })}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={data.password}
+            onChange={(e) => setData({ ...data, password: e.target.value })}
+            required
+          />
+          <button type="submit">Iniciar sesión</button>
+        </form>
+      </div>
+    </div>
+  );
 }
