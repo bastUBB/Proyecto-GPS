@@ -100,6 +100,7 @@ export const getProfile = (req, res) => {
             if (err) throw err;
             res.json(user);
         }); 
-    } else {
-        res.json(null);
+        } else {
+            res.json(null);
+        }
     }
