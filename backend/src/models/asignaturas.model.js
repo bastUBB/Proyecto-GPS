@@ -7,7 +7,7 @@ const asignaturaSchema = new mongoose.Schema({
         unique: true,
         trim: true,
         minlength: 3,
-        maxlength: 50
+        maxlength: 80
     },
     codigo: {
         type: String,

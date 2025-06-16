@@ -33,7 +33,7 @@ async function createInitialUsers() {
 
 async function createAsignaturas() {
     try {
-        await Asignatura.create([ // Se deberia sacar de internet pero nose de donde sacar los prerequisitos
+        const asignaturasData = [
             // Primer Año
             {
                 nombre: 'Álgebra y Trigonometría',
@@ -127,7 +127,6 @@ async function createAsignaturas() {
                 creditos: 4,
                 prerequisitos: []
             },
-
             // Segundo Año
             {
                 nombre: 'Cálculo Integral',
@@ -231,7 +230,6 @@ async function createAsignaturas() {
                     'Inglés II'
                 ]
             },
-
             // Tercer Año
             {
                 nombre: 'Ondas, Óptica y Física Moderna',
@@ -329,7 +327,6 @@ async function createAsignaturas() {
                     'Sistemas de Información'
                 ]
             },
-
             // Cuarto Año
             {
                 nombre: 'Investigación de Operaciones',
@@ -421,7 +418,6 @@ async function createAsignaturas() {
                 creditos: 5,
                 prerequisitos: []
             },
-
             // Quinto Año
             {
                 nombre: 'Proyecto de Título',
@@ -456,8 +452,33 @@ async function createAsignaturas() {
                 codigo: '620476',
                 creditos: 5,
                 prerequisitos: []
-            },
-        ]);
+            }
+        ]
+        const asignaturasSinPrereq = asignaturasData.map(a => ({ ...a, prerequisitos: [] }));
+        for (const asignatura of asignaturasSinPrereq) {
+            const exists = await Asignatura.findOne({ nombre: asignatura.nombre });
+            if (!exists) {
+                await Asignatura.create(asignatura);
+            }
+        }
+
+        const asignaturas = await Asignatura.find({});
+
+        const asignaturaMap = {};
+        asignaturas.forEach(asignatura => {
+            asignaturaMap[asignatura.nombre] = asignatura._id;
+        });
+
+
+        for (const asignatura of asignaturasData) {
+            if (asignatura.prerequisitos && asignatura.prerequisitos.length > 0) {
+                const ids = asignatura.prerequisitos.map(nombre => asignaturaMap[nombre]).filter(Boolean);
+                await Asignatura.updateOne(
+                    { nombre: asignatura.nombre },
+                    { $set: { prerequisitos: ids } }
+                );
+            }
+        }
     } catch (error) {
         console.error('Error al crear asignaturas iniciales:', error.message);
     }
