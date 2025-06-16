@@ -7,25 +7,25 @@ import Bloque from '../models/bloques.models.js';
 async function createInitialUsers() {
     try {
         // Verificar si ya existe el usuario admin
-        const adminExists = await User.findOne({ email: 'admin@example.com' });
+        const adminExists = await User.findOne({ email: 'admin@ubiobio.cl' });
         if (adminExists) {
             console.log('Usuario inicial ya existe');
             return;
         }
 
         // Encriptar contraseña
-        const hashedPassword = await hashPassword('123456');
+        const hashedPassword = await hashPassword('admin1234');
 
         // Crear usuario admin
         await User.create({
-            nombre: 'Administrador',
-            email: 'admin@example.com',
+            name: 'Administrador',
+            email: 'admin@ubiobio.cl',
             rut: '12345678-9',
             password: hashedPassword,
             role: 'admin'
         });
 
-        console.log('Usuario inicial creado: admin@example.com');
+        console.log('Usuario inicial creado: admin@ubiobio.cl');
     } catch (error) {
         console.error('Error al crear usuario inicial:', error.message);
     }
