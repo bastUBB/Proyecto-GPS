@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
 import productRoutes from './routes/product.routes.js';
 import authRoutes from './routes/auth.routes.js';
-import { createInitialUsers } from './config/initialSetup.js';
+import { initialSetup } from './config/initialSetup.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -22,8 +22,8 @@ app.use(
 );
 
 // Initial setup to create default users
-createInitialUsers()
-    .then(() => console.log('Initial users setup completed'))
+initialSetup()
+    .then(() => console.log('Initial setup completed'))
     .catch(err => console.error('Error during initial setup:', err));
 
 app.use(express.json());
