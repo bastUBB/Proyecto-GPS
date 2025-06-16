@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5500; 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8000'; 
+const FRONTEND_URL = process.env.FRONTEND_URL?.split(',') || ['http://localhost:5173'];
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`; 
 
 app.use(
