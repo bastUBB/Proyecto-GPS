@@ -32,7 +32,7 @@ return (
     />
 
     {/* Cuadro de login */}
-    <div className="bg-[#115397] p-4 h-[470px]  ">
+    <div className="bg-[#115397] p-4 h-[470px] rounded shadow-[0_8px_24px_rgba(59,130,246,0.5)] ">
       <img
         src="/Escudo-ubb.svg"
         alt="Escudo"

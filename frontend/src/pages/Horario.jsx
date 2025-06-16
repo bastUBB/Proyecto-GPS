@@ -101,9 +101,9 @@ export default function Horario() {
           <table className="border-collapse border w-full">
             <thead>
               <tr>
-                <th className="border px-2 py-1 bg-gray-100">Hora</th>
+                <th className="border px-2 py-1 bg-[EEF5FF]">Hora</th>
                 {days.map((dia) => (
-                  <th key={dia} className="border px-2 py-1 bg-gray-100">
+                  <th key={dia} className="border px-2 py-1 bg-[#0e93ff]">
                     {dia}
                   </th>
                 ))}
