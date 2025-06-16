@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import axios from 'axios';
 import {toast} from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/userContext';
 
 export default function Login() {
     const navigate = useNavigate();
+    const { setUser } = useContext(UserContext);
     const [data, setData] = useState({
         email: "",
         password: ""
@@ -14,13 +16,14 @@ export default function Login() {
         e.preventDefault();
         const { email, password } = data;
         try {
-            const {data} = await axios.post('/login', {
+            const { data: response } = await axios.post('/login', {
                 email,
                 password
             });
-            if (data.error) {
-                toast.error(data.error);
+            if (response.error) {
+                toast.error(response.error);
             } else {
+                setUser(response); 
                 setData({});
                 navigate('/');
             }
@@ -28,6 +31,7 @@ export default function Login() {
             
         }
     };
+
 
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
