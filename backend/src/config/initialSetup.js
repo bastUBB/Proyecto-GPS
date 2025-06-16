@@ -18,7 +18,7 @@ async function createInitialUsers() {
 
         // Crear usuario admin
         await User.create({
-            name: 'Administrador',
+            nombre: 'Administrador',
             email: 'admin@example.com',
             rut: '12345678-9',
             password: hashedPassword,
@@ -36,61 +36,61 @@ async function createAsignaturas() {
         await Asignatura.create([ // Se deberia sacar de internet pero nose de donde sacar los prerequisitos
             // Primer Año
             {
-                name: 'Álgebra y Trigonometría',
+                nombre: 'Álgebra y Trigonometría',
                 codigo: '220143',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Cálculo Diferencial',
+                nombre: 'Cálculo Diferencial',
                 codigo: '220144',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Introducción a la Ingeniería',
+                nombre: 'Introducción a la Ingeniería',
                 codigo: '620432',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Química General',
+                nombre: 'Química General',
                 codigo: '210020',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Comunicación Oral y Escrita',
+                nombre: 'Comunicación Oral y Escrita',
                 codigo: '340266',
                 creditos: 4,
                 prerequisitos: []
             },
             {
-                name: 'Introducción a la Programación',
+                nombre: 'Introducción a la Programación',
                 codigo: '620431',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Formación Integral Oferta Institucional I',
+                nombre: 'Formación Integral Oferta Institucional I',
                 codigo: '340556',
                 creditos: 3,
                 prerequisitos: []
             },
             {
-                name: 'Formación Integral Oferta Institucional II',
+                nombre: 'Formación Integral Oferta Institucional II',
                 codigo: '340557',
                 creditos: 3,
                 prerequisitos: []
             },
             {
-                name: 'Administración General',
+                nombre: 'Administración General',
                 codigo: '610227',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Álgebra Lineal',
+                nombre: 'Álgebra Lineal',
                 codigo: '220145',
                 creditos: 5,
                 prerequisitos: [
@@ -98,7 +98,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Física Newtoniana',
+                nombre: 'Física Newtoniana',
                 codigo: '230033',
                 creditos: 5,
                 prerequisitos: [
@@ -106,7 +106,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Estructuras Discretas para Ciencias de la Computación',
+                nombre: 'Estructuras Discretas para Ciencias de la Computación',
                 codigo: '620434',
                 creditos: 5,
                 prerequisitos: [
@@ -114,7 +114,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Programación Orientada a Objeto',
+                nombre: 'Programación Orientada a Objeto',
                 codigo: '620433',
                 creditos: 5,
                 prerequisitos: [
@@ -122,7 +122,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Inglés I',
+                nombre: 'Inglés I',
                 codigo: '340276',
                 creditos: 4,
                 prerequisitos: []
@@ -130,7 +130,7 @@ async function createAsignaturas() {
 
             // Segundo Año
             {
-                name: 'Cálculo Integral',
+                nombre: 'Cálculo Integral',
                 codigo: '220146',
                 creditos: 5,
                 prerequisitos: [
@@ -138,7 +138,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Ecuaciones Diferenciales',
+                nombre: 'Ecuaciones Diferenciales',
                 codigo: '220147',
                 creditos: 5,
                 prerequisitos: [
@@ -146,7 +146,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Electro-magnetismo',
+                nombre: 'Electro-magnetismo',
                 codigo: '230034',
                 creditos: 5,
                 prerequisitos: [
@@ -154,7 +154,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Fundamentos de Ciencias de la Computación',
+                nombre: 'Fundamentos de Ciencias de la Computación',
                 codigo: '620437',
                 creditos: 5,
                 prerequisitos: [
@@ -162,7 +162,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Modelamiento de Procesos e Información',
+                nombre: 'Modelamiento de Procesos e Información',
                 codigo: '620436',
                 creditos: 5,
                 prerequisitos: [
@@ -170,7 +170,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Inglés II',
+                nombre: 'Inglés II',
                 codigo: '340277',
                 creditos: 4,
                 prerequisitos: [
@@ -178,13 +178,13 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Formación Integral Oferta Institucional III',
+                nombre: 'Formación Integral Oferta Institucional III',
                 codigo: '340556',
                 creditos: 3,
                 prerequisitos: []
             },
             {
-                name: 'Gestión Contable',
+                nombre: 'Gestión Contable',
                 codigo: '610228',
                 creditos: 5,
                 prerequisitos: [
@@ -192,7 +192,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Cálculo en Varias Variables',
+                nombre: 'Cálculo en Varias Variables',
                 codigo: '220148',
                 creditos: 5,
                 prerequisitos: [
@@ -200,7 +200,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Sistemas Digitales',
+                nombre: 'Sistemas Digitales',
                 codigo: '410268',
                 creditos: 5,
                 prerequisitos: [
@@ -208,7 +208,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Análisis y Diseño de Algoritmos',
+                nombre: 'Análisis y Diseño de Algoritmos',
                 codigo: '620448',
                 creditos: 5,
                 prerequisitos: [
@@ -216,7 +216,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Teoría de Sistemas',
+                nombre: 'Teoría de Sistemas',
                 codigo: '620438',
                 creditos: 5,
                 prerequisitos: [
@@ -224,7 +224,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Inglés III',
+                nombre: 'Inglés III',
                 codigo: '340278',
                 creditos: 4,
                 prerequisitos: [
@@ -234,7 +234,7 @@ async function createAsignaturas() {
 
             // Tercer Año
             {
-                name: 'Ondas, Óptica y Física Moderna',
+                nombre: 'Ondas, Óptica y Física Moderna',
                 codigo: '230035',
                 creditos: 5,
                 prerequisitos: [
@@ -242,7 +242,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Estadística y Probabilidades',
+                nombre: 'Estadística y Probabilidades',
                 codigo: '220149',
                 creditos: 5,
                 prerequisitos: [
@@ -250,7 +250,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Economía',
+                nombre: 'Economía',
                 codigo: '610409',
                 creditos: 5,
                 prerequisitos: [
@@ -258,7 +258,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Base de Datos',
+                nombre: 'Base de Datos',
                 codigo: '620439',
                 creditos: 5,
                 prerequisitos: [
@@ -266,7 +266,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Práctica Profesional I',
+                nombre: 'Práctica Profesional I',
                 codigo: '620449',
                 creditos: 5,
                 prerequisitos: [
@@ -274,7 +274,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Inglés IV',
+                nombre: 'Inglés IV',
                 codigo: '340279',
                 creditos: 4,
                 prerequisitos: [
@@ -282,7 +282,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Arquitectura de Computadores',
+                nombre: 'Arquitectura de Computadores',
                 codigo: '620450',
                 creditos: 5,
                 prerequisitos: [
@@ -290,7 +290,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Administración y Programación de Base de Datos',
+                nombre: 'Administración y Programación de Base de Datos',
                 codigo: '620451',
                 creditos: 5,
                 prerequisitos: [
@@ -298,7 +298,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Sistemas de Información',
+                nombre: 'Sistemas de Información',
                 codigo: '620452',
                 creditos: 5,
                 prerequisitos: [
@@ -306,7 +306,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Gestión Estratégica',
+                nombre: 'Gestión Estratégica',
                 codigo: '612239',
                 creditos: 5,
                 prerequisitos: [
@@ -314,7 +314,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Gestión Presupuestaria y Financiera',
+                nombre: 'Gestión Presupuestaria y Financiera',
                 codigo: '610229',
                 creditos: 5,
                 prerequisitos: [
@@ -322,7 +322,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Práctica Profesional II',
+                nombre: 'Práctica Profesional II',
                 codigo: '620456',
                 creditos: 5,
                 prerequisitos: [
@@ -332,7 +332,7 @@ async function createAsignaturas() {
 
             // Cuarto Año
             {
-                name: 'Investigación de Operaciones',
+                nombre: 'Investigación de Operaciones',
                 codigo: '430183',
                 creditos: 5,
                 prerequisitos: [
@@ -340,7 +340,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Legislación *',
+                nombre: 'Legislación *',
                 codigo: '613017',
                 creditos: 5,
                 prerequisitos: [
@@ -348,7 +348,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Anteproyecto de Título *',
+                nombre: 'Anteproyecto de Título *',
                 codigo: '620472',
                 creditos: 5,
                 prerequisitos: [
@@ -356,7 +356,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Sistemas Operativos',
+                nombre: 'Sistemas Operativos',
                 codigo: '620453',
                 creditos: 5,
                 prerequisitos: [
@@ -364,7 +364,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Inteligencia Artificial',
+                nombre: 'Inteligencia Artificial',
                 codigo: '620454',
                 creditos: 5,
                 prerequisitos: [
@@ -372,7 +372,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Ingeniería de Software',
+                nombre: 'Ingeniería de Software',
                 codigo: '620455',
                 creditos: 5,
                 prerequisitos: [
@@ -380,7 +380,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Gestión de Proyectos de Software',
+                nombre: 'Gestión de Proyectos de Software',
                 codigo: '620458',
                 creditos: 5,
                 prerequisitos: [
@@ -388,7 +388,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Formulación y Evaluación de Proyectos',
+                nombre: 'Formulación y Evaluación de Proyectos',
                 codigo: '611050',
                 creditos: 5,
                 prerequisitos: [
@@ -396,7 +396,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Gestión de Recursos Humanos',
+                nombre: 'Gestión de Recursos Humanos',
                 codigo: '610231',
                 creditos: 5,
                 prerequisitos: [
@@ -404,19 +404,19 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Electivo Profesional I *',
+                nombre: 'Electivo Profesional I *',
                 codigo: '620459',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Electivo Profesional II *',
+                nombre: 'Electivo Profesional II *',
                 codigo: '620470',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Electivo Profesional III *',
+                nombre: 'Electivo Profesional III *',
                 codigo: '620471',
                 creditos: 5,
                 prerequisitos: []
@@ -424,7 +424,7 @@ async function createAsignaturas() {
 
             // Quinto Año
             {
-                name: 'Proyecto de Título',
+                nombre: 'Proyecto de Título',
                 codigo: '620477',
                 creditos: 5,
                 prerequisitos: [
@@ -432,7 +432,7 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Seguridad Informática *',
+                nombre: 'Seguridad Informática *',
                 codigo: '620473',
                 creditos: 5,
                 prerequisitos: [
@@ -440,19 +440,19 @@ async function createAsignaturas() {
                 ]
             },
             {
-                name: 'Electivo Profesional IV *',
+                nombre: 'Electivo Profesional IV *',
                 codigo: '620474',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Electivo Profesional V *',
+                nombre: 'Electivo Profesional V *',
                 codigo: '620475',
                 creditos: 5,
                 prerequisitos: []
             },
             {
-                name: 'Electivo Profesional VI *',
+                nombre: 'Electivo Profesional VI *',
                 codigo: '620476',
                 creditos: 5,
                 prerequisitos: []
