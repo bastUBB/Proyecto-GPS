@@ -4,14 +4,14 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
 import productRoutes from './routes/product.routes.js';
 import authRoutes from './routes/auth.routes.js';
-import { createInitialUsers } from './config/initialSetup.js';
+import { initialSetup } from './config/initialSetup.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5500; 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8000'; 
+const FRONTEND_URL = process.env.FRONTEND_URL?.split(',') || ['http://localhost:5173'];
 const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`; 
 
 app.use(
@@ -22,8 +22,8 @@ app.use(
 );
 
 // Initial setup to create default users
-createInitialUsers()
-    .then(() => console.log('Initial users setup completed'))
+initialSetup()
+    .then(() => console.log('Initial setup completed'))
     .catch(err => console.error('Error during initial setup:', err));
 
 app.use(express.json());
