@@ -3,8 +3,14 @@ import mongoose from "mongoose";
 const evaluacionSchema = new mongoose.Schema({
     profesor: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profesor',
-        required: true
+        ref: 'Usuario',
+        required: true,
+        validate: {
+            validator: async function (profesorId) {
+                const busqueda_docente = await mongoose.model('Usuario').findById(profesorId);
+                return busqueda_docente && busqueda_docente.role === 'docente';
+            },
+        }
     },
     asignatura: {
         type: mongoose.Schema.Types.ObjectId,

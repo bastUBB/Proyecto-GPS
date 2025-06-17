@@ -15,6 +15,7 @@ const bloqueSchema = new mongoose.Schema({
     dia:{
         type: String,
         required: true,
+        // TODO: Coordinar el cómo será el manejo de los días (tildes, minusculas y mayúsculas)
         enum: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
     }
 }, {
