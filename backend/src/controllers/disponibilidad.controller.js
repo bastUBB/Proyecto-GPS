@@ -1,4 +1,4 @@
-import { guardarDisponibilidad } from '../services/disponibilidad.service.js';
+import { guardarDisponibilidad, obtenerDisponibilidad } from '../services/disponibilidad.service.js';
 import User from '../models/user.model.js';
 
 export const subirDisponibilidad = async (req, res) => {
@@ -15,5 +15,18 @@ export const subirDisponibilidad = async (req, res) => {
         res.json({ message: 'Disponibilidad guardada', disponibilidad });
     } catch (error) {
         res.status(500).json({ error: 'Error al guardar disponibilidad' });
+    }
+};
+
+export const verDisponibilidad = async (req, res) => {
+    try {
+        const { profesorId } = req.query; // Puedes pasar ?profesorId=... en la URL
+        const disponibilidad = await obtenerDisponibilidad(profesorId);
+        if (!disponibilidad || (Array.isArray(disponibilidad) && disponibilidad.length === 0)) {
+            return res.status(404).json({ message: 'No se encontró disponibilidad' });
+        }
+        res.json({ disponibilidad });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener disponibilidad' });
     }
 };
