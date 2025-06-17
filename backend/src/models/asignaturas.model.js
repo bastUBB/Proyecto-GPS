@@ -1,0 +1,40 @@
+import mongoose from "mongoose";
+
+const asignaturaSchema = new mongoose.Schema({
+    // conseguir ER
+    nombre: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 50,
+        match: /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]+$/
+    },
+    // conseguir ER
+    codigo: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        minlength: 3,
+        maxlength: 10
+    },
+    creditos: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 10
+    },
+    prerequisitos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Asignatura'
+    }],
+}, {
+    timestamps: true,
+    versionKey: false
+});
+
+const Asignatura = mongoose.model('Asignatura', asignaturaSchema);
+export default Asignatura;
