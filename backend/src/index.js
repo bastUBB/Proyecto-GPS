@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
 import productRoutes from './routes/product.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import disponibilidadRoutes from './routes/disponibilidad.routes.js';
 import { initialSetup } from './config/initialSetup.js';
 import dotenv from 'dotenv';
 
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false })); 
 
 app.use("/api/products", productRoutes); 
+app.use("/api", disponibilidadRoutes); // Rutas de disponibilidad
 app.use("/", authRoutes); // Rutas de autenticación en la raíz
 
 app.listen(PORT, () => {
