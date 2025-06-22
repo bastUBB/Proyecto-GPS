@@ -8,6 +8,7 @@ import Horario from './pages/Horario'
 import axios from 'axios'
 import { Toaster } from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8000'
 axios.defaults.baseURL = API_URL
@@ -15,14 +16,14 @@ axios.defaults.withCredentials = true
 
 function App() {
   const location = useLocation()
-  const hideNavbarRoutes = ['/login', '/register']
+  const hideNavbar = location.pathname === "/login" || location.pathname === "/register"
 
   return (
     <UserContextProvider>
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {!hideNavbar && <Navbar />}
       <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/horario" element={<Horario />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
