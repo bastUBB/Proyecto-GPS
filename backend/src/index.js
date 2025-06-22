@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes.js';
 import disponibilidadRoutes from './routes/disponibilidad.routes.js';
 import { initialSetup } from './config/initialSetup.js';
 import dotenv from 'dotenv';
+import '../scripts/inscripcionReminder.js'; // Importa el script de recordatorio de inscripción
 
 dotenv.config();
 

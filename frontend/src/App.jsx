@@ -10,7 +10,7 @@ import { Toaster } from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
-const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:8000'
+const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5500'
 axios.defaults.baseURL = API_URL
 axios.defaults.withCredentials = true
 
