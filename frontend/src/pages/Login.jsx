@@ -32,7 +32,7 @@ export default function Login() {
     <div className="w-screen h-screen relative">
       {/* Imagen de fondo */}
       <img
-        src="/Fondo.png"
+        src="/FondoLogin.jpg"
         alt="Fondo Login"
         className="absolute inset-0 w-full h-full object-cover -z-10"
       />
