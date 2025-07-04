@@ -12,7 +12,6 @@ export default function Login() {
   const loginUser = async (e) => {
     e.preventDefault();
     const { email, password } = data;
-
     try {
       const { data: response } = await axios.post('/login', { email, password });
       if (response.error) {
@@ -20,6 +19,8 @@ export default function Login() {
       } else {
         setUser(response);
         setData({ email: "", password: "" });
+        //contraseña por 
+        console.log(response.password);
         navigate('/');
       }
     } catch (error) {

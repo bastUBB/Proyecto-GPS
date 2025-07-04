@@ -1,10 +1,8 @@
 import React from "react";
 
 export default function PagGeneral({ children }) {
-
   return (
-    <div className="flex flex-col bg-white">
-
+    <div className="min-w-screen min-h-screen bg-[url('/FondoHome2.jpg')] bg-cover bg-center bg-opacity-20 flex flex-col">
       {/* Contenido */}
       <main className="flex-1">{children}</main>
 

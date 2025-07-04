@@ -9,6 +9,8 @@ import axios from 'axios'
 import { Toaster } from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import MallaCurricular from './pages/MallaCurricular'
+import Consultas from './pages/Consultas'
 
 const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5500'
 axios.defaults.baseURL = API_URL
@@ -27,6 +29,8 @@ function App() {
         <Route path="/horario" element={<Horario />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/malla" element={<MallaCurricular />} />
+        <Route path="/consultas" element={<Consultas />} />
       </Routes>
     </UserContextProvider>
   )
