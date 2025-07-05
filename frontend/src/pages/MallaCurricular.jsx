@@ -13,6 +13,7 @@ const malla = [
   { nombre: "Programación Orientada a Objetos", creditos: 8, semestre: 2 },
   { nombre: "Estructuras Discretas para Cie. de la Computación", creditos: 5, semestre: 2 },
   { nombre: "Formación Integral (Oferta Institucional)", creditos: 2, semestre: 2 },
+  { nombre: "Formación Integral (Oferta Institucional)", creditos: 2, semestre: 2 },
   { nombre: "Cálculo Integral", creditos: 6, semestre: 3 },
   { nombre: "Álgebra Lineal", creditos: 5, semestre: 3 },
   { nombre: "Física Newtoniana", creditos: 6, semestre: 3 },
@@ -27,8 +28,8 @@ const malla = [
   { nombre: "Formación Integral (Oferta Institucional)", creditos: 2, semestre: 4 },
   { nombre: "Ondas, Óptica y Física Moderna", creditos: 6, semestre: 5 },
   { nombre: "Sistemas Digitales", creditos: 5, semestre: 5 },
-  { nombre: "Fundamentos de Ciencia de Datos", creditos: 6, semestre: 5 },
-  { nombre: "Teoría de Sistemas", creditos: 5, semestre: 5 },
+  { nombre: "Fundamentos de Ciencias de la computación", creditos: 6, semestre: 5 },
+  { nombre: "Teoría de Sistemas", creditos: 4, semestre: 5 },
   { nombre: "Inglés III", creditos: 4, semestre: 5 },
   { nombre: "Gestión Contable", creditos: 4, semestre: 5 },
   { nombre: "Estadística y Probabilidades", creditos: 6, semestre: 6 },
@@ -37,28 +38,28 @@ const malla = [
   { nombre: "Base de Datos", creditos: 6, semestre: 6 },
   { nombre: "Inglés IV", creditos: 4, semestre: 6 },
   { nombre: "Práctica Profesional I", creditos: 6, semestre: 6 },
-  { nombre: "Investigación de Operaciones", creditos: 6, semestre: 7 },
+  { nombre: "Investigación de Operaciones", creditos: 4, semestre: 7 },
   { nombre: "Arquitectura de Computadores", creditos: 6, semestre: 7 },
   { nombre: "Administración y Programación de BD", creditos: 6, semestre: 7 },
   { nombre: "Sistemas de Información", creditos: 4, semestre: 7 },
   { nombre: "Gestión Estratégica", creditos: 3, semestre: 7 },
   { nombre: "Formación Integral (Oferta Institucional)", creditos: 2, semestre: 7 },
+  { nombre: "Gestión Presupuestaria y Financiera", creditos: 4, semestre: 7 },
   { nombre: "Legislación", creditos: 3, semestre: 8 },
   { nombre: "Sistemas Operativos", creditos: 6, semestre: 8 },
   { nombre: "Inteligencia Artificial", creditos: 4, semestre: 8 },
   { nombre: "Ingeniería de Software", creditos: 5, semestre: 8 },
   { nombre: "Formulación y Evaluación de Proyectos", creditos: 4, semestre: 8 },
-  { nombre: "Gestión Presupuestaria y Financiera", creditos: 4, semestre: 8 },
   { nombre: "Práctica Profesional II", creditos: 9, semestre: 8 },
-  { nombre: "Anteproyecto de Título", creditos: 5, semestre: 9 },
+  { nombre: "Anteproyecto de Título", creditos: 4, semestre: 9 },
   { nombre: "Comunicación de Datos y Redes", creditos: 5, semestre: 9 },
   { nombre: "Electivo Profesional I", creditos: 5, semestre: 9 },
   { nombre: "Electivo Profesional II", creditos: 5, semestre: 9 },
+  { nombre: "Electivo Profesional III", creditos: 5, semestre: 9 },
   { nombre: "Gestión de Proyectos de Software", creditos: 4, semestre: 9 },
   { nombre: "Gestión de Recursos Humanos", creditos: 3, semestre: 9 },
-  { nombre: "Proyecto de Título", creditos: 15, semestre: 10 },
+  { nombre: "Proyecto de Título", creditos: 10, semestre: 10 },
   { nombre: "Seguridad Informática", creditos: 4, semestre: 10 },
-  { nombre: "Electivo Profesional III", creditos: 5, semestre: 10 },
   { nombre: "Electivo Profesional IV", creditos: 5, semestre: 10 },
   { nombre: "Electivo Profesional V", creditos: 5, semestre: 10 },
   { nombre: "Electivo Profesional VI", creditos: 5, semestre: 10 },
@@ -111,7 +112,7 @@ const MallaCurricular = () => {
 
   return (
     <PagGeneral>
-    <div className="min-h-screen flex flex-col px-4 py-6">
+    <div className="min-h-screen mt-12 flex flex-col px-4 py-6">
       {/* Título + Botón */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">

@@ -3,14 +3,14 @@ import PagGeneral from "../components/PagGeneral";
 
 export default function FormularioDudas() {
   const [correo, setCorreo] = useState("");
-  const [duda, setDuda] = useState("");
+  const [comentario, setComentario] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Correo del profesor:", correo);
-    console.log("Duda:", duda);
+    console.log("Comentario:", comentario);
     setCorreo("");
-    setDuda("");
+    setComentario("");
   };
 
   return (
@@ -18,7 +18,7 @@ export default function FormularioDudas() {
     <div className="min-h-screen flex items-center justify-center  p-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl shadow-md w-full max-w-md"
+        //className="bg-[#b4ecff] p-6 rounded-xl shadow-md w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-4 text-center">Consultas</h2>
 
@@ -33,13 +33,13 @@ export default function FormularioDudas() {
           required
         />
 
-        <label htmlFor="duda" className="block mb-2 font-medium">Comentario:</label>
+        <label htmlFor="Comentario" className="block mb-2 font-medium">Comentario:</label>
         <textarea
-          id="duda"
-          value={duda}
-          onChange={(e) => setDuda(e.target.value)}
+          id="Comentario"
+          value={comentario}
+          onChange={(e) => setComentario(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded mb-4"
-          placeholder="Escribe tu duda aquí..."
+          placeholder="Escribe tu comentario aquí..."
           rows={5}
           required
         />

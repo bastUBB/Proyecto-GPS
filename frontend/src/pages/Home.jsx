@@ -10,6 +10,8 @@ export default function Home() {
       navigate("/malla");
     } else if (id === "circle3") {
       navigate("/consultas");
+    } else if (id === "circle4") {
+      navigate("/createmalla");
     } else {
       alert(`Clic en ${id}`);
     }
@@ -19,6 +21,7 @@ export default function Home() {
     { id: "circle1", image: "/IconHorario.png", label: "Horario" },
     { id: "circle2", image: "/IconMalla.png", label: "Malla" },
     { id: "circle3", image: "/IconChat.png", label: "Consultas" },
+    { id: "circle4", image: "/IconMalla.png", label: "Mallas Curriculares" }, // Nuevo círculo
   ];
 
   return (
@@ -33,7 +36,7 @@ export default function Home() {
         />
 
         {/* Círculos con labels dentro */}
-        <div className="flex gap-16">
+        <div className="flex gap-16 flex-wrap justify-center">
           {circleData.map(({ id, image, label }) => (
             <button
               key={id}

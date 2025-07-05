@@ -11,6 +11,7 @@ import { UserContextProvider } from '../context/userContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import MallaCurricular from './pages/MallaCurricular'
 import Consultas from './pages/Consultas'
+import CreateMalla from './pages/CreateMalla'
 
 const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5500'
 axios.defaults.baseURL = API_URL
@@ -31,6 +32,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/malla" element={<MallaCurricular />} />
         <Route path="/consultas" element={<Consultas />} />
+        <Route path="/createmalla" element={<CreateMalla/>} />
       </Routes>
     </UserContextProvider>
   )

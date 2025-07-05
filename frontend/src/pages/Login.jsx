@@ -33,14 +33,14 @@ export default function Login() {
     <div className="w-screen h-screen relative">
       {/* Imagen de fondo */}
       <img
-        src="/FondoLogin.jpg"
+        src="/FondoL.jpg"
         alt="Fondo Login"
         className="absolute inset-0 w-full h-full object-cover -z-10"
       />
 
       <div className="w-full h-full flex justify-end items-center pr-40">
         {/* Cuadro de login */}
-        <div className="bg-gradient-to-b from-[#123a68] to-[#86e1ff] p-4 h-[470px] rounded shadow-[0_8px_24px_rgba(59,130,246,0.5)]">
+        <div className="bg-gradient-to-b from-[#0c549c] to-[#b4ecff] p-4 h-[470px] rounded shadow-[0_8px_24px_rgba(59,130,246,0.5)]">
           <img
             src="/Escudo-ubb.svg"
             alt="Escudo UBB"
