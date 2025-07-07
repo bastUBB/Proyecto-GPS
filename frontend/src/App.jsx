@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Horario from './pages/Horario'
+import SubidaExcel from './pages/SubidaExcel'
 import axios from 'axios'
 import { Toaster } from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
@@ -24,9 +25,11 @@ function App() {
       <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
       <Routes>
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/ExcelUploader" element={<SubidaExcel />} />
         <Route path="/horario" element={<Horario />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<h1 className="text-3xl text-center mt-10">Página no encontrada</h1>} />
       </Routes>
     </UserContextProvider>
   )
