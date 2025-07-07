@@ -1,4 +1,4 @@
-import evaluacionDocente from "../models/evaluacionDocente.js";
+import evaluacionDocente from "../models/evaluacionDocente.model.js";
 import User from "../models/user.model.js";
 import Asignatura from "../models/asignaturas.model.js";
 

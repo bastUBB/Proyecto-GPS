@@ -1,4 +1,4 @@
-import Bloque from '../models/bloques.models.js';
+import Bloque from '../models/bloques.model.js';
 
 //TODO: Agregar en todo el CRUD el nuevo campo 'tipo'
 

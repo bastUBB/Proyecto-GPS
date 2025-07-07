@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'Joi';
 import mongoose from 'mongoose';
 
 export const rendimientoAsignaturaQueryValidation = Joi.object({
@@ -35,7 +35,6 @@ export const rendimientoAsignaturaQueryValidation = Joi.object({
             return value;
         }, 'Año dentro de rango')
         .required()
-        .trim()
         .messages({
             'string.pattern.base': 'El campo añoRegistro debe ser un año válido de 4 dígitos',
             'any.invalid': `El campo añoRegistro debe estar entre ${new Date().getFullYear() - 25} y ${new Date().getFullYear()}`,
@@ -74,7 +73,6 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
     procentajeAprob: Joi.number()
         .min(0)
         .max(100)
-        .trim()
         .messages({
             'number.base': 'El campo porcentajeAprob debe ser un número',
             'number.min': 'El campo porcentajeAprob debe ser al menos 0',
@@ -84,7 +82,6 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
     porcentajeDesaprob: Joi.number()
         .min(0)
         .max(100)
-        .trim()
         .messages({
             'number.base': 'El campo porcentajeDesaprob debe ser un número',
             'number.min': 'El campo porcentajeDesaprob debe ser al menos 0',
@@ -94,7 +91,6 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
     porcentajeNCR: Joi.number()
         .min(0)
         .max(100)
-        .trim()
         .messages({
             'number.base': 'El campo porcentajeNCR debe ser un número',
             'number.min': 'El campo porcentajeNCR debe ser al menos 0',
@@ -119,7 +115,6 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
         }),
     totalInscritos: Joi.number()
         .min(0)
-        .trim()
         .messages({
             'number.base': 'El campo totalInscritos debe ser un número',
             'number.min': 'El campo totalInscritos debe ser al menos 0',

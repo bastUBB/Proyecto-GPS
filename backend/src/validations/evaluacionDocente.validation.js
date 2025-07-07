@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'Joi';
 
 export const evaluacionDocenteQueryValidation = Joi.object({
     docente: Joi.string()

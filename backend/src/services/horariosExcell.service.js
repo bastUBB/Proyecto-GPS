@@ -1,7 +1,7 @@
 import horarioExcell from '../models/horariosExcell.model.js';
 import Asignatura from '../models/asignaturas.model.js';
 import User from '../models/user.model.js';
-import Bloques from '../models/bloques.models.js';   
+import Bloques from '../models/bloques.model.js';   
 
 export async function createHorarioExcellService(dataHorario) {
     try {
