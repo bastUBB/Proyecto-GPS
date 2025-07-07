@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default function PagGeneral({ children }) {
   return (
-    <div className="relative min-w-screen min-h-screen overflow-hidden">
+    <div className="relative min-w-screen min-h-screen overflow-hidden bg-gradient-to-b from-[#b8ebff] to-[#edfaff]">
       {/* Contenido principal */}
       <main className="w-full h-full">{children}</main>
 

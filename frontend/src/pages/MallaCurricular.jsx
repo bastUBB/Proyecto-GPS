@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import PagGeneral from "../components/PagGeneral";
 import Colores from "../components/Colores"; 
@@ -100,17 +100,31 @@ const MallaCurricular = () => {
     guardarEnLocalStorage(nuevaMalla);
   };
 
-  const handleDownloadPDF = () => {
-    const element = mallaRef.current;
-    const options = {
-      margin: 0.3,
-      filename: "MallaCurricular.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "legal", orientation: "landscape" },
-    };
-    html2pdf().set(options).from(element).save();
+ const handleDownloadPDF = () => {
+  const element = mallaRef.current;
+
+  const opt = {
+    margin:       0.2, // margen pequeño 
+    filename:     "MallaCurricular.pdf",
+    image:        { type: "png" }, 
+    html2canvas:  {
+      scale: 3, // más resolución = menos borroso
+      useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+    },
+    jsPDF: {
+      unit: "in",
+      format: "legal", // tamaño oficio: 8.5 x 14 pulgadas
+      orientation: "landscape", // horizontal
+    },
+    pagebreak: {
+      mode: ["avoid-all", "css", "legacy"], // evita cortar contenido 
+    },
   };
+
+  html2pdf().set(opt).from(element).save();
+};
 
   const handleResetMalla = () => {
     setAsignaturas(mallaOriginal);
@@ -126,7 +140,7 @@ const MallaCurricular = () => {
           <button
             key={asig.nombre}
             type="button"
-            className={`w-28 h-16 border text-[11px] rounded shadow-sm overflow-hidden cursor-pointer p-1 text-center ${getColor(asig.estado)}`}
+            className={`w-28 min-h-[4rem] border text-[11px] rounded shadow-sm overflow-visible cursor-pointer p-1 text-center ${getColor(asig.estado)}`}
             onClick={() => handleAsignaturaClick(asig.nombre)}
             title="Haz clic para cambiar color"
           >
