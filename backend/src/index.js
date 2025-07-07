@@ -4,10 +4,9 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
 import { initialSetup } from './config/initialSetup.js';
-import authRoutes from './routes/auth.routes.js';
-import asignaturaRoutes from './routes/asignaturas.routes.js';
-import disponibilidadRoutes from './routes/disponibilidad.routes.js';
 import indexRoutes from './routes/index.routes.js';
+import '../scripts/inscripcionReminder.js'; // Importa el script de recordatorio de inscripción
+
 
 dotenv.config();
 
@@ -32,7 +31,6 @@ app.use(express.json());
 app.use(cookieParser()); 
 app.use(express.urlencoded({ extended: false })); 
 
-app.use("/disp", disponibilidadRoutes); // Rutas de disponibilidad
 app.use("/api", indexRoutes); // Rutas de la API
 
 
