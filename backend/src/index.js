@@ -1,19 +1,20 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
-import productRoutes from './routes/product.routes.js';
-import authRoutes from './routes/auth.routes.js';
-import disponibilidadRoutes from './routes/disponibilidad.routes.js';
 import { initialSetup } from './config/initialSetup.js';
-import dotenv from 'dotenv';
+import authRoutes from './routes/auth.routes.js';
+import asignaturaRoutes from './routes/asignaturas.routes.js';
+import disponibilidadRoutes from './routes/disponibilidad.routes.js';
+import indexRoutes from './routes/index.routes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5500; 
 const FRONTEND_URL = process.env.FRONTEND_URL?.split(',') || ['http://localhost:5173'];
-const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`; 
+const BACKEND_URL = process.env.BACKEND_URL ||`http://localhost:${PORT}`; 
 
 app.use(
   cors({
@@ -31,9 +32,9 @@ app.use(express.json());
 app.use(cookieParser()); 
 app.use(express.urlencoded({ extended: false })); 
 
-app.use("/api/products", productRoutes); 
-app.use("/api", disponibilidadRoutes); // Rutas de disponibilidad
-app.use("/", authRoutes); // Rutas de autenticación en la raíz
+app.use("/disp", disponibilidadRoutes); // Rutas de disponibilidad
+app.use("/api", indexRoutes); // Rutas de la API
+
 
 app.listen(PORT, () => {
   connectDB(); // Conecta a la base de datos

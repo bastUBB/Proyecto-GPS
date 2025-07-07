@@ -1,36 +1,28 @@
 import mongoose from "mongoose";
 
+//TODO: Representar la malla a través de mapeo y hacer dinámica (check de asignatura) a través del modelo historial
+
 const asignaturaSchema = new mongoose.Schema({
-    // conseguir ER
     nombre: {
         type: String,
         required: true,
-        unique: true,
-        trim: true,
-        minlength: 3,
-        maxlength: 50,
-        match: /^[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s]+$/
     },
-    // conseguir ER
     codigo: {
         type: String,
         required: true,
         unique: true,
-        trim: true,
-        minlength: 3,
-        maxlength: 10
     },
     creditos: {
         type: Number,
         required: true,
-        min: 1,
-        max: 10
     },
-    prerequisitos: [{
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Asignatura'
+    prerrequisitos: [{
+        type: String,
     }],
+    semestre: {
+        type: String,
+        required: true,
+    },
 }, {
     timestamps: true,
     versionKey: false

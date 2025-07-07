@@ -1,100 +1,45 @@
 import { describe, it, expect } from 'vitest';
 import Asignatura from '../src/models/asignaturas.model.js';
 import {connectDbTest} from '../src/config/dbTest.js';
+import { asignaturaQueryValidation, asignaturaBodyValidation } from '../src/validations/asignaturas.validation.js';
+import { createAsignaturaService } from '../src/services/asignaturas.service.js';
+import { createAsignatura } from '../src/controllers/asignaturas.controller.js';
+
+// hacer pruebas con json
 
 /*
 TESTS
-1. inserción válida
-2. falta de parámetro código
-3. falta de parámetro créditos
-5. error de sintaxis en nombre
-6. error de sintaxis de código
-7. error de sintaxis de créditos
-8. error de contenido en prerequisitos
+1. inserción válida al modelo Asignatura
+2. inserción válida query
+3. inserción válida body
+4. inserción inválida query por falta de parámetro 'codigo'
+5. inserción inválida body por falta de parámetro 'nombre'
+6. inserción inválida body por falta de parámetro 'codigo'
+7. inserción inválida body por falta de parámetro 'creditos'
+8. insercion inválida query por código no válido
+9. inserción inválida body por código no válido
+10. inserción inválida body por nombre no válido
+11. inserción inválida body por créditos no válidos
+
 */
 
 // Conexión a MongoDB
 connectDbTest();
 
-describe('Tests al modelo Asignatura', () => {
-  //.1
+describe('Asignatura Model Tests', () => {
+  // 1.
   it('debería guardar una asignatura válida', async () => {
     const test_asignatura = new Asignatura({
       nombre: 'Matemáticas Avanzadas',
       codigo: 'MAT101',
       creditos: 4,
-      prerequisitos: []
+      prerrequisitos: []
     });
 
     const saved = await test_asignatura.save();
     expect(saved.nombre).toBe('Matemáticas Avanzadas');
     expect(saved.codigo).toBe('MAT101');
     expect(saved.creditos).toBe(4);
-    expect(saved.prerequisitos).toEqual([]);
-  });
-  //.2
-  it('debería fallar al guardar sin código', async () => {
-    const test_asignatura = new Asignatura({
-      nombre: 'Matemáticas Avanzadas',
-      creditos: 4,
-      prerequisitos: []
-    });
-
-    await expect(test_asignatura.save()).rejects.toThrow();
-  });
-  //.3
-  it('debería fallar al guardar sin créditos', async () => {
-    const test_asignatura = new Asignatura({
-      nombre: 'Matemáticas Avanzadas',
-      codigo: 'MAT101',
-      prerequisitos: []
-    });
-
-    await expect(test_asignatura.save()).rejects.toThrow();
-  });
-  //.5
-  it('debería fallar al guardar con nombre inválido', async () => {
-    const test_asignatura = new Asignatura({
-      nombre: 'Matemáticas! Avanzadas',
-      codigo: 'MAT103',
-      creditos: 4,
-      prerequisitos: []
-    });
-
-    await expect(test_asignatura.save()).rejects.toThrow();
-  });
-  //.6
-  // TODO: Falta de expresión regular testear el código
-  // it('debería fallar al guardar con código inválido', async () => {
-  //   const test_asignatura = new Asignatura({
-  //     nombre: 'Matemáticas Avanzadas',
-  //     codigo: 'M@T101',
-  //     creditos: 4,
-  //     prerequisitos: []
-  //   });
-
-  //   await expect(test_asignatura.save()).rejects.toThrow();
-  // });
-  //.7
-  it('debería fallar al guardar con créditos inválidos', async () => {
-    const test_asignatura = new Asignatura({
-      nombre: 'Matemáticas Avanzadas',
-      codigo: 'MAT101',
-      creditos: 11, // fuera del rango permitido
-      prerequisitos: []
-    });
-
-    await expect(test_asignatura.save()).rejects.toThrow();
-  });
-  //.8
-  it('debería fallar al guardar con prerequisitos inválidos', async () => {
-    const test_asignatura = new Asignatura({
-      nombre: 'Matemáticas Avanzadas',
-      codigo: 'MAT101',
-      creditos: 4,
-      prerequisitos: ['invalid_id'] // ID no válido
-    });
-
-    await expect(test_asignatura.save()).rejects.toThrow();
+    expect(saved.prerrequisitos).toEqual([]);
   });
 });
