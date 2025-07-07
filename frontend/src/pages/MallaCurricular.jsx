@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import PagGeneral from "../components/PagGeneral";
+import Colores from "../components/Colores"; 
 
-const malla = [
+
+const mallaOriginal = [
   { nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
   { nombre: "Introducción a la Ingeniería", creditos: 6, semestre: 1 },
   { nombre: "Comunicación Oral y Escrita", creditos: 4, semestre: 1 },
@@ -65,19 +67,38 @@ const malla = [
   { nombre: "Electivo Profesional VI", creditos: 5, semestre: 10 },
 ];
 
-const getColor = (estado) => {
-  switch (estado) {
-    case "aprobada":
-      return "bg-green-300 border-green-600";
-    case "disponible":
-      return "bg-purple-200 border-purple-500";
-    default:
-      return "bg-gray-200";
-  }
-};
+
+const getColor = (estado) => estado || "bg-gray-200";
 
 const MallaCurricular = () => {
   const mallaRef = useRef();
+  const [asignaturas, setAsignaturas] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [asignaturaSeleccionada, setAsignaturaSeleccionada] = useState(null);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("mallaPersonalizada");
+    setAsignaturas(savedData ? JSON.parse(savedData) : mallaOriginal);
+  }, []);
+
+  const guardarEnLocalStorage = (nuevaMalla) => {
+    localStorage.setItem("mallaPersonalizada", JSON.stringify(nuevaMalla));
+  };
+
+  const handleAsignaturaClick = (nombre) => {
+    setAsignaturaSeleccionada(nombre);
+    setModalVisible(true);
+  };
+
+  const aplicarColor = (colorClase) => {
+    const nuevaMalla = asignaturas.map((asig) =>
+      asig.nombre === asignaturaSeleccionada
+        ? { ...asig, estado: colorClase }
+        : asig
+    );
+    setAsignaturas(nuevaMalla);
+    guardarEnLocalStorage(nuevaMalla);
+  };
 
   const handleDownloadPDF = () => {
     const element = mallaRef.current;
@@ -91,64 +112,75 @@ const MallaCurricular = () => {
     html2pdf().set(options).from(element).save();
   };
 
+  const handleResetMalla = () => {
+    setAsignaturas(mallaOriginal);
+    localStorage.removeItem("mallaPersonalizada");
+  };
+
   const renderSemestre = (sem) => (
     <div key={sem} className="flex flex-col items-center gap-1">
       <h2 className="text-sm font-semibold text-center">Semestre {sem}</h2>
-      {malla
+      {asignaturas
         .filter((asig) => asig.semestre === sem)
         .map((asig) => (
-          <div
+          <button
             key={asig.nombre}
-            className={`w-28 h-16 border text-xs rounded shadow-sm overflow-hidden ${getColor(
-              asig.estado
-            )}`}
+            type="button"
+            className={`w-28 h-16 border text-[11px] rounded shadow-sm overflow-hidden cursor-pointer p-1 text-center ${getColor(asig.estado)}`}
+            onClick={() => handleAsignaturaClick(asig.nombre)}
+            title="Haz clic para cambiar color"
           >
-            <p className="font-semibold">{asig.nombre}</p>
+            <p className="font-semibold break-words leading-tight">{asig.nombre}</p>
             <p>Créditos: {asig.creditos}</p>
-          </div>
+          </button>
         ))}
     </div>
   );
 
-  return (
+   return (
     <PagGeneral>
-    <div className="min-h-screen mt-12 flex flex-col px-4 py-6">
-      {/* Título + Botón */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">
-          Malla Curricular - Ingeniería Civil en Informática
-        </h1>
-        <button
-          onClick={handleDownloadPDF}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          PDF
-        </button>
-      </div>
-
-      {/* Contenido de la malla */}
-      <div ref={mallaRef} className="overflow-x-auto">
-        <div className="grid grid-cols-10 min-w-full">
-          {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
+      <div className="flex-1 overflow-hidden flex flex-col px-4 pt-20">
+        <div className="flex flex-wrap gap-2 items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">
+            Malla Curricular - Ingeniería Civil en Informática
+          </h1>
+          <div className="flex gap-2">
+            <button
+              onClick={handleDownloadPDF}
+              className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2"
+            >
+              <img 
+              src="/IconPdf.png" 
+              alt="Icono PDF" 
+              className="w-6 h-6" />{" "}
+            </button>
+            <button
+              onClick={handleResetMalla}
+              className="bg-red-500 text-white px-4 py-2 rounded flex items-center gap-2"
+            >
+              <img 
+              src="/IconRegreso.png" 
+              alt="Icono Restablecer" 
+              className="w-5 h-5" />{" "}
+              Restablecer
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Leyenda */}
-      <div className="text-xs mt-6 self-start max-w-full">
-        <h2 className="font-semibold mb-1">Leyenda de colores:</h2>
-        <ul className="flex flex-wrap gap-4">
-          <li className="flex items-center">
-            <span className="inline-block w-3 h-3 mr-1 bg-green-300 border border-green-600"></span>{" "}
-            Aprobada
-          </li>
-          <li className="flex items-center">
-            <span className="inline-block w-3 h-3 mr-1 bg-purple-200 border border-purple-500"></span>{" "}
-            Disponible para cursar
-          </li>
-        </ul>
+        <div ref={mallaRef} className="overflow-x-auto">
+          <div className="grid grid-cols-10 min-w-full gap-2">
+            {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
+          </div>
+        </div>
+
+        <Colores
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSelect={aplicarColor}
+        />
       </div>
-    </div>
     </PagGeneral>
   );
 };
+
 export default MallaCurricular;

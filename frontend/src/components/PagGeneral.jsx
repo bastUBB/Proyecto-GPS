@@ -1,13 +1,14 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function PagGeneral({ children }) {
   return (
-    <div className="min-w-screen min-h-screen bg-[url('/FondoHome1.jpg')] bg-cover bg-center bg-opacity-20 flex flex-col">
-      {/* Contenido */}
-      <main className="flex-1">{children}</main>
+    <div className="relative min-w-screen min-h-screen overflow-hidden">
+      {/* Contenido principal */}
+      <main className="w-full h-full">{children}</main>
 
-      {/* Pie logo */}
-      <footer className="flex justify-end items-end pr-4 pb-4">
+      {/* Pie de página decorativo */}
+      <footer className="absolute bottom-0 right-0 pr-4 pb-4 pointer-events-none">
         <img
           src="/Escudo.svg"
           alt="Universidad del Bío-Bío"
@@ -17,3 +18,7 @@ export default function PagGeneral({ children }) {
     </div>
   );
 }
+
+PagGeneral.propTypes = {
+  children: PropTypes.node,
+};

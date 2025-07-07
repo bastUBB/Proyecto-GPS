@@ -40,7 +40,7 @@ export default function Login() {
 
       <div className="w-full h-full flex justify-end items-center pr-40">
         {/* Cuadro de login */}
-        <div className="bg-gradient-to-b from-[#0c549c] to-[#b4ecff] p-4 h-[470px] rounded shadow-[0_8px_24px_rgba(59,130,246,0.5)]">
+        <div className="bg-gradient-to-b from-[#0c549c] to-[#b4ecff] p-4 h-[470px] rounded shadow-[0_0_25px_rgba(0,191,255,0.9)]">
           <img
             src="/Escudo-ubb.svg"
             alt="Escudo UBB"
