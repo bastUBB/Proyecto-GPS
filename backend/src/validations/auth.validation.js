@@ -1,12 +1,12 @@
 import Joi from 'joi';
 
 const domainEmailValidator = (value, helper) => {
-    if (!value.endsWith("@ubiobio.cl") && !value.endsWith("@alumnos.ubiobio.cl")) {
-        return helper.message(
-            "El correo electrónico debe terminar en @ubiobio.cl o @alumnos.ubiobio.cl"
-        );
-    }
-    return value;
+  if (!value.endsWith("@ubiobio.cl") && !value.endsWith("@alumnos.ubiobio.cl") ) {
+    return helper.message(
+      "El correo electrónico debe terminar en @ubiobio.cl o @alumnos.ubiobio.cl"
+    );
+  }
+  return value;
 };
 
 export const registerValidation = Joi.object({
