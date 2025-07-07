@@ -5,7 +5,7 @@ import{
     updateRendimientoAsignaturaService,
     deleteRendimientoAsignaturaService
 } from '../services/rendimientoAsignatura.service.js';
-import { rendimientoAsignaturaQueryValidation, rendimientoAsignaturaBodyValidation } from '../validations/rendimientoAsignatura.js';
+import { rendimientoAsignaturaQueryValidation, rendimientoAsignaturaBodyValidation } from '../validations/rendimientoAsignatura.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function createRendimientoAsignatura(req, res) {

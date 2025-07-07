@@ -1,6 +1,6 @@
-import Joi from 'joi';
+import Joi from 'Joi';
 
-export const horariosExcellQueryValidation = Joi.object({
+export const horarioExcellQueryValidation = Joi.object({
     codigoAsignatura: Joi.string()
         .length(6)
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
@@ -40,7 +40,7 @@ export const horariosExcellQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar al menos uno de los campos: asignatura, bloques, seccion o docente',
     });
 
-export const horariosExcellBodyValidation = Joi.object({
+export const horarioExcellBodyValidation = Joi.object({
     codigoAsignatura: Joi.string()
         .length(6)
         .trim()

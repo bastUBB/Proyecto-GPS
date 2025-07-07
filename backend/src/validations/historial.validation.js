@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'Joi';
 
 export const historialQueryValidation = Joi.object({
     alumno: Joi.string()
