@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 export default function PagGeneral({ children }) {
   return (
-    <div className="relative min-w-screen min-h-screen overflow-hidden bg-gradient-to-b from-[#b8ebff] to-[#edfaff]">
+    <div className="relative min-w-screen min-h-screen overflow-hidden bg-gradient-to-b from-[#b8ebff] to-[#edfaff] pt-20">
       {/* Contenido principal */}
-      <main className="w-full h-full">{children}</main>
+      <main className="w-screen h-screen">{children}</main>
 
       {/* Pie de página decorativo */}
       <footer className="absolute bottom-0 right-0 pr-4 pb-4 pointer-events-none">
