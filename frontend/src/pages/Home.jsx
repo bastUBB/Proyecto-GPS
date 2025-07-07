@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <div className="min-w-screen min-h-screen bg-[url('/FondoHome.jpg')] bg-cover bg-center flex flex-col">
-      <div className="flex flex-col items-center justify-start flex-1 w-full p-12 perspective-[1000px]">
+      <div className="flex flex-col items-center justify-start flex-1 w-screen p-12 perspective-[1000px]">
         <img
           src="/Escudo.svg"
           alt="Escudo"
