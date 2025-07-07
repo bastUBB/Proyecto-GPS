@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'Joi';
 
 export const asignaturaQueryValidation = Joi.object({
     codigo: Joi.string()

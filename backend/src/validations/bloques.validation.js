@@ -1,7 +1,7 @@
-import joi, { object } from 'joi';
+import Joi from 'Joi';
 
-export const bloqueQueryValidation = joi.object({
-    horaInicio: joi.string()
+export const bloqueQueryValidation = Joi.object({
+    horaInicio: Joi.string()
         .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
         .required()
         .messages({
@@ -11,7 +11,7 @@ export const bloqueQueryValidation = joi.object({
             'string.max': 'La hora de inicio no puede ser más tarde de las 23:00',
             'string.pattern.base': 'La hora de inicio debe tener el formato HH:MM (24 horas)',
         }),
-    horaFin: joi.string()
+    horaFin: Joi.string()
         .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
         .required()
         .messages({
@@ -21,7 +21,7 @@ export const bloqueQueryValidation = joi.object({
             'string.max': 'La hora de inicio no puede ser más tarde de las 23:00',
             'string.pattern.base': 'La hora de inicio debe tener el formato HH:MM (24 horas)',
         }),
-    dia: joi.string()
+    dia: Joi.string()
         .valid('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado')
         .required()
         .messages({
@@ -29,7 +29,7 @@ export const bloqueQueryValidation = joi.object({
             'string.base': 'El día debe ser una cadena de texto',
             'any.only': 'El día debe ser uno de los siguientes: Lunes, Martes, Miércoles, Jueves, Viernes o Sábado',
         }),
-    tipo: joi.string()
+    tipo: Joi.string()
         .valid('TEO', 'PRA', 'LAB')
         .required()
         .messages({
@@ -44,8 +44,8 @@ export const bloqueQueryValidation = joi.object({
         'object.missing': 'Debe proporcionar al menos uno de los campos: horaInicio, horaFin, dia y tipo',
     });
 
-export const bloqueBodyValidation = joi.object({
-    horaInicio: joi.string()
+export const bloqueBodyValidation = Joi.object({
+    horaInicio: Joi.string()
         .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
         .messages({
             'string.empty': 'La hora de inicio no puede estar vacía',
@@ -55,7 +55,7 @@ export const bloqueBodyValidation = joi.object({
             'any.required': 'La hora de inicio es obligatoria',
             'string.pattern.base': 'La hora de inicio debe tener el formato HH:MM (24 horas)',
         }),
-    horaFin: joi.string()
+    horaFin: Joi.string()
         .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
         .messages({
             'string.empty': 'La hora de fin no puede estar vacía',
@@ -65,7 +65,7 @@ export const bloqueBodyValidation = joi.object({
             'any.required': 'La hora de fin es obligatoria',
             'string.pattern.base': 'La hora de fin debe tener el formato HH:MM (24 horas)',
         }),
-    dia: joi.string()
+    dia: Joi.string()
         .valid('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado')
         .messages({
             'string.empty': 'El día no puede estar vacío',
@@ -73,7 +73,7 @@ export const bloqueBodyValidation = joi.object({
             'any.only': 'El día debe ser uno de los siguientes: Lunes, Martes, Miércoles, Jueves, Viernes o Sábado',
             'any.required': 'El día es obligatorio',
         }),
-    tipo: joi.string()
+    tipo: Joi.string()
         .valid('TEO', 'PRA', 'LAB')
         .messages({
             'string.empty': 'El tipo no puede estar vacío',
@@ -94,8 +94,8 @@ export const bloqueBodyValidation = joi.object({
         'object.missing': 'Debe proporcionar al menos uno de los campos: horaInicio, horaFin, dia o tipo',
     });
 
-export const bloqueIdValidation = joi.object({
-    objectId: joi.string()
+export const bloqueIdValidation = Joi.object({
+    objectId: Joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({

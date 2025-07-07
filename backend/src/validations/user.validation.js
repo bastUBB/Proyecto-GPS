@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from "Joi";
 
 const domainEmailValidator = (value, helper) => {
     const domainRegex = /@gmail\.cl$/;

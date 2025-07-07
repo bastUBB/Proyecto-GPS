@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from 'Joi';
 
 const domainEmailValidator = (value, helper) => {
   if (!value.endsWith("@ubiobio.cl") && !value.endsWith("@alumnos.ubiobio.cl") ) {
