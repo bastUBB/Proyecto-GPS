@@ -180,12 +180,12 @@ describe('Test asignaturaBodyValidation', () => {
     expect(error.message).toBe('El código debe ser una cadena de texto');
   });
   it('14. Debe fallar si el código está vacío', () => {
-    const body = { //TODO: AQUI QUEDE
+    const body = {
       nombre: 'Cálculo Diferencial',
       codigo: '',
-      creditos: 5,
-      prerrequisitos: ['340464'],
-      semestre: 'I'
+      creditos: 1,
+      prerrequisitos: ['Materia Cinco'],
+      semestre: 'IV'
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -196,7 +196,7 @@ describe('Test asignaturaBodyValidation', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 'cinco',
-      prerrequisitos: ['340464'],
+      prerrequisitos: ['Materia Dos'],
       semestre: 'I'
     };
     const { error } = asignaturaBodyValidation.validate(body);
@@ -208,7 +208,7 @@ describe('Test asignaturaBodyValidation', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 11,
-      prerrequisitos: ['340464'],
+      prerrequisitos: ['Materia Dos'],
       semestre: 'I'
     };
     const { error } = asignaturaBodyValidation.validate(body);
@@ -220,7 +220,7 @@ describe('Test asignaturaBodyValidation', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 5.5,
-      prerrequisitos: ['340464'],
+      prerrequisitos: ['Materia Dos'],
       semestre: 'I'
     };
     const { error } = asignaturaBodyValidation.validate(body);
@@ -232,7 +232,7 @@ describe('Test asignaturaBodyValidation', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: -5,
-      prerrequisitos: ['340464'],
+      prerrequisitos: ['Materia Dos'],
       semestre: 'I'
     };
     const { error } = asignaturaBodyValidation.validate(body);
@@ -273,14 +273,14 @@ describe('Test asignaturaBodyValidation', () => {
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
-    expect(error.message).toBe('El nombre debe ser una cadena de texto');
+    expect(error.message).toBe('El nombre solo puede contener letras y espacios');
   });
   it('22. Debe fallar si los prerrequisitos contienen un elemento con 5 caracteres', () => {
     const body = {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 5,
-      prerrequisitos: ['34046'],
+      prerrequisitos: ['Mater'],
       semestre: 'I'
     };
     const { error } = asignaturaBodyValidation.validate(body);
@@ -292,19 +292,19 @@ describe('Test asignaturaBodyValidation', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 5,
-      prerrequisitos: ['340464', '340465', '340466', '340467'],
+      prerrequisitos: ['Materia Dos', 'Materia Tres', 'Materia Cuatro', 'Materia Cinco'],
       semestre: 'I'
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
-    expect(error.message).toBe('No puede tener más de 3 prerrequisitos');
+    expect(error.message).toBe('Debe tener como máximo 3 prerrequisitos');
   });
   it('24. Debe fallar si el semestre no cumple con la expresión regular', () => {
     const body = {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 5,
-      prerrequisitos: ['340464'],
+      prerrequisitos: ['Materia Dos'],
       semestre: 'IVX'
     };
     const { error } = asignaturaBodyValidation.validate(body);
@@ -316,7 +316,7 @@ describe('Test asignaturaBodyValidation', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 5,
-      prerrequisitos: ['340464'],
+      prerrequisitos: ['Materia Dos'],
       semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);

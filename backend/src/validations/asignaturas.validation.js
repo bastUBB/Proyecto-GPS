@@ -69,6 +69,7 @@ export const asignaturaBodyValidation = Joi.object({
         .max(3)
         .messages({
             'array.base': 'Los prerrequisitos deben ser un arreglo',
+            'array.max': 'Debe tener como máximo 3 prerrequisitos',
             'array.min': 'Debe tener al menos 0 prerrequisitos'
         }),
     semestre: Joi.string()
