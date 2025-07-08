@@ -17,7 +17,7 @@ async function createInitialUsers() {
 
         // Crear usuario admin
         await User.create({
-            name: 'Administrador',
+            nombreCompleto: 'Administrador',
             email: 'admin@ubiobio.cl',
             rut: '12345678-9',
             password: hashedPassword,
