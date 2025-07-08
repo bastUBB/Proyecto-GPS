@@ -10,6 +10,7 @@ import horariosExcellRoutes from "./horariosExcell.routes.js";
 import rendimientoAsignaturaRoutes from "./rendimientoAsignatura.routes.js";
 import disponibilidadRoutes from "./disponibilidad.routes.js";
 import combiHorarioProfesorRoutes from "./combiHorarioProfesor.routes.js";
+import combinacionHorariosRoutes from "./combinacionHorarios.routes.js";
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router
     .use("/horariosExcell", horariosExcellRoutes)
     .use("/rendimientoAsignatura", rendimientoAsignaturaRoutes)
     .use("/disponibilidad", disponibilidadRoutes)
-    .use("/combi", combiHorarioProfesorRoutes);
+    .use("/combi", combiHorarioProfesorRoutes)
+    .use("/combinaciones", combinacionHorariosRoutes);
     
 export default router;
