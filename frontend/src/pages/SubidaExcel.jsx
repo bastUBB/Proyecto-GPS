@@ -1,5 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import Button from "../components/ui/button";
+import axios from 'axios';
 import {
     Card,
     CardContent,
@@ -24,6 +25,7 @@ export default function SubidaExcel() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [dragActive, setDragActive] = useState(false);
+    const fileInputRef = useRef(null); // Añade esta línea
 
     const handleDrag = useCallback((e) => {
         e.preventDefault();
@@ -34,6 +36,10 @@ export default function SubidaExcel() {
             setDragActive(false);
         }
     }, []);
+
+    const handleSelectFileClick = () => {
+        fileInputRef.current.click(); // Activa el input file al hacer clic en el botón
+    };
 
     const handleDrop = useCallback((e) => {
         e.preventDefault();
@@ -62,20 +68,39 @@ export default function SubidaExcel() {
 
         setLoading(true);
         try {
-            const arrayBuffer = await file.arrayBuffer();
-            const workbook = XLSX.read(arrayBuffer, { type: "array" });
+            const formData = new FormData();
+            formData.append("excelFile", file);
 
-            const result = {};
-
-            workbook.SheetNames.forEach((sheetName) => {
-                const worksheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                result[sheetName] = jsonData;
+            // Usando Axios correctamente
+            const response = await axios.post("/api/excel/procesar-excel", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
             });
 
-            setData(result);
+            // Axios pone los datos en response.data
+            setData({
+                // Usamos el nombre del archivo como "sheetName"
+                [file.name]: response.data.data
+            });
         } catch (error) {
-            console.error("Error processing Excel file:", error);
+            console.error("Error al procesar:", error);
+
+            // Manejo detallado de errores de Axios
+            let errorMessage = "Error desconocido";
+            if (error.response) {
+                // El servidor respondió con un código de error
+                errorMessage = error.response.data.error ||
+                    `Error ${error.response.status}: ${error.response.statusText}`;
+            } else if (error.request) {
+                // La solicitud fue hecha pero no se recibió respuesta
+                errorMessage = "No se recibió respuesta del servidor";
+            } else {
+                // Error al configurar la solicitud
+                errorMessage = error.message;
+            }
+
+            alert(`Error: ${errorMessage}`);
         } finally {
             setLoading(false);
         }
@@ -117,21 +142,27 @@ export default function SubidaExcel() {
                                     onDrop={handleDrop}
                                 >
                                     <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400 mx-auto mb-2 sm:mb-3" />
-                                    <p className="text-sm sm:text-base font-medium text-blue-900 mb-1 sm:mb-2">Arrastra tu archivo Excel aquí</p>
+                                    <p className="text-sm sm:text-base font-medium text-blue-900 mb-1 sm:mb-2">
+                                        Arrastra tu archivo Excel aquí
+                                    </p>
                                     <p className="text-blue-600 mb-2 sm:mb-3">o</p>
-                                    <label htmlFor="file-upload" className="block">
-                                        <Button className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2">
-                                            Seleccionar archivo
-                                        </Button>
-                                    </label>
+                                    <Button
+                                        className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm px-3 py-1.5 sm:px-4 sm:py-2"
+                                        onClick={handleSelectFileClick} // Añade este onClick
+                                    >
+                                        Seleccionar archivo
+                                    </Button>
                                     <input
+                                        ref={fileInputRef} // Asigna la referencia
                                         id="file-upload"
                                         type="file"
                                         accept=".xlsx,.xls"
                                         onChange={handleFileChange}
                                         className="hidden"
                                     />
-                                    <p className="text-xs text-blue-500 mt-2 sm:mt-3">Formatos soportados: .xlsx, .xls</p>
+                                    <p className="text-xs text-blue-500 mt-2 sm:mt-3">
+                                        Formatos soportados: .xlsx, .xls
+                                    </p>
                                 </div>
                             ) : (
                                 <div className="space-y-2 sm:space-y-3">
@@ -223,7 +254,7 @@ export default function SubidaExcel() {
                                                     </Table>
                                                     {sheetData.length > 6 && (
                                                         <p className="text-xs text-blue-600 mt-1 sm:mt-2 text-center">
-                                                            Mostrando las primeras 5 filas de {sheetData.length - 1} filas totales
+                                                            Existen {sheetData.length - 1} filas totales en el archivo
                                                         </p>
                                                     )}
                                                 </div>
