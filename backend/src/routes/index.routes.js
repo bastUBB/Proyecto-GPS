@@ -8,6 +8,9 @@ import evaluacionDocenteRoutes from "./evaluacionDocente.routes.js";
 import historialRoutes from "./historial.routes.js";
 import horariosExcellRoutes from "./horariosExcell.routes.js";
 import rendimientoAsignaturaRoutes from "./rendimientoAsignatura.routes.js";
+import disponibilidadRoutes from "./disponibilidad.routes.js";
+import combiHorarioProfesorRoutes from "./combiHorarioProfesor.routes.js";
+import combinacionHorariosRoutes from "./combinacionHorarios.routes.js";
 
 const router = Router();
 
@@ -19,6 +22,9 @@ router
     .use("/evaluacionDocente", evaluacionDocenteRoutes)
     .use("/historial", historialRoutes)
     .use("/horariosExcell", horariosExcellRoutes)
-    .use("/rendimientoAsignatura", rendimientoAsignaturaRoutes);
+    .use("/rendimientoAsignatura", rendimientoAsignaturaRoutes)
+    .use("/disponibilidad", disponibilidadRoutes)
+    .use("/combi", combiHorarioProfesorRoutes)
+    .use("/combinaciones", combinacionHorariosRoutes);
     
 export default router;
