@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     const { email, password } = data;
     try {
-      const { data: response } = await axios.post('/login', { email, password });
+      const { data: response } = await axios.post('api/auth/login', { email, password });
       if (response.error) {
         toast.error(response.error);
       } else {

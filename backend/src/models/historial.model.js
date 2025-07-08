@@ -2,23 +2,19 @@
 import mongoose from "mongoose";
 
 const historialSchema = new mongoose.Schema({
-    usuario: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario',
+    alumno: {
+        type: String,
         required: true
     },
-    asignaturas: [{
+    asignaturasCursadas: [{
         asignatura: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Asignatura',
+            type: String,
             required: true
         },
-        nota: {
+        notaFinal: {
             type: Number,
             required: true,
-            min: 1,
-            max: 7
-        }
+        },
     }]
 }, {
     timestamps: true,
