@@ -35,7 +35,7 @@ export default function Horario() {
     const key = `${dia}-${hora}`;
     if (item) {
       return (
-        <td key={key} className="border px-2 py-1 bg-blue-100 text-sm">
+        <td key={key} className="border px-2 py-1 bg-blue-100 text-gray-900 text-sm border-gray-300">
           <strong>{item.asignatura}</strong>
           <br />
           {item.sala}
@@ -44,29 +44,44 @@ export default function Horario() {
         </td>
       );
     }
-    return <td key={key} className="border px-2 py-1"></td>;
+    return <td key={key} className="border px-2 py-1 bg-white border-gray-300"></td>;
   };
 
   return (
     <PagGeneral>
       <div className="w-full max-w-6xl mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-4 text-center">Horario UBB</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900">Horario UBB</h2>
 
         <form onSubmit={agregarHorario} className="space-y-2 mb-6">
           <div className="flex gap-2 flex-wrap justify-center">
-            <select name="dia" value={form.dia} onChange={handleChange}>
+            <select 
+              name="dia" 
+              value={form.dia} 
+              onChange={handleChange}
+              className="border px-2 py-1 bg-white text-gray-900 border-gray-300 rounded"
+            >
               {days.map((d) => (
                 <option key={d}>{d}</option>
               ))}
             </select>
 
-            <select name="horaInicio" value={form.horaInicio} onChange={handleChange}>
+            <select 
+              name="horaInicio" 
+              value={form.horaInicio} 
+              onChange={handleChange}
+              className="border px-2 py-1 bg-white text-gray-900 border-gray-300 rounded"
+            >
               {hours.map((h) => (
                 <option key={h}>{h}</option>
               ))}
             </select>
 
-            <select name="horaFin" value={form.horaFin} onChange={handleChange}>
+            <select 
+              name="horaFin" 
+              value={form.horaFin} 
+              onChange={handleChange}
+              className="border px-2 py-1 bg-white text-gray-900 border-gray-300 rounded"
+            >
               {hours.map((h) => (
                 <option key={h}>{h}</option>
               ))}
@@ -78,7 +93,7 @@ export default function Horario() {
               placeholder="Asignatura"
               value={form.asignatura}
               onChange={handleChange}
-              className="border px-2"
+              className="border px-2 py-1 bg-white text-gray-900 placeholder-gray-500 border-gray-300 rounded"
             />
             <input
               type="text"
@@ -86,24 +101,24 @@ export default function Horario() {
               placeholder="Sala"
               value={form.sala}
               onChange={handleChange}
-              className="border px-2"
+              className="border px-2 py-1 bg-white text-gray-900 placeholder-gray-500 border-gray-300 rounded"
             />
             <button
               type="submit"
-              className="bg-[#145C9E] text-white px-3 py-1 rounded"
+              className="bg-[#145C9E] text-white px-3 py-1 rounded hover:bg-blue-700 transition"
             >
               Agregar
             </button>
           </div>
         </form>
 
-        <div className="overflow-auto border rounded shadow">
-          <table className="border-collapse border w-full">
+        <div className="overflow-auto border rounded shadow bg-white">
+          <table className="border-collapse border w-full bg-white">
             <thead>
               <tr>
-                <th className="border px-2 py-1 bg-[EEF5FF]">Hora</th>
+                <th className="border px-2 py-1 bg-gray-100 text-gray-900 border-gray-300">Hora</th>
                 {days.map((dia) => (
-                  <th key={dia} className="border px-2 py-1 bg-[#0e93ff]">
+                  <th key={dia} className="border px-2 py-1 bg-blue-500 text-white border-gray-300">
                     {dia}
                   </th>
                 ))}
@@ -112,7 +127,7 @@ export default function Horario() {
             <tbody>
               {hours.map((hora) => (
                 <tr key={hora}>
-                  <td className="border px-2 py-1 font-medium">{hora}</td>
+                  <td className="border px-2 py-1 font-medium bg-white text-gray-900 border-gray-300">{hora}</td>
                   {days.map((dia) => renderCelda(dia, hora))}
                 </tr>
               ))}

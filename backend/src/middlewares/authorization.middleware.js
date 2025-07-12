@@ -1,7 +1,7 @@
 //TODO: Requiero hacer el modelo User para continuar
 
 
-import User from "../entity/user.entity.js";
+import User from "../models/user.model.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function isAdmin(req, res, next) {
