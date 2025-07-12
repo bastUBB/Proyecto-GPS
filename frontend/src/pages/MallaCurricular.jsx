@@ -152,7 +152,7 @@ const MallaCurricular = () => {
 
   return (
     <PagGeneral>
-      <div className="flex-1 overflow-hidden flex flex-col px-4">
+      <div className="flex-1 overflow-hidden flex flex-col">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">
             Malla Curricular - Ingeniería Civil en Informática

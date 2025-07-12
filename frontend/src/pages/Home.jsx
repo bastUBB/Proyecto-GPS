@@ -1,29 +1,70 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { 
+  Calendar, 
+  BookOpen, 
+  MessageCircle, 
+  Users, 
+  FileSpreadsheet, 
+  GraduationCap, 
+  History 
+} from "lucide-react";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [availablePages, setAvailablePages] = useState([]);
 
-  const handleButtonClick = (id) => {
-    switch (id) {
-      case "circle1":
-        navigate("/horario");
-        break;
-      case "circle2":
-        navigate("/malla");
-        break;
-      case "circle3":
-        navigate("/foro");
-        break;
-      default:
-        alert(`Clic en ${id}`);
+  useEffect(() => {
+    // Obtener rol del usuario desde localStorage
+    const storedUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+    // console.log('Datos del usuario desde localStorage:', storedUserData); // Debug
+    setUserData(storedUserData);
+    setUserRole(storedUserData.role);
+  }, []);
+
+  useEffect(() => {
+    console.log('UserRole actual:', userRole); // Debug
+    
+    // Definir páginas disponibles según el rol
+    const getAvailablePages = (role) => {
+      const basePages = [
+        { id: "horario", route: "/horario", icon: Calendar, label: "Horario" },
+        { id: "malla", route: "/malla", icon: BookOpen, label: "Malla" },
+        { id: "foro", route: "/foro", icon: MessageCircle, label: "Foro" },
+      ];
+
+      const roleSpecificPages = {
+        admin: [
+          ...basePages,
+          { id: "usuarios", route: "/gestion-usuarios", icon: Users, label: "Usuarios" },
+          { id: "excel", route: "/subida-excel", icon: FileSpreadsheet, label: "Excel" },
+        ],
+        profesor: [
+          ...basePages,
+          { id: "evaluaciones", route: "/evaluaciones", icon: GraduationCap, label: "Evaluaciones" },
+        ],
+        estudiante: [
+          ...basePages,
+          { id: "historial", route: "/historial", icon: History, label: "Historial" },
+        ],
+      };
+
+      console.log('Páginas disponibles para rol', role, ':', roleSpecificPages[role] || basePages); // Debug
+      return roleSpecificPages[role] || basePages;
+    };
+
+    if (userRole) {
+      const pages = getAvailablePages(userRole);
+      setAvailablePages(pages);
+      console.log('Páginas configuradas:', pages); // Debug
     }
-  };
+  }, [userRole]);
 
-  const circleData = [
-    { id: "circle1", image: "/IconHorario.png", label: "Horario" },
-    { id: "circle2", image: "/IconMalla.png", label: "Malla" },
-    { id: "circle3", image: "/IconChat.png", label: "Foro" },
-  ];
+  const handleButtonClick = (route) => {
+    navigate(route);
+  };
 
   const handle3DRotate = (e) => {
     const el = e.currentTarget;
@@ -42,37 +83,53 @@ export default function Home() {
     el.classList.remove("shadow-[0_25px_40px_rgba(59,130,246,0.8)]", "shadow-white/60");
   };
 
+  const getGridLayout = (itemCount) => {
+    // Determinar el layout del grid según la cantidad de elementos
+    if (itemCount <= 3) {
+      return "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+    } else if (itemCount <= 4) {
+      return "grid-cols-2 lg:grid-cols-4";
+    } else if (itemCount <= 6) {
+      return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3";
+    } else {
+      return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
+    }
+  };
+
   return (
-    <div className="min-w-screen min-h-screen bg-[url('/FondoHome.jpg')] bg-cover bg-center flex flex-col">
-      <div className="flex flex-col items-center justify-start flex-1 w-screen p-12 perspective-[1000px]">
+    <div className="w-screen h-screen bg-[url('/FondoHome.jpg')] bg-cover bg-center flex flex-col">
+      <div className="flex flex-col items-center justify-start flex-1 p-8 pt-24 overflow-y-auto perspective-[1000px]">
         <img
           src="/Escudo.svg"
           alt="Escudo"
-          className="h-48 mt-32 mb-16 opacity-90"
+          className="h-[170px] mb-6 opacity-90"
         />
-      {/*Circulos*/}
-        <div className="flex gap-16 flex-wrap justify-center">
-          {circleData.map(({ id, image, label }) => (
+
+        {/* Círculos dinámicos */}
+        <div className={`grid gap-6 sm:gap-8 lg:gap-12 justify-center max-w-6xl pb-8 ${getGridLayout(availablePages.length)}`}>
+          {availablePages.map(({ id, route, icon: Icon, label }) => (
             <button
               key={id}
-              onClick={() => handleButtonClick(id)}
+              onClick={() => handleButtonClick(route)}
               onMouseMove={handle3DRotate}
               onMouseLeave={reset3DRotate}
               className="
-                w-44 h-44 rounded-full cursor-pointer 
+                w-36 h-36 sm:w-44 sm:h-44 rounded-full cursor-pointer 
                 bg-[#123a68] hover:bg-[#0d61c0] 
-                text-white transition-transform 
+                text-white transition-all duration-300
                 flex flex-col items-center justify-center overflow-hidden
                 shadow-[0_0_25px_rgba(13,97,192,0.9)]
                 will-change-transform focus:outline-none
+                transform-gpu
               "
             >
-              <img
-                src={image}
-                alt={id}
-                className="w-16 h-16 object-contain mb-2 pointer-events-none drop-shadow-md"
+              <Icon 
+                size={48} 
+                className="mb-2 drop-shadow-md" 
               />
-              <span className="text-md font-semibold">{label}</span>
+              <span className="text-sm sm:text-md font-semibold text-center px-2">
+                {label}
+              </span>
             </button>
           ))}
         </div>

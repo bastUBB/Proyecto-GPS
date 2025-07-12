@@ -113,7 +113,7 @@ export default function SubidaExcel() {
 
     return (
         <PagGeneral>
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 p-2 sm:p-4">
+            <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
                 <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
                     {/* Encabezado responsivo */}
                     <div className="text-center space-y-1 sm:space-y-2">

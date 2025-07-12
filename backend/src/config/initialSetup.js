@@ -5,28 +5,65 @@ import Asignatura from '../models/asignaturas.model.js';
 
 async function createInitialUsers() {
     try {
-        // Verificar si ya existe el usuario admin
-        const adminExists = await User.findOne({ email: 'admin@ubiobio.cl' });
-        if (adminExists) {
-            console.log('Usuario inicial ya existe');
+        // Verificar si ya existen los usuarios iniciales
+        const existingUsers = await User.find({});
+        if (existingUsers.length > 0) {
+            console.log('Usuarios iniciales ya existen');
             return;
         }
 
-        // Encriptar contraseña
-        const hashedPassword = await hashPassword('admin1234');
+        // Array de usuarios iniciales
+        const usersData = [
+            {
+                nombreCompleto: 'Administrador',
+                email: 'admin@ubiobio.cl',
+                rut: '12345678-9',
+                password: 'admin1234',
+                role: 'admin'
+            },
+            {
+                nombreCompleto: 'Juan Carlos Pérez Quijada',
+                email: 'juan.perez@ubiobio.cl',
+                rut: '15876543-2',
+                password: 'profesor123',
+                role: 'profesor'
+            },
+            {
+                nombreCompleto: 'María Fernanda González',
+                email: 'maria.gonzalez@alumnos.ubiobio.cl',
+                rut: '19876543-5',
+                password: 'estudiante123',
+                role: 'alumno'
+            },
+            {
+                nombreCompleto: 'Ana Isabel Morales',
+                email: 'ana.morales@ubiobio.cl',
+                rut: '14567890-1',
+                password: 'admin456',
+                role: 'admin'
+            }
+        ];
 
-        // Crear usuario admin
-        await User.create({
-            nombreCompleto: 'Administrador',
-            email: 'admin@ubiobio.cl',
-            rut: '12345678-9',
-            password: hashedPassword,
-            role: 'admin'
+        // Crear usuarios con contraseñas encriptadas
+        const usersPromises = usersData.map(async (userData) => {
+            const hashedPassword = await hashPassword(userData.password);
+            return User.create({
+                nombreCompleto: userData.nombreCompleto,
+                email: userData.email,
+                rut: userData.rut,
+                password: hashedPassword,
+                role: userData.role
+            });
         });
 
-        console.log('Usuario inicial creado: admin@ubiobio.cl');
+        await Promise.all(usersPromises);
+
+        console.log('Usuarios iniciales creados exitosamente:');
+        usersData.forEach(user => {
+            console.log(`- ${user.nombreCompleto} (${user.role}): ${user.email}`);
+        });
     } catch (error) {
-        console.error('Error al crear usuario inicial:', error.message);
+        console.error('Error al crear usuarios iniciales:', error.message);
     }
 };
 
