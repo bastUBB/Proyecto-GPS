@@ -31,6 +31,8 @@ function App() {
         <Route path="/horario" element={<Horario />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/malla" element={<MallaCurricular />} />
+        <Route path="/foro" element={<Foro />} />
       </Routes>
     </UserContextProvider>
   )

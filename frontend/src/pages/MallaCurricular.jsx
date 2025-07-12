@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import PagGeneral from "../components/PagGeneral";
-import Colores from "../components/Colores"; 
-
+import Colores from "../components/Colores";
 
 const mallaOriginal = [
   { nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
@@ -100,31 +99,31 @@ const MallaCurricular = () => {
     guardarEnLocalStorage(nuevaMalla);
   };
 
- const handleDownloadPDF = () => {
-  const element = mallaRef.current;
+  const handleDownloadPDF = () => {
+    const element = mallaRef.current;
 
-  const opt = {
-    margin:       0.2, // margen pequeño 
-    filename:     "MallaCurricular.pdf",
-    image:        { type: "png" }, 
-    html2canvas:  {
-      scale: 3, // más resolución = menos borroso
-      useCORS: true,
-      scrollX: 0,
-      scrollY: -window.scrollY,
-    },
-    jsPDF: {
-      unit: "in",
-      format: "legal", // tamaño oficio: 8.5 x 14 pulgadas
-      orientation: "landscape", // horizontal
-    },
-    pagebreak: {
-      mode: ["avoid-all", "css", "legacy"], // evita cortar contenido 
-    },
+    const opt = {
+      margin: 0.2, // margen pequeño 
+      filename: "MallaCurricular.pdf",
+      image: { type: "png" },
+      html2canvas: {
+        scale: 3, // más resolución = menos borroso
+        useCORS: true,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+      },
+      jsPDF: {
+        unit: "in",
+        format: "legal", // tamaño oficio: 8.5 x 14 pulgadas
+        orientation: "landscape", // horizontal
+      },
+      pagebreak: {
+        mode: ["avoid-all", "css", "legacy"], // evita cortar contenido 
+      },
+    };
+
+    html2pdf().set(opt).from(element).save();
   };
-
-  html2pdf().set(opt).from(element).save();
-};
 
   const handleResetMalla = () => {
     setAsignaturas(mallaOriginal);
@@ -151,9 +150,9 @@ const MallaCurricular = () => {
     </div>
   );
 
-   return (
+  return (
     <PagGeneral>
-      <div className="flex-1 overflow-hidden flex flex-col px-4 pt-20">
+      <div className="flex-1 overflow-hidden flex flex-col px-4">
         <div className="flex flex-wrap gap-2 items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">
             Malla Curricular - Ingeniería Civil en Informática
@@ -163,19 +162,19 @@ const MallaCurricular = () => {
               onClick={handleDownloadPDF}
               className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2"
             >
-              <img 
-              src="/IconPdf.png" 
-              alt="Icono PDF" 
-              className="w-6 h-6" />{" "}
+              <img
+                src="/IconPdf.png"
+                alt="Icono PDF"
+                className="w-6 h-6" />{" "}
             </button>
             <button
               onClick={handleResetMalla}
               className="bg-red-500 text-white px-4 py-2 rounded flex items-center gap-2"
             >
-              <img 
-              src="/IconRegreso.png" 
-              alt="Icono Restablecer" 
-              className="w-5 h-5" />{" "}
+              <img
+                src="/IconRegreso.png"
+                alt="Icono Restablecer"
+                className="w-5 h-5" />{" "}
               Restablecer
             </button>
           </div>
