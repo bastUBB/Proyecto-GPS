@@ -9,6 +9,9 @@ import historialRoutes from "./historial.routes.js";
 import horariosExcellRoutes from "./horariosExcell.routes.js";
 import rendimientoAsignaturaRoutes from "./rendimientoAsignatura.routes.js";
 import excelRouter from './excelextr.routes.js'; // Asegúrate de que la ruta sea correcta
+import disponibilidadRoutes from "./disponibilidad.routes.js";
+import combiHorarioProfesorRoutes from "./combiHorarioProfesor.routes.js";
+import combinacionHorariosRoutes from "./combinacionHorarios.routes.js";
 
 const router = Router();
 
@@ -21,6 +24,9 @@ router
     .use("/historial", historialRoutes)
     .use("/horariosExcell", horariosExcellRoutes)
     .use("/rendimientoAsignatura", rendimientoAsignaturaRoutes)
-    .use("/excel", excelRouter); // Asegúrate de que la ruta sea correcta
+    .use("/excel", excelRouter)
+    .use("/disponibilidad", disponibilidadRoutes)
+    .use("/combi", combiHorarioProfesorRoutes)
+    .use("/combinaciones", combinacionHorariosRoutes);
     
 export default router;

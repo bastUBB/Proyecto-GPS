@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Disponibilidad horaria de los profesores
 const disponibilidadSchema = new mongoose.Schema({
     profesor: {
         type: mongoose.Schema.Types.ObjectId,
@@ -10,18 +11,15 @@ const disponibilidadSchema = new mongoose.Schema({
     bloques: [{
         dia: {
             type: String,
-            enum: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
             required: true
         },
         horaInicio: {
             type: String,
-            required: true,
-            match: /^([01]\d|2[0-3]):([0-5]\d)$/
+            required: true
         },
         horaFin: {
             type: String,
-            required: true,
-            match: /^([01]\d|2[0-3]):([0-5]\d)$/
+            required: true
         }
     }]
 }, {
