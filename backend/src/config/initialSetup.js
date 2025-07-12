@@ -2,32 +2,68 @@
 import { hashPassword } from '../helpers/bcrypt.helper.js';
 import User from '../models/user.model.js';
 import Asignatura from '../models/asignaturas.model.js';
-import Bloque from '../models/bloques.models.js';
 
 async function createInitialUsers() {
     try {
-        // Verificar si ya existe el usuario admin
-        const adminExists = await User.findOne({ email: 'admin@ubiobio.cl' });
-        if (adminExists) {
-            console.log('Usuario inicial ya existe');
+        // Verificar si ya existen los usuarios iniciales
+        const existingUsers = await User.find({});
+        if (existingUsers.length > 0) {
+            console.log('Usuarios iniciales ya existen');
             return;
         }
 
-        // Encriptar contraseña
-        const hashedPassword = await hashPassword('admin1234');
+        // Array de usuarios iniciales
+        const usersData = [
+            {
+                nombreCompleto: 'Administrador',
+                email: 'admin@ubiobio.cl',
+                rut: '12345678-9',
+                password: 'admin1234',
+                role: 'admin'
+            },
+            {
+                nombreCompleto: 'Juan Carlos Pérez Quijada',
+                email: 'juan.perez@ubiobio.cl',
+                rut: '15876543-2',
+                password: 'profesor123',
+                role: 'profesor'
+            },
+            {
+                nombreCompleto: 'María Fernanda González',
+                email: 'maria.gonzalez@alumnos.ubiobio.cl',
+                rut: '19876543-5',
+                password: 'estudiante123',
+                role: 'alumno'
+            },
+            {
+                nombreCompleto: 'Ana Isabel Morales',
+                email: 'ana.morales@ubiobio.cl',
+                rut: '14567890-1',
+                password: 'admin456',
+                role: 'admin'
+            }
+        ];
 
-        // Crear usuario admin
-        await User.create({
-            name: 'Administrador',
-            email: 'admin@ubiobio.cl',
-            rut: '12345678-9',
-            password: hashedPassword,
-            role: 'admin'
+        // Crear usuarios con contraseñas encriptadas
+        const usersPromises = usersData.map(async (userData) => {
+            const hashedPassword = await hashPassword(userData.password);
+            return User.create({
+                nombreCompleto: userData.nombreCompleto,
+                email: userData.email,
+                rut: userData.rut,
+                password: hashedPassword,
+                role: userData.role
+            });
         });
 
-        console.log('Usuario inicial creado: admin@ubiobio.cl');
+        await Promise.all(usersPromises);
+
+        console.log('Usuarios iniciales creados exitosamente:');
+        usersData.forEach(user => {
+            console.log(`- ${user.nombreCompleto} (${user.role}): ${user.email}`);
+        });
     } catch (error) {
-        console.error('Error al crear usuario inicial:', error.message);
+        console.error('Error al crear usuarios iniciales:', error.message);
     }
 };
 
@@ -36,449 +72,370 @@ async function createAsignaturas() {
         const asignaturasData = [
             // Primer Año
             {
-                nombre: 'Álgebra y Trigonometría',
-                codigo: '220143',
+                nombre: "Álgebra y Trigonometría",
+                codigo: "220143",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Cálculo Diferencial',
-                codigo: '220144',
+                nombre: "Cálculo Diferencial",
+                codigo: "220144",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Introducción a la Ingeniería',
-                codigo: '620432',
+                nombre: "Introducción a la Ingeniería",
+                codigo: "620432",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Química General',
-                codigo: '210020',
+                nombre: "Química General",
+                codigo: "210020",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Comunicación Oral y Escrita',
-                codigo: '340266',
+                nombre: "Comunicación Oral y Escrita",
+                codigo: "340266",
                 creditos: 4,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Introducción a la Programación',
-                codigo: '620431',
+                nombre: "Introducción a la Programación",
+                codigo: "620431",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Formación Integral Oferta Institucional I',
-                codigo: '340556',
+                nombre: "Formación Integral Oferta Institucional I",
+                codigo: "340556",
                 creditos: 3,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Formación Integral Oferta Institucional II',
-                codigo: '340557',
+                nombre: "Formación Integral Oferta Institucional II",
+                codigo: "340557",
                 creditos: 3,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Administración General',
-                codigo: '610227',
+                nombre: "Administración General",
+                codigo: "610227",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Álgebra Lineal',
-                codigo: '220145',
+                nombre: "Álgebra Lineal",
+                codigo: "220145",
                 creditos: 5,
-                prerequisitos: [
-                    'Álgebra y Trigonometría'
-                ]
+                prerrequisitos: ["Álgebra y Trigonometría"]
             },
             {
-                nombre: 'Física Newtoniana',
-                codigo: '230033',
+                nombre: "Física Newtoniana",
+                codigo: "230033",
                 creditos: 5,
-                prerequisitos: [
-                    'Álgebra y Trigonometría'
-                ]
+                prerrequisitos: ["Álgebra y Trigonometría"]
             },
             {
-                nombre: 'Estructuras Discretas para Ciencias de la Computación',
-                codigo: '620434',
+                nombre: "Estructuras Discretas para Ciencias de la Computación",
+                codigo: "620434",
                 creditos: 5,
-                prerequisitos: [
-                    'Álgebra y Trigonometría'
-                ]
+                prerrequisitos: ["Álgebra y Trigonometría"]
             },
             {
-                nombre: 'Programación Orientada a Objeto',
-                codigo: '620433',
+                nombre: "Programación Orientada a Objeto",
+                codigo: "620433",
                 creditos: 5,
-                prerequisitos: [
-                    'Introducción a la Programación'
-                ]
+                prerrequisitos: ["Introducción a la Programación"]
             },
             {
-                nombre: 'Inglés I',
-                codigo: '340276',
+                nombre: "Inglés I",
+                codigo: "340276",
                 creditos: 4,
-                prerequisitos: []
+                prerrequisitos: []
             },
             // Segundo Año
             {
-                nombre: 'Cálculo Integral',
-                codigo: '220146',
+                nombre: "Cálculo Integral",
+                codigo: "220146",
                 creditos: 5,
-                prerequisitos: [
-                    'Cálculo Diferencial'
-                ]
+                prerrequisitos: ["Cálculo Diferencial"]
             },
             {
-                nombre: 'Ecuaciones Diferenciales',
-                codigo: '220147',
+                nombre: "Ecuaciones Diferenciales",
+                codigo: "220147",
                 creditos: 5,
-                prerequisitos: [
-                    'Cálculo Integral'
-                ]
+                prerrequisitos: ["Cálculo Integral"]
             },
             {
-                nombre: 'Electro-magnetismo',
-                codigo: '230034',
+                nombre: "Electro-magnetismo",
+                codigo: "230034",
                 creditos: 5,
-                prerequisitos: [
-                    'Física Newtoniana'
-                ]
+                prerrequisitos: ["Física Newtoniana"]
             },
             {
-                nombre: 'Fundamentos de Ciencias de la Computación',
-                codigo: '620437',
+                nombre: "Fundamentos de Ciencias de la Computación",
+                codigo: "620437",
                 creditos: 5,
-                prerequisitos: [
-                    'Estructuras Discretas para Ciencias de la Computación'
-                ]
+                prerrequisitos: ["Estructuras Discretas para Ciencias de la Computación"]
             },
             {
-                nombre: 'Modelamiento de Procesos e Información',
-                codigo: '620436',
+                nombre: "Modelamiento de Procesos e Información",
+                codigo: "620436",
                 creditos: 5,
-                prerequisitos: [
-                    'Programación Orientada a Objeto'
-                ]
+                prerrequisitos: ["Programación Orientada a Objeto"]
             },
             {
-                nombre: 'Inglés II',
-                codigo: '340277',
+                nombre: "Inglés II",
+                codigo: "340277",
                 creditos: 4,
-                prerequisitos: [
-                    'Inglés I'
-                ]
+                prerrequisitos: ["Inglés I"]
             },
             {
-                nombre: 'Formación Integral Oferta Institucional III',
-                codigo: '340556',
+                nombre: "Formación Integral Oferta Institucional III",
+                codigo: "340558",
                 creditos: 3,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Gestión Contable',
-                codigo: '610228',
+                nombre: "Gestión Contable",
+                codigo: "610228",
                 creditos: 5,
-                prerequisitos: [
-                    'Administración General'
-                ]
+                prerrequisitos: ["Administración General"]
             },
             {
-                nombre: 'Cálculo en Varias Variables',
-                codigo: '220148',
+                nombre: "Cálculo en Varias Variables",
+                codigo: "220148",
                 creditos: 5,
-                prerequisitos: [
-                    'Cálculo Integral'
-                ]
+                prerrequisitos: ["Cálculo Integral"]
             },
             {
-                nombre: 'Sistemas Digitales',
-                codigo: '410268',
+                nombre: "Sistemas Digitales",
+                codigo: "410268",
                 creditos: 5,
-                prerequisitos: [
-                    'Fundamentos de Ciencias de la Computación'
-                ]
+                prerrequisitos: ["Fundamentos de Ciencias de la Computación"]
             },
             {
-                nombre: 'Análisis y Diseño de Algoritmos',
-                codigo: '620448',
+                nombre: "Análisis y Diseño de Algoritmos",
+                codigo: "620448",
                 creditos: 5,
-                prerequisitos: [
-                    'Modelamiento de Procesos e Información'
-                ]
+                prerrequisitos: ["Modelamiento de Procesos e Información"]
             },
             {
-                nombre: 'Teoría de Sistemas',
-                codigo: '620438',
+                nombre: "Teoría de Sistemas",
+                codigo: "620438",
                 creditos: 5,
-                prerequisitos: [
-                    'Sistemas Digitales'
-                ]
+                prerrequisitos: ["Sistemas Digitales"]
             },
             {
-                nombre: 'Inglés III',
-                codigo: '340278',
+                nombre: "Inglés III",
+                codigo: "340278",
                 creditos: 4,
-                prerequisitos: [
-                    'Inglés II'
-                ]
+                prerrequisitos: ["Inglés II"]
             },
             // Tercer Año
             {
-                nombre: 'Ondas, Óptica y Física Moderna',
-                codigo: '230035',
+                nombre: "Ondas, Óptica y Física Moderna",
+                codigo: "230035",
                 creditos: 5,
-                prerequisitos: [
-                    'Electro-magnetismo'
-                ]
+                prerrequisitos: ["Electro-magnetismo"]
             },
             {
-                nombre: 'Estadística y Probabilidades',
-                codigo: '220149',
+                nombre: "Estadística y Probabilidades",
+                codigo: "220149",
                 creditos: 5,
-                prerequisitos: [
-                    'Cálculo en Varias Variables'
-                ]
+                prerrequisitos: ["Cálculo en Varias Variables"]
             },
             {
-                nombre: 'Economía',
-                codigo: '610409',
+                nombre: "Economía",
+                codigo: "610409",
                 creditos: 5,
-                prerequisitos: [
-                    'Estadística y Probabilidades'
-                ]
+                prerrequisitos: ["Estadística y Probabilidades"]
             },
             {
-                nombre: 'Base de Datos',
-                codigo: '620439',
+                nombre: "Base de Datos",
+                codigo: "620439",
                 creditos: 5,
-                prerequisitos: [
-                    'Teoría de Sistemas'
-                ]
+                prerrequisitos: ["Teoría de Sistemas"]
             },
             {
-                nombre: 'Práctica Profesional I',
-                codigo: '620449',
+                nombre: "Práctica Profesional I",
+                codigo: "620449",
                 creditos: 5,
-                prerequisitos: [
-                    'Base de Datos'
-                ]
+                prerrequisitos: ["Base de Datos"]
             },
             {
-                nombre: 'Inglés IV',
-                codigo: '340279',
+                nombre: "Inglés IV",
+                codigo: "340279",
                 creditos: 4,
-                prerequisitos: [
-                    'Inglés III'
-                ]
+                prerrequisitos: ["Inglés III"]
             },
             {
-                nombre: 'Arquitectura de Computadores',
-                codigo: '620450',
+                nombre: "Arquitectura de Computadores",
+                codigo: "620450",
                 creditos: 5,
-                prerequisitos: [
-                    'Sistemas Digitales'
-                ]
+                prerrequisitos: ["Sistemas Digitales"]
             },
             {
-                nombre: 'Administración y Programación de Base de Datos',
-                codigo: '620451',
+                nombre: "Administración y Programación de Base de Datos",
+                codigo: "620451",
                 creditos: 5,
-                prerequisitos: [
-                    'Base de Datos'
-                ]
+                prerrequisitos: ["Base de Datos"]
             },
             {
-                nombre: 'Sistemas de Información',
-                codigo: '620452',
+                nombre: "Sistemas de Información",
+                codigo: "620452",
                 creditos: 5,
-                prerequisitos: [
-                    'Administración y Programación de Base de Datos'
-                ]
+                prerrequisitos: ["Administración y Programación de Base de Datos"]
             },
             {
-                nombre: 'Gestión Estratégica',
-                codigo: '612239',
+                nombre: "Gestión Estratégica",
+                codigo: "612239",
                 creditos: 5,
-                prerequisitos: [
-                    'Economía'
-                ]
+                prerrequisitos: ["Economía"]
             },
             {
-                nombre: 'Gestión Presupuestaria y Financiera',
-                codigo: '610229',
+                nombre: "Gestión Presupuestaria y Financiera",
+                codigo: "610229",
                 creditos: 5,
-                prerequisitos: [
-                    'Gestión Estratégica'
-                ]
+                prerrequisitos: ["Gestión Estratégica"]
             },
             {
-                nombre: 'Práctica Profesional II',
-                codigo: '620456',
+                nombre: "Práctica Profesional II",
+                codigo: "620456",
                 creditos: 5,
-                prerequisitos: [
-                    'Sistemas de Información'
-                ]
+                prerrequisitos: ["Sistemas de Información"]
             },
             // Cuarto Año
             {
-                nombre: 'Investigación de Operaciones',
-                codigo: '430183',
+                nombre: "Investigación de Operaciones",
+                codigo: "430183",
                 creditos: 5,
-                prerequisitos: [
-                    'Estadística y Probabilidades'
-                ]
+                prerrequisitos: ["Estadística y Probabilidades"]
             },
             {
-                nombre: 'Legislación *',
-                codigo: '613017',
+                nombre: "Legislación *",
+                codigo: "613017",
                 creditos: 5,
-                prerequisitos: [
-                    'Gestión Estratégica'
-                ]
+                prerrequisitos: ["Gestión Estratégica"]
             },
             {
-                nombre: 'Anteproyecto de Título *',
-                codigo: '620472',
+                nombre: "Anteproyecto de Título *",
+                codigo: "620472",
                 creditos: 5,
-                prerequisitos: [
-                    'Practica Profesional II'
-                ]
+                prerrequisitos: ["Practica Profesional II"]
             },
             {
-                nombre: 'Sistemas Operativos',
-                codigo: '620453',
+                nombre: "Sistemas Operativos",
+                codigo: "620453",
                 creditos: 5,
-                prerequisitos: [
-                    'Arquitectura de Computadores'
-                ]
+                prerrequisitos: ["Arquitectura de Computadores"]
             },
             {
-                nombre: 'Inteligencia Artificial',
-                codigo: '620454',
+                nombre: "Inteligencia Artificial",
+                codigo: "620454",
                 creditos: 5,
-                prerequisitos: [
-                    'Análisis y Diseño de Algoritmos'
-                ]
+                prerrequisitos: ["Análisis y Diseño de Algoritmos"]
             },
             {
-                nombre: 'Ingeniería de Software',
-                codigo: '620455',
+                nombre: "Ingeniería de Software",
+                codigo: "620455",
                 creditos: 5,
-                prerequisitos: [
-                    'Sistemas de Información'
-                ]
+                prerrequisitos: ["Sistemas de Información"]
             },
             {
-                nombre: 'Gestión de Proyectos de Software',
-                codigo: '620458',
+                nombre: "Gestión de Proyectos de Software",
+                codigo: "620458",
                 creditos: 5,
-                prerequisitos: [
-                    'Ingeniería de Software'
-                ]
+                prerrequisitos: ["Ingeniería de Software"]
             },
             {
-                nombre: 'Formulación y Evaluación de Proyectos',
-                codigo: '611050',
+                nombre: "Formulación y Evaluación de Proyectos",
+                codigo: "611050",
                 creditos: 5,
-                prerequisitos: [
-                    'Gestión Estratégica'
-                ]
+                prerrequisitos: ["Gestión Estratégica"]
             },
             {
-                nombre: 'Gestión de Recursos Humanos',
-                codigo: '610231',
+                nombre: "Gestión de Recursos Humanos",
+                codigo: "610231",
                 creditos: 5,
-                prerequisitos: [
-                    'Gestión Estratégica'
-                ]
+                prerrequisitos: ["Gestión Estratégica"]
             },
             {
-                nombre: 'Electivo Profesional I *',
-                codigo: '620459',
+                nombre: "Electivo Profesional I ",
+                codigo: "620459",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Electivo Profesional II *',
-                codigo: '620470',
+                nombre: "Electivo Profesional II ",
+                codigo: "620470",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Electivo Profesional III *',
-                codigo: '620471',
+                nombre: "Electivo Profesional III ",
+                codigo: "620471",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             // Quinto Año
             {
-                nombre: 'Proyecto de Título',
-                codigo: '620477',
+                nombre: "Proyecto de Título",
+                codigo: "620477",
                 creditos: 5,
-                prerequisitos: [
-                    'Anteproyecto de Título *'
-                ]
+                prerrequisitos: ["Anteproyecto de Título "]
             },
             {
-                nombre: 'Seguridad Informática *',
-                codigo: '620473',
+                nombre: "Seguridad Informática ",
+                codigo: "620473",
                 creditos: 5,
-                prerequisitos: [
-                    'Sistemas Operativos'
-                ]
+                prerrequisitos: ["Sistemas Operativos"]
             },
             {
-                nombre: 'Electivo Profesional IV *',
-                codigo: '620474',
+                nombre: "Electivo Profesional IV ",
+                codigo: "620474",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Electivo Profesional V *',
-                codigo: '620475',
+                nombre: "Electivo Profesional V ",
+                codigo: "620475",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             },
             {
-                nombre: 'Electivo Profesional VI *',
-                codigo: '620476',
+                nombre: "Electivo Profesional VI ",
+                codigo: "620476",
                 creditos: 5,
-                prerequisitos: []
+                prerrequisitos: []
             }
         ]
-        const asignaturasSinPrereq = asignaturasData.map(a => ({ ...a, prerequisitos: [] }));
-        for (const asignatura of asignaturasSinPrereq) {
-            const exists = await Asignatura.findOne({ nombre: asignatura.nombre });
-            if (!exists) {
-                await Asignatura.create(asignatura);
-            }
+
+        // Verificar si ya existen las asignaturas
+        const asignaturasExistentes = await Asignatura.find({});
+        if (asignaturasExistentes.length > 0) {
+            console.log('Asignaturas iniciales ya existen');
+            return;
         }
 
-        const asignaturas = await Asignatura.find({});
-
-        const asignaturaMap = {};
-        asignaturas.forEach(asignatura => {
-            asignaturaMap[asignatura.nombre] = asignatura._id;
-        });
-
-
-        for (const asignatura of asignaturasData) {
-            if (asignatura.prerequisitos && asignatura.prerequisitos.length > 0) {
-                const ids = asignatura.prerequisitos.map(nombre => asignaturaMap[nombre]).filter(Boolean);
-                await Asignatura.updateOne(
-                    { nombre: asignatura.nombre },
-                    { $set: { prerequisitos: ids } }
-                );
-            }
+        // mapear cada asignatura de asignaturasData y crearla en la base de datos
+        const asignaturasPromises = asignaturasData.map(asignatura => {
+            return Asignatura.create({
+                nombre: asignatura.nombre,
+                codigo: asignatura.codigo,
+                creditos: asignatura.creditos,
+                prerrequisitos: asignatura.prerrequisitos
+            });
         }
+        );
+
+        await Promise.all(asignaturasPromises);
+
+        // Si todas las asignaturas se crean correctamente, imprimir un mensaje de éxito
+        console.log('Asignaturas iniciales creadas exitosamente');
+        
     } catch (error) {
         console.error('Error al crear asignaturas iniciales:', error.message);
     }
