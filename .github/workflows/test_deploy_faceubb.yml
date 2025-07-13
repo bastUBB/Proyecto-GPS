@@ -85,7 +85,7 @@ jobs:
               # acceder al directorio del proyecto
               echo "Conectando al servidor..."
               echo "Accediendo al directorio del proyecto..."
-              cd ${{ secrets.PROD_ROUTE }} || { echo "No se pudo acceder al directorio del proyecto"; exit 1; }
+              cd "${{ secrets.PROD_ROUTE }}/" || { echo "No se pudo acceder al directorio del proyecto"; exit 1; }
 
               # actualizar el código fuente, instalar dependencias y reiniciar servicios
               echo "Actualizando el código fuente..."
