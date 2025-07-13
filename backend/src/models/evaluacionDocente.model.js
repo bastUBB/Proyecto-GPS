@@ -18,7 +18,8 @@ const evaluacionDocenteSchema = new mongoose.Schema({
         required: true,
     },
     fecha: {
-        type: String,
+        type: Date,
+        default: Date.now,
         required: true
     },
     texto: {

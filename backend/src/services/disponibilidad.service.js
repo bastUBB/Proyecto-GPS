@@ -15,3 +15,7 @@ export const obtenerDisponibilidad = async (profesorId) => {
         return Disponibilidad.find().populate('profesor', 'name email');
     }
 };
+
+export const eliminarDisponibilidad = async (profesorId) => {
+    return Disponibilidad.findOneAndDelete({ profesor: profesorId });
+};

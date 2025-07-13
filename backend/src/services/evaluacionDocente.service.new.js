@@ -239,27 +239,3 @@ export async function getAsignaturasListService() {
         return [null, 'Error interno del servidor'];
     }
 }
-
-// Nuevo servicio para eliminar evaluaciones por ID (solo administradores)
-export async function deleteEvaluacionByIdService(evaluacionId) {
-    try {
-        // Verificar que la evaluación existe
-        const evaluacionExistente = await evaluacionDocente.findById(evaluacionId);
-        if (!evaluacionExistente) {
-            return [null, 'La evaluación no existe'];
-        }
-
-        // Eliminar la evaluación
-        const evaluacionEliminada = await evaluacionDocente.findByIdAndDelete(evaluacionId);
-        
-        if (!evaluacionEliminada) {
-            return [null, 'Error al eliminar la evaluación'];
-        }
-
-        return [evaluacionEliminada, null];
-
-    } catch (error) {
-        console.error('Error al eliminar evaluación por ID:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}

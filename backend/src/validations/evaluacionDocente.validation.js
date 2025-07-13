@@ -2,42 +2,42 @@ import Joi from 'Joi';
 
 export const evaluacionDocenteQueryValidation = Joi.object({
     docente: Joi.string()
-        .min(15)
-        .max(50)
-        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+        .min(5)
+        .max(100)
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .required()
         .messages({
             'string.empty': 'El campo docente no puede estar vacío',
             'string.base': 'El campo docente debe ser una cadena de texto',
-            'string.min': 'El campo docente debe tener al menos 15 caracteres',
-            'string.max': 'El campo docente no puede tener más de 50 caracteres',
-            'string.pattern.base': 'El campo docente solo puede contener letras y espacios',
+            'string.min': 'El campo docente debe tener al menos 5 caracteres',
+            'string.max': 'El campo docente no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El campo docente solo puede contener letras, espacios y puntos',
             'any.required': 'El campo docente es obligatorio',
         }),
     alumno: Joi.string()
-        .min(15)
-        .max(50)
-        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+        .min(5)
+        .max(100)
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .required()
         .messages({
             'string.empty': 'El campo alumno no puede estar vacío',
             'string.base': 'El campo alumno debe ser una cadena de texto',
-            'string.min': 'El campo alumno debe tener al menos 15 caracteres',
-            'string.max': 'El campo alumno no puede tener más de 50 caracteres',
-            'string.pattern.base': 'El campo alumno solo puede contener letras y espacios',
+            'string.min': 'El campo alumno debe tener al menos 5 caracteres',
+            'string.max': 'El campo alumno no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El campo alumno solo puede contener letras, espacios y puntos',
             'any.required': 'El campo alumno es obligatorio',
         }),
     asignatura: Joi.string()
         .min(3)
-        .max(50)
-        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+        .max(100)
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .required()
         .messages({
             'string.empty': 'El campo asignatura no puede estar vacío',
             'string.base': 'El campo asignatura debe ser una cadena de texto',
             'string.min': 'El campo asignatura debe tener al menos 3 caracteres',
-            'string.max': 'El campo asignatura no puede tener más de 50 caracteres',
-            'string.pattern.base': 'El campo asignatura solo puede contener letras y espacios',
+            'string.max': 'El campo asignatura no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El campo asignatura solo puede contener letras, espacios y puntos',
             'any.required': 'El campo asignatura es obligatorio',
         }),
     fecha: Joi.string()
@@ -80,29 +80,29 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'any.required': 'El campo docente es obligatorio',
         }),
     alumno: Joi.string()
-        .min(15)
-        .max(50)
+        .min(5)
+        .max(100)
         .trim()
-        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .messages({
             'string.empty': 'El campo alumno no puede estar vacío',
             'string.base': 'El campo alumno debe ser una cadena de texto',
-            'string.min': 'El campo alumno debe tener al menos 3 caracteres',
-            'string.max': 'El campo alumno no puede tener más de 50 caracteres',
-            'string.pattern.base': 'El campo alumno solo puede contener letras y espacios',
+            'string.min': 'El campo alumno debe tener al menos 5 caracteres',
+            'string.max': 'El campo alumno no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El campo alumno solo puede contener letras, espacios y puntos',
             'any.required': 'El campo alumno es obligatorio',
         }),
     asignatura: Joi.string()
         .min(3)
-        .max(50)
+        .max(100)
         .trim()
-        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .messages({
             'string.empty': 'El campo asignatura no puede estar vacío',
             'string.base': 'El campo asignatura debe ser una cadena de texto',
             'string.min': 'El campo asignatura debe tener al menos 3 caracteres',
-            'string.max': 'El campo asignatura no puede tener más de 50 caracteres',
-            'string.pattern.base': 'El campo asignatura solo puede contener letras y espacios',
+            'string.max': 'El campo asignatura no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El campo asignatura solo puede contener letras, espacios y puntos',
             'any.required': 'El campo asignatura es obligatorio',
         }),
     visibilidad: Joi.string()
@@ -166,4 +166,70 @@ export const evaluacionDocenteBodyValidation = Joi.object({
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales en el cuerpo de la solicitud',
         'object.missing': 'Debe proporcionar al menos uno de los campos: docente, alumno, asignatura, visibilidad, fecha, texto o calificacion',
+    });
+
+// Nueva validación para cuando un alumno crea una evaluación
+export const createEvaluacionAlumnoValidation = Joi.object({
+    docente: Joi.string()
+        .min(5)
+        .max(100)
+        .trim()
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
+        .required()
+        .messages({
+            'string.empty': 'Debe seleccionar un docente',
+            'string.base': 'El campo docente debe ser una cadena de texto',
+            'string.min': 'El nombre del docente debe tener al menos 5 caracteres',
+            'string.max': 'El nombre del docente no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El nombre del docente solo puede contener letras, espacios y puntos',
+            'any.required': 'Debe seleccionar un docente',
+        }),
+    asignatura: Joi.string()
+        .min(3)
+        .max(100)
+        .trim()
+        .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
+        .required()
+        .messages({
+            'string.empty': 'Debe seleccionar una asignatura',
+            'string.base': 'El campo asignatura debe ser una cadena de texto',
+            'string.min': 'El nombre de la asignatura debe tener al menos 3 caracteres',
+            'string.max': 'El nombre de la asignatura no puede tener más de 100 caracteres',
+            'string.pattern.base': 'El nombre de la asignatura solo puede contener letras, espacios y puntos',
+            'any.required': 'Debe seleccionar una asignatura',
+        }),
+    texto: Joi.string()
+        .min(10)
+        .max(500)
+        .trim()
+        .required()
+        .messages({
+            'string.empty': 'Debe escribir un comentario sobre el docente',
+            'string.base': 'El comentario debe ser una cadena de texto',
+            'string.min': 'El comentario debe tener al menos 10 caracteres',
+            'string.max': 'El comentario no puede tener más de 500 caracteres',
+            'any.required': 'Debe escribir un comentario sobre el docente',
+        }),
+    calificacion: Joi.number()
+        .min(1)
+        .max(7)
+        .integer()
+        .required()
+        .messages({
+            'number.base': 'La calificación debe ser un número',
+            'number.min': 'La calificación debe ser al menos 1',
+            'number.max': 'La calificación no puede ser más de 7',
+            'number.integer': 'La calificación debe ser un número entero',
+            'any.required': 'Debe asignar una calificación',
+        }),
+    visibilidad: Joi.string()
+        .valid('Anónima', 'Pública', 'anónima', 'pública')
+        .default('Anónima')
+        .messages({
+            'any.only': 'La visibilidad debe ser "Anónima" o "Pública"',
+        }),
+})
+    .unknown(false)
+    .messages({
+        'object.unknown': 'No se permiten campos adicionales',
     });

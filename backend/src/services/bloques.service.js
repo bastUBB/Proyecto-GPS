@@ -11,7 +11,7 @@ export async function createBloqueService(dataBloque) {
         const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
 
         if (existingBloque) return [null, 'El bloque que desea crear ya existe'];
-   
+
         const newBloque = new Bloque(dataBloque);
 
         if (!newBloque) return [null, 'Error al crear el bloque'];
