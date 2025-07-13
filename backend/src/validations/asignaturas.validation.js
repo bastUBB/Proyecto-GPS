@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const asignaturaQueryValidation = Joi.object({
-    codigo: Joi.string()
+export const asignaturaQueryValidation = joi.object({
+    codigo: joi.string()
         .length(6)
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .required()
@@ -18,8 +18,8 @@ export const asignaturaQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar el campo código',
     });
 
-export const asignaturaBodyValidation = Joi.object({
-    nombre: Joi.string()
+export const asignaturaBodyValidation = joi.object({
+    nombre: joi.string()
         .min(3)
         .max(50)
         .trim()
@@ -31,7 +31,7 @@ export const asignaturaBodyValidation = Joi.object({
             'string.max': 'El nombre no puede tener más de 50 caracteres',
             'string.pattern.base': 'El nombre solo puede contener letras y espacios',
         }),
-    codigo: Joi.string()
+    codigo: joi.string()
         .length(6)
         .trim()
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
@@ -41,7 +41,7 @@ export const asignaturaBodyValidation = Joi.object({
             'string.length': 'El código debe tener exactamente 6 caracteres',
             'string.pattern.base': 'El código debe ser un dígito válido de 6 caracteres',
         }),
-    creditos: Joi.number()
+    creditos: joi.number()
         .min(1)
         .max(10)
         .integer()
@@ -51,9 +51,9 @@ export const asignaturaBodyValidation = Joi.object({
             'number.max': 'Los créditos no pueden ser más de 10',
             'number.integer': 'Los créditos deben ser un número entero',
         }),
-    prerrequisitos: Joi.array()
+    prerrequisitos: joi.array()
         .items(
-            Joi.string()
+            joi.string()
                 .min(6)
                 .max(50)
                 .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -72,7 +72,7 @@ export const asignaturaBodyValidation = Joi.object({
             'array.max': 'Debe tener como máximo 3 prerrequisitos',
             'array.min': 'Debe tener al menos 0 prerrequisitos'
         }),
-    semestre: Joi.string()
+    semestre: joi.string()
         .pattern(/^(I{1,3}|IV|V|VI{0,3}|IX|X)$/)
         .trim()
         .uppercase()

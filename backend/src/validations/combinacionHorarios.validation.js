@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const combinacionHorariosValidation = Joi.object({
-    alumnoId: Joi.string()
+export const combinacionHorariosValidation = joi.object({
+    alumnoId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -10,7 +10,7 @@ export const combinacionHorariosValidation = Joi.object({
             'string.pattern.base': 'El ID del alumno debe ser un ObjectId válido',
             'any.required': 'El ID del alumno es obligatorio',
         }),
-    semestre: Joi.string()
+    semestre: joi.string()
         .valid('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18')
         .required()
         .messages({
@@ -19,7 +19,7 @@ export const combinacionHorariosValidation = Joi.object({
             'any.only': 'El semestre debe ser un valor válido del 1 al 18',
             'any.required': 'El semestre es obligatorio',
         }),
-    maxCombinaciones: Joi.number()
+    maxCombinaciones: joi.number()
         .integer()
         .min(1)
         .max(20)
@@ -37,8 +37,8 @@ export const combinacionHorariosValidation = Joi.object({
         'object.missing': 'Debe proporcionar los campos: alumnoId y semestre',
     });
 
-export const combinacionHorariosAvanzadaValidation = Joi.object({
-    alumnoId: Joi.string()
+export const combinacionHorariosAvanzadaValidation = joi.object({
+    alumnoId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -47,7 +47,7 @@ export const combinacionHorariosAvanzadaValidation = Joi.object({
             'string.pattern.base': 'El ID del alumno debe ser un ObjectId válido',
             'any.required': 'El ID del alumno es obligatorio',
         }),
-    semestre: Joi.string()
+    semestre: joi.string()
         .valid('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18')
         .required()
         .messages({
@@ -56,7 +56,7 @@ export const combinacionHorariosAvanzadaValidation = Joi.object({
             'any.only': 'El semestre debe ser un valor válido del 1 al 18',
             'any.required': 'El semestre es obligatorio',
         }),
-    maxCombinaciones: Joi.number()
+    maxCombinaciones: joi.number()
         .integer()
         .min(1)
         .max(20)
@@ -67,7 +67,7 @@ export const combinacionHorariosAvanzadaValidation = Joi.object({
             'number.min': 'El máximo de combinaciones debe ser al menos 1',
             'number.max': 'El máximo de combinaciones no puede ser más de 20',
         }),
-    creditosMinimos: Joi.number()
+    creditosMinimos: joi.number()
         .integer()
         .min(12)
         .max(48)
@@ -78,9 +78,9 @@ export const combinacionHorariosAvanzadaValidation = Joi.object({
             'number.min': 'Los créditos mínimos deben ser al menos 12',
             'number.max': 'Los créditos mínimos no pueden ser más de 48',
         }),
-    creditosMaximos: Joi.number()
+    creditosMaximos: joi.number()
         .integer()
-        .min(Joi.ref('creditosMinimos'))
+        .min(joi.ref('creditosMinimos'))
         .max(50)
         .default(36)
         .messages({
@@ -89,14 +89,14 @@ export const combinacionHorariosAvanzadaValidation = Joi.object({
             'number.min': 'Los créditos máximos deben ser mayores o iguales a los mínimos',
             'number.max': 'Los créditos máximos no pueden ser más de 50',
         }),
-    priorizarRendimiento: Joi.boolean()
+    priorizarRendimiento: joi.boolean()
         .default(true)
         .messages({
             'boolean.base': 'Priorizar rendimiento debe ser un valor booleano',
         }),
-    excluirAsignaturas: Joi.array()
+    excluirAsignaturas: joi.array()
         .items(
-            Joi.string()
+            joi.string()
                 .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
                 .messages({
                     'string.pattern.base': 'El código de asignatura debe tener el formato correcto (6 dígitos)',
@@ -115,8 +115,8 @@ export const combinacionHorariosAvanzadaValidation = Joi.object({
         'object.missing': 'Debe proporcionar los campos: alumnoId y semestre',
     });
 
-export const alumnoIdValidation = Joi.object({
-    alumnoId: Joi.string()
+export const alumnoIdValidation = joi.object({
+    alumnoId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -132,8 +132,8 @@ export const alumnoIdValidation = Joi.object({
         'object.missing': 'Debe proporcionar el campo: alumnoId',
     });
 
-export const estadisticasValidation = Joi.object({
-    alumnoId: Joi.string()
+export const estadisticasValidation = joi.object({
+    alumnoId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -142,7 +142,7 @@ export const estadisticasValidation = Joi.object({
             'string.pattern.base': 'El ID del alumno debe ser un ObjectId válido',
             'any.required': 'El ID del alumno es obligatorio',
         }),
-    semestre: Joi.string()
+    semestre: joi.string()
         .valid('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18')
         .required()
         .messages({

@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const historialQueryValidation = Joi.object({
-    alumno: Joi.string()
+export const historialQueryValidation = joi.object({
+    alumno: joi.string()
         .min(15)
         .max(50)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -21,8 +21,8 @@ export const historialQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar todos los campos: alumno',
     });
 
-export const historialBodyValidation = Joi.object({
-    alumno: Joi.string()
+export const historialBodyValidation = joi.object({
+    alumno: joi.string()
         .min(15)
         .max(50)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -36,10 +36,10 @@ export const historialBodyValidation = Joi.object({
             'any.required': 'El campo alumno es obligatorio',
         }),
 
-    asignaturasCursadas: Joi.array()
+    asignaturasCursadas: joi.array()
         .items(
-            Joi.object({
-                asignatura: Joi.string()
+            joi.object({
+                asignatura: joi.string()
                     .min(3)
                     .max(50)
                     .trim()
@@ -50,7 +50,7 @@ export const historialBodyValidation = Joi.object({
                         'string.max': 'El campo asignatura no puede tener más de 100 caracteres',
                         'any.required': 'El campo asignatura es obligatorio',
                     }),
-                notaFinal: Joi.number()
+                notaFinal: joi.number()
                     .min(1)
                     .max(7)
                     .messages({
