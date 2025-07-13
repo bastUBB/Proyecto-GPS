@@ -1,8 +1,8 @@
-import Joi from 'Joi';
+import joi from 'joi';
 import mongoose from 'mongoose';
 
-export const rendimientoAsignaturaQueryValidation = Joi.object({
-    asignatura: Joi.string().custom((value, helpers) => {
+export const rendimientoAsignaturaQueryValidation = joi.object({
+    asignatura: joi.string().custom((value, helpers) => {
         if (!mongoose.Types.ObjectId.isValid(value)) return helpers.error('any.invalid');
         return value;
     }, 'ObjectId validation')
@@ -11,7 +11,7 @@ export const rendimientoAsignaturaQueryValidation = Joi.object({
             'any.invalid': 'El campo asignatura debe ser un ID de MongoDB válido',
             'any.required': 'El campo asignatura es obligatorio',
         }),
-    docente: Joi.string()
+    docente: joi.string()
         .min(15)
         .max(50)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -24,7 +24,7 @@ export const rendimientoAsignaturaQueryValidation = Joi.object({
             'string.pattern.base': 'El campo docente solo puede contener letras y espacios',
             'any.required': 'El campo docente es obligatorio',
         }),
-    añoRegistro: Joi.string()
+    añoRegistro: joi.string()
         .pattern(/^\d{4}$/)
         .custom((value, helpers) => {
             const year = parseInt(value, 10);
@@ -47,8 +47,8 @@ export const rendimientoAsignaturaQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar todos los campos requeridos: asignatura, docente y añoRegistro',
     });
 
-export const rendimientoAsignaturaBodyValidation = Joi.object({
-    asignatura: Joi.string().custom((value, helpers) => {
+export const rendimientoAsignaturaBodyValidation = joi.object({
+    asignatura: joi.string().custom((value, helpers) => {
         if (!mongoose.Types.ObjectId.isValid(value)) return helpers.error('any.invalid');
         return value;
     }, 'ObjectId validation')
@@ -57,7 +57,7 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
             'any.invalid': 'El campo asignatura debe ser un ID de MongoDB válido',
             'any.required': 'El campo asignatura es obligatorio',
         }),
-    docente: Joi.string()
+    docente: joi.string()
         .min(15)
         .max(50)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -70,7 +70,7 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
             'string.pattern.base': 'El campo docente solo puede contener letras y espacios',
             'any.required': 'El campo docente es obligatorio',
         }),
-    procentajeAprob: Joi.number()
+    procentajeAprob: joi.number()
         .min(0)
         .max(100)
         .messages({
@@ -79,7 +79,7 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
             'number.max': 'El campo porcentajeAprob no puede ser mayor a 100',
             'any.required': 'El campo porcentajeAprob es obligatorio',
         }),
-    porcentajeDesaprob: Joi.number()
+    porcentajeDesaprob: joi.number()
         .min(0)
         .max(100)
         .messages({
@@ -88,7 +88,7 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
             'number.max': 'El campo porcentajeDesaprob no puede ser mayor a 100',
             'any.required': 'El campo porcentajeDesaprob es obligatorio',
         }),
-    porcentajeNCR: Joi.number()
+    porcentajeNCR: joi.number()
         .min(0)
         .max(100)
         .messages({
@@ -97,7 +97,7 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
             'number.max': 'El campo porcentajeNCR no puede ser mayor a 100',
             'any.required': 'El campo porcentajeNCR es obligatorio',
         }),
-    añoRegistro: Joi.string()
+    añoRegistro: joi.string()
         .pattern(/^\d{4}$/)
         .custom((value, helpers) => {
             const year = parseInt(value, 10);
@@ -113,7 +113,7 @@ export const rendimientoAsignaturaBodyValidation = Joi.object({
             'any.invalid': `El campo añoRegistro debe estar entre ${new Date().getFullYear() - 25} y ${new Date().getFullYear()}`,
             'any.required': 'El campo añoRegistro es obligatorio',
         }),
-    totalInscritos: Joi.number()
+    totalInscritos: joi.number()
         .min(0)
         .messages({
             'number.base': 'El campo totalInscritos debe ser un número',

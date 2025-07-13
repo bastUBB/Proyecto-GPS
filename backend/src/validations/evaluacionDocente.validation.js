@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const evaluacionDocenteQueryValidation = Joi.object({
-    docente: Joi.string()
+export const evaluacionDocenteQueryValidation = joi.object({
+    docente: joi.string()
         .min(5)
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
@@ -14,7 +14,7 @@ export const evaluacionDocenteQueryValidation = Joi.object({
             'string.pattern.base': 'El campo docente solo puede contener letras, espacios y puntos',
             'any.required': 'El campo docente es obligatorio',
         }),
-    alumno: Joi.string()
+    alumno: joi.string()
         .min(5)
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
@@ -27,7 +27,7 @@ export const evaluacionDocenteQueryValidation = Joi.object({
             'string.pattern.base': 'El campo alumno solo puede contener letras, espacios y puntos',
             'any.required': 'El campo alumno es obligatorio',
         }),
-    asignatura: Joi.string()
+    asignatura: joi.string()
         .min(3)
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
@@ -40,7 +40,7 @@ export const evaluacionDocenteQueryValidation = Joi.object({
             'string.pattern.base': 'El campo asignatura solo puede contener letras, espacios y puntos',
             'any.required': 'El campo asignatura es obligatorio',
         }),
-    fecha: Joi.string()
+    fecha: joi.string()
         .pattern(/^((0[1-9]|1[0-9]|2[0-8])-(0[1-9]|1[0-2])|(29)-(02)-(19|20)([02468][048]|[13579][26])|(29)-(02)-(19|20)\d{2}|(30)-(0[13-9]|1[0-2])|(31)-(0[13578]|1[02]))-(19|20)\d{2}$/)
         .required()
         .custom((value, helpers) => {
@@ -65,8 +65,8 @@ export const evaluacionDocenteQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar todos los campos: docente, alumno, asignatura y fecha',
     });
 
-export const evaluacionDocenteBodyValidation = Joi.object({
-    docente: Joi.string()
+export const evaluacionDocenteBodyValidation = joi.object({
+    docente: joi.string()
         .min(15)
         .max(50)
         .trim()
@@ -79,7 +79,7 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'string.pattern.base': 'El campo docente solo puede contener letras y espacios',
             'any.required': 'El campo docente es obligatorio',
         }),
-    alumno: Joi.string()
+    alumno: joi.string()
         .min(5)
         .max(100)
         .trim()
@@ -92,7 +92,7 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'string.pattern.base': 'El campo alumno solo puede contener letras, espacios y puntos',
             'any.required': 'El campo alumno es obligatorio',
         }),
-    asignatura: Joi.string()
+    asignatura: joi.string()
         .min(3)
         .max(100)
         .trim()
@@ -105,7 +105,7 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'string.pattern.base': 'El campo asignatura solo puede contener letras, espacios y puntos',
             'any.required': 'El campo asignatura es obligatorio',
         }),
-    visibilidad: Joi.string()
+    visibilidad: joi.string()
         .valid('Anónima', 'Pública')
         .trim()
         .lowercase()
@@ -115,7 +115,7 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'any.only': 'El campo visibilidad debe ser "Anonima" o "Publica"',
             'any.required': 'El campo visibilidad es obligatorio',
         }),
-    fecha: Joi.string()
+    fecha: joi.string()
         .trim()
         .pattern(/^((0[1-9]|1[0-9]|2[0-8])-(0[1-9]|1[0-2])|(29)-(02)-(19|20)([02468][048]|[13579][26])|(29)-(02)-(19|20)\d{2}|(30)-(0[13-9]|1[0-2])|(31)-(0[13578]|1[02]))-(19|20)\d{2}$/)
         .custom((value, helpers) => {
@@ -133,7 +133,7 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'date.min': 'La fecha debe ser posterior al 01-01-2024',
             'any.required': 'El campo fecha es obligatorio',
         }),
-    texto: Joi.string()
+    texto: joi.string()
         .min(10)
         .max(200)
         .trim()
@@ -144,7 +144,7 @@ export const evaluacionDocenteBodyValidation = Joi.object({
             'string.max': 'El campo texto no puede tener más de 200 caracteres',
             'any.required': 'El campo texto es obligatorio',
         }),
-    calificacion: Joi.number()
+    calificacion: joi.number()
         .min(1)
         .max(7)
         .messages({
@@ -169,8 +169,8 @@ export const evaluacionDocenteBodyValidation = Joi.object({
     });
 
 // Nueva validación para cuando un alumno crea una evaluación
-export const createEvaluacionAlumnoValidation = Joi.object({
-    docente: Joi.string()
+export const createEvaluacionAlumnoValidation = joi.object({
+    docente: joi.string()
         .min(5)
         .max(100)
         .trim()
@@ -184,7 +184,7 @@ export const createEvaluacionAlumnoValidation = Joi.object({
             'string.pattern.base': 'El nombre del docente solo puede contener letras, espacios y puntos',
             'any.required': 'Debe seleccionar un docente',
         }),
-    asignatura: Joi.string()
+    asignatura: joi.string()
         .min(3)
         .max(100)
         .trim()
@@ -198,7 +198,7 @@ export const createEvaluacionAlumnoValidation = Joi.object({
             'string.pattern.base': 'El nombre de la asignatura solo puede contener letras, espacios y puntos',
             'any.required': 'Debe seleccionar una asignatura',
         }),
-    texto: Joi.string()
+    texto: joi.string()
         .min(10)
         .max(500)
         .trim()
@@ -210,7 +210,7 @@ export const createEvaluacionAlumnoValidation = Joi.object({
             'string.max': 'El comentario no puede tener más de 500 caracteres',
             'any.required': 'Debe escribir un comentario sobre el docente',
         }),
-    calificacion: Joi.number()
+    calificacion: joi.number()
         .min(1)
         .max(7)
         .integer()
@@ -222,7 +222,7 @@ export const createEvaluacionAlumnoValidation = Joi.object({
             'number.integer': 'La calificación debe ser un número entero',
             'any.required': 'Debe asignar una calificación',
         }),
-    visibilidad: Joi.string()
+    visibilidad: joi.string()
         .valid('Anónima', 'Pública', 'anónima', 'pública')
         .default('Anónima')
         .messages({
