@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const horarioExcellQueryValidation = Joi.object({
-    codigoAsignatura: Joi.string()
+export const horarioExcellQueryValidation = joi.object({
+    codigoAsignatura: joi.string()
         .length(6)
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .required()
@@ -12,7 +12,7 @@ export const horarioExcellQueryValidation = Joi.object({
             'string.max': 'El código no puede tener más de 6 caracteres',
             'string.pattern.base': 'El código debe ser un número válido de 6 dígitos',
         }),
-    seccion: Joi.number()
+    seccion: joi.number()
         .valid(1, 2, 3)
         .required()
         .messages({
@@ -20,7 +20,7 @@ export const horarioExcellQueryValidation = Joi.object({
             'any.only': 'El campo seccion debe ser 1, 2 o 3',
             'any.required': 'El campo seccion es obligatorio',
         }),
-    docente: Joi.string()
+    docente: joi.string()
         .min(15)
         .max(50)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -40,8 +40,8 @@ export const horarioExcellQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar al menos uno de los campos: asignatura, bloques, seccion o docente',
     });
 
-export const horarioExcellBodyValidation = Joi.object({
-    codigoAsignatura: Joi.string()
+export const horarioExcellBodyValidation = joi.object({
+    codigoAsignatura: joi.string()
         .length(6)
         .trim()
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
@@ -53,8 +53,8 @@ export const horarioExcellBodyValidation = Joi.object({
             'string.pattern.base': 'El código debe ser un dígito válido de 6 caracteres',
             'any.required': 'El código es obligatorio',
         }),
-    bloques: Joi.array()
-        .items(Joi.string().custom((value, helpers) => {
+    bloques: joi.array()
+        .items(joi.string().custom((value, helpers) => {
             if (!mongoose.Types.ObjectId.isValid(value)) return helpers.error('any.invalid');
             return value;
         }).messages({
@@ -69,14 +69,14 @@ export const horarioExcellBodyValidation = Joi.object({
             'array.min': 'Debe haber al menos un bloques',
             'any.required': 'El campo bloques es obligatorio',
         }),
-    seccion: Joi.number()
+    seccion: joi.number()
         .valid(1, 2, 3)
         .messages({
             'number.base': 'El campo seccion debe ser un número',
             'any.only': 'El campo seccion debe ser 1, 2 o 3',
             'any.required': 'El campo seccion es obligatorio',
         }),
-    docente: Joi.string()
+    docente: joi.string()
         .min(15)
         .max(50)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)

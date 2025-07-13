@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const generarHorarioValidation = Joi.object({
-    profesorId: Joi.string()
+export const generarHorarioValidation = joi.object({
+    profesorId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -10,10 +10,10 @@ export const generarHorarioValidation = Joi.object({
             'string.pattern.base': 'El ID del profesor debe ser un ObjectId válido',
             'any.required': 'El ID del profesor es obligatorio',
         }),
-    bloques: Joi.array()
+    bloques: joi.array()
         .items(
-            Joi.object({
-                tipo: Joi.string()
+            joi.object({
+                tipo: joi.string()
                     .valid('1h20min', '2h10min', '2h50min')
                     .required()
                     .messages({
@@ -22,7 +22,7 @@ export const generarHorarioValidation = Joi.object({
                         'any.only': 'El tipo de bloque debe ser: 1h20min, 2h10min o 2h50min',
                         'any.required': 'El tipo de bloque es obligatorio',
                     }),
-                cantidad: Joi.number()
+                cantidad: joi.number()
                     .integer()
                     .min(1)
                     .max(10)
@@ -52,8 +52,8 @@ export const generarHorarioValidation = Joi.object({
         'object.missing': 'Debe proporcionar los campos: profesorId y bloques',
     });
 
-export const profesorIdValidation = Joi.object({
-    profesorId: Joi.string()
+export const profesorIdValidation = joi.object({
+    profesorId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
