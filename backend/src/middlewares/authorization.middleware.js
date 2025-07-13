@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.model.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function isAdmin(req, res) {
