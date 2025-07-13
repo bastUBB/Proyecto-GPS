@@ -17,8 +17,15 @@ export default function Login() {
       if (response.error) {
         toast.error(response.error);
       } else {
-        setUser(response);
+        // Guardar en localStorage
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('userData', JSON.stringify(response.user));
+        
+        // Actualizar el contexto
+        setUser(response.user);
+        
         setData({ email: "", password: "" });
+
         navigate('/');
       }
     } catch (error) {
@@ -28,24 +35,18 @@ export default function Login() {
   };
 
   return (
-    <div className="w-screen h-screen flex relative">
-      <img
-        src="/FondoL.jpg"
-        alt="Fondo Login"
-        className="absolute inset-0 w-full h-full object-cover -z-10"
+    <div className="w-screen h-screen relative overflow-hidden">
+      {/* Imagen de fondo */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/FondoL.jpg')",
+          zIndex: 1
+        }}
       />
 
-      {/* Lado izquierdo con imagen */}
-      <div className="w-1/2 h-full flex items-center justify-center z-10 ml-12">
-        <img
-          src="/Logo.png" 
-          alt="Logo"
-          className="max-w-[70%] max-h-[70%] object-contain"
-        />
-      </div>
-
-      {/* Lado derecho con login */}
-      <div className="w-1/2 h-full flex justify-center items-center z-10">
+      <div className="relative w-full h-full flex justify-end items-center pr-40 z-20">
+        {/* Cuadro de login */}
         <div className="bg-gradient-to-b from-[#0c549c] to-[#b4ecff] p-4 h-[470px] rounded shadow-[0_0_25px_rgba(0,191,255,0.9)]">
           <img
             src="/Escudo-ubb.svg"

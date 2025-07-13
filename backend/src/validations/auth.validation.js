@@ -1,4 +1,4 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
 const domainEmailValidator = (value, helper) => {
   if (!value.endsWith("@ubiobio.cl") && !value.endsWith("@alumnos.ubiobio.cl") ) {
@@ -9,8 +9,8 @@ const domainEmailValidator = (value, helper) => {
   return value;
 };
 
-export const registerValidation = Joi.object({
-    name: Joi.string()
+export const registerValidation = joi.object({
+    name: joi.string()
         .min(3)
         .max(30)
         .pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)
@@ -23,7 +23,7 @@ export const registerValidation = Joi.object({
             'any.required': 'El nombre es obligatorio',
             'string.pattern.base': 'El nombre solo puede contener letras y espacios',
         }),
-    rut: Joi.string()
+    rut: joi.string()
         .min(9)
         .max(12)
         .pattern(/^(?:(?:[1-9]\d{0}|[1-2]\d{1})(\.\d{3}){2}|[1-9]\d{6}|[1-2]\d{7}|29\.999\.999|29999999)-[\dkK]$/)
@@ -36,7 +36,7 @@ export const registerValidation = Joi.object({
             'any.required': 'El RUT es obligatorio',
             'string.pattern.base': 'El RUT no es válido',
         }),
-    email: Joi.string()
+    email: joi.string()
         .min(15)
         .max(50)
         .email()
@@ -50,7 +50,7 @@ export const registerValidation = Joi.object({
             'string.email': 'El correo electrónico no es válido',
         })
         .custom(domainEmailValidator, 'Domain Email Validator'),
-    password: Joi.string()
+    password: joi.string()
         .min(8)
         .max(30)
         .pattern(/^[a-zA-Z0-9]+$/)
@@ -67,8 +67,8 @@ export const registerValidation = Joi.object({
     .unknown(true)
 
 
-export const loginValidation = Joi.object({
-    email: Joi.string()
+export const loginValidation = joi.object({
+    email: joi.string()
         .min(15)
         .max(50)
         .email()
@@ -82,7 +82,7 @@ export const loginValidation = Joi.object({
             'string.email': 'El correo electrónico no es válido',
         })
         .custom(domainEmailValidator, 'Domain Email Validator'),
-    password: Joi.string()
+    password: joi.string()
         .min(8)
         .max(30)
         .pattern(/^[a-zA-Z0-9]+$/)

@@ -1,15 +1,14 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const asignaturaQueryValidation = Joi.object({
-    codigo: Joi.string()
+export const asignaturaQueryValidation = joi.object({
+    codigo: joi.string()
         .length(6)
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .required()
         .messages({
             'string.empty': 'El código no puede estar vacío',
             'string.base': 'El código debe ser una cadena de texto',
-            'string.min': 'El código debe tener al menos 6 caracteres',
-            'string.max': 'El código no puede tener más de 6 caracteres',
+            'string.length': 'El código debe tener exactamente 6 caracteres',
             'string.pattern.base': 'El código debe ser un número válido de 6 dígitos',
         }),
 })
@@ -19,8 +18,8 @@ export const asignaturaQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar el campo código',
     });
 
-export const asignaturaBodyValidation = Joi.object({
-    nombre: Joi.string()
+export const asignaturaBodyValidation = joi.object({
+    nombre: joi.string()
         .min(3)
         .max(50)
         .trim()
@@ -30,33 +29,31 @@ export const asignaturaBodyValidation = Joi.object({
             'string.base': 'El nombre debe ser una cadena de texto',
             'string.min': 'El nombre debe tener al menos 3 caracteres',
             'string.max': 'El nombre no puede tener más de 50 caracteres',
-            'any.required': 'El nombre es obligatorio',
             'string.pattern.base': 'El nombre solo puede contener letras y espacios',
         }),
-    codigo: Joi.string()
+    codigo: joi.string()
         .length(6)
         .trim()
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .messages({
             'string.base': 'El código debe ser una cadena de texto',
             'string.empty': 'El código no puede estar vacío',
-            'string.min': 'El código debe tener al menos 6 caracteres',
-            'string.max': 'El código no puede tener más de 6 caracteres',
+            'string.length': 'El código debe tener exactamente 6 caracteres',
             'string.pattern.base': 'El código debe ser un dígito válido de 6 caracteres',
-            'any.required': 'El código es obligatorio',
         }),
-    creditos: Joi.number()
+    creditos: joi.number()
         .min(1)
         .max(10)
+        .integer()
         .messages({
             'number.base': 'Los créditos deben ser un número',
             'number.min': 'Los créditos deben ser al menos 1',
             'number.max': 'Los créditos no pueden ser más de 10',
-            'any.required': 'Los créditos son obligatorios',
+            'number.integer': 'Los créditos deben ser un número entero',
         }),
-    prerrequisitos: Joi.array()
+    prerrequisitos: joi.array()
         .items(
-            Joi.string()
+            joi.string()
                 .min(6)
                 .max(50)
                 .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
@@ -72,10 +69,10 @@ export const asignaturaBodyValidation = Joi.object({
         .max(3)
         .messages({
             'array.base': 'Los prerrequisitos deben ser un arreglo',
-            'array.min': 'Debe tener al menos 0 prerrequisitos',
-            'array.max': 'No puede tener más de 2 prerrequisitos',
+            'array.max': 'Debe tener como máximo 3 prerrequisitos',
+            'array.min': 'Debe tener al menos 0 prerrequisitos'
         }),
-    semestre: Joi.string()
+    semestre: joi.string()
         .pattern(/^(I{1,3}|IV|V|VI{0,3}|IX|X)$/)
         .trim()
         .uppercase()
@@ -83,7 +80,6 @@ export const asignaturaBodyValidation = Joi.object({
             'string.empty': 'El semestre no puede estar vacío',
             'string.base': 'El semestre debe ser una cadena de texto',
             'string.pattern.base': 'El semestre debe ser un número romano válido (I, II, III, IV, V, VI, VII, VIII, IX, X)',
-            'any.required': 'El semestre es obligatorio',
         }),
 })
     .or(
