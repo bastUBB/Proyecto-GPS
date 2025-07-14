@@ -5,6 +5,7 @@ import { useEvaluaciones } from "../hooks/useEvaluaciones";
 import { useAdminEvaluaciones } from "../hooks/useAdminEvaluaciones";
 import { UserContext } from '../../context/userContext';
 import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, Shield } from 'lucide-react';
+import axios from 'axios';
 
 export default function Foro() {
   const { user } = useContext(UserContext);
@@ -46,17 +47,13 @@ export default function Foro() {
     return localStorage.getItem('token') || '';
   }
 
-  // Función para realizar peticiones autenticadas
-  const authenticatedFetch = async (url, options = {}) => {
+  // Configurar headers de autenticación para axios
+  const getAuthHeaders = () => {
     const token = getAuthToken();
-    return fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        ...options.headers,
-      },
-    });
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
   };
 
   // Cargar datos iniciales
@@ -83,30 +80,26 @@ export default function Foro() {
   // Cargar lista de docentes (solo para alumnos)
   const loadDocentes = async () => {
     try {
-      const response = await authenticatedFetch('http://localhost:5500/api/evaluacionDocente/docentes');
-      const data = await response.json();
-      if (response.ok) {
-        setDocentes(data.data || []);
-      } else {
-        setError(data.message || 'Error al cargar docentes');
-      }
+      const response = await axios.get('/api/evaluacionDocente/docentes', {
+        headers: getAuthHeaders()
+      });
+      setDocentes(response.data.data || []);
     } catch (error) {
-      setError('Error de conexión al cargar docentes');
+      console.error('Error al cargar docentes:', error);
+      setError(error.response?.data?.message || 'Error al cargar docentes');
     }
   };
 
   // Cargar lista de asignaturas (solo para alumnos)
   const loadAsignaturas = async () => {
     try {
-      const response = await authenticatedFetch('http://localhost:5500/api/evaluacionDocente/asignaturas');
-      const data = await response.json();
-      if (response.ok) {
-        setAsignaturas(data.data || []);
-      } else {
-        setError(data.message || 'Error al cargar asignaturas');
-      }
+      const response = await axios.get('/api/evaluacionDocente/asignaturas', {
+        headers: getAuthHeaders()
+      });
+      setAsignaturas(response.data.data || []);
     } catch (error) {
-      setError('Error de conexión al cargar asignaturas');
+      console.error('Error al cargar asignaturas:', error);
+      setError(error.response?.data?.message || 'Error al cargar asignaturas');
     }
   };
 
@@ -125,31 +118,24 @@ export default function Foro() {
       console.log('📤 Enviando datos:', formData);
       console.log('🔑 Token:', getAuthToken());
       
-      const response = await authenticatedFetch('http://localhost:5500/api/evaluacionDocente/alumno', {
-        method: 'POST',
-        body: JSON.stringify(formData),
+      const response = await axios.post('/api/evaluacionDocente/alumno', formData, {
+        headers: getAuthHeaders()
       });
       
-      console.log('📥 Respuesta status:', response.status);
-      const data = await response.json();
-      console.log('📥 Respuesta data:', data);
+      console.log('📥 Respuesta:', response.data);
       
-      if (response.ok) {
-        setSuccess('Evaluación creada exitosamente');
-        setFormData({
-          docente: '',
-          asignatura: '',
-          texto: '',
-          calificacion: 5,
-          visibilidad: 'Anónima'
-        });
-        setTimeout(() => setSuccess(''), 3000);
-      } else {
-        setError(data.message || 'Error al crear evaluación');
-      }
+      setSuccess('Evaluación creada exitosamente');
+      setFormData({
+        docente: '',
+        asignatura: '',
+        texto: '',
+        calificacion: 5,
+        visibilidad: 'Anónima'
+      });
+      setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
-      console.error('💥 Error en fetch:', error);
-      setError('Error de conexión al crear evaluación');
+      console.error('💥 Error:', error);
+      setError(error.response?.data?.message || 'Error al crear evaluación');
     } finally {
       setLoading(false);
     }
