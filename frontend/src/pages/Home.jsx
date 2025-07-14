@@ -43,7 +43,7 @@ export default function Home() {
         ],
         profesor: [
           ...basePages,
-          { id: "evaluaciones", route: "/evaluaciones", icon: GraduationCap, label: "Evaluaciones" },
+          // { id: "evaluaciones", route: "/evaluaciones", icon: GraduationCap, label: "Evaluaciones" },
         ],
         estudiante: [
           ...basePages,
