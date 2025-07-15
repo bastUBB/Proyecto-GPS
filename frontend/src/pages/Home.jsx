@@ -7,7 +7,10 @@ import {
   Users, 
   FileSpreadsheet, 
   GraduationCap, 
-  History 
+  History,
+  Settings,
+  Clock,
+  PlusCircle
 } from "lucide-react";
 
 export default function Home() {
@@ -40,14 +43,22 @@ export default function Home() {
           ...basePages,
           { id: "usuarios", route: "/gestion-usuarios", icon: Users, label: "Usuarios" },
           { id: "excel", route: "/subida-excel", icon: FileSpreadsheet, label: "Excel" },
+          { id: "gestion-malla", route: "/gestion-malla", icon: Settings, label: "Gestión Malla" },
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
         ],
         profesor: [
           ...basePages,
-          // { id: "evaluaciones", route: "/evaluaciones", icon: GraduationCap, label: "Evaluaciones" },
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
+        ],
+        alumno: [
+          ...basePages,
+          { id: "historial", route: "/historial", icon: History, label: "Historial" },
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
         ],
         estudiante: [
           ...basePages,
           { id: "historial", route: "/historial", icon: History, label: "Historial" },
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
         ],
       };
 
@@ -91,8 +102,10 @@ export default function Home() {
       return "grid-cols-2 lg:grid-cols-4";
     } else if (itemCount <= 6) {
       return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3";
-    } else {
+    } else if (itemCount <= 8) {
       return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
+    } else {
+      return "grid-cols-3 sm:grid-cols-4 lg:grid-cols-5";
     }
   };
 

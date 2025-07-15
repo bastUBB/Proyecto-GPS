@@ -12,6 +12,8 @@ import { Toaster } from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import MallaCurricular from './pages/MallaCurricular'
+import GestionMallaCurricular from './pages/GestionMallaCurricular'
+import SugerenciaHorarios from './pages/SugerenciaHorarios'
 import Foro from './pages/Foro'
 
 const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5500'
@@ -60,6 +62,8 @@ function App() {
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/horario" element={<Horario />} />
         <Route path="/malla" element={<MallaCurricular />} />
+        <Route path="/gestion-malla" element={<GestionMallaCurricular />} />
+        <Route path="/sugerencia-horarios" element={<SugerenciaHorarios />} />
         <Route path="/foro" element={<Foro />} />
         
         {/* Rutas específicas para admin */}
