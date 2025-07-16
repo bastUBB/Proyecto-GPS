@@ -5,23 +5,39 @@ getUserService,
 updateUserService,
 deleteUserService,
 } from '../services/user.service.js';
-import { userQueryValidation, userBodyValidation } from '../validations/user.validation.js';
+import { userQueryValidation, userBodyValidation, userUpdateBodyValidation } from '../validations/user.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
 
 export async function createUser(req, res) {
     try {
         const user = req.body;
+        
+        // Mapear "estudiante" a "alumno" para mantener compatibilidad
+        if (user.role === "estudiante") {
+            user.role = "alumno";
+        }
+        
+        console.log('🔍 Datos recibidos para crear usuario:', user);
 
         const { value, error } = userBodyValidation.validate(user);
+        
+        if (error) {
+            console.log('❌ Error de validación:', error.details);
+            return handleErrorClient(res, 400, "Error de validación", error.message);
+        }
 
-        if (error) return handleErrorClient(res, 400, "Error de validación", error.message);
-
+        console.log('✅ Datos validados correctamente:', value);
         const [newUser, errorNewUser] = await createUserService(value);
 
-        if (errorNewUser) return handleErrorClient(res, 400, "Error registrando el usuario", errorNewUser);
+        if (errorNewUser) {
+            console.log('❌ Error al crear usuario:', errorNewUser);
+            return handleErrorClient(res, 400, "Error registrando el usuario", errorNewUser);
+        }
 
+        console.log('✅ Usuario creado exitosamente:', newUser);
         handleSuccess(res, 201, "Usuario registrado con éxito", newUser);
     } catch (error) {
+        console.log('💥 Error inesperado:', error);
         handleErrorServer(res, 500, error.message);
     }
 }
@@ -59,12 +75,17 @@ export async function getAllUsers(req, res) {
 export async function updateUser(req, res) {
     try {
         const body = req.body;
+        
+        // Mapear "estudiante" a "alumno" para mantener compatibilidad
+        if (body.role === "estudiante") {
+            body.role = "alumno";
+        }
 
         const { errorQuery } = userQueryValidation.validate(req.query);
         
         if (errorQuery) return handleErrorClient(res, 400, "Error de validación", errorQuery.message);
 
-        const { errorBody } = userBodyValidation.validate(body);
+        const { errorBody } = userUpdateBodyValidation.validate(body);
 
         if (errorBody) return handleErrorClient(res, 400, "Error de validación", errorBody.message);
 

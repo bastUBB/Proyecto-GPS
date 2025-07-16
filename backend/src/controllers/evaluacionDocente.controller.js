@@ -4,6 +4,7 @@ getEvaluacionDocenteService,
 getAllEvaluacionesDocenteService,
 getEvaluacionesByDocenteService,
 updateEvaluacionDocenteService,
+updateEvaluacionByIdService,
 deleteEvaluacionDocenteService,
 createEvaluacionByAlumnoService,
 getDocentesListService,
@@ -213,6 +214,48 @@ export async function deleteEvaluacionByAdmin(req, res) {
 
         console.log('✅ Evaluación eliminada exitosamente');
         handleSuccess(res, 200, "Evaluación eliminada exitosamente", evaluacionEliminada);
+    } catch (error) {
+        console.log('💥 Error inesperado:', error);
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+// Función para aprobar una evaluación (solo administradores)
+export async function aprobarEvaluacion(req, res) {
+    try {
+        const { id } = req.params;
+        console.log('✅ Administrador aprobando evaluación ID:', id);
+        
+        const [evaluacionAprobada, errorAprobacion] = await updateEvaluacionByIdService(id, { estado: 'aprobada' });
+
+        if (errorAprobacion) {
+            console.log('❌ Error al aprobar evaluación:', errorAprobacion);
+            return handleErrorClient(res, 400, "Error al aprobar evaluación", errorAprobacion);
+        }
+
+        console.log('✅ Evaluación aprobada exitosamente');
+        handleSuccess(res, 200, "Evaluación aprobada exitosamente", evaluacionAprobada);
+    } catch (error) {
+        console.log('💥 Error inesperado:', error);
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+// Función para rechazar una evaluación (solo administradores)
+export async function rechazarEvaluacion(req, res) {
+    try {
+        const { id } = req.params;
+        console.log('❌ Administrador rechazando evaluación ID:', id);
+        
+        const [evaluacionRechazada, errorRechazo] = await updateEvaluacionByIdService(id, { estado: 'rechazada' });
+
+        if (errorRechazo) {
+            console.log('❌ Error al rechazar evaluación:', errorRechazo);
+            return handleErrorClient(res, 400, "Error al rechazar evaluación", errorRechazo);
+        }
+
+        console.log('✅ Evaluación rechazada exitosamente');
+        handleSuccess(res, 200, "Evaluación rechazada exitosamente", evaluacionRechazada);
     } catch (error) {
         console.log('💥 Error inesperado:', error);
         handleErrorServer(res, 500, error.message);
