@@ -30,6 +30,12 @@ const evaluacionDocenteSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    estado: {
+        type: String,
+        enum: ['pendiente', 'aprobada', 'rechazada'],
+        default: 'pendiente',
+        required: true
+    },
 }, {
     timestamps: true,
     versionKey: false

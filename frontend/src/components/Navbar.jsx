@@ -5,7 +5,7 @@ import { UserContext } from "../../context/userContext";
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const [userData, setUserData] = useState(null);
 
   const isHome = location.pathname === "/";
@@ -83,8 +83,7 @@ export default function Navbar() {
         {isHome ? (
           <button
             onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('userData');
+              logout();
               navigate('/login');
             }}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors flex items-center gap-2 flex-shrink-0"
