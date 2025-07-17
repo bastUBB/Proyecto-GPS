@@ -1,24 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-// import pkg from 'xlsx'; // importar como paquete completo por compatibilidad CJS
+import xlsx from 'xlsx'; // Importar xlsx correctamente
 
-const { readFile, utils } = pkg;
+const { readFile, utils } = xlsx;
 
 // Soporte para __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ruta al archivo Excel
-const excelPath = path.join(__dirname, '..', 'public', 'excel_horario_20250705201501.xlsx');
-
-// Leer el archivo
-const workbook = readFile(excelPath);
-const sheetName = workbook.SheetNames[0];
-const worksheet = workbook.Sheets[sheetName];
-const excelData = utils.sheet_to_json(worksheet, { header: 1 });
-
-// Función de extracción
+// Función de extracción mejorada
 export function extractSubjects(data) {
     const subjects = [];
 
@@ -57,10 +48,50 @@ export function extractSubjects(data) {
     return subjects;
 }
 
-// Ejecutar extracción
-// const extractedSubjects = extractSubjects(excelData);
-// console.log(JSON.stringify(extractedSubjects, null, 2));
+// Función para procesar archivo Excel desde buffer
+export function processExcelFromBuffer(buffer) {
+    try {
+        const workbook = xlsx.read(buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const excelData = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
+        
+        return extractSubjects(excelData);
+    } catch (error) {
+        console.error('Error procesando Excel:', error);
+        throw error;
+    }
+}
 
-// Guardar como JSON
-// fs.writeFileSync('output.json', JSON.stringify(extractedSubjects, null, 2), 'utf8');
-// console.log('✅ Datos guardados en output.json');
+// Función para procesar archivo Excel desde path
+export function processExcelFromPath(filePath) {
+    try {
+        const workbook = readFile(filePath);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const excelData = utils.sheet_to_json(worksheet, { header: 1 });
+        
+        return extractSubjects(excelData);
+    } catch (error) {
+        console.error('Error procesando Excel:', error);
+        throw error;
+    }
+}
+
+// Ejecutar extracción si se ejecuta directamente
+if (import.meta.url === `file://${process.argv[1]}`) {
+    // Ruta al archivo Excel
+    const excelPath = path.join(__dirname, '..', 'public', 'excel_horario_20250705201501.xlsx');
+    
+    try {
+        const extractedSubjects = processExcelFromPath(excelPath);
+        console.log('✅ Extracción completada');
+        console.log(`📊 Total de asignaturas extraídas: ${extractedSubjects.length}`);
+        
+        // Guardar como JSON
+        fs.writeFileSync('output.json', JSON.stringify(extractedSubjects, null, 2), 'utf8');
+        console.log('💾 Datos guardados en output.json');
+    } catch (error) {
+        console.error('❌ Error en la extracción:', error);
+    }
+}
