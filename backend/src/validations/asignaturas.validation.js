@@ -2,6 +2,7 @@ import joi from 'joi';
 
 export const asignaturaQueryValidation = joi.object({
     codigo: joi.string()
+        .strict()
         .length(6)
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .required()
@@ -23,6 +24,7 @@ export const asignaturaBodyValidation = joi.object({
         .min(3)
         .max(50)
         .trim()
+        .strict()
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
         .messages({
             'string.empty': 'El nombre no puede estar vacío',
@@ -34,6 +36,7 @@ export const asignaturaBodyValidation = joi.object({
     codigo: joi.string()
         .length(6)
         .trim()
+        .strict()
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .messages({
             'string.base': 'El código debe ser una cadena de texto',
@@ -56,6 +59,7 @@ export const asignaturaBodyValidation = joi.object({
             joi.string()
                 .min(6)
                 .max(50)
+                .strict()
                 .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
                 .messages({
                     'string.empty': 'El nombre no puede estar vacío',
@@ -75,6 +79,7 @@ export const asignaturaBodyValidation = joi.object({
     semestre: joi.string()
         .pattern(/^(I{1,3}|IV|V|VI{0,3}|IX|X)$/)
         .trim()
+        .strict()
         .uppercase()
         .messages({
             'string.empty': 'El semestre no puede estar vacío',
