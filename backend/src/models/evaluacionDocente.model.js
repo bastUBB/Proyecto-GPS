@@ -18,7 +18,8 @@ const evaluacionDocenteSchema = new mongoose.Schema({
         required: true,
     },
     fecha: {
-        type: String,
+        type: Date,
+        default: Date.now,
         required: true
     },
     texto: {
@@ -28,6 +29,12 @@ const evaluacionDocenteSchema = new mongoose.Schema({
     calificacion: {
         type: Number,
         required: true,
+    },
+    estado: {
+        type: String,
+        enum: ['pendiente', 'aprobada', 'rechazada'],
+        default: 'pendiente',
+        required: true
     },
 }, {
     timestamps: true,

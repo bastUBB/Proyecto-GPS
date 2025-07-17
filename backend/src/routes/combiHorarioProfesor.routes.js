@@ -11,7 +11,7 @@ import {
     generarHorarioValidation, 
     profesorIdValidation 
 } from '../validations/combiHorarioProfesor.validation.js';
-import { authorizationMiddleware } from '../middlewares/authorization.middleware.js';
+// import { authorizationMiddleware } from '../middlewares/authorization.middleware.js';
 
 const router = express.Router();
 
@@ -41,40 +41,40 @@ const validateParams = (schema) => (req, res, next) => {
 
 // Ruta para generar horario básico
 router.post('/horario/generar', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateBody(generarHorarioValidation),
     generarHorario
 );
 
 // Ruta para generar horario con validación previa
 router.post('/horario/generar-validado', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateBody(generarHorarioValidation),
     generarHorarioConValidacion
 );
 
 // Ruta para obtener salas disponibles
 router.get('/horario/salas', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     obtenerSalas
 );
 
 // Ruta para obtener tipos de bloques disponibles
 router.get('/horario/tipos-bloques', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     obtenerTiposBloquesController
 );
 
 // Ruta para validar disponibilidad de un profesor
 router.get('/horario/validar/:profesorId', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateParams(profesorIdValidation),
     validarDisponibilidad
 );
 
 // Ruta para obtener estadísticas de horarios de un profesor
 router.get('/horario/estadisticas/:profesorId', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateParams(profesorIdValidation),
     obtenerEstadisticasHorarios
 );

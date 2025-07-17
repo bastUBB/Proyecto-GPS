@@ -11,7 +11,7 @@ import {
     estadisticasValidation,
     alumnoIdValidation
 } from '../validations/combinacionHorarios.validation.js';
-import { authorizationMiddleware } from '../middlewares/authorization.middleware.js';
+// import { authorizationMiddleware } from '../middlewares/authorization.middleware.js';
 
 const router = express.Router();
 
@@ -41,28 +41,28 @@ const validateParams = (schema) => (req, res, next) => {
 
 // Ruta para generar combinaciones básicas de horarios
 router.post('/generar', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateBody(combinacionHorariosValidation),
     generarCombinaciones
 );
 
 // Ruta para generar combinaciones avanzadas con parámetros personalizados
 router.post('/generar-avanzado', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateBody(combinacionHorariosAvanzadaValidation),
     generarCombinacionesAvanzadas
 );
 
 // Ruta para obtener estadísticas de asignaturas disponibles
 router.get('/estadisticas/:alumnoId/:semestre', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateParams(estadisticasValidation),
     obtenerEstadisticas
 );
 
 // Ruta para obtener historial académico resumido
 router.get('/historial/:alumnoId', 
-    authorizationMiddleware,
+    // authorizationMiddleware,
     validateParams(alumnoIdValidation),
     obtenerHistorialResumido
 );

@@ -1,109 +1,54 @@
-//TODO: Requiero hacer el modelo User para continuar
-
-
-import User from "../entity/user.entity.js";
+import User from "../models/user.model.js";
 import { handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
-export async function isAdmin(req, res, next) {
+export async function isAdmin(req, res) {
     try {
-        const userRepository = AppDataSource.getRepository(User);
 
-        const userFound = await userRepository.findOneBy({ email: req.user.email });
+        const userFound = await User.findOne({ email: req.user.email });
 
-        if (!userFound) {
-            return handleErrorClient(
-                res,
-                404,
-                "Usuario no encontrado en la base de datos",
-            );
-        }
+        if (!userFound) return handleErrorClient(res, 404, "Usuario no encontrado en la base de datos");
 
         const rolUser = userFound.rol;
 
-        if (rolUser !== "administrador") {
-            return handleErrorClient(
-                res,
-                403,
-                "Error al acceder al recurso",
-                "Se requiere un rol de administrador para realizar esta acción."
-            );
-        }
-        next();
+        if (rolUser !== "administrador") return handleErrorClient(res, 403,
+            "Error al acceder al recurso", "Se requiere un rol de Administrador para realizar esta acción.");
     } catch (error) {
-        handleErrorServer(
-            res,
-            500,
-            error.message,
-        );
+        handleErrorServer(res, 500, error.message);
     }
 }
 
-export async function isJefeUTP(req, res, next) {
+export async function isJefeDepartamento(req, res) {
     try {
-        const userRepository = AppDataSource.getRepository(User);
-        const userFound = await userRepository.findOneBy({ email: req.user.email });
+        const userFound = await User.findOne({ email: req.user.email });
 
-        if (!userFound) {
-            return handleErrorClient(
-                res,
-                404,
-                "Usuario no encontrado en la base de datos",
-            );
-        }
+        if (!userFound) return handleErrorClient(res, 404, "Usuario no encontrado en la base de datos");
 
         const rolUser = userFound.rol;
 
-        if (rolUser !== "jefe de utp") {
-            return handleErrorClient(
-                res,
-                403,
-                "Error al acceder al recurso",
-                "Se requiere un rol de Jefe de UTP para realizar esta acción."
-            );
-        }
-
-        next();
+        if (rolUser !== "jefeDepartamento") return handleErrorClient(res, 403,
+            "Error al acceder al recurso", "Se requiere un rol de Jefe de Departamento para realizar esta acción.");
     } catch (error) {
-        handleErrorServer(
-            res,
-            500,
-            error.message,
-        );
+        handleErrorServer(res, 500, error.message);
     }
 }
 
-async function checkRole(req, res, next, rolesToCheck) {
+async function checkRole(req, res, rolesToCheck) {
     try {
-        const userRepository = AppDataSource.getRepository(User);
+        const userFound = await User.findOne({ email: req.user.email });
 
-        const userFound = await userRepository.findOneBy({ email: req.user.email });
+        if (!userFound) return handleErrorClient(res, 404, "Usuario no encontrado en la base de datos");
 
-        if (!userFound) {
-            return handleErrorClient(
-                res,
-                404,
-                "Usuario no encontrado en la base de datos",
-            );
+        const rolUser = userFound.rol;
+
+        if (!rolesToCheck.includes(rolUser)) {
+            return handleErrorClient(res, 403,
+                "Error al acceder al recurso", `Se requiere uno de los siguientes roles: ${rolesToCheck.join(", ")}`);
         }
-
-        const userRoles = Array.isArray(userFound.rol) ? userFound.rol : [userFound.rol];
-
-        const hasRole = userRoles.some(role => rolesToCheck.includes(role));
-
-        if (hasRole) {
-            return next();
-        }
-
-        return res.status(401).json({
-            message: "No tienes los permisos necesarios para realizar esta acción"
-        });
     } catch (error) {
-        return res.status(500).json({
-            message: "authorization.middleware -> checkRole()",
-            error: error.message,
-        });
+        handleErrorServer(res, 500, error.message);
     }
 }
+
 export function authorizeRoles(...roles) {
     return (req, res, next) => {
         checkRole(req, res, next, roles);

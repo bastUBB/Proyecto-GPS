@@ -9,11 +9,11 @@ export async function createUserService(dataUser) {
 
         if (existingUserRut) return [null, 'El rut que desea ingresar, ya se encuentra registrado'];
 
-        const existingUserEmail = await User.find({ email });
+        const existingUserEmail = await User.findOne({ email });
 
         if (existingUserEmail) return [null, 'El correo electrónico que desea ingresar, ya se encuentra registrado'];
 
-        newUser = new User(dataUser);
+        const newUser = new User(dataUser);
 
         if (!newUser) return [null, 'Error al crear el usuario'];
 
@@ -30,9 +30,9 @@ export async function getUserService(query) {
     try {
         const { rut } = query;
 
-        const existingUser = await User.find({ rut });
+        const existingUser = await User.findOne({ rut });
 
-        if (!existingUser || existingUser.length === 0) return [null, 'Usuario no encontrado'];
+        if (!existingUser) return [null, 'Usuario no encontrado'];
 
         return [existingUser, null];
     } catch (error) {
@@ -64,21 +64,21 @@ export async function updateUserService(query, body) {
 
         const { rut: nuevoRutCompleto, email: nuevoEmail, password: nuevaPassword } = body;
 
+        // Verificar si el nuevo RUT ya existe en otro usuario
         const existingUserRut = await User.findOne({ rut: nuevoRutCompleto });
-
-        if (existingUserRut) return [null, 'El rut que desea ingresar ya se encuentra registrado con otro usuario'];
-
-        const existingUserEmail = await User.findOne({ email: nuevoEmail });
-
-        if (existingUserEmail) return [null, 'El correo electrónico que desea ingresar ya se encuentra registrado con otro usuario'];
-        
-        if (nuevaPassword) {
-            const matchPassword = await comparePassword(nuevaPassword, userFound.password,);
-            if (!matchPassword) return [null, "La contraseña no coincide"];
+        if (existingUserRut && existingUserRut.rut !== existingUser.rut) {
+            return [null, 'El rut que desea ingresar ya se encuentra registrado con otro usuario'];
         }
 
-        if (nuevaPassword && nuevaPassword.trim() !== "") {
-            dataUserUpdate.password = await hashPassword(nuevaPassword);
+        // Verificar si el nuevo email ya existe en otro usuario
+        const existingUserEmail = await User.findOne({ email: nuevoEmail });
+        if (existingUserEmail && existingUserEmail.email !== existingUser.email) {
+            return [null, 'El correo electrónico que desea ingresar ya se encuentra registrado con otro usuario'];
+        }
+        
+        if (nuevaPassword) {
+            const matchPassword = await comparePassword(nuevaPassword, existingUser.password);
+            if (!matchPassword) return [null, "La contraseña no coincide"];
         }
 
         await User.updateOne(
@@ -109,9 +109,9 @@ export async function deleteUserService(query) {
     try {
         const { rut } = query;
 
-        const existingUser = await User.find({ rut });
+        const existingUser = await User.findOne({ rut });
 
-        if (!existingUser || existingUser.length === 0) return [null, 'El usuario que desea eliminar no existe'];
+        if (!existingUser) return [null, 'El usuario que desea eliminar no existe'];
 
         const deletedUser = await User.deleteOne({ rut });
 

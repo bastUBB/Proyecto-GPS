@@ -8,6 +8,7 @@ import evaluacionDocenteRoutes from "./evaluacionDocente.routes.js";
 import historialRoutes from "./historial.routes.js";
 import horariosExcellRoutes from "./horariosExcell.routes.js";
 import rendimientoAsignaturaRoutes from "./rendimientoAsignatura.routes.js";
+import excelRouter from './excelextr.routes.js'; // Asegúrate de que la ruta sea correcta
 import disponibilidadRoutes from "./disponibilidad.routes.js";
 import combiHorarioProfesorRoutes from "./combiHorarioProfesor.routes.js";
 import combinacionHorariosRoutes from "./combinacionHorarios.routes.js";
@@ -23,6 +24,7 @@ router
     .use("/historial", historialRoutes)
     .use("/horariosExcell", horariosExcellRoutes)
     .use("/rendimientoAsignatura", rendimientoAsignaturaRoutes)
+    .use("/excel", excelRouter)
     .use("/disponibilidad", disponibilidadRoutes)
     .use("/combi", combiHorarioProfesorRoutes)
     .use("/combinaciones", combinacionHorariosRoutes);
