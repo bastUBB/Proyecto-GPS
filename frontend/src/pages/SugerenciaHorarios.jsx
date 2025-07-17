@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import PagGeneral from "../components/PagGeneral";
+import { UserContext } from "../../context/userContext";
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -9,9 +10,12 @@ const horasDisponibles = [
 ];
 
 export default function SugerenciaHorarios() {
+  const { user } = useContext(UserContext);
   const [asignaturas, setAsignaturas] = useState([]);
   const [disponibilidad, setDisponibilidad] = useState({});
   const [sugerencias, setSugerencias] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState('');
   const [configuracion, setConfiguracion] = useState({
     maxHorasPorDia: 8,
     preferenciaMorning: true,
@@ -19,27 +23,123 @@ export default function SugerenciaHorarios() {
     descansoAlmuerzo: true
   });
 
+  // Función para realizar peticiones autenticadas
+  const authenticatedFetch = async (url, options = {}) => {
+    const token = localStorage.getItem('token');
+    return fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+  };
+
+  // Cargar disponibilidad del profesor desde el backend
+  const cargarDisponibilidadProfesor = async () => {
+    if (user?.role !== 'profesor') return;
+
+    try {
+      setLoading(true);
+      const response = await authenticatedFetch('http://localhost:5500/api/disponibilidad');
+      const data = await response.json();
+      
+      if (response.ok && data.data) {
+        // Convertir los bloques del backend al formato de disponibilidad del frontend
+        const disponibilidadFormateada = {};
+        data.data.bloques?.forEach(bloque => {
+          const key = `${bloque.dia}-${bloque.horaInicio}`;
+          disponibilidadFormateada[key] = true;
+        });
+        setDisponibilidad(disponibilidadFormateada);
+      } else if (response.status === 404) {
+        // No hay disponibilidad guardada, inicializar vacía
+        setDisponibilidad({});
+      } else {
+        setMensaje(data.message || 'Error al cargar disponibilidad');
+      }
+    } catch (error) {
+      console.error('Error al cargar disponibilidad:', error);
+      setMensaje('Error al cargar la disponibilidad');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Guardar disponibilidad del profesor en el backend
+  const guardarDisponibilidadProfesor = async () => {
+    if (user?.role !== 'profesor') return;
+
+    try {
+      setLoading(true);
+      setMensaje('');
+
+      // Convertir disponibilidad del frontend al formato esperado por el backend
+      const bloques = [];
+      Object.entries(disponibilidad).forEach(([key, isDisponible]) => {
+        if (isDisponible) {
+          const [dia, horaInicio] = key.split('-');
+          const horaInicioIndex = horasDisponibles.indexOf(horaInicio);
+          const horaFin = horasDisponibles[horaInicioIndex + 1] || horaInicio;
+          
+          bloques.push({
+            dia,
+            horaInicio,
+            horaFin
+          });
+        }
+      });
+
+      const response = await authenticatedFetch('http://localhost:5500/api/disponibilidad', {
+        method: 'POST',
+        body: JSON.stringify({
+          bloques
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMensaje('Disponibilidad guardada exitosamente');
+        setTimeout(() => setMensaje(''), 3000);
+      } else {
+        setMensaje(data.message || 'Error al guardar la disponibilidad');
+      }
+    } catch (error) {
+      console.error('Error al guardar disponibilidad:', error);
+      setMensaje('Error al guardar la disponibilidad');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Cargar datos iniciales
   useEffect(() => {
-    const asignaturasGuardadas = localStorage.getItem("asignaturasDisponibles");
-    if (asignaturasGuardadas) {
-      setAsignaturas(JSON.parse(asignaturasGuardadas));
-    } else {
-      // Datos de ejemplo
-      setAsignaturas([
-        { id: 1, nombre: "Cálculo Diferencial", creditos: 6, semestre: 2 },
-        { id: 2, nombre: "Programación OOP", creditos: 8, semestre: 2 },
-        { id: 3, nombre: "Estructuras Discretas", creditos: 5, semestre: 2 },
-        { id: 4, nombre: "Química General", creditos: 8, semestre: 2 },
-        { id: 5, nombre: "Inglés I", creditos: 4, semestre: 3 }
-      ]);
-    }
+    if (user?.role === 'profesor') {
+      cargarDisponibilidadProfesor();
+    } else if (user?.role !== 'profesor') {
+      // Código original para otros roles
+      const asignaturasGuardadas = localStorage.getItem("asignaturasDisponibles");
+      if (asignaturasGuardadas) {
+        setAsignaturas(JSON.parse(asignaturasGuardadas));
+      } else {
+        // Datos de ejemplo
+        setAsignaturas([
+          { id: 1, nombre: "Cálculo Diferencial", creditos: 6, semestre: 2 },
+          { id: 2, nombre: "Programación OOP", creditos: 8, semestre: 2 },
+          { id: 3, nombre: "Estructuras Discretas", creditos: 5, semestre: 2 },
+          { id: 4, nombre: "Química General", creditos: 8, semestre: 2 },
+          { id: 5, nombre: "Inglés I", creditos: 4, semestre: 3 }
+        ]);
+      }
 
-    const disponibilidadGuardada = localStorage.getItem("disponibilidadHoraria");
-    if (disponibilidadGuardada) {
-      setDisponibilidad(JSON.parse(disponibilidadGuardada));
+      const disponibilidadGuardada = localStorage.getItem("disponibilidadHoraria");
+      if (disponibilidadGuardada) {
+        setDisponibilidad(JSON.parse(disponibilidadGuardada));
+      }
     }
-  }, []);
+  }, [user]);
 
   const handleConfiguracionChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -55,6 +155,16 @@ export default function SugerenciaHorarios() {
       ...prev,
       [key]: !prev[key]
     }));
+    
+    // Para profesores, no guardar en localStorage ya que se maneja en el backend
+    if (user?.role !== 'profesor') {
+      // Guardar en localStorage para otros roles
+      const nuevaDisponibilidad = {
+        ...disponibilidad,
+        [key]: !disponibilidad[key]
+      };
+      localStorage.setItem("disponibilidadHoraria", JSON.stringify(nuevaDisponibilidad));
+    }
   };
 
   const generarSugerencias = () => {
@@ -103,6 +213,160 @@ export default function SugerenciaHorarios() {
     alert(`Horario "${sugerencia.nombre}" aplicado correctamente`);
   };
 
+  // Si no hay usuario logueado
+  if (!user) {
+    return (
+      <PagGeneral>
+        <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
+          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                Acceso Restringido
+              </h1>
+              <p className="text-sm sm:text-base text-blue-700">
+                Debes iniciar sesión para acceder a esta página
+              </p>
+            </div>
+          </div>
+        </div>
+      </PagGeneral>
+    );
+  }
+
+  // Vista para profesores - Solo disponibilidad horaria
+  if (user.role === 'profesor') {
+    return (
+      <PagGeneral>
+        <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
+          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+            {/* Encabezado para profesores */}
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                Mi Disponibilidad Horaria
+              </h1>
+              <p className="text-sm sm:text-base text-blue-700">
+                Configura tu disponibilidad para dictar clases
+              </p>
+            </div>
+
+            {/* Mensajes */}
+            {mensaje && (
+              <div className={`p-4 rounded-lg text-center ${
+                mensaje.includes('exitosamente') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              }`}>
+                {mensaje}
+              </div>
+            )}
+
+            {/* Disponibilidad Horaria */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconHorario.png" alt="Icono Horario" className="w-5 h-5" />
+                  Mi Disponibilidad Horaria
+                </h2>
+                <p className="text-cyan-100 text-xs sm:text-sm mt-1">
+                  Marca los horarios en los que puedes dictar clases (verde = disponible)
+                </p>
+              </div>
+
+              <div className="p-4 sm:p-6 overflow-x-auto">
+                <table className="w-full border-collapse min-w-[600px]">
+                  <thead>
+                    <tr className="bg-blue-50">
+                      <th className="border border-blue-200 px-3 py-2 text-blue-900 font-semibold text-sm">
+                        Hora
+                      </th>
+                      {diasSemana.map(dia => (
+                        <th key={dia} className="border border-blue-200 px-3 py-2 text-blue-900 font-semibold text-sm">
+                          {dia}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {horasDisponibles.map(hora => (
+                      <tr key={hora}>
+                        <td className="border border-blue-200 px-3 py-2 text-blue-900 font-medium text-sm bg-blue-50">
+                          {hora}
+                        </td>
+                        {diasSemana.map(dia => {
+                          const key = `${dia}-${hora}`;
+                          const isDisponible = disponibilidad[key];
+                          return (
+                            <td key={key} className="border border-blue-200 p-1">
+                              <button
+                                onClick={() => toggleDisponibilidad(dia, hora)}
+                                disabled={loading}
+                                className={`w-full h-8 rounded transition-colors ${
+                                  isDisponible
+                                    ? 'bg-green-500 hover:bg-green-600'
+                                    : 'bg-gray-200 hover:bg-gray-300'
+                                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                title={isDisponible ? 'Disponible' : 'No disponible'}
+                              />
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Botón para guardar disponibilidad */}
+              <div className="p-4 bg-gray-50 text-center">
+                <button
+                  onClick={guardarDisponibilidadProfesor}
+                  disabled={loading}
+                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl ${
+                    loading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {loading ? 'Guardando...' : 'Guardar Disponibilidad'}
+                </button>
+              </div>
+            </div>
+
+            {/* Información de ayuda para profesores */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-3">
+                Instrucciones
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="font-semibold text-blue-900 mb-1">1. Seleccionar Horarios</p>
+                  <p className="text-blue-700">
+                    Haz clic en las casillas para marcar tu disponibilidad
+                  </p>
+                </div>
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="font-semibold text-blue-900 mb-1">2. Guardar Cambios</p>
+                  <p className="text-blue-700">
+                    Presiona "Guardar Disponibilidad" para confirmar los cambios
+                  </p>
+                </div>
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="font-semibold text-blue-900 mb-1">3. Disponibilidad</p>
+                  <p className="text-blue-700">
+                    Verde = Disponible, Gris = No disponible
+                  </p>
+                </div>
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="font-semibold text-blue-900 mb-1">4. Actualizaciones</p>
+                  <p className="text-blue-700">
+                    Puedes modificar tu disponibilidad en cualquier momento
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </PagGeneral>
+    );
+  }
+
+  // Vista original para otros roles (alumnos, admin, etc.)
   return (
     <PagGeneral>
       <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">

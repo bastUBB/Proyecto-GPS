@@ -13,7 +13,7 @@ import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers
 export const subirDisponibilidad = async (req, res) => {
     try {
         const { bloques } = req.body;
-        const profesorId = req.user?.id || req.body.profesorId;
+        const profesorId = req.user?.id || req.user?._id || req.body.profesorId;
         
         // Validar datos de entrada
         const datosValidar = { profesor: profesorId, bloques };
@@ -43,9 +43,12 @@ export const verDisponibilidad = async (req, res) => {
     try {
         const { profesorId } = req.query;
         
+        // Si no se proporciona profesorId, usar el ID del usuario autenticado
+        const idProfesor = profesorId || req.user?.id || req.user?._id;
+        
         // Validar parámetros de consulta si se proporciona profesorId
-        if (profesorId) {
-            const { value, error } = disponibilidadQueryValidation.validate({ profesor: profesorId });
+        if (idProfesor) {
+            const { value, error } = disponibilidadQueryValidation.validate({ profesor: idProfesor });
             
             if (error) {
                 return handleErrorClient(res, 400, "Error de validación", error.details.map(detail => detail.message));
@@ -53,7 +56,7 @@ export const verDisponibilidad = async (req, res) => {
         }
         
         // Obtener disponibilidad
-        const disponibilidad = await obtenerDisponibilidad(profesorId);
+        const disponibilidad = await obtenerDisponibilidad(idProfesor);
         
         if (!disponibilidad || (Array.isArray(disponibilidad) && disponibilidad.length === 0)) {
             return handleErrorClient(res, 404, 'No se encontró disponibilidad');
