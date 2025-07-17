@@ -1,7 +1,7 @@
-import Joi from 'Joi';
+import joi from 'joi';
 
-export const disponibilidadQueryValidation = Joi.object({
-    profesor: Joi.string()
+export const disponibilidadQueryValidation = joi.object({
+    profesor: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
@@ -16,8 +16,8 @@ export const disponibilidadQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar el campo: profesor',
     });
 
-export const disponibilidadBodyValidation = Joi.object({
-    profesor: Joi.string()
+export const disponibilidadBodyValidation = joi.object({
+    profesor: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .messages({
             'string.empty': 'El ID del profesor no puede estar vacío',
@@ -25,10 +25,10 @@ export const disponibilidadBodyValidation = Joi.object({
             'string.pattern.base': 'El ID del profesor debe ser un ObjectId válido',
             'any.required': 'El ID del profesor es obligatorio',
         }),
-    bloques: Joi.array()
+    bloques: joi.array()
         .items(
-            Joi.object({
-                dia: Joi.string()
+            joi.object({
+                dia: joi.string()
                     .valid('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado')
                     .required()
                     .messages({
@@ -37,7 +37,7 @@ export const disponibilidadBodyValidation = Joi.object({
                         'any.only': 'El día debe ser uno de los siguientes: Lunes, Martes, Miércoles, Jueves, Viernes o Sábado',
                         'any.required': 'El día es obligatorio',
                     }),
-                horaInicio: Joi.string()
+                horaInicio: joi.string()
                     .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
                     .required()
                     .messages({
@@ -46,7 +46,7 @@ export const disponibilidadBodyValidation = Joi.object({
                         'string.pattern.base': 'La hora de inicio debe tener el formato HH:MM (24 horas) y estar entre las 07:00 y 23:59',
                         'any.required': 'La hora de inicio es obligatoria',
                     }),
-                horaFin: Joi.string()
+                horaFin: joi.string()
                     .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
                     .required()
                     .messages({
@@ -75,8 +75,8 @@ export const disponibilidadBodyValidation = Joi.object({
         'object.missing': 'Debe proporcionar al menos uno de los campos: profesor o bloques',
     });
 
-export const disponibilidadIdValidation = Joi.object({
-    objectId: Joi.string()
+export const disponibilidadIdValidation = joi.object({
+    objectId: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .required()
         .messages({
