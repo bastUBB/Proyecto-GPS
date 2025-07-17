@@ -10,10 +10,13 @@ import '../scripts/inscripcionReminder.js'; // Importa el script de recordatorio
 
 dotenv.config();
 
+//Adaptarlo a como esta en servidor
 const app = express();
 const PORT = process.env.PORT || 5500; 
 const FRONTEND_URL = process.env.FRONTEND_URL || ['http://localhost:5173'];
-const BACKEND_URL = process.env.BACKEND_URL ||`http://localhost:${PORT}`; 
+const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`; 
+const url = new URL(BACKEND_URL);
+const HOST = url.hostname;
 
 app.use(
   cors({

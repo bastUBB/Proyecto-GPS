@@ -10,7 +10,9 @@ import {
     getDocentesList,
     getAsignaturasList,
     getAllEvaluacionesForAdmin,
-    deleteEvaluacionByAdmin
+    deleteEvaluacionByAdmin,
+    aprobarEvaluacion,
+    rechazarEvaluacion
 } from '../controllers/evaluacionDocente.controller.js';
 import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware.js';
 
@@ -32,5 +34,7 @@ router
     // Rutas para administradores
     .get('/admin/todas', authenticateJWT, authorizeRoles('admin'), getAllEvaluacionesForAdmin)
     .delete('/admin/:id', authenticateJWT, authorizeRoles('admin'), deleteEvaluacionByAdmin)
+    .put('/aprobar/:id', authenticateJWT, authorizeRoles('admin'), aprobarEvaluacion)
+    .put('/rechazar/:id', authenticateJWT, authorizeRoles('admin'), rechazarEvaluacion)
 
 export default router;

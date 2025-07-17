@@ -165,7 +165,8 @@ export async function createEvaluacionByAlumnoService(dataEvaluacion, alumnoId) 
             visibilidad: visibilidad || 'Anónima',
             fecha: new Date(),
             texto,
-            calificacion
+            calificacion,
+            estado: 'pendiente' // Por defecto, toda evaluación nueva está pendiente
         });
 
         const evaluacionGuardada = await nuevaEvaluacion.save();
@@ -180,12 +181,15 @@ export async function createEvaluacionByAlumnoService(dataEvaluacion, alumnoId) 
 // Nuevo servicio para obtener evaluaciones de un docente específico
 export async function getEvaluacionesByDocenteService(docenteNombre) {
     try {
-        const evaluaciones = await evaluacionDocente.find({ docente: docenteNombre })
+        const evaluaciones = await evaluacionDocente.find({ 
+            docente: docenteNombre,
+            estado: 'aprobada' // Solo mostrar evaluaciones aprobadas
+        })
             .select('-__v')
             .sort({ fecha: -1 }); // Ordenar por fecha más reciente primero
 
         if (!evaluaciones || evaluaciones.length === 0) {
-            return [null, 'No tienes evaluaciones disponibles'];
+            return [null, 'No tienes evaluaciones aprobadas disponibles'];
         }
 
         // Si la evaluación es anónima, no mostrar el nombre del alumno
@@ -260,6 +264,23 @@ export async function deleteEvaluacionByIdService(evaluacionId) {
 
     } catch (error) {
         console.error('Error al eliminar evaluación por ID:', error);
+        return [null, 'Error interno del servidor'];
+    }
+}
+
+// Función para actualizar una evaluación por ID (útil para aprobar/rechazar)
+export async function updateEvaluacionByIdService(evaluacionId, updateData) {
+    try {
+        const evaluacion = await evaluacionDocente.findByIdAndUpdate(
+            evaluacionId,
+            updateData,
+            { new: true }
+        );
+
+        if (!evaluacion) return [null, 'Evaluación no encontrada'];
+        return [evaluacion, null];
+    } catch (error) {
+        console.error('Error al actualizar la evaluación:', error);
         return [null, 'Error interno del servidor'];
     }
 }

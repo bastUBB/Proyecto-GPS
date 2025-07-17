@@ -1,27 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle
-} from "../components/ui/card";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from "../components/ui/table";
-import Button from "../components/ui/button";
 import { 
-    Users, 
     UserPlus, 
-    Edit, 
-    Trash2, 
     Loader2, 
     Shield, 
     User, 
@@ -29,6 +10,7 @@ import {
     AlertCircle
 } from "lucide-react";
 import PagGeneral from "../components/PagGeneral";
+import TablaGestion from "../components/TablaGestion";
 
 export default function GestionUsuarios() {
     const [users, setUsers] = useState([]);
@@ -261,6 +243,57 @@ export default function GestionUsuarios() {
         }
     };
 
+    // Configuración de columnas para la tabla
+    const columns = [
+        {
+            key: 'nombreCompleto',
+            title: 'Nombre Completo',
+            render: (user) => (
+                <div className="text-sm font-medium text-blue-900">
+                    {user.nombreCompleto}
+                </div>
+            )
+        },
+        {
+            key: 'email',
+            title: 'Email',
+            render: (user) => (
+                <div className="text-sm text-blue-800">
+                    {user.email}
+                </div>
+            )
+        },
+        {
+            key: 'rut',
+            title: 'RUT',
+            render: (user) => (
+                <div className="text-sm text-blue-800">
+                    {user.rut}
+                </div>
+            )
+        },
+        {
+            key: 'role',
+            title: 'Rol',
+            align: 'center',
+            render: (user) => (
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
+                    {getRoleIcon(user.role)}
+                    {user.role}
+                </span>
+            )
+        },
+        {
+            key: 'createdAt',
+            title: 'Fecha Creación',
+            render: (user) => (
+                <div className="text-sm text-blue-800">
+                    {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                </div>
+            )
+        }
+    ];
+
     if (loading) {
         return (
             <PagGeneral>
@@ -273,7 +306,7 @@ export default function GestionUsuarios() {
 
     return (
         <PagGeneral>
-            <div className="flex-1 overflow-hidden flex flex-col bg-transparent">
+            <div className="p-4 sm:p-6 lg:p-8 bg-transparent">
                 {/* Alerta */}
                 {alert.show && (
                     <div className={`mb-4 p-4 rounded-lg ${alert.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}`}>
@@ -281,111 +314,47 @@ export default function GestionUsuarios() {
                     </div>
                 )}
 
-                {/* Título principal */}
-                <div className="flex flex-wrap gap-2 items-center justify-between mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        Gestión de Usuarios
-                    </h1>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => {
-                                resetForm();
-                                setShowModal(true);
-                            }}
-                            className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2"
-                        >
-                            <UserPlus className="w-5 h-5" />
-                            Nuevo Usuario
-                        </button>
-                    </div>
-                </div>
+        {/* Título principal */}
+        <div className="mb-6">
+          {/* Encabezado */}
+          <div className="text-center space-y-1 sm:space-y-2 mb-6">
+            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+              Gestión de Usuarios
+            </h1>
+            <p className="text-sm sm:text-base text-blue-700">
+              Administra los usuarios del sistema y sus permisos
+            </p>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={() => {
+                resetForm();
+                setShowModal(true);
+              }}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+            >
+              <UserPlus className="w-5 h-5" />
+              Nuevo Usuario
+            </button>
+          </div>
+        </div>
 
                 {/* Tabla de usuarios */}
-                <div className="overflow-x-auto bg-white rounded-lg shadow">
-                    <table className="min-w-full">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nombre Completo
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Email
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    RUT
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Rol
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Fecha Creación
-                                </th>
-                                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Acciones
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {Array.isArray(users) && users.length > 0 ? (
-                                users.map((user) => (
-                                    <tr key={user._id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">
-                                                {user.nombreCompleto}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">
-                                                {user.email}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">
-                                                {user.rut}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeColor(user.role)}`}>
-                                                {getRoleIcon(user.role)}
-                                                {user.role}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                                            <div className="flex items-center justify-center gap-2">
-                                                <button
-                                                    onClick={() => handleEdit(user)}
-                                                    className="text-blue-600 hover:text-blue-900 p-1"
-                                                    title="Editar usuario"
-                                                >
-                                                    <Edit className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        setUserToDelete(user);
-                                                        setShowDeleteModal(true);
-                                                    }}
-                                                    className="text-red-600 hover:text-red-900 p-1"
-                                                    title="Eliminar usuario"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                                        No hay usuarios disponibles
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                <TablaGestion
+                    data={users}
+                    columns={columns}
+                    title="Usuarios del Sistema"
+                    icon="/IconUsers.png"
+                    searchPlaceholder="Buscar usuarios..."
+                    onEdit={handleEdit}
+                    onDelete={(user) => {
+                        setUserToDelete(user);
+                        setShowDeleteModal(true);
+                    }}
+                    emptyMessage="No hay usuarios disponibles"
+                    itemsPerPage={10}
+                />
 
                 {/* Modal para crear/editar usuario */}
                 {showModal && (

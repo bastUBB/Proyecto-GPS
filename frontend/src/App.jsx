@@ -12,11 +12,42 @@ import { Toaster } from 'react-hot-toast'
 import { UserContextProvider } from '../context/userContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import MallaCurricular from './pages/MallaCurricular'
+import GestionMallaCurricular from './pages/GestionMallaCurricular'
+import SugerenciaHorarios from './pages/SugerenciaHorarios'
 import Foro from './pages/Foro'
 
 const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5500'
 axios.defaults.baseURL = API_URL
 axios.defaults.withCredentials = true
+
+// Interceptor para agregar automáticamente el token a todas las requests
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Interceptor para manejar errores de autenticación
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // Token expirado o inválido, limpiar localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
+      // Recargar la página para reiniciar el estado
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 function App() {
   const location = useLocation()
@@ -31,6 +62,8 @@ function App() {
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/horario" element={<Horario />} />
         <Route path="/malla" element={<MallaCurricular />} />
+        <Route path="/gestion-malla" element={<GestionMallaCurricular />} />
+        <Route path="/sugerencia-horarios" element={<SugerenciaHorarios />} />
         <Route path="/foro" element={<Foro />} />
         
         {/* Rutas específicas para admin */}
