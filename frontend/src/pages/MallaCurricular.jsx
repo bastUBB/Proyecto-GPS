@@ -156,7 +156,7 @@ const MallaCurricular = () => {
           <button
             key={asig.nombre}
             type="button"
-            className={`w-28 min-h-[4rem] border text-[11px] rounded shadow-sm overflow-visible cursor-pointer p-1 text-center mb-1 ${getColor(asig.estado)}`}
+            className={`w-full aspect-[3/2] border text-[11px] rounded shadow-sm overflow-visible cursor-pointer px-2 py-1 text-center ${getColor(asig.estado)}`}
             onClick={() => handleAsignaturaClick(asig.nombre)}
             title="Haz clic para cambiar color"
           >
