@@ -1,7 +1,7 @@
 // backend/routes/excelRoutes.js
 import express from 'express';
 import multer from 'multer';
-import { processExcelFile, getStoredHorarios } from '../controllers/excelProcessor.controller.js';
+import { processExcelFile, getStoredHorarios, processRendimientoFile } from '../controllers/excelProcessor.controller.js';
 
 const router = express.Router();
 const upload = multer({ 
@@ -24,8 +24,11 @@ const upload = multer({
     }
 });
 
-// Ruta para procesar archivo Excel
+// Ruta para procesar archivo Excel de horarios
 router.post('/procesar-excel', upload.single('excelFile'), processExcelFile);
+
+// Ruta para procesar archivo Excel de rendimiento
+router.post('/procesar-rendimiento', upload.single('excelFile'), processRendimientoFile);
 
 // Ruta para obtener horarios almacenados
 router.get('/horarios', getStoredHorarios);

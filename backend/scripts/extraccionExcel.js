@@ -81,7 +81,7 @@ export function processExcelFromPath(filePath) {
 // Ejecutar extracción si se ejecuta directamente
 if (import.meta.url === `file://${process.argv[1]}`) {
     // Ruta al archivo Excel
-    const excelPath = path.join(__dirname, '..', 'public', 'excel_horario_20250705201501.xlsx');
+    // const excelPath = path.join(__dirname, '..', 'public', 'excel_horario_20250705201501.xlsx');
     
     try {
         const extractedSubjects = processExcelFromPath(excelPath);
