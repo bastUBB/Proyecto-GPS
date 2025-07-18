@@ -1,0 +1,387 @@
+[
+  {
+    "nombre": "Álgebra y Trigonometría",
+    "codigo": "220413",
+    "creditos": 8,
+    "prerrequisitos": [],
+    "semestre": "I"
+  },
+  {
+    "nombre": "Introducción a la Ingeniería",
+    "codigo": "620432",
+    "creditos": 6,
+    "prerrequisitos": [],
+    "semestre": "I"
+  },
+  {
+    "nombre": "Comunicación Oral y Escrita",
+    "codigo": "340266",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": "I"
+  },
+  {
+    "nombre": "Introducción a la Programación",
+    "codigo": "620431",
+    "creditos": 9,
+    "prerrequisitos": [],
+    "semestre": "I"
+  },
+  {
+    "nombre": "Cálculo Diferencial",
+    "codigo": "220144",
+    "creditos": 6,
+    "prerrequisitos": ["Álgebra y Trigonometría"],
+    "semestre": "II"
+  },
+  {
+    "nombre": "Química General",
+    "codigo": "210020",
+    "creditos": 8,
+    "prerrequisitos": [],
+    "semestre": "II"
+  },
+  {
+    "nombre": "Estructuras Discretas para Cs. de la Computación",
+    "codigo": "620434",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "II"
+  },
+  {
+    "nombre": "Programación Orientada a Objetos",
+    "codigo": "620433",
+    "creditos": 8,
+    "prerrequisitos": ["Introducción a la Programación"],
+    "semestre": "II"
+  },
+  {
+    "nombre": "Cálculo Integral",
+    "codigo": "220146",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Diferencial"],
+    "semestre": "III"
+  },
+  {
+    "nombre": "Álgebra Lineal",
+    "codigo": "220145",
+    "creditos": 5,
+    "prerrequisitos": ["Cálculo Diferencial"],
+    "semestre": "III"
+  },
+  {
+    "nombre": "Fisica Newtoniana",
+    "codigo": "230033",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Diferencial"],
+    "semestre": "III"
+  },
+  {
+    "nombre": "Estructura de Datos",
+    "codigo": "620435",
+    "creditos": 6,
+    "prerrequisitos": ["Estructuras Discretas para Cs. de la Computación", "Programación Orientada a Objetos"],
+    "semestre": "III"
+  },
+  {
+    "nombre": "Inglés I",
+    "codigo": "340276",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": "III"
+  },
+  {
+    "nombre": "Administración General",
+    "codigo": "610227",
+    "creditos": 3,
+    "prerrequisitos": [],
+    "semestre": "III"
+  },
+  {
+    "nombre": "Cálculo en Varias Variables",
+    "codigo": "220148",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Integral"],
+    "semestre": "IV"
+  },
+  {
+    "nombre": "Ecuaciones Diferenciales",
+    "codigo": "220147",
+    "creditos": 5,
+    "prerrequisitos": ["Cálculo Integral", "Álgebra Lineal"],
+    "semestre": "IV"
+  },
+  {
+    "nombre": "Electro-magnetismo",
+    "codigo": "230034",
+    "creditos": 6,
+    "prerrequisitos": ["Fisica Newtoniana"],
+    "semestre": "IV"
+  },
+  {
+    "nombre": "Modelamiento de Procesos e Información",
+    "codigo": "620436",
+    "creditos": 7,
+    "prerrequisitos": [],
+    "semestre": "IV"
+  },
+  {
+    "nombre": "Inglés II",
+    "codigo": "340277",
+    "creditos": 4,
+    "prerrequisitos": ["Inglés I"],
+    "semestre": "IV"
+  },
+  {
+    "nombre": "Ondas, Óptica y Física Moderna",
+    "codigo": "230035",
+    "creditos": 6,
+    "prerrequisitos": ["Electro-magnetismo", "Ecuaciones Diferenciales"],
+    "semestre": "V"
+  },
+  {
+    "nombre": "Sistemas Digitales",
+    "codigo": "410268",
+    "creditos": 5,
+    "prerrequisitos": ["Electro-magnetismo"],
+    "semestre": "V"
+  },
+  {
+    "nombre": "Fundamentos de las Ciencias de la Computación",
+    "codigo": "620437",
+    "creditos": 6,
+    "prerrequisitos": ["Estructura de Datos"],
+    "semestre": "V"
+  },
+  {
+    "nombre": "Teoría de Sistemas",
+    "codigo": "620438",
+    "creditos": 4,
+    "prerrequisitos": ["Administración General", "Cálculo Integral"],
+    "semestre": "V"
+  },
+  {
+    "nombre": "Inglés III",
+    "codigo": "340278",
+    "creditos": 4,
+    "prerrequisitos": ["Inglés II"],
+    "semestre": "V"
+  },
+  {
+    "nombre": "Gestión Contable",
+    "codigo": "610228",
+    "creditos": 4,
+    "prerrequisitos": ["Administración General"],
+    "semestre": "V"
+  },
+  {
+    "nombre": "Estadística y Probabilidades",
+    "codigo": "220149",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Integral"],
+    "semestre": "VI"
+  },
+  {
+    "nombre": "Economía",
+    "codigo": "611049",
+    "creditos": 4,
+    "prerrequisitos": ["Cálculo Integral"],
+    "semestre": "VI"
+  },
+  {
+    "nombre": "Análisis y Diseño de Algoritmos",
+    "codigo": "620448",
+    "creditos": 5,
+    "prerrequisitos": ["Fundamentos de las Ciencias de la Computación"],
+    "semestre": "VI"
+  },
+  {
+    "nombre": "Base de Datos",
+    "codigo": "620439",
+    "creditos": 6,
+    "prerrequisitos": ["Modelamiento de Procesos e Información", "Estructura de Datos"],
+    "semestre": "VI"
+  },
+  {
+    "nombre": "Inglés IV",
+    "codigo": "340279",
+    "creditos": 4,
+    "prerrequisitos": ["Inglés III"],
+    "semestre": "VI"
+  },
+  {
+    "nombre": "Práctica Profesional I",
+    "codigo": "620449",
+    "creditos": 6,
+    "prerrequisitos": [],
+    "semestre": "IV"
+  },
+  {
+    "nombre": "Investigación de Operaciones",
+    "codigo": "430183",
+    "creditos": 4,
+    "prerrequisitos": ["Estadística y Probabilidades"],
+    "semestre": "VII"
+  },
+  {
+    "nombre": "Arquitectura de Computadores",
+    "codigo": "620450",
+    "creditos": 6,
+    "prerrequisitos": ["Sistemas Digitales"],
+    "semestre": "VII"
+  },
+  {
+    "nombre": "Administración y Programación de Base de Datos",
+    "codigo": "620451",
+    "creditos": 6,
+    "prerrequisitos": ["Base de Datos"],
+    "semestre": "VII"
+  },
+  {
+    "nombre": "Sistemas de Información",
+    "codigo": "620452",
+    "creditos": 4,
+    "prerrequisitos": ["Teoría de Sistemas"],
+    "semestre": "VII"
+  },
+  {
+    "nombre": "Gestión Estratégica",
+    "codigo": "612239",
+    "creditos": 3,
+    "prerrequisitos": ["Gestión Contable"],
+    "semestre": "VII"
+  },
+  {
+    "nombre": "Gestión Presupuestaria y Financiera",
+    "codigo": "610229",
+    "creditos": 4,
+    "prerrequisitos": ["Gestión Contable"],
+    "semestre": "VII"
+  },
+  {
+    "nombre": "Legislación",
+    "codigo": "613017",
+    "creditos": 3,
+    "prerrequisitos": [],
+    "semestre": "VIII"
+  },
+  {
+    "nombre": "Sistemas Operativos",
+    "codigo": "620453",
+    "creditos": 6,
+    "prerrequisitos": ["Arquitectura de Computadores", "Análisis y Diseño de Algoritmos"],
+    "semestre": "VIII"
+  },
+  {
+    "nombre": "Inteligencia Artificial",
+    "codigo": "620454",
+    "creditos": 4,
+    "prerrequisitos": ["Análisis y Diseño de Algoritmos"],
+    "semestre": "VIII"
+  },
+  {
+    "nombre": "Ingeniería de Software",
+    "codigo": "620455",
+    "creditos": 5,
+    "prerrequisitos": ["Base de Datos"],
+    "semestre": "VIII"
+  },
+  {
+    "nombre": "Formulación y Evaluación de Proyectos",
+    "codigo": "611050",
+    "creditos": 4,
+    "prerrequisitos": ["Gestión Presupuestaria y Financiera"],
+    "semestre": "VIII"
+  },
+  {
+    "nombre": "Práctica Profesional II",
+    "codigo": "620456",
+    "creditos": 9,
+    "prerrequisitos": [],
+    "semestre": "VIII"
+  },
+  {
+    "nombre": "Anteproyecto de Título",
+    "codigo": "620472",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Comunicación de Datos y Redes",
+    "codigo": "620457",
+    "creditos": 5,
+    "prerrequisitos": ["Sistemas Operativos", "Ondas, Óptica y Física Moderna"],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Electivo Profesional I",
+    "codigo": "620459",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Gestión de Proyectos de Software",
+    "codigo": "620458",
+    "creditos": 4,
+    "prerrequisitos": ["Ingeniería de Software"],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Gestión de Recursos Humanos",
+    "codigo": "610231",
+    "creditos": 3,
+    "prerrequisitos": ["Gestión Estratégica"],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Electivo Profesional II",
+    "codigo": "620470",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Electivo Profesional III",
+    "codigo": "620471",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "IX"
+  },
+  {
+    "nombre": "Proyecto de Título",
+    "codigo": "620477",
+    "creditos": 10,
+    "prerrequisitos": ["Anteproyecto de Título"],
+    "semestre": "X"
+  },
+  {
+    "nombre": "Seguridad Informática",
+    "codigo": "620473",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": "X"
+  },
+  {
+    "nombre": "Electivo Profesional IV",
+    "codigo": "620474",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "X"
+  },
+  {
+    "nombre": "Electivo Profesional V",
+    "codigo": "620475",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "X"
+  },
+  {
+    "nombre": "Electivo Profesional VI",
+    "codigo": "620476",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": "X"
+  }
+]
