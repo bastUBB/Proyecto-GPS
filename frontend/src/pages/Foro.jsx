@@ -15,6 +15,8 @@ export default function Foro() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos'); // nuevo estado para filtros
+  const [filtroProfesor, setFiltroProfesor] = useState(''); // filtro por profesor
+  const [filtroAsignatura, setFiltroAsignatura] = useState(''); // filtro por asignatura
 
   // Hook personalizado para evaluaciones (solo profesores)
   const { 
@@ -64,11 +66,9 @@ export default function Foro() {
         loadDocentes();
         loadAsignaturas();
       }
-      // Para profesores, el hook useEvaluaciones se encarga de cargar las evaluaciones
     }
   }, [user]);
 
-  // Usar errores del hook si es profesor o admin
   useEffect(() => {
     if (user?.role === 'profesor' && errorEvaluaciones) {
       setError(errorEvaluaciones);
@@ -78,7 +78,6 @@ export default function Foro() {
     }
   }, [errorEvaluaciones, errorAdmin, user?.role]);
 
-  // Cargar lista de docentes (solo para alumnos)
   const loadDocentes = async () => {
     try {
       const response = await axios.get('/api/evaluacionDocente/docentes', {
@@ -224,10 +223,61 @@ export default function Foro() {
 
   // Función para obtener evaluaciones filtradas
   const getEvaluacionesFiltradas = () => {
-    if (filtroEstado === 'todos') {
-      return evaluacionesAdmin;
+    let evaluacionesFiltradas = evaluacionesAdmin;
+    
+    // Filtrar por estado
+    if (filtroEstado !== 'todos') {
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => evaluacion.estado === filtroEstado);
     }
-    return evaluacionesAdmin.filter(evaluacion => evaluacion.estado === filtroEstado);
+    
+    // Filtrar por profesor
+    if (filtroProfesor) {
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => 
+        evaluacion.docente.toLowerCase().includes(filtroProfesor.toLowerCase())
+      );
+    }
+    
+    // Filtrar por asignatura
+    if (filtroAsignatura) {
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => 
+        evaluacion.asignatura.toLowerCase().includes(filtroAsignatura.toLowerCase())
+      );
+    }
+    
+    return evaluacionesFiltradas;
+  };
+
+  // Función para obtener lista única de profesores
+  const getProfesoresUnicos = () => {
+    const profesores = [...new Set(evaluacionesAdmin.map(evaluacion => evaluacion.docente))];
+    return profesores.sort();
+  };
+
+  // Función para obtener lista única de asignaturas
+  const getAsignaturasUnicas = () => {
+    const asignaturas = [...new Set(evaluacionesAdmin.map(evaluacion => evaluacion.asignatura))];
+    return asignaturas.sort();
+  };
+
+  // Función para generar el título de los filtros aplicados
+  const getTituloFiltros = () => {
+    const filtros = [];
+    const resultados = getEvaluacionesFiltradas();
+    
+    if (filtroEstado !== 'todos') {
+      filtros.push(`Estado: ${filtroEstado}`);
+    }
+    if (filtroProfesor) {
+      filtros.push(`Profesor: ${filtroProfesor}`);
+    }
+    if (filtroAsignatura) {
+      filtros.push(`Asignatura: ${filtroAsignatura}`);
+    }
+    
+    const baseTitulo = filtros.length > 0 ? 'Evaluaciones Filtradas' : 'Todas las Evaluaciones';
+    const filtrosTexto = filtros.length > 0 ? ` (${filtros.join(', ')})` : '';
+    
+    return `${baseTitulo}${filtrosTexto} - ${resultados.length} resultado${resultados.length !== 1 ? 's' : ''}`;
   };
 
   // Función para obtener el color del estado
@@ -577,16 +627,6 @@ export default function Foro() {
           {/* Panel de administración para administradores */}
           {user.role === 'admin' && (
             <div className="space-y-4">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-blue-800">Panel de Administración</h2>
-                </div>
-                <p className="text-blue-700 text-sm">
-                  Como administrador, puedes revisar, aprobar, rechazar o eliminar evaluaciones. 
-                  Solo las evaluaciones aprobadas serán visibles para los profesores.
-                </p>
-              </div>
 
               {/* Estadísticas del sistema */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -630,48 +670,96 @@ export default function Foro() {
 
               {/* Filtros */}
               <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setFiltroEstado('pendiente')}
-                    className={`px-3 py-1 rounded-full text-sm transition ${
-                      filtroEstado === 'pendiente' 
-                        ? 'bg-yellow-200 text-yellow-800' 
-                        : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                    }`}
-                  >
-                    Ver solo pendientes ({evaluacionesAdmin.filter(e => e.estado === 'pendiente').length})
-                  </button>
-                  <button
-                    onClick={() => setFiltroEstado('aprobada')}
-                    className={`px-3 py-1 rounded-full text-sm transition ${
-                      filtroEstado === 'aprobada' 
-                        ? 'bg-green-200 text-green-800' 
-                        : 'bg-green-100 text-green-800 hover:bg-green-200'
-                    }`}
-                  >
-                    Ver solo aprobadas ({evaluacionesAdmin.filter(e => e.estado === 'aprobada').length})
-                  </button>
-                  <button
-                    onClick={() => setFiltroEstado('rechazada')}
-                    className={`px-3 py-1 rounded-full text-sm transition ${
-                      filtroEstado === 'rechazada' 
-                        ? 'bg-red-200 text-red-800' 
-                        : 'bg-red-100 text-red-800 hover:bg-red-200'
-                    }`}
-                  >
-                    Ver solo rechazadas ({evaluacionesAdmin.filter(e => e.estado === 'rechazada').length})
-                  </button>
-                  <button
-                    onClick={() => setFiltroEstado('todos')}
-                    className={`px-3 py-1 rounded-full text-sm transition ${
-                      filtroEstado === 'todos' 
-                        ? 'bg-blue-200 text-blue-800' 
-                        : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-                    }`}
-                  >
-                    Ver todas ({evaluacionesAdmin.length})
-                  </button>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
+                
+                {/* Filtros por estado */}
+                <div className="mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    {/* Filtro por Estado */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <CheckCircle className="w-4 h-4 inline mr-1" />
+                        Estado de la Evaluación:
+                      </label>
+                      <select
+                        value={filtroEstado}
+                        onChange={(e) => setFiltroEstado(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="todos">
+                          Todas las evaluaciones ({evaluacionesAdmin.length})
+                        </option>
+                        <option value="pendiente">
+                          Pendientes ({evaluacionesAdmin.filter(e => e.estado === 'pendiente').length})
+                        </option>
+                        <option value="aprobada">
+                          Aprobadas ({evaluacionesAdmin.filter(e => e.estado === 'aprobada').length})
+                        </option>
+                        <option value="rechazada">
+                          Rechazadas ({evaluacionesAdmin.filter(e => e.estado === 'rechazada').length})
+                        </option>
+                      </select>
+                    </div>
+
+                    {/* Filtro por Profesor */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <User className="w-4 h-4 inline mr-1" />
+                        Filtrar por Profesor:
+                      </label>
+                      <select
+                        value={filtroProfesor}
+                        onChange={(e) => setFiltroProfesor(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="">Todos los profesores</option>
+                        {getProfesoresUnicos().map((profesor) => (
+                          <option key={profesor} value={profesor}>
+                            {profesor}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Filtro por Asignatura */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <BookOpen className="w-4 h-4 inline mr-1" />
+                        Filtrar por Asignatura:
+                      </label>
+                      <select
+                        value={filtroAsignatura}
+                        onChange={(e) => setFiltroAsignatura(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="">Todas las asignaturas</option>
+                        {getAsignaturasUnicas().map((asignatura) => (
+                          <option key={asignatura} value={asignatura}>
+                            {asignatura}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Eliminar la sección separada de filtros por profesor y asignatura */}
+
+                {/* Botón para limpiar filtros */}
+                {(filtroProfesor || filtroAsignatura || filtroEstado !== 'todos') && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => {
+                        setFiltroProfesor('');
+                        setFiltroAsignatura('');
+                        setFiltroEstado('todos');
+                      }}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm"
+                    >
+                      Limpiar todos los filtros
+                    </button>
+                  </div>
+                )}
               </div>
               
               {loadingAdmin ? (
@@ -688,7 +776,7 @@ export default function Foro() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-gray-800">
-                      {filtroEstado === 'todos' ? 'Todas las Evaluaciones' : `Evaluaciones ${filtroEstado}s`} ({getEvaluacionesFiltradas().length})
+                      {getTituloFiltros()}
                     </h3>
                     <button
                       onClick={reloadEvaluaciones}
@@ -698,15 +786,24 @@ export default function Foro() {
                     </button>
                   </div>
                   
-                  {getEvaluacionesFiltradas().map((evaluacion) => (
-                    <div
-                      key={evaluacion._id}
-                      className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${
-                        evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
-                        evaluacion.estado === 'aprobada' ? 'border-green-200' :
-                        'border-red-200'
-                      }`}
-                    >
+                  {getEvaluacionesFiltradas().length === 0 ? (
+                    <div className="text-center py-8">
+                      <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500 text-lg">No se encontraron evaluaciones con los filtros aplicados.</p>
+                      <p className="text-gray-400 text-sm mt-2">
+                        Intenta ajustar los filtros o limpiarlos para ver más resultados.
+                      </p>
+                    </div>
+                  ) : (
+                    getEvaluacionesFiltradas().map((evaluacion) => (
+                      <div
+                        key={evaluacion._id}
+                        className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${
+                          evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
+                          evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                          'border-red-200'
+                        }`}
+                      >
                       {/* Estado y acciones */}
                       <div className="absolute top-4 right-4 flex items-center gap-2">
                         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
@@ -793,7 +890,8 @@ export default function Foro() {
                         ID: {evaluacion._id}
                       </div>
                     </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               )}
             </div>
