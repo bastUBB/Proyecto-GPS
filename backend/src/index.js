@@ -5,14 +5,16 @@ import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db.js';
 import { initialSetup } from './config/initialSetup.js';
 import indexRoutes from './routes/index.routes.js';
-import '../scripts/inscripcionReminder.js';
+import '../scripts/inscripcionReminder.js'; // Importa el script de recordatorio de inscripción
+
 
 dotenv.config();
 
+//Adaptarlo a como esta en servidor
 const app = express();
+const PORT = process.env.PORT || 5500; 
 const FRONTEND_URL = process.env.FRONTEND_URL || ['http://localhost:5173'];
-const PORT = process.env.PORT || 5500; // Definir PORT primero
-const BACKEND_URL = process.env.BACKEND_URL ||`http://localhost:${PORT}`; 
+const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`; 
 const url = new URL(BACKEND_URL);
 const HOST = url.hostname;
 
@@ -34,7 +36,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api", indexRoutes); // Rutas de la API
 
-app.listen(PORT, HOST, () => {
+
+app.listen(PORT, () => {
   connectDB(); // Conecta a la base de datos
   console.log(`Backend corriendo en: ${BACKEND_URL}`);
 });

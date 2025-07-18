@@ -71,7 +71,7 @@ export const userBodyValidation = Joi.object({
             "any.custom": "El correo electrónico debe finalizar en @gmail.cl, @ubiobio.cl o @alumnos.ubiobio.cl.",
             "any.required": "El correo electrónico es obligatorio.",
         }),
-    password: Joi.string()
+    password: joi.string()
         .min(6)
         .max(26)
         .pattern(/^[a-zA-Z0-9]+$/)
@@ -85,7 +85,7 @@ export const userBodyValidation = Joi.object({
                 "La contraseña solo puede contener letras y números.",
             "any.required": "La contraseña es obligatoria.",
         }),
-    role: Joi.string()
+    role: joi.string()
         .min(5)
         .max(25)
         .trim()
@@ -105,8 +105,8 @@ export const userBodyValidation = Joi.object({
         'object.unknown': 'No se permiten propiedades adicionales en el cuerpo de la solicitud',
     });
 
-export const userUpdateBodyValidation = Joi.object({
-    nombreCompleto: Joi.string()
+export const userUpdateBodyValidation = joi.object({
+    nombreCompleto: joi.string()
         .min(15)
         .max(50)
         .trim()
@@ -119,7 +119,7 @@ export const userUpdateBodyValidation = Joi.object({
             "string.pattern.base":
                 "El nombre completo solo puede contener letras y espacios.",
         }),
-    rut: Joi.string()
+    rut: joi.string()
         .min(9)
         .max(12)
         .trim()
@@ -131,7 +131,7 @@ export const userUpdateBodyValidation = Joi.object({
             "string.max": "El rut debe tener como máximo 12 caracteres.",
             "string.pattern.base": "Formato rut inválido, debe ser xx.xxx.xxx-x o xxxxxxxx-x.",
         }),
-    email: Joi.string()
+    email: joi.string()
         .min(15)
         .max(50)
         .email()
@@ -145,7 +145,7 @@ export const userUpdateBodyValidation = Joi.object({
             "string.email": "El correo electrónico debe ser válido.",
             "any.custom": "El correo electrónico debe finalizar en @gmail.cl, @ubiobio.cl o @alumnos.ubiobio.cl.",
         }),
-    password: Joi.string()
+    password: joi.string()
         .min(6)
         .max(26)
         .pattern(/^[a-zA-Z0-9]+$/)

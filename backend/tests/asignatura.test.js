@@ -1,6 +1,7 @@
+import mongoose from 'mongoose';
 import { describe, it, expect } from 'vitest';
-import Asignatura from '../src/models/asignaturas.model.js';
 import {connectDbTest} from '../src/config/dbTest.js';
+import Asignatura from '../src/models/asignaturas.model.js';
 import { asignaturaQueryValidation, asignaturaBodyValidation } from '../src/validations/asignaturas.validation.js';
 
 /*
@@ -35,6 +36,23 @@ TESTS
 25. ingreso inválido del body: semestre no es de tipo string && todos los demás campos válidos
 
 ----------------------------- MODELO
+26. ingreso válido del modelo: creación de una asignatura
+27. ingreso inválido del modelo: nombre vacío && todos los demás campos válidos
+28. ingreso inválido del modelo: nombre no es de tipo string && todos los demás campos válidos
+29. ingreso inválido del modelo: no existe campo nombre && todos los demás campos válidos
+30. ingreso inválido del modelo: codigo vacío && todos los demás campos válidos
+31. ingreso inválido del modelo: codigo no es de tipo string && todos los demás campos válidos
+32. ingreso inválido del modelo: no existe campo codigo && todos los demás campos válidos
+33. ingreso inválido del modelo: creditos vacío && todos los demás campos válidos
+34. ingreso inválido del modelo: creditos no es de tipo number && todos los demás campos válidos
+35. ingreso inválido del modelo: no existe campo creditos && todos los demás campos válidos
+36. ingreso válido del modelo: prerrequisitos vacío && todos los demás campos válidos
+37. ingreso inválido del modelo: prerrequisitos no es un array del tipo string && todos los demás campos válidos
+38. ingreso válido del modelo: no existe campo prerrequisitos && todos los demás campos válidos
+39. ingreso inválido del modelo: semestre vacío && todos los demás campos válidos
+40. ingreso inválido del modelo: semestre no es de tipo string && todos los demás campos válidos
+41. ingreso inválido del modelo: no existe campo semestre && todos los demás campos válidos
+
 */
 
 // Conexión a MongoDB
@@ -325,3 +343,170 @@ describe('Test asignaturaBodyValidation', () => {
   });
 }
 );
+
+// Tests Modelo
+describe('Test Modelo Asignatura', () => {
+  it('26. Debe crear un modelo de asignatura correctamente', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno', 'Materia Dos'],
+      semestre: 'III'
+    });
+    const savedAsignatura = await asignatura.save();
+    expect(savedAsignatura._id).toBeDefined();
+    expect(savedAsignatura.nombre).toBe('Cálculo Diferencial');
+    expect(savedAsignatura.codigo).toBe('340465');
+    expect(savedAsignatura.creditos).toBe(5);
+    expect(savedAsignatura.prerrequisitos).toEqual(['Materia Uno', 'Materia Dos']);
+    expect(savedAsignatura.semestre).toBe('III');
+  });
+  it('27. Debe fallar al crear una asignatura con nombre vacío', async () => {
+    const asignatura = new Asignatura({
+      nombre: '',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('28. Debe fallar al crear una asignatura con nombre no es de tipo string', async () => {
+    const asignatura = new Asignatura({
+      nombre: 12345,
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate({ validateModifiedOnly: false })).rejects.toThrow(mongoose.Error.ValidationError);
+  });
+  it('29. Debe fallar al crear una asignatura sin el campo nombre', async () => {
+    const asignatura = new Asignatura({
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('30. Debe fallar al crear una asignatura con código vacío', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('31. Debe fallar al crear una asignatura con código no es de tipo string', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: 340465,
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('32. Debe fallar al crear una asignatura sin el campo código', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('33. Debe fallar al crear una asignatura con créditos vacío', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: '',
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('34. Debe fallar al crear una asignatura con créditos no es de tipo number', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 'cinco',
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('35. Debe fallar al crear una asignatura sin el campo créditos', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      prerrequisitos: ['Materia Uno'],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('36. Debe crear una asignatura con el campo prerrequisitos vacío', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: [],
+      semestre: 'I'
+    });
+    const savedAsignatura = await asignatura.save();
+    expect(savedAsignatura.prerrequisitos).toEqual([]);
+  });
+  it('37. Debe fallar al crear una asignatura con prerrequisitos no es un array del tipo string', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno', 12345],
+      semestre: 'I'
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('38. Debe crear una asignatura sin el campo prerrequisitos', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      semestre: 'I'
+    });
+    const savedAsignatura = await asignatura.save();
+    expect(savedAsignatura.prerrequisitos).toEqual([]);
+  });
+  it('39. Debe fallar al crear una asignatura con semestre vacío', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: ''
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('40. Debe fallar al crear una asignatura con semestre no es de tipo string', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno'],
+      semestre: 1
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+  it('41. Debe fallar al crear una asignatura sin el campo semestre', async () => {
+    const asignatura = new Asignatura({
+      nombre: 'Cálculo Diferencial',
+      codigo: '340465',
+      creditos: 5,
+      prerrequisitos: ['Materia Uno']
+    });
+    await expect(asignatura.validate()).rejects.toThrow();
+  });
+});
