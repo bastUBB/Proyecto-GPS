@@ -10,9 +10,9 @@ import { authorizeRoles } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router
-    .get('/detail', authorizeRoles("administrador", "alumno"), getMallaUser)
-    .post('/', authorizeRoles("administrador", "alumno"), createMallaUser)
-    .patch('/detail', authorizeRoles("administrador", "alumno"), updateMallaUser)
-    .delete('/detail', authorizeRoles("administrador", "alumno"), deleteMallaUser);
+    .get('/detail', authorizeRoles("administrador", "admin", "alumno"), getMallaUser)
+    .post('/', authorizeRoles("administrador", "admin", "alumno"), createMallaUser)
+    .patch('/detail', authorizeRoles("administrador", "admin", "alumno"), updateMallaUser)
+    .delete('/detail', authorizeRoles("administrador", "admin", "alumno"), deleteMallaUser);
 
 export default router;
