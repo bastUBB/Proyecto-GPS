@@ -53,12 +53,10 @@ export default function Home() {
         alumno: [
           ...basePages,
           { id: "historial", route: "/historial", icon: History, label: "Historial" },
-          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
         ],
         estudiante: [
           ...basePages,
           { id: "historial", route: "/historial", icon: History, label: "Historial" },
-          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
         ],
       };
 

@@ -19,12 +19,12 @@ export default function Foro() {
   const [filtroAsignatura, setFiltroAsignatura] = useState(''); // filtro por asignatura
 
   // Hook personalizado para evaluaciones (solo profesores)
-  const { 
-    evaluaciones, 
-    nuevasEvaluaciones, 
-    loading: loadingEvaluaciones, 
-    error: errorEvaluaciones, 
-    marcarComoLeidas 
+  const {
+    evaluaciones,
+    nuevasEvaluaciones,
+    loading: loadingEvaluaciones,
+    error: errorEvaluaciones,
+    marcarComoLeidas
   } = useEvaluaciones(user?.role, getAuthToken());
 
   // Hook personalizado para administradores
@@ -114,16 +114,16 @@ export default function Foro() {
     try {
       setLoading(true);
       setError('');
-      
+
       console.log('📤 Enviando datos:', formData);
       console.log('🔑 Token:', getAuthToken());
-      
+
       const response = await axios.post('/api/evaluacionDocente/alumno', formData, {
         headers: getAuthHeaders()
       });
-      
+
       console.log('📥 Respuesta:', response.data);
-      
+
       setSuccess('Evaluación enviada exitosamente. Será revisada por un administrador antes de ser publicada.');
       setFormData({
         docente: '',
@@ -146,11 +146,11 @@ export default function Foro() {
     try {
       setLoading(true);
       setError('');
-      
+
       const response = await axios.put(`/api/evaluacionDocente/aprobar/${evaluacionId}`, {}, {
         headers: getAuthHeaders()
       });
-      
+
       if (response.data.success) {
         setSuccess('Evaluación aprobada correctamente');
         await reloadEvaluaciones();
@@ -175,11 +175,11 @@ export default function Foro() {
     try {
       setLoading(true);
       setError('');
-      
+
       const response = await axios.put(`/api/evaluacionDocente/rechazar/${evaluacionId}`, {}, {
         headers: getAuthHeaders()
       });
-      
+
       if (response.data.success) {
         setSuccess('Evaluación rechazada correctamente');
         await reloadEvaluaciones();
@@ -204,9 +204,9 @@ export default function Foro() {
     try {
       setLoading(true);
       setError('');
-      
+
       const result = await deleteEvaluacion(evaluacionId);
-      
+
       if (result.success) {
         setSuccess(result.message);
         setTimeout(() => setSuccess(''), 3000);
@@ -224,26 +224,26 @@ export default function Foro() {
   // Función para obtener evaluaciones filtradas
   const getEvaluacionesFiltradas = () => {
     let evaluacionesFiltradas = evaluacionesAdmin;
-    
+
     // Filtrar por estado
     if (filtroEstado !== 'todos') {
       evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => evaluacion.estado === filtroEstado);
     }
-    
+
     // Filtrar por profesor
     if (filtroProfesor) {
-      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => 
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion =>
         evaluacion.docente.toLowerCase().includes(filtroProfesor.toLowerCase())
       );
     }
-    
+
     // Filtrar por asignatura
     if (filtroAsignatura) {
-      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => 
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion =>
         evaluacion.asignatura.toLowerCase().includes(filtroAsignatura.toLowerCase())
       );
     }
-    
+
     return evaluacionesFiltradas;
   };
 
@@ -263,7 +263,7 @@ export default function Foro() {
   const getTituloFiltros = () => {
     const filtros = [];
     const resultados = getEvaluacionesFiltradas();
-    
+
     if (filtroEstado !== 'todos') {
       filtros.push(`Estado: ${filtroEstado}`);
     }
@@ -273,10 +273,10 @@ export default function Foro() {
     if (filtroAsignatura) {
       filtros.push(`Asignatura: ${filtroAsignatura}`);
     }
-    
+
     const baseTitulo = filtros.length > 0 ? 'Evaluaciones Filtradas' : 'Todas las Evaluaciones';
     const filtrosTexto = filtros.length > 0 ? ` (${filtros.join(', ')})` : '';
-    
+
     return `${baseTitulo}${filtrosTexto} - ${resultados.length} resultado${resultados.length !== 1 ? 's' : ''}`;
   };
 
@@ -315,9 +315,9 @@ export default function Foro() {
     try {
       setLoading(true);
       setError('');
-      
+
       const result = await deleteEvaluacion(evaluacionId);
-      
+
       if (result.success) {
         setSuccess(result.message);
         setTimeout(() => setSuccess(''), 3000);
@@ -374,23 +374,23 @@ export default function Foro() {
           {/* Encabezado */}
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
-              {user.role === 'alumno' 
-                ? 'Evaluar Docentes' 
-                : user.role === 'profesor' 
-                ? 'Mis Evaluaciones Recibidas'
-                : 'Gestión de Evaluaciones Docentes'
+              {user.role === 'alumno'
+                ? 'Evaluar Docentes'
+                : user.role === 'profesor'
+                  ? 'Mis Evaluaciones Recibidas'
+                  : 'Gestión de Evaluaciones Docentes'
               }
             </h1>
             <p className="text-sm sm:text-base text-blue-700">
-              {user.role === 'alumno' 
+              {user.role === 'alumno'
                 ? 'Evalúa a tus docentes y ayuda a mejorar la calidad educativa'
-                : user.role === 'profesor' 
-                ? 'Revisa las evaluaciones que has recibido de tus estudiantes'
-                : 'Administra las evaluaciones docentes del sistema'
+                : user.role === 'profesor'
+                  ? 'Revisa las evaluaciones que has recibido de tus estudiantes'
+                  : 'Administra las evaluaciones docentes del sistema'
               }
             </p>
           </div>
-          
+
           <div className="flex items-center justify-center mb-6">
             <div></div>
             {/* Indicador de notificaciones para profesores */}
@@ -408,7 +408,7 @@ export default function Foro() {
               {error}
             </div>
           )}
-          
+
           {success && (
             <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
               {success}
@@ -422,7 +422,7 @@ export default function Foro() {
                 <MessageSquare className="w-5 h-5" />
                 Crear Nueva Evaluación
               </h2>
-              
+
               {/* Información del proceso */}
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -430,11 +430,11 @@ export default function Foro() {
                   <h3 className="font-semibold text-blue-800">Proceso de Evaluación</h3>
                 </div>
                 <p className="text-blue-700 text-sm">
-                  Las evaluaciones son revisadas por un administrador antes de ser publicadas. 
+                  Las evaluaciones son revisadas por un administrador antes de ser publicadas.
                   Solo las evaluaciones aprobadas serán visibles para los profesores.
                 </p>
               </div>
-              
+
               <form onSubmit={handleSubmitEvaluacion} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -444,7 +444,7 @@ export default function Foro() {
                     </label>
                     <select
                       value={formData.docente}
-                      onChange={(e) => setFormData({...formData, docente: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, docente: e.target.value })}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
@@ -464,7 +464,7 @@ export default function Foro() {
                     </label>
                     <select
                       value={formData.asignatura}
-                      onChange={(e) => setFormData({...formData, asignatura: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, asignatura: e.target.value })}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
@@ -488,7 +488,7 @@ export default function Foro() {
                       min="1"
                       max="7"
                       value={formData.calificacion}
-                      onChange={(e) => setFormData({...formData, calificacion: parseInt(e.target.value)})}
+                      onChange={(e) => setFormData({ ...formData, calificacion: parseInt(e.target.value) })}
                       className="flex-1"
                     />
                     <div className="flex items-center gap-2">
@@ -506,7 +506,7 @@ export default function Foro() {
                   </label>
                   <textarea
                     value={formData.texto}
-                    onChange={(e) => setFormData({...formData, texto: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, texto: e.target.value })}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows="4"
                     placeholder="Comparte tu experiencia con este docente..."
@@ -525,7 +525,7 @@ export default function Foro() {
                   </label>
                   <select
                     value={formData.visibilidad}
-                    onChange={(e) => setFormData({...formData, visibilidad: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, visibilidad: e.target.value })}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="Anónima">Anónima (recomendado)</option>
@@ -557,10 +557,10 @@ export default function Foro() {
                   Solo se muestran las evaluaciones que han sido revisadas y aprobadas por un administrador.
                 </p>
               </div>
-              
+
               {/* Estadísticas de evaluaciones */}
               {evaluaciones.length > 0 && <EvaluacionStats evaluaciones={evaluaciones} />}
-              
+
               {loadingEvaluaciones ? (
                 <div className="text-center py-8">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -585,7 +585,7 @@ export default function Foro() {
                       <CheckCircle className="w-3 h-3" />
                       <span>Aprobada</span>
                     </div>
-                    
+
                     <div className="flex justify-between items-start mb-4 pr-20">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
@@ -610,11 +610,11 @@ export default function Foro() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="border-t pt-4">
                       <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
                     </div>
-                    
+
                     <div className="mt-3 text-xs text-gray-500 uppercase tracking-wide">
                       {evaluacion.visibilidad}
                     </div>
@@ -671,7 +671,7 @@ export default function Foro() {
               {/* Filtros */}
               <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
-                
+
                 {/* Filtros por estado */}
                 <div className="mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -761,7 +761,7 @@ export default function Foro() {
                   </div>
                 )}
               </div>
-              
+
               {loadingAdmin ? (
                 <div className="text-center py-8">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -785,7 +785,7 @@ export default function Foro() {
                       Actualizar
                     </button>
                   </div>
-                  
+
                   {getEvaluacionesFiltradas().length === 0 ? (
                     <div className="text-center py-8">
                       <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -798,98 +798,97 @@ export default function Foro() {
                     getEvaluacionesFiltradas().map((evaluacion) => (
                       <div
                         key={evaluacion._id}
-                        className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${
-                          evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
-                          evaluacion.estado === 'aprobada' ? 'border-green-200' :
-                          'border-red-200'
-                        }`}
+                        className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
+                            evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                              'border-red-200'
+                          }`}
                       >
-                      {/* Estado y acciones */}
-                      <div className="absolute top-4 right-4 flex items-center gap-2">
-                        <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
-                          {getStatusIcon(evaluacion.estado)}
-                          <span className="capitalize">{evaluacion.estado}</span>
+                        {/* Estado y acciones */}
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
+                            {getStatusIcon(evaluacion.estado)}
+                            <span className="capitalize">{evaluacion.estado}</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex justify-between items-start mb-4 pr-32">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <BookOpen className="w-4 h-4 text-blue-600" />
-                            <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
+                        <div className="flex justify-between items-start mb-4 pr-32">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <BookOpen className="w-4 h-4 text-blue-600" />
+                              <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="w-4 h-4 text-gray-600" />
+                              <span className="text-gray-700">
+                                Profesor: <strong>{evaluacion.docente}</strong>
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="w-4 h-4 text-green-600" />
+                              <span className="text-gray-700">
+                                {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="w-4 h-4 text-gray-600" />
-                            <span className="text-gray-700">
-                              Profesor: <strong>{evaluacion.docente}</strong>
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="w-4 h-4 text-green-600" />
-                            <span className="text-gray-700">
-                              {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
-                            </span>
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1 mb-1">
+                              {renderStars(evaluacion.calificacion)}
+                              <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-gray-500">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+                            </div>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center gap-1 mb-1">
-                            {renderStars(evaluacion.calificacion)}
-                            <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
+
+                        <div className="border-t pt-4 mb-4">
+                          <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <div className="text-xs text-gray-500 uppercase tracking-wide">
+                            {evaluacion.visibilidad}
                           </div>
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <Calendar className="w-3 h-3" />
-                            {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+
+                          {/* Botones de acción */}
+                          <div className="flex gap-2">
+                            {evaluacion.estado === 'pendiente' && (
+                              <>
+                                <button
+                                  onClick={() => handleAprobarEvaluacion(evaluacion._id)}
+                                  className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
+                                  disabled={loading}
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                  Aprobar
+                                </button>
+                                <button
+                                  onClick={() => handleRechazarEvaluacion(evaluacion._id)}
+                                  className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
+                                  disabled={loading}
+                                >
+                                  <XCircle className="w-4 h-4" />
+                                  Rechazar
+                                </button>
+                              </>
+                            )}
+
+                            <button
+                              onClick={() => handleDeleteEvaluacion(evaluacion._id)}
+                              className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
+                              disabled={loading}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Eliminar
+                            </button>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div className="border-t pt-4 mb-4">
-                        <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <div className="text-xs text-gray-500 uppercase tracking-wide">
-                          {evaluacion.visibilidad}
-                        </div>
-                        
-                        {/* Botones de acción */}
-                        <div className="flex gap-2">
-                          {evaluacion.estado === 'pendiente' && (
-                            <>
-                              <button
-                                onClick={() => handleAprobarEvaluacion(evaluacion._id)}
-                                className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
-                                disabled={loading}
-                              >
-                                <CheckCircle className="w-4 h-4" />
-                                Aprobar
-                              </button>
-                              <button
-                                onClick={() => handleRechazarEvaluacion(evaluacion._id)}
-                                className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
-                                disabled={loading}
-                              >
-                                <XCircle className="w-4 h-4" />
-                                Rechazar
-                              </button>
-                            </>
-                          )}
-                          
-                          <button
-                            onClick={() => handleDeleteEvaluacion(evaluacion._id)}
-                            className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
-                            disabled={loading}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            Eliminar
-                          </button>
+
+                        <div className="mt-2 text-xs text-gray-400">
+                          ID: {evaluacion._id}
                         </div>
                       </div>
-                      
-                      <div className="mt-2 text-xs text-gray-400">
-                        ID: {evaluacion._id}
-                      </div>
-                    </div>
                     ))
                   )}
                 </div>

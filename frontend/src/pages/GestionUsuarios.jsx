@@ -14,6 +14,8 @@ import TablaGestion from "../components/TablaGestion";
 
 export default function GestionUsuarios() {
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -35,6 +37,20 @@ export default function GestionUsuarios() {
         checkAdminAccess();
         loadUsers();
     }, []);
+
+    useEffect(() => {
+        if (!searchTerm.trim()) {
+            setFilteredUsers(users);
+        } else {
+            const term = searchTerm.trim().toLowerCase();
+            setFilteredUsers(
+                users.filter(u =>
+                    u.nombreCompleto.toLowerCase().includes(term) ||
+                    u.rut.toLowerCase().includes(term)
+                )
+            );
+        }
+    }, [searchTerm, users]);
 
     const checkAdminAccess = () => {
         const token = localStorage.getItem('token');
@@ -314,35 +330,42 @@ export default function GestionUsuarios() {
                     </div>
                 )}
 
-        {/* Título principal */}
-        <div className="mb-6">
-          {/* Encabezado */}
-          <div className="text-center space-y-1 sm:space-y-2 mb-6">
-            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
-              Gestión de Usuarios
-            </h1>
-            <p className="text-sm sm:text-base text-blue-700">
-              Administra los usuarios del sistema y sus permisos
-            </p>
-          </div>
+                {/* Título principal */}
+                <div className="mb-6">
+                    {/* Encabezado */}
+                    <div className="text-center space-y-1 sm:space-y-2 mb-6">
+                        <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                            Gestión de Usuarios
+                        </h1>
+                        <p className="text-sm sm:text-base text-blue-700">
+                            Administra los usuarios del sistema y sus permisos
+                        </p>
+                    </div>
 
-          <div className="flex justify-end">
-            <button
-              onClick={() => {
-                resetForm();
-                setShowModal(true);
-              }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
-            >
-              <UserPlus className="w-5 h-5" />
-              Nuevo Usuario
-            </button>
-          </div>
-        </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            placeholder="Buscar por nombre o RUT..."
+                            className="w-full sm:w-1/3 px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-blue-900 bg-white shadow-sm"
+                        />
+                        <button
+                            onClick={() => {
+                                resetForm();
+                                setShowModal(true);
+                            }}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+                        >
+                            <UserPlus className="w-5 h-5" />
+                            Nuevo Usuario
+                        </button>
+                    </div>
+                </div>
 
                 {/* Tabla de usuarios */}
                 <TablaGestion
-                    data={users}
+                    data={filteredUsers}
                     columns={columns}
                     title="Usuarios del Sistema"
                     icon="/IconUsers.png"
