@@ -4,6 +4,7 @@ import path from 'path';
 import { hashPassword } from '../helpers/bcrypt.helper.js';
 import User from '../models/user.model.js';
 import Asignatura from '../models/asignaturas.model.js';
+
 const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
 const Asignaturas = JSON.parse(asignaturasRaw);
@@ -93,7 +94,8 @@ async function createAsignaturas() {
                 codigo: asignatura.codigo,
                 creditos: asignatura.creditos,
                 prerrequisitos: asignatura.prerrequisitos,
-                semestre: asignatura.semestre
+                semestre: asignatura.semestre,
+                ambito: asignatura.ambito
             });
         }
         );
