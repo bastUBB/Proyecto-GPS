@@ -60,21 +60,21 @@ function App() {
         <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
         <Routes>
         <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/horario" element={<Horario />} />
-        <Route path="/malla" element={<MallaCurricular />} />
-        <Route path="/gestion-malla" element={<GestionMallaCurricular />} />
-        <Route path="/sugerencia-horarios" element={<SugerenciaHorarios />} />
-        <Route path="/foro" element={<Foro />} />
+        <Route path="/horario" element={<ProtectedRoute><Horario /></ProtectedRoute>} />
+        <Route path="/malla" element={<ProtectedRoute><MallaCurricular /></ProtectedRoute>} />
+        <Route path="/gestion-malla" element={<ProtectedRoute><GestionMallaCurricular /></ProtectedRoute>} />
+        <Route path="/sugerencia-horarios" element={<ProtectedRoute><SugerenciaHorarios /></ProtectedRoute>} />
+        <Route path="/foro" element={<ProtectedRoute><Foro /></ProtectedRoute>} />
         
         {/* Rutas específicas para admin */}
-        <Route path="/gestion-usuarios" element={<GestionUsuarios />} />
-        <Route path="/subida-excel" element={<SubidaExcel />} />
+        <Route path="/gestion-usuarios" element={<ProtectedRoute><GestionUsuarios /></ProtectedRoute>} />
+        <Route path="/subida-excel" element={<ProtectedRoute><SubidaExcel /></ProtectedRoute>} />
         
         {/* Rutas para profesores */}
-        <Route path="/evaluaciones" element={<div>Página de Evaluaciones - En desarrollo</div>} />
+        {/* <Route path="/evaluaciones" element={<div>Página de Evaluaciones - En desarrollo</div>} /> */}
         
         {/* Rutas para estudiantes */}
-        <Route path="/historial" element={<div>Página de Historial - En desarrollo</div>} />
+        {/* <Route path="/historial" element={<div>Página de Historial - En desarrollo</div>} /> */}
         
         {/* Rutas de autenticación */}
         <Route path="/login" element={<Login />} />

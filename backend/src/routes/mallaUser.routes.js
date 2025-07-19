@@ -5,7 +5,7 @@ import {
     updateMallaUser,
     deleteMallaUser
 } from '../controllers/mallaUser.controller.js';
-import { authorizeRoles } from "../middlewares/authorization.middleware.js";
+import { authorizeRoles } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
