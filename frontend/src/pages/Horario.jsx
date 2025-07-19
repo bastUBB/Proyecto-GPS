@@ -74,24 +74,20 @@ export default function Horario() {
           </div>
 
           {/* Formulario para agregar horarios */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconHorario.png" alt="Icono Horario" className="w-5 h-5" />
-                Agregar Clase al Horario
+                Agregar clase al horario
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                Completa los datos para agregar una nueva clase
-              </p>
             </div>
-            
+
             <form onSubmit={agregarHorario} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-sm font-medium text-blue-900 mb-1">Día</label>
-                  <select 
-                    name="dia" 
-                    value={form.dia} 
+                  <select
+                    name="dia"
+                    value={form.dia}
                     onChange={handleChange}
                     className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -103,9 +99,9 @@ export default function Horario() {
 
                 <div>
                   <label className="block text-sm font-medium text-blue-900 mb-1">Hora Inicio</label>
-                  <select 
-                    name="horaInicio" 
-                    value={form.horaInicio} 
+                  <select
+                    name="horaInicio"
+                    value={form.horaInicio}
                     onChange={handleChange}
                     className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -117,9 +113,9 @@ export default function Horario() {
 
                 <div>
                   <label className="block text-sm font-medium text-blue-900 mb-1">Hora Fin</label>
-                  <select 
-                    name="horaFin" 
-                    value={form.horaFin} 
+                  <select
+                    name="horaFin"
+                    value={form.horaFin}
                     onChange={handleChange}
                     className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
@@ -168,12 +164,11 @@ export default function Horario() {
           </div>
 
           {/* Tabla de horarios */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4">
-              <h2 className="text-base sm:text-lg font-semibold">Horario de Clases</h2>
-              <p className="text-cyan-100 text-xs sm:text-sm mt-1">
-                Vista semanal de tus clases programadas
-              </p>
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                Horario de clases
+              </h2>
             </div>
 
             <div className="overflow-auto">

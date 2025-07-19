@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { 
-    UserPlus, 
-    Loader2, 
-    Shield, 
-    User, 
+import {
+    UserPlus,
+    Loader2,
+    Shield,
+    User,
     GraduationCap,
     AlertCircle
 } from "lucide-react";
@@ -39,7 +39,7 @@ export default function GestionUsuarios() {
     const checkAdminAccess = () => {
         const token = localStorage.getItem('token');
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        
+
         if (!token || userData.role !== 'admin') {
             navigate('/');
             return;
@@ -54,15 +54,15 @@ export default function GestionUsuarios() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            
+
             // Tu backend devuelve { statusCode: 200, message: "...", data: [...] }
             const usersData = response.data.data || [];
             setUsers(Array.isArray(usersData) ? usersData : []);
-            
+
         } catch (error) {
             console.error('Error al cargar usuarios:', error);
             setUsers([]);
-            
+
             if (error.response?.status === 403) {
                 navigate('/');
             } else {
@@ -84,29 +84,29 @@ export default function GestionUsuarios() {
 
     const validateForm = () => {
         const newErrors = {};
-        
+
         if (!formData.nombreCompleto.trim()) {
             newErrors.nombreCompleto = 'El nombre es obligatorio';
         }
-        
+
         if (!formData.email.trim()) {
             newErrors.email = 'El email es obligatorio';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'El email no es válido';
         }
-        
+
         if (!formData.rut.trim()) {
             newErrors.rut = 'El RUT es obligatorio';
         } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(formData.rut)) {
             newErrors.rut = 'El RUT debe tener el formato 12345678-9';
         }
-        
+
         if (!editingUser && !formData.password) {
             newErrors.password = 'La contraseña es obligatoria';
         } else if (formData.password && formData.password.length < 6) {
             newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
         }
-        
+
         if (!formData.role) {
             newErrors.role = 'El rol es obligatorio';
         }
@@ -117,14 +117,14 @@ export default function GestionUsuarios() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) return;
 
         setSubmitting(true);
         try {
             const token = localStorage.getItem('token');
             const dataToSend = { ...formData };
-            
+
             if (editingUser && !formData.password) {
                 delete dataToSend.password;
             }
@@ -314,31 +314,31 @@ export default function GestionUsuarios() {
                     </div>
                 )}
 
-        {/* Título principal */}
-        <div className="mb-6">
-          {/* Encabezado */}
-          <div className="text-center space-y-1 sm:space-y-2 mb-6">
-            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
-              Gestión de Usuarios
-            </h1>
-            <p className="text-sm sm:text-base text-blue-700">
-              Administra los usuarios del sistema y sus permisos
-            </p>
-          </div>
+                {/* Título principal */}
+                <div className="mb-6">
+                    {/* Encabezado */}
+                    <div className="text-center space-y-1 sm:space-y-2 mb-6">
+                        <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                            Gestión de Usuarios
+                        </h1>
+                        <p className="text-sm sm:text-base text-blue-700">
+                            Administra los usuarios del sistema y sus permisos
+                        </p>
+                    </div>
 
-          <div className="flex justify-end">
-            <button
-              onClick={() => {
-                resetForm();
-                setShowModal(true);
-              }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
-            >
-              <UserPlus className="w-5 h-5" />
-              Nuevo Usuario
-            </button>
-          </div>
-        </div>
+                    <div className="flex justify-end ">
+                        <button
+                            onClick={() => {
+                                resetForm();
+                                setShowModal(true);
+                            }}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+                        >
+                            <UserPlus className="w-5 h-5" />
+                            Nuevo Usuario
+                        </button>
+                    </div>
+                </div>
 
                 {/* Tabla de usuarios */}
                 <TablaGestion
@@ -364,7 +364,7 @@ export default function GestionUsuarios() {
                                 <h2 className="text-xl font-bold mb-4 text-gray-900">
                                     {editingUser ? 'Editar Usuario' : 'Crear Usuario'}
                                 </h2>
-                                
+
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
