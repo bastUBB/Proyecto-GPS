@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PagGeneral from "../components/PagGeneral";
+import HelpTooltip from "../components/PuntoAyuda";
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -123,6 +124,12 @@ export default function SugerenciaHorarios() {
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <img src="/IconHorario.png" alt="Icono Horario" className="w-5 h-5" />
                 Configuración de Preferencias
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Ajusta tus preferencias para obtener mejores sugerencias
+                  </p>
+                </HelpTooltip>
               </h2>
             </div>
 
@@ -197,6 +204,16 @@ export default function SugerenciaHorarios() {
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 Disponibilidad Horaria
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Cómo funciona?</h3>
+                  <p className="text-gray-600 text-xs">
+                    1. Ajusta tus preferencias de horario según tus necesidades.
+                    2. Marca los horarios en los que puedes tomar clases.
+                    3. El sistema genera múltiples opciones optimizadas.
+                    4. Elige la opción que mejor se adapte a ti.
+                    5. Marca los horarios en los que estás disponible (verde = disponible)
+                  </p>
+                </HelpTooltip>
               </h2>
             </div>
 
@@ -228,8 +245,8 @@ export default function SugerenciaHorarios() {
                             <button
                               onClick={() => toggleDisponibilidad(dia, hora)}
                               className={`w-full h-8 rounded transition-colors ${isDisponible
-                                  ? 'bg-green-500 hover:bg-green-600'
-                                  : 'bg-gray-200 hover:bg-gray-300'
+                                ? 'bg-green-500 hover:bg-green-600'
+                                : 'bg-gray-200 hover:bg-gray-300'
                                 }`}
                               title={isDisponible ? 'Disponible' : 'No disponible'}
                             />
@@ -289,41 +306,6 @@ export default function SugerenciaHorarios() {
               </div>
             </div>
           )}
-
-          {/* Información de ayuda */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                ¿Como funciona?
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">1. Configuración</p>
-                <p className="text-blue-700">
-                  Ajusta tus preferencias de horario según tus necesidades
-                </p>
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">2. Disponibilidad</p>
-                <p className="text-blue-700">
-                  Marca los horarios en los que puedes tomar clases
-                </p>
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">3. Generación</p>
-                <p className="text-blue-700">
-                  El sistema genera múltiples opciones optimizadas
-                </p>
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">4. Selección</p>
-                <p className="text-blue-700">
-                  Elige la opción que mejor se adapte a ti
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </PagGeneral>

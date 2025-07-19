@@ -7,6 +7,7 @@ import { UserContext } from '../../context/userContext';
 import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, Shield, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
+
 export default function Foro() {
   const { user } = useContext(UserContext);
   const [docentes, setDocentes] = useState([]);
@@ -810,8 +811,8 @@ export default function Foro() {
                           <div
                             key={evaluacion._id}
                             className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
-                                evaluacion.estado === 'aprobada' ? 'border-green-200' :
-                                  'border-red-200'
+                              evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                                'border-red-200'
                               }`}
                           >
                             {/* Estado y acciones */}

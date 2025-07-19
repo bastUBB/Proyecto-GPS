@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useRef } from "react";
 import Button from "../components/ui/button";
 import axios from 'axios';
+import HelpTooltip from "../components/PuntoAyuda";
 import {
     Card,
     CardContent,
@@ -195,6 +196,13 @@ function SubidaExcel() {
                         <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
                             <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                                 Tipo de archivo exel
+                                <HelpTooltip className="text-white hover:text-yellow-300">
+                                    <h3 className="text-blue-700 font-bold text-sm mb-1">Información del procesador</h3>
+                                    <p className="text-gray-600 text-xs">
+                                        Formatos Soportados Excel (.xlsx, .xls)
+                                        Tamaño Máximo 10 MB por archivo
+                                    </p>
+                                </HelpTooltip>
                             </h2>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -494,28 +502,6 @@ function SubidaExcel() {
                             </div>
                         </div>
                     )}
-
-                    <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-                        <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-                            <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                                Información del procesador
-                            </h2>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 text-sm">
-                            <div className="bg-blue-50 p-3 rounded-lg">
-                                <p className="font-semibold text-blue-900 mb-1">Formatos Soportados</p>
-                                <p className="text-blue-700">Excel (.xlsx, .xls)</p>
-                            </div>
-                            <div className="bg-blue-50 p-3 rounded-lg">
-                                <p className="font-semibold text-blue-900 mb-1">Tamaño Máximo</p>
-                                <p className="text-blue-700">10 MB por archivo</p>
-                            </div>
-                            {/* <div className="bg-yellow-50 p-3 rounded-lg">
-                                <p className="font-semibold text-yellow-900 mb-1">Base de Datos</p>
-                                <p className="text-yellow-700">DESACTIVADA</p>
-                            </div> */}
-                        </div>
-                    </div>
                 </div>
             </div>
 

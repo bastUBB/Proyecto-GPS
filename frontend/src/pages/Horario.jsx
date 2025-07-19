@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PagGeneral from "../components/PagGeneral";
+import HelpTooltip from "../components/PuntoAyuda";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const hours = [
@@ -78,6 +79,12 @@ export default function Horario() {
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 Agregar clase al horario
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Completa los datos para agregar una nueva clase.
+                  </p>
+                </HelpTooltip>
               </h2>
             </div>
 
@@ -168,6 +175,12 @@ export default function Horario() {
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 Horario de clases
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Vista semanal de tus clases programadas.
+                  </p>
+                </HelpTooltip>
               </h2>
             </div>
 
