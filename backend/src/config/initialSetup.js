@@ -95,7 +95,8 @@ async function createAsignaturas() {
                 creditos: asignatura.creditos,
                 prerrequisitos: asignatura.prerrequisitos,
                 semestre: asignatura.semestre,
-                ambito: asignatura.ambito
+                ambito: asignatura.ambito,
+                area: asignatura.area
             });
         }
         );
