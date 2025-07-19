@@ -24,7 +24,7 @@ const asignaturaSchema = new mongoose.Schema({
         cast: false,
     }],
     semestre: {
-        type: number,
+        type: Number,
         required: true,
         cast: false,
     },
