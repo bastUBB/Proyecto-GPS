@@ -80,7 +80,6 @@ export const asignaturaBodyValidation = joi.object({
         .min(1)
         .max(10)
         .integer()
-        .trim()
         .strict()
         .messages({
             'number.base': 'El semestre debe ser un número',
