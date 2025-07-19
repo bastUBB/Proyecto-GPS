@@ -90,7 +90,7 @@
     "area": "Área Ciencias Básicas"
   },
   {
-    "nombre": "Fisica Newtoniana",
+    "nombre": "Física Newtoniana",
     "codigo": "230033",
     "creditos": 6,
     "prerrequisitos": ["Cálculo Diferencial"],
@@ -108,7 +108,7 @@
     "area": "Área Ingeniería de Software y Base de Datos"
   },
   {
-    "nombre": "Inglés 1",
+    "nombre": "Inglés I",
     "codigo": "340276",
     "creditos": 4,
     "prerrequisitos": [],
@@ -147,7 +147,7 @@
     "nombre": "Electro-magnetismo",
     "codigo": "230034",
     "creditos": 6,
-    "prerrequisitos": ["Fisica Newtoniana"],
+    "prerrequisitos": ["Física Newtoniana"],
     "semestre": 4,
     "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
     "area": "Área Ciencias de la Ingeniería"
@@ -162,10 +162,10 @@
     "area": "Área Ingeniería de Software y Base de Datos"
   },
   {
-    "nombre": "Inglés 2",
+    "nombre": "Inglés II",
     "codigo": "340277",
     "creditos": 4,
-    "prerrequisitos": ["Inglés 1"],
+    "prerrequisitos": ["Inglés I"],
     "semestre": 4,
     "ambito": "Ámbito Competencias Genéricas",
     "area": "Área Form. Integral Profesional"
@@ -207,10 +207,10 @@
     "area": "Área Ciencias de la Ingeniería"
   },
   {
-    "nombre": "Inglés 3",
+    "nombre": "Inglés III",
     "codigo": "340278",
     "creditos": 4,
-    "prerrequisitos": ["Inglés 2"],
+    "prerrequisitos": ["Inglés II"],
     "semestre": 5,
     "ambito": "Ámbito Competencias Genéricas",
     "area": "Área Form. Integral Profesional"
@@ -261,10 +261,10 @@
     "area": "Área Ingeniería de Software y Base de Datos"
   },
   {
-    "nombre": "Inglés 4",
+    "nombre": "Inglés IV",
     "codigo": "340279",
     "creditos": 4,
-    "prerrequisitos": ["Inglés 3"],
+    "prerrequisitos": ["Inglés III"],
     "semestre": 6,
     "ambito": "Ámbito Competencias Genéricas",
     "area": "Área Form. Integral Profesional"
