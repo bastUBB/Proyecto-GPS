@@ -12,54 +12,111 @@ export async function asignarAsignaturas(asignaturasCursadas) {
     try {
         const malla = await Asignatura.find();
 
-        const cursadasSet = new Set(asignaturasCursadas);
+        // Convertir asignaturas cursadas a minúsculas para comparación insensible a mayúsculas
+        const cursadasSet = new Set(asignaturasCursadas.map(asig => asig.toLowerCase()));
 
-        const codigosOfertados = new Set(horario.map(h => h.asignaturaCodigo));
+        // Crear conjunto de nombres ofertados en minúsculas desde el horario
+        const nombresOfertados = new Set(horario.map(h => h.nombre?.toLowerCase()));
 
+        // Filtrar asignaturas disponibles
         const disponibles = malla.filter(asig => {
-            if (cursadasSet.has(asig.codigo)) return false;
-            if (!codigosOfertados.has(asig.codigo)) return false;
-            return asig.prerrequisitos.every(pr => cursadasSet.has(pr));
+            // No incluir si ya está cursada
+            if (cursadasSet.has(asig.nombre?.toLowerCase())) {
+                return false;
+            }
+            
+            // No incluir si no está ofertada en el horario
+            if (!nombresOfertados.has(asig.nombre?.toLowerCase())) {
+                return false;
+            }
+            
+            // Verificar que todos los prerrequisitos estén cursados
+            return asig.prerrequisitos.every(pr => cursadasSet.has(pr?.toLowerCase()));
         });
 
-        const combinacionesValidas = [];
+        // Si no hay asignaturas disponibles, retornar arrays vacíos
+        if (disponibles.length === 0) {
+            return [[], []];
+        }
 
-        function backtrack(combo, index, sumaCreditos) {
-            if (sumaCreditos >= 24 && sumaCreditos <= 36) {
-                combinacionesValidas.push([...combo]);
+        // Algoritmo mejorado: priorizar por semestre y luego por créditos
+        // Ordenar por semestre ascendente (prioridad a semestres bajos), luego por créditos descendente, y finalmente por nombre
+        const asignaturasOrdenadas = disponibles.sort((a, b) => {
+            // Primero por semestre (ascendente - semestres menores tienen prioridad)
+            if (a.semestre !== b.semestre) {
+                return a.semestre - b.semestre;
             }
-            if (sumaCreditos >= 36 || index >= disponibles.length) {
-                return;
+            // Si están en el mismo semestre, priorizar por más créditos
+            if (a.creditos !== b.creditos) {
+                return b.creditos - a.creditos;
             }
-
-            for (let i = index; i < disponibles.length; i++) {
-                const asig = disponibles[i];
-                combo.push(asig);
-                backtrack(combo, i + 1, sumaCreditos + asig.creditos);
-                combo.pop();
+            // Si tienen los mismos créditos, ordenar alfabéticamente por nombre
+            return a.nombre.localeCompare(b.nombre);
+        });
+        
+        let mejorCombinacion = [];
+        let sumaCreditos = 0;
+        
+        // Algoritmo greedy mejorado: tomar asignaturas priorizando semestres bajos
+        for (const asig of asignaturasOrdenadas) {
+            if (sumaCreditos + asig.creditos <= 36) {
+                mejorCombinacion.push(asig);
+                sumaCreditos += asig.creditos;
+                
+                // Si alcanzamos al menos 24 créditos, podemos parar o continuar con cuidado
+                if (sumaCreditos >= 24) {
+                    // Solo continuar si podemos agregar asignaturas pequeñas del mismo semestre o siguientes
+                    continue;
+                }
             }
         }
 
-        backtrack([], 0, 0);
+        // Si no alcanzamos 24 créditos, intentar con algoritmo alternativo
+        if (sumaCreditos < 24) {
+            mejorCombinacion = [];
+            sumaCreditos = 0;
+            
+            // Segundo intento: solo por créditos descendente si el primer método no funcionó
+            const asignaturasPorCreditos = disponibles.sort((a, b) => b.creditos - a.creditos);
+            
+            for (const asig of asignaturasPorCreditos) {
+                if (sumaCreditos + asig.creditos <= 36) {
+                    mejorCombinacion.push(asig);
+                    sumaCreditos += asig.creditos;
+                    
+                    if (sumaCreditos >= 24) {
+                        break;
+                    }
+                }
+            }
+        }
 
-        // Escoge la mejor combinación (mayor carga dentro del rango permitido)
-        const mejorOpcion = combinacionesValidas.sort((a, b) => {
-            const sumaA = a.reduce((acc, cur) => acc + cur.creditos, 0);
-            const sumaB = b.reduce((acc, cur) => acc + cur.creditos, 0);
-            return sumaB - sumaA;
-        })[0] || [];
+        // Ordenar las asignaturas inscribibles alfabéticamente
+        const asignaturasInscribibles = mejorCombinacion
+            .map(asig => asig.nombre)
+            .sort((a, b) => a.localeCompare(b));
 
-        const asignaturasInscribibles = mejorOpcion.map(asig => asig.nombre);
-
-        const preNoInscribibles = disponibles.filter(asig => !mejorOpcion.includes(asig));
-
-        const asignaturasNoInscribibles = preNoInscribibles.map(asig => asig.nombre);
+        // Para las no inscribibles: incluir TODAS las asignaturas que no están en inscribibles
+        // (tanto las disponibles no seleccionadas como las no disponibles)
+        const nombresInscribibles = new Set(asignaturasInscribibles.map(nombre => nombre.toLowerCase()));
+        const nombresCursadas = new Set(asignaturasCursadas.map(nombre => nombre.toLowerCase()));
+        
+        const asignaturasNoInscribibles = malla
+            .filter(asig => {
+                // No incluir si está en inscribibles
+                if (nombresInscribibles.has(asig.nombre?.toLowerCase())) return false;
+                // No incluir si ya está cursada
+                if (nombresCursadas.has(asig.nombre?.toLowerCase())) return false;
+                return true;
+            })
+            .map(asig => asig.nombre)
+            .sort((a, b) => a.localeCompare(b)); // Ordenar alfabéticamente
 
         return [asignaturasInscribibles, asignaturasNoInscribibles];
 
     } catch (error) {
         console.error('Error al asignar asignaturas inscribibles:', error);
-        return [null, 'Error interno del servidor'];
+        return [[], []];
     }
 }
 
@@ -71,7 +128,12 @@ export async function createMallaUserService(dataMallaUser) {
 
         if (!userExist) return [null, 'El usuario no existe'];
 
-        const asignaturasValidas = await Asignatura.find({ codigo: { $in: asignaturasCursadas } });
+        // Búsqueda insensible a mayúsculas para los nombres de asignaturas
+        const asignaturasValidas = await Asignatura.find({ 
+            nombre: { 
+                $in: asignaturasCursadas.map(nombre => new RegExp(`^${nombre}$`, 'i'))
+            } 
+        });
 
         if (asignaturasValidas.length !== asignaturasCursadas.length) return [null, 'Algunas asignaturas cursadas no son válidas'];
 
@@ -81,7 +143,10 @@ export async function createMallaUserService(dataMallaUser) {
 
         const [asignaturasInscribibles, asignaturasNoInscribibles] = await asignarAsignaturas(asignaturasCursadas);
 
-        if (!asignaturasInscribibles && !asignaturasNoInscribibles) return [null, 'Error al asignar asignaturas'];
+        // Verificar que la función devolvió arrays válidos
+        if (!Array.isArray(asignaturasInscribibles) || !Array.isArray(asignaturasNoInscribibles)) {
+            return [null, 'Error al asignar asignaturas'];
+        }
 
         const newMallaUser = new mallaUser({
             rutUser,
@@ -129,7 +194,12 @@ export async function updateMallaUserService(query, body) {
 
         if (!newUserExist && nuevoRutUser !== rutUser) return [null, 'El nuevo rut del usuario ya está en uso'];
         
-        const asignaturasValidas = await Asignatura.find({ codigo: { $in: nuevasAsignaturasCursadas } });
+        // Búsqueda insensible a mayúsculas para las asignaturas
+        const asignaturasValidas = await Asignatura.find({ 
+            codigo: { 
+                $in: nuevasAsignaturasCursadas.map(codigo => new RegExp(`^${codigo}$`, 'i'))
+            } 
+        });
 
         if (asignaturasValidas.length !== nuevasAsignaturasCursadas.length) return [null, 'Algunas asignaturas cursadas no son válidas'];
 
@@ -139,7 +209,10 @@ export async function updateMallaUserService(query, body) {
 
         const [asignaturasInscribibles, asignaturasNoInscribibles] = await asignarAsignaturas(nuevasAsignaturasCursadas);
 
-        if (!asignaturasInscribibles && !asignaturasNoInscribibles) return [null, 'Error al asignar asignaturas'];
+        // Verificar que la función devolvió arrays válidos
+        if (!Array.isArray(asignaturasInscribibles) || !Array.isArray(asignaturasNoInscribibles)) {
+            return [null, 'Error al asignar asignaturas'];
+        }
 
         const updatedMallaUser = await mallaUser.findOneAndUpdate(
             { rutUser },

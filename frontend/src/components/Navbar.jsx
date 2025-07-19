@@ -127,7 +127,7 @@ export default function Navbar() {
         { name: 'Gestión Usuarios', path: '/gestion-usuarios', visible: isAdmin },
         { name: 'Subida Excel', path: '/subida-excel', visible: isAdmin }
       ],
-      visible: isAdmin
+      visible: isAdmin && !isHome
     }
   ];
 

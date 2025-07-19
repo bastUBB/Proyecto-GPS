@@ -36,6 +36,15 @@
     "area": "Área Ingeniería de Software y Base de Datos"
   },
   {
+    "nombre": "Formación Integral I",
+    "codigo": "340556",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
     "nombre": "Cálculo Diferencial",
     "codigo": "220144",
     "creditos": 6,
@@ -70,6 +79,24 @@
     "semestre": 2,
     "ambito": "Ámbito Ingeniería Aplicada",
     "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Formación Integral II",
+    "codigo": "340557",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Formación Integral III",
+    "codigo": "340558",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
   },
   {
     "nombre": "Cálculo Integral",
@@ -167,6 +194,15 @@
     "creditos": 4,
     "prerrequisitos": ["Inglés I"],
     "semestre": 4,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Formación Integral IV",
+    "codigo": "340559",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
     "ambito": "Ámbito Competencias Genéricas",
     "area": "Área Form. Integral Profesional"
   },
@@ -331,6 +367,15 @@
     "semestre": 7,
     "ambito": "Ámbito Ingeniería Aplicada",
     "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Formación Integral V",
+    "codigo": "340560",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
   },
   {
     "nombre": "Legislación",
