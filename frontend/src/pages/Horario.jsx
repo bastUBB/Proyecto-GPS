@@ -172,25 +172,29 @@ export default function Horario() {
 
           {/* Tabla de horarios */}
           <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+            < div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                Horario de clases
+                Horario Actual
                 <HelpTooltip className="text-white hover:text-yellow-300">
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
                   <p className="text-gray-600 text-xs">
-                    Vista semanal de tus clases programadas.
+                    Aquí puedes ver tu horario actual con las clases que has agregado.
                   </p>
                 </HelpTooltip>
               </h2>
             </div>
-
-            <div className="overflow-auto">
-              <table className="w-full border-collapse">
+            <div className="p-4 sm:p-6 overflow-x-auto">
+              <table className="w-full border-collapse min-w-[600px]">
                 <thead>
                   <tr className="bg-blue-50">
-                    <th className="border border-blue-200 px-3 py-2 bg-blue-100 text-blue-900 font-semibold text-sm">Hora</th>
+                    <th className="border border-blue-200 px-3 py-2 text-blue-900 font-semibold text-sm">
+                      Hora
+                    </th>
                     {days.map((dia) => (
-                      <th key={dia} className="border border-blue-200 px-3 py-2 bg-blue-500 text-white font-semibold text-sm">
+                      <th
+                        key={dia}
+                        className="border border-blue-200 px-3 py-2 text-blue-900 font-semibold text-sm"
+                      >
                         {dia}
                       </th>
                     ))}
@@ -198,8 +202,8 @@ export default function Horario() {
                 </thead>
                 <tbody>
                   {hours.map((hora) => (
-                    <tr key={hora} className="hover:bg-blue-50">
-                      <td className="border border-blue-200 px-3 py-2 font-medium bg-blue-50 text-blue-900 text-sm text-center">
+                    <tr key={hora}>
+                      <td className="border border-blue-200 px-3 py-2 text-blue-900 font-medium text-sm bg-blue-50">
                         {hora}
                       </td>
                       {days.map((dia) => renderCelda(dia, hora))}
@@ -209,6 +213,8 @@ export default function Horario() {
               </table>
             </div>
           </div>
+
+
 
           {/* Resumen de horarios */}
           {horarios.length > 0 && (
@@ -228,7 +234,7 @@ export default function Horario() {
             </div>
           )}
         </div>
-      </div>
-    </PagGeneral>
+      </div >
+    </PagGeneral >
   );
 }
