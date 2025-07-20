@@ -42,7 +42,7 @@ export default function SugerenciaHorarios() {
 
   // Cargar lista de profesores (solo para administradores)
   const cargarProfesores = async () => {
-    if (user?.role !== 'admin') return;
+    if (user?.role !== 'admin' && user?.role !== 'director') return;
 
     try {
       setLoading(true);
@@ -226,11 +226,11 @@ export default function SugerenciaHorarios() {
 
   // Cargar datos iniciales
   useEffect(() => {
-    if (user?.role === 'admin') {
+    if (user?.role === 'admin' || user?.role === 'director') {
       cargarProfesores();
     } else if (user?.role === 'profesor') {
       cargarDisponibilidadProfesor();
-    } else if (user?.role !== 'profesor' && user?.role !== 'admin') {
+    } else if (user?.role !== 'profesor' && user?.role !== 'admin' && user?.role !== 'director') {
       // Código original para otros roles
       const asignaturasGuardadas = localStorage.getItem("asignaturasDisponibles");
       if (asignaturasGuardadas) {
@@ -346,7 +346,7 @@ export default function SugerenciaHorarios() {
   }
 
   // Vista para administradores - Lista de profesores y disponibilidad
-  if (user.role === 'admin') {
+  if (user.role === 'admin' || user.role === 'director') {
     return (
       <PagGeneral>
         <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">

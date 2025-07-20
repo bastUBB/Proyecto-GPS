@@ -14,14 +14,14 @@ router.post('/',
 // Ruta para obtener disponibilidad
 router.get('/', 
     authenticateJWT,
-    authorizeRoles('profesor', 'admin'),
+    authorizeRoles('profesor', 'admin', 'director'),
     verDisponibilidad
 );
 
 // Ruta para eliminar disponibilidad de un profesor
 router.delete('/:profesorId', 
     authenticateJWT,
-    authorizeRoles('profesor', 'admin'),
+    authorizeRoles('profesor', 'admin', 'director'),
     eliminarDisponibilidad
 );
 

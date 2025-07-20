@@ -494,6 +494,7 @@ export default function GestionUsuarios() {
                                             <option value="admin">Administrador</option>
                                             <option value="profesor">Profesor</option>
                                             <option value="estudiante">Estudiante</option>
+                                            <option value="director">Jefe de Departamento</option>
                                         </select>
                                         {errors.role && (
                                             <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
