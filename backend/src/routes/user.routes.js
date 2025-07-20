@@ -4,7 +4,8 @@ import {
     getUser,
     getAllUsers,
     updateUser,
-    deleteUser
+    deleteUser,
+    getFilterUsers
 } from '../controllers/user.controller.js';
 
 const router = Router();
@@ -14,6 +15,7 @@ router
     .get('/', getAllUsers)
     .post('/', createUser)
     .patch('/detail', updateUser)
-    .delete('/detail', deleteUser);
+    .delete('/detail', deleteUser)
+    .get('/filter', getFilterUsers);
 
 export default router;
