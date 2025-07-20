@@ -18,6 +18,35 @@ export async function asignarAsignaturas(asignaturasCursadas) {
         // Crear conjunto de nombres ofertados en minúsculas desde el horario
         const nombresOfertados = new Set(horario.map(h => h.nombre?.toLowerCase()));
 
+        // Determinar el semestre actual del estudiante (el más alto de las materias cursadas)
+        const asignaturasCursadasCompletas = malla.filter(asig => 
+            cursadasSet.has(asig.nombre?.toLowerCase())
+        );
+        const semestreActual = asignaturasCursadasCompletas.length > 0 
+            ? Math.max(...asignaturasCursadasCompletas.map(asig => asig.semestre))
+            : 1;
+        
+        const maxSemestrePermitido = semestreActual + 2; // Máximo 2 semestres de adelantamiento
+
+        // Función para verificar si es una práctica profesional
+        const esPractica = (nombre) => nombre.toLowerCase().includes('práctica profesional');
+
+        // Función para verificar prerrequisitos de prácticas
+        const verificarPrerrequisitosEspeciales = (asig) => {
+            if (esPractica(asig.nombre)) {
+                // Para prácticas: verificar que todas las materias de semestres anteriores estén aprobadas
+                const materiasAnteriores = malla.filter(materia => 
+                    materia.semestre < asig.semestre && 
+                    !esPractica(materia.nombre) // No considerar otras prácticas como prerrequisito
+                );
+                
+                return materiasAnteriores.every(materia => 
+                    cursadasSet.has(materia.nombre?.toLowerCase())
+                );
+            }
+            return true; // Para asignaturas normales, no hay restricciones especiales
+        };
+
         // Filtrar asignaturas disponibles
         const disponibles = malla.filter(asig => {
             // No incluir si ya está cursada
@@ -30,8 +59,22 @@ export async function asignarAsignaturas(asignaturasCursadas) {
                 return false;
             }
             
-            // Verificar que todos los prerrequisitos estén cursados
-            return asig.prerrequisitos.every(pr => cursadasSet.has(pr?.toLowerCase()));
+            // Verificar límite de semestres (máximo 2 semestres de adelantamiento)
+            if (asig.semestre > maxSemestrePermitido) {
+                return false;
+            }
+            
+            // Verificar prerrequisitos normales
+            const prerequisitosNormales = asig.prerrequisitos.every(pr => 
+                cursadasSet.has(pr?.toLowerCase())
+            );
+            
+            if (!prerequisitosNormales) {
+                return false;
+            }
+            
+            // Verificar prerrequisitos especiales (para prácticas)
+            return verificarPrerrequisitosEspeciales(asig);
         });
 
         // Si no hay asignaturas disponibles, retornar arrays vacíos
@@ -39,65 +82,39 @@ export async function asignarAsignaturas(asignaturasCursadas) {
             return [[], []];
         }
 
-        // Algoritmo mejorado: priorizar por semestre y luego por créditos
-        // Ordenar por semestre ascendente (prioridad a semestres bajos), luego por créditos descendente, y finalmente por nombre
-        const asignaturasOrdenadas = disponibles.sort((a, b) => {
-            // Primero por semestre (ascendente - semestres menores tienen prioridad)
-            if (a.semestre !== b.semestre) {
-                return a.semestre - b.semestre;
-            }
-            // Si están en el mismo semestre, priorizar por más créditos
-            if (a.creditos !== b.creditos) {
-                return b.creditos - a.creditos;
-            }
-            // Si tienen los mismos créditos, ordenar alfabéticamente por nombre
-            return a.nombre.localeCompare(b.nombre);
-        });
-        
-        let mejorCombinacion = [];
-        let sumaCreditos = 0;
-        
-        // Algoritmo greedy mejorado: tomar asignaturas priorizando semestres bajos
-        for (const asig of asignaturasOrdenadas) {
-            if (sumaCreditos + asig.creditos <= 36) {
-                mejorCombinacion.push(asig);
-                sumaCreditos += asig.creditos;
+        // Mostrar TODAS las asignaturas disponibles como inscribibles
+        // Ordenar por semestre ascendente, luego por tipo (normales antes que formaciones), luego por créditos descendente, luego por nombre
+        const asignaturasInscribibles = disponibles
+            .sort((a, b) => {
+                // Primero por semestre (ascendente)
+                if (a.semestre !== b.semestre) {
+                    return a.semestre - b.semestre;
+                }
                 
-                // Si alcanzamos al menos 24 créditos, podemos parar o continuar con cuidado
-                if (sumaCreditos >= 24) {
-                    // Solo continuar si podemos agregar asignaturas pequeñas del mismo semestre o siguientes
-                    continue;
+                // Luego priorizar asignaturas normales sobre formaciones integrales
+                const aEsFormacion = a.nombre.toLowerCase().includes('formación integral');
+                const bEsFormacion = b.nombre.toLowerCase().includes('formación integral');
+                
+                if (aEsFormacion !== bEsFormacion) {
+                    return aEsFormacion ? 1 : -1; // Normales primero
                 }
-            }
-        }
-
-        // Si no alcanzamos 24 créditos, intentar con algoritmo alternativo
-        if (sumaCreditos < 24) {
-            mejorCombinacion = [];
-            sumaCreditos = 0;
-            
-            // Segundo intento: solo por créditos descendente si el primer método no funcionó
-            const asignaturasPorCreditos = disponibles.sort((a, b) => b.creditos - a.creditos);
-            
-            for (const asig of asignaturasPorCreditos) {
-                if (sumaCreditos + asig.creditos <= 36) {
-                    mejorCombinacion.push(asig);
-                    sumaCreditos += asig.creditos;
-                    
-                    if (sumaCreditos >= 24) {
-                        break;
-                    }
+                
+                // Luego por créditos descendente
+                if (a.creditos !== b.creditos) {
+                    return b.creditos - a.creditos;
                 }
-            }
-        }
+                
+                // Finalmente por nombre alfabético
+                return a.nombre.localeCompare(b.nombre);
+            })
+            .map(asig => asig.nombre);
 
-        // Ordenar las asignaturas inscribibles alfabéticamente
-        const asignaturasInscribibles = mejorCombinacion
-            .map(asig => asig.nombre)
-            .sort((a, b) => a.localeCompare(b));
+        console.log(`Semestre actual del estudiante: ${semestreActual}`);
+        console.log(`Máximo semestre permitido: ${maxSemestrePermitido}`);
+        console.log(`Total asignaturas inscribibles: ${asignaturasInscribibles.length}`);
 
         // Para las no inscribibles: incluir TODAS las asignaturas que no están en inscribibles
-        // (tanto las disponibles no seleccionadas como las no disponibles)
+        // (tanto las no disponibles como las que exceden el límite de semestres)
         const nombresInscribibles = new Set(asignaturasInscribibles.map(nombre => nombre.toLowerCase()));
         const nombresCursadas = new Set(asignaturasCursadas.map(nombre => nombre.toLowerCase()));
         

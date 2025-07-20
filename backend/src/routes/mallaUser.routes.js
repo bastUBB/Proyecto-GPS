@@ -5,9 +5,12 @@ import {
     updateMallaUser,
     deleteMallaUser
 } from '../controllers/mallaUser.controller.js';
-import { authorizeRoles } from "../middlewares/auth.middleware.js";
+import  { authenticateJWT, authorizeRoles } from "../middlewares/auth.middleware.js";
 
 const router = Router();
+
+router.use(authenticateJWT);
+
 
 router
     .get('/detail', authorizeRoles("administrador", "admin", "alumno"), getMallaUser)
