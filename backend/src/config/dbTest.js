@@ -5,6 +5,7 @@ import { connectDB } from '../config/db.js';
 export const connectDbTest = async () => {
   beforeAll(async () => {
     await connectDB();
+    // mongoose.Schema.Types.String.cast(false); //esto desactiva la coerción de tipo string
   });
   afterEach(async () => {
     const collections = mongoose.connection.collections;

@@ -55,7 +55,7 @@ const TablaGestion = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
       {/* Encabezado */}
       <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
         <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">

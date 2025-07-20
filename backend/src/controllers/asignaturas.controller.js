@@ -60,18 +60,15 @@ export async function getAllAsignaturas(req, res) {
 
 export async function updateAsignatura(req, res) {
     try {
-
         const body = req.body;
+        const { id } = req.params;
 
-        const { errorQuery } = asignaturaQueryValidation.validate(req.query);
-
-        if (errorQuery) return handleErrorClient(res, 400, "Error de validación en la consulta", errorQuery.message);
-
-        const { errorBody } = asignaturaBodyValidation.validate(body);
-
+        // Validar el body
+        const { error: errorBody } = asignaturaBodyValidation.validate(body);
         if (errorBody) return handleErrorClient(res, 400, "Error de validación en el body", errorBody.message);
 
-        const [updatedAsignatura, errorUpdatedAsignatura] = await updateAsignaturaService(req.query, body);
+        // Usar el ID del parámetro para buscar por _id
+        const [updatedAsignatura, errorUpdatedAsignatura] = await updateAsignaturaService({ _id: id }, body);
 
         if (errorUpdatedAsignatura) return handleErrorClient(res, 404, "Asignatura no encontrada", errorUpdatedAsignatura);
 
@@ -84,13 +81,10 @@ export async function updateAsignatura(req, res) {
 
 export async function deleteAsignatura(req, res) {
     try {
-        const { codigo } = req.query;
+        const { id } = req.params;
 
-        const { error } = asignaturaQueryValidation.validate(req.query);
-
-        if (error) return handleErrorClient(res, 400, "Error de validación en la consulta", error.message);
-
-        const [deletedAsignatura, errorDeletedAsignatura] = await deleteAsignaturaService({ codigo });
+        // Usar el ID del parámetro para buscar por _id
+        const [deletedAsignatura, errorDeletedAsignatura] = await deleteAsignaturaService({ _id: id });
 
         if (errorDeletedAsignatura) return handleErrorClient(res, 404, "Asignatura no encontrada", errorDeletedAsignatura);
 

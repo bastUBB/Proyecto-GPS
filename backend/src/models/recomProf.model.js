@@ -2,11 +2,14 @@
 // SIento que falta algo para saber la cantidad de horas que deben impartirse por cada asignatura
 import mongoose from "mongoose";
 
+//TODO: arreglar modelo -> CRUD completo
+
 const recomProfSchema = new mongoose.Schema({
     usuario: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Usuario',
-        required: true
+        required: true,
+        
     },
     bloquesAsignaturas: [{
         bloque: {
