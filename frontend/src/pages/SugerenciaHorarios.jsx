@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import PagGeneral from "../components/PagGeneral";
 import { UserContext } from "../../context/userContext";
+import axios from 'axios';
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -23,51 +24,147 @@ export default function SugerenciaHorarios() {
     descansoAlmuerzo: true
   });
 
-  // Función para realizar peticiones autenticadas
-  const authenticatedFetch = async (url, options = {}) => {
+  // Estados específicos para administradores
+  const [profesores, setProfesores] = useState([]);
+  const [profesorSeleccionado, setProfesorSeleccionado] = useState(null);
+  const [disponibilidadProfesor, setDisponibilidadProfesor] = useState({});
+
+  // Configurar axios con token de autenticación
+  const getAuthConfig = () => {
     const token = localStorage.getItem('token');
-    return fetch(url, {
-      ...options,
+    return {
       headers: {
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
-        ...options.headers,
-      },
-    });
+        'Content-Type': 'application/json'
+      }
+    };
   };
 
-  // Cargar disponibilidad del profesor desde el backend
-  const cargarDisponibilidadProfesor = async () => {
-    if (user?.role !== 'profesor') return;
+  // Cargar lista de profesores (solo para administradores)
+  const cargarProfesores = async () => {
+    if (user?.role !== 'admin') return;
 
     try {
       setLoading(true);
-      const response = await authenticatedFetch('http://localhost:5500/api/disponibilidad');
-      const data = await response.json();
+      setMensaje('');
       
-      if (response.ok && data.data) {
-        // Convertir los bloques del backend al formato de disponibilidad del frontend
-        const disponibilidadFormateada = {};
-        data.data.bloques?.forEach(bloque => {
-          const key = `${bloque.dia}-${bloque.horaInicio}`;
-          disponibilidadFormateada[key] = true;
-        });
-        setDisponibilidad(disponibilidadFormateada);
-      } else if (response.status === 404) {
-        // No hay disponibilidad guardada, inicializar vacía
-        setDisponibilidad({});
+      // Usar el endpoint con filtro por rol
+      const response = await axios.get(
+        'http://localhost:5500/api/users/filter?role=profesor', 
+        getAuthConfig()
+      );
+      
+      if (response.data && response.data.data) {
+        setProfesores(response.data.data);
+        console.log('Profesores cargados:', response.data.data);
       } else {
-        setMensaje(data.message || 'Error al cargar disponibilidad');
+        setMensaje('No se encontraron profesores');
+        setProfesores([]);
       }
     } catch (error) {
-      console.error('Error al cargar disponibilidad:', error);
-      setMensaje('Error al cargar la disponibilidad');
+      console.error('Error al cargar profesores:', error);
+      if (error.response?.status === 401) {
+        setMensaje('No tienes autorización para ver esta información');
+      } else if (error.response?.status === 404) {
+        setMensaje('No se encontraron profesores');
+        setProfesores([]);
+      } else {
+        setMensaje(error.response?.data?.message || 'Error al cargar la lista de profesores');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // Guardar disponibilidad del profesor en el backend
+  // Cargar disponibilidad de un profesor específico (para administradores)
+  const cargarDisponibilidadProfesorAdmin = async (profesorId) => {
+    try {
+      setLoading(true);
+      setMensaje('');
+      
+      const response = await axios.get(
+        `http://localhost:5500/api/disponibilidad?profesorId=${profesorId}`, 
+        getAuthConfig()
+      );
+      
+      if (response.data && response.data.data) {
+        // Convertir los bloques del backend al formato de disponibilidad del frontend
+        const disponibilidadFormateada = {};
+        response.data.data.bloques?.forEach(bloque => {
+          const key = `${bloque.dia}-${bloque.horaInicio}`;
+          disponibilidadFormateada[key] = true;
+        });
+        setDisponibilidadProfesor(disponibilidadFormateada);
+        console.log('Disponibilidad del profesor cargada:', disponibilidadFormateada);
+      } else {
+        setDisponibilidadProfesor({});
+      }
+    } catch (error) {
+      console.error('Error al cargar disponibilidad del profesor:', error);
+      if (error.response?.status === 404) {
+        // No hay disponibilidad guardada para este profesor
+        setDisponibilidadProfesor({});
+        setMensaje('Este profesor no ha configurado su disponibilidad horaria');
+      } else if (error.response?.status === 401) {
+        setMensaje('No tienes autorización para ver esta información');
+      } else {
+        setMensaje(error.response?.data?.message || 'Error al cargar la disponibilidad del profesor');
+        setDisponibilidadProfesor({});
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Seleccionar profesor y cargar su disponibilidad
+  const seleccionarProfesor = (profesor) => {
+    setProfesorSeleccionado(profesor);
+    setMensaje(''); // Limpiar mensajes anteriores
+    cargarDisponibilidadProfesorAdmin(profesor._id);
+  };
+
+  // Cargar disponibilidad del profesor desde el backend (para profesores)
+  const cargarDisponibilidadProfesor = async () => {
+    if (user?.role !== 'profesor') return;
+
+    try {
+      setLoading(true);
+      setMensaje('');
+      
+      const response = await axios.get(
+        'http://localhost:5500/api/disponibilidad', 
+        getAuthConfig()
+      );
+      
+      if (response.data && response.data.data) {
+        // Convertir los bloques del backend al formato de disponibilidad del frontend
+        const disponibilidadFormateada = {};
+        response.data.data.bloques?.forEach(bloque => {
+          const key = `${bloque.dia}-${bloque.horaInicio}`;
+          disponibilidadFormateada[key] = true;
+        });
+        setDisponibilidad(disponibilidadFormateada);
+        console.log('Mi disponibilidad cargada:', disponibilidadFormateada);
+      } else {
+        setDisponibilidad({});
+      }
+    } catch (error) {
+      console.error('Error al cargar disponibilidad:', error);
+      if (error.response?.status === 404) {
+        // No hay disponibilidad guardada, inicializar vacía
+        setDisponibilidad({});
+        console.log('No hay disponibilidad guardada, iniciando con tabla vacía');
+      } else if (error.response?.status === 401) {
+        setMensaje('No tienes autorización para acceder a esta función');
+      } else {
+        setMensaje(error.response?.data?.message || 'Error al cargar la disponibilidad');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Guardar disponibilidad del profesor en el backend (para profesores)
   const guardarDisponibilidadProfesor = async () => {
     if (user?.role !== 'profesor') return;
 
@@ -91,24 +188,37 @@ export default function SugerenciaHorarios() {
         }
       });
 
-      const response = await authenticatedFetch('http://localhost:5500/api/disponibilidad', {
-        method: 'POST',
-        body: JSON.stringify({
-          bloques
-        })
-      });
+      console.log('Datos a enviar:', { bloques });
+      console.log('Usuario:', user);
+      console.log('ID del usuario:', user?.id || user?._id);
 
-      const data = await response.json();
+      const response = await axios.post(
+        'http://localhost:5500/api/disponibilidad',
+        { bloques },
+        getAuthConfig()
+      );
 
-      if (response.ok) {
+      if (response.data) {
         setMensaje('Disponibilidad guardada exitosamente');
+        console.log('Disponibilidad guardada:', response.data);
         setTimeout(() => setMensaje(''), 3000);
-      } else {
-        setMensaje(data.message || 'Error al guardar la disponibilidad');
       }
     } catch (error) {
       console.error('Error al guardar disponibilidad:', error);
-      setMensaje('Error al guardar la disponibilidad');
+      console.error('Respuesta del servidor:', error.response?.data);
+      console.error('Código de estado:', error.response?.status);
+      
+      if (error.response?.status === 401) {
+        setMensaje('No tienes autorización para realizar esta acción');
+      } else if (error.response?.status === 403) {
+        setMensaje('Solo los profesores pueden configurar disponibilidad');
+      } else if (error.response?.status === 400) {
+        // Mostrar detalles del error de validación
+        const errorDetails = error.response?.data?.details || error.response?.data?.message;
+        setMensaje(`Error de validación: ${Array.isArray(errorDetails) ? errorDetails.join(', ') : errorDetails}`);
+      } else {
+        setMensaje(error.response?.data?.message || 'Error al guardar la disponibilidad');
+      }
     } finally {
       setLoading(false);
     }
@@ -116,9 +226,11 @@ export default function SugerenciaHorarios() {
 
   // Cargar datos iniciales
   useEffect(() => {
-    if (user?.role === 'profesor') {
+    if (user?.role === 'admin') {
+      cargarProfesores();
+    } else if (user?.role === 'profesor') {
       cargarDisponibilidadProfesor();
-    } else if (user?.role !== 'profesor') {
+    } else if (user?.role !== 'profesor' && user?.role !== 'admin') {
       // Código original para otros roles
       const asignaturasGuardadas = localStorage.getItem("asignaturasDisponibles");
       if (asignaturasGuardadas) {
@@ -233,6 +345,208 @@ export default function SugerenciaHorarios() {
     );
   }
 
+  // Vista para administradores - Lista de profesores y disponibilidad
+  if (user.role === 'admin') {
+    return (
+      <PagGeneral>
+        <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
+          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+            {/* Encabezado para administradores */}
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                Gestión de Disponibilidad de Profesores
+              </h1>
+              <p className="text-sm sm:text-base text-blue-700">
+                Consulta la disponibilidad horaria de todos los profesores
+              </p>
+            </div>
+
+            {/* Mensajes */}
+            {mensaje && (
+              <div className={`p-4 rounded-lg text-center ${
+                mensaje.includes('exitosamente') || mensaje.includes('cargado') 
+                  ? 'bg-green-100 text-green-700 border border-green-300' 
+                  : mensaje.includes('no ha configurado') 
+                    ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
+                    : 'bg-red-100 text-red-700 border border-red-300'
+              }`}>
+                <div className="flex items-center justify-center gap-2">
+                  {mensaje.includes('exitosamente') || mensaje.includes('cargado') ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : mensaje.includes('no ha configurado') ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )}
+                  {mensaje}
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Lista de profesores */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-t-lg">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                    Lista de Profesores ({profesores.length})
+                  </h2>
+                  <p className="text-blue-100 text-xs sm:text-sm mt-1">
+                    Selecciona un profesor para ver su disponibilidad
+                  </p>
+                </div>
+
+                <div className="p-4 sm:p-6 max-h-96 overflow-y-auto">
+                  {loading && !profesorSeleccionado ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                      <p className="text-blue-600 mt-2">Cargando profesores...</p>
+                    </div>
+                  ) : profesores.length === 0 ? (
+                    <div className="text-center py-4">
+                      <svg className="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                      </svg>
+                      <p className="text-gray-500">No se encontraron profesores</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {profesores.map((profesor) => (
+                        <div
+                          key={profesor._id}
+                          onClick={() => seleccionarProfesor(profesor)}
+                          className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${
+                            profesorSeleccionado?._id === profesor._id
+                              ? 'bg-blue-50 border-blue-500 shadow-md'
+                              : 'bg-gray-50 border-gray-200 hover:bg-blue-50'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-semibold text-blue-900">
+                                {profesor.nombreCompleto || `${profesor.nombres} ${profesor.apellidos}`}
+                              </p>
+                              <p className="text-sm text-blue-600">{profesor.email}</p>
+                              <p className="text-xs text-gray-500">
+                                RUT: {profesor.rut}
+                              </p>
+                            </div>
+                            <div className="text-blue-500">
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Disponibilidad del profesor seleccionado */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200">
+                <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4 rounded-t-lg">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Disponibilidad Horaria
+                  </h2>
+                  {profesorSeleccionado && (
+                    <p className="text-cyan-100 text-xs sm:text-sm mt-1">
+                      {profesorSeleccionado.nombreCompleto || `${profesorSeleccionado.nombres} ${profesorSeleccionado.apellidos}`}
+                    </p>
+                  )}
+                </div>
+
+                <div className="p-4 sm:p-6">
+                  {!profesorSeleccionado ? (
+                    <div className="text-center py-8">
+                      <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-gray-500">Selecciona un profesor para ver su disponibilidad</p>
+                    </div>
+                  ) : loading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                      <p className="text-blue-600 mt-2">Cargando disponibilidad...</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse text-sm">
+                        <thead>
+                          <tr className="bg-blue-50">
+                            <th className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">
+                              Hora
+                            </th>
+                            {diasSemana.map(dia => (
+                              <th key={dia} className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">
+                                {dia.substring(0, 3)}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {horasDisponibles.map(hora => (
+                            <tr key={hora}>
+                              <td className="border border-blue-200 px-2 py-1 text-blue-900 font-medium text-xs bg-blue-50">
+                                {hora}
+                              </td>
+                              {diasSemana.map(dia => {
+                                const key = `${dia}-${hora}`;
+                                const isDisponible = disponibilidadProfesor[key];
+                                return (
+                                  <td key={key} className="border border-blue-200 p-1">
+                                    <div
+                                      className={`w-full h-6 rounded transition-colors ${
+                                        isDisponible
+                                          ? 'bg-green-500'
+                                          : 'bg-gray-200'
+                                      }`}
+                                      title={isDisponible ? 'Disponible' : 'No disponible'}
+                                    />
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Leyenda */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
+              <div className="flex items-center justify-center space-x-6">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-green-500 rounded"></div>
+                  <span className="text-sm text-gray-700">Disponible</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                  <span className="text-sm text-gray-700">No disponible</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </PagGeneral>
+    );
+  }
+
   // Vista para profesores - Solo disponibilidad horaria
   if (user.role === 'profesor') {
     return (
@@ -319,11 +633,23 @@ export default function SugerenciaHorarios() {
                 <button
                   onClick={guardarDisponibilidadProfesor}
                   disabled={loading}
-                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl ${
+                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 mx-auto ${
                     loading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  {loading ? 'Guardando...' : 'Guardar Disponibilidad'}
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Guardando...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Guardar Disponibilidad
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -366,7 +692,7 @@ export default function SugerenciaHorarios() {
     );
   }
 
-  // Vista original para otros roles (alumnos, admin, etc.)
+  // Vista original para otros roles (alumnos, etc.)
   return (
     <PagGeneral>
       <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">

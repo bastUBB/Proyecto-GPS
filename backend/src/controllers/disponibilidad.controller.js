@@ -19,18 +19,20 @@ const isValidObjectId = (id) => {
 export const subirDisponibilidad = async (req, res) => {
     try {
         const { bloques } = req.body;
-        const profesorId = req.user?.id || req.user?._id || req.body.profesorId;
+        const profesorId = req.user?.id || req.user?._id;
+        
+        console.log('Datos recibidos:', { bloques, profesorId, user: req.user });
         
         // Validar que profesorId sea un ObjectId válido
         if (!isValidObjectId(profesorId)) {
             return handleErrorClient(res, 400, "ID de profesor inválido");
         }
         
-        // Validar datos de entrada
-        const datosValidar = { profesor: profesorId, bloques };
-        const { value, error } = disponibilidadBodyValidation.validate(datosValidar);
+        // Validar solo los bloques (no incluir profesor en la validación)
+        const { value, error } = disponibilidadBodyValidation.validate({ bloques });
         
         if (error) {
+            console.log('Error de validación:', error.details);
             return handleErrorClient(res, 400, "Error de validación", error.details.map(detail => detail.message));
         }
         
@@ -41,8 +43,9 @@ export const subirDisponibilidad = async (req, res) => {
         }
 
         // Guardar disponibilidad
-        const disponibilidad = await guardarDisponibilidad(profesorId, bloques);
+        const disponibilidad = await guardarDisponibilidad(profesorId, value.bloques);
         
+        console.log('Disponibilidad guardada exitosamente:', disponibilidad);
         handleSuccess(res, 200, 'Disponibilidad guardada exitosamente', disponibilidad);
     } catch (error) {
         console.error('Error al guardar disponibilidad:', error);
