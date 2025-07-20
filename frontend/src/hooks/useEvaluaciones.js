@@ -1,22 +1,11 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Hook personalizado para manejar evaluaciones y notificaciones
 export const useEvaluaciones = (userRole, authToken) => {
     const [evaluaciones, setEvaluaciones] = useState([]);
     const [nuevasEvaluaciones, setNuevasEvaluaciones] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
-    const authenticatedFetch = async (url, options = {}) => {
-        return fetch(url, {
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${authToken}`,
-                ...options.headers,
-            },
-        });
-    };
 
     const loadEvaluaciones = async () => {
         if (userRole !== 'profesor') return;
@@ -25,49 +14,43 @@ export const useEvaluaciones = (userRole, authToken) => {
             setLoading(true);
             setError('');
 
-            const response = await authenticatedFetch(
-                'http://localhost:5500/api/evaluacionDocente/profesor/mis-evaluaciones'
-            );
+            const response = await axios.get('/api/evaluacionDocente/detail', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                }
+            });
 
-            const data = await response.json();
+            const evaluacionesData = response.data.data || [];
 
-            if (response.ok) {
-                const evaluacionesData = data.data || [];
+            const hace24Horas = new Date();
+            hace24Horas.setHours(hace24Horas.getHours() - 24);
 
-                // Calcular evaluaciones nuevas (últimas 24 horas)
-                const hace24Horas = new Date();
-                hace24Horas.setHours(hace24Horas.getHours() - 24);
+            const nuevas = evaluacionesData.filter(evaluacion =>
+                new Date(evaluacion.fecha) > hace24Horas
+            ).length;
 
-                const nuevas = evaluacionesData.filter(evaluacion =>
-                    new Date(evaluacion.fecha) > hace24Horas
-                ).length;
-
-                setEvaluaciones(evaluacionesData);
-                setNuevasEvaluaciones(nuevas);
-            } else {
-                setError(data.message || 'Error al cargar evaluaciones');
-            }
+            setEvaluaciones(evaluacionesData);
+            setNuevasEvaluaciones(nuevas);
         } catch (error) {
-            setError('Error de conexión al cargar evaluaciones');
+            console.error('Error al cargar evaluaciones:', error);
+            setError(error.response?.data?.message || 'Error de conexión al cargar evaluaciones');
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => {
-        if (authToken && userRole === 'profesor') {
-            loadEvaluaciones();
-
-            // Recargar cada 5 minutos para capturar nuevas evaluaciones
-            const interval = setInterval(loadEvaluaciones, 5 * 60 * 1000);
-
-            return () => clearInterval(interval);
-        }
-    }, [authToken, userRole]);
-
     const marcarComoLeidas = () => {
         setNuevasEvaluaciones(0);
     };
+
+    useEffect(() => {
+        if (authToken && userRole === 'profesor') {
+            loadEvaluaciones();
+            const interval = setInterval(loadEvaluaciones, 5 * 60 * 1000);
+            return () => clearInterval(interval);
+        }
+    }, [authToken, userRole]);
 
     return {
         evaluaciones,
