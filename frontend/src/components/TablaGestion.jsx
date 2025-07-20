@@ -19,8 +19,8 @@ const TablaGestion = ({
   // Filtrar datos basado en el término de búsqueda
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
-    
-    return data.filter(item => 
+
+    return data.filter(item =>
       columns.some(column => {
         const value = item[column.key];
         return value && value.toString().toLowerCase().includes(searchTerm.toLowerCase());
@@ -62,13 +62,10 @@ const TablaGestion = ({
           {icon && <img src={icon} alt="Icono" className="w-5 h-5" />}
           {title} ({filteredData.length})
         </h2>
-        <p className="text-blue-100 text-xs sm:text-sm mt-1">
-          Lista de elementos con paginación y búsqueda
-        </p>
       </div>
 
       {/* Barra de búsqueda */}
-      <div className="p-4 border-b border-blue-200">
+      <div className=" mt-1 mb-6">
         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 w-4 h-4" />
           <input
@@ -89,10 +86,9 @@ const TablaGestion = ({
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className={`border border-blue-200 px-4 py-3 text-blue-900 font-medium text-sm ${
-                    column.align === 'center' ? 'text-center' : 
-                    column.align === 'right' ? 'text-right' : 'text-left'
-                  }`}
+                  className={`border border-blue-200 px-4 py-3 text-blue-900 font-medium text-sm ${column.align === 'center' ? 'text-center' :
+                      column.align === 'right' ? 'text-right' : 'text-left'
+                    }`}
                 >
                   {column.title}
                 </th>
@@ -111,10 +107,9 @@ const TablaGestion = ({
                   {columns.map((column) => (
                     <td
                       key={column.key}
-                      className={`px-4 py-4 border-r border-blue-200 text-sm ${
-                        column.align === 'center' ? 'text-center' : 
-                        column.align === 'right' ? 'text-right' : 'text-left'
-                      } ${column.className || 'text-blue-700'}`}
+                      className={`px-4 py-4 border-r border-blue-200 text-sm ${column.align === 'center' ? 'text-center' :
+                          column.align === 'right' ? 'text-right' : 'text-left'
+                        } ${column.className || 'text-blue-700'}`}
                     >
                       {renderCellContent(item, column)}
                     </td>
@@ -147,8 +142,8 @@ const TablaGestion = ({
               ))
             ) : (
               <tr>
-                <td 
-                  colSpan={columns.length + (showActions ? 1 : 0)} 
+                <td
+                  colSpan={columns.length + (showActions ? 1 : 0)}
                   className="px-6 py-8 text-center text-blue-600"
                 >
                   {searchTerm ? 'No se encontraron resultados que coincidan con la búsqueda' : emptyMessage}

@@ -5,6 +5,7 @@ import Colores from "../components/Colores";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
 
+
 const mallaOriginal = [
   { id: 1, nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
   { id: 2, nombre: "Introducción a la Ingeniería", creditos: 6, semestre: 1 },
@@ -577,9 +578,6 @@ const MallaCurricular = () => {
                 <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
                 Herramientas y Estados de Malla
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                Personaliza tu progreso académico y descarga tu malla
-              </p>
             </div>
 
             {/* Leyenda de colores para alumnos */}
@@ -680,8 +678,17 @@ const MallaCurricular = () => {
           <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                <img src="/IconMalla.png"
+                  alt="Icono Malla"
+                  className="w-5 h-5"
+                />
                 Plan de Estudios
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">Guía de personalización académica</h3>
+                  <p className="text-gray-600 text-xs">
+                    Haz Clic en las asignaturas para cambiar su color
+                  </p>
+                </HelpTooltip>
               </h2>
               <p className="text-blue-100 text-xs sm:text-sm mt-1">
                 {user && user.role === 'alumno'

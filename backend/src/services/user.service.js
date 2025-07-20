@@ -1,5 +1,7 @@
 import User from '../models/user.model.js';
-import { comparePassword, hashPassword } from "../helpers/bcrypt.helper.js";
+import { comparePassword, hashPassword } from '../helpers/bcrypt.helper.js';
+
+let newUser;
 
 export async function createUserService(dataUser) {
     try {
@@ -9,11 +11,11 @@ export async function createUserService(dataUser) {
 
         if (existingUserRut) return [null, 'El rut que desea ingresar, ya se encuentra registrado'];
 
-        const existingUserEmail = await User.findOne({ email });
+        const existingUserEmail = await User.findOne({ email }); // ← Corregir: usar findOne en lugar de find
 
         if (existingUserEmail) return [null, 'El correo electrónico que desea ingresar, ya se encuentra registrado'];
 
-        const newUser = new User(dataUser);
+        newUser = new User(dataUser);
 
         if (!newUser) return [null, 'Error al crear el usuario'];
 
