@@ -235,6 +235,7 @@ export default function GestionMallaCurricular() {
     return (
         <PagGeneral>
             <div className="p-4 sm:p-6 lg:p-8 bg-transparent">
+                <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
                 {/* Mensajes de éxito y error */}
                 {success && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -423,6 +424,7 @@ export default function GestionMallaCurricular() {
                         </div>
                     </div>
                 )}
+                </div>
             </div>
 
             {/* Modal de edición */}
