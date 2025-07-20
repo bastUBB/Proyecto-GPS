@@ -58,6 +58,11 @@ export default function Home() {
           ...basePages,
           { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
+        director: [
+          ...basePages,
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
+          { id: "gestion-malla", route: "/gestion-malla", icon: Settings, label: "Gestión Malla" },
+        ],
       };
 
       console.log('Páginas disponibles para rol', role, ':', roleSpecificPages[role] || basePages); // Debug
