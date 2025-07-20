@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import PagGeneral from "../components/PagGeneral";
 import Colores from "../components/Colores";
+import HelpTooltip from "../components/PuntoAyuda";
 
 const mallaOriginal = [
   { nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
@@ -156,7 +157,7 @@ const MallaCurricular = () => {
           <button
             key={asig.nombre}
             type="button"
-            className={`w-28 min-h-[4rem] border text-[11px] rounded shadow-sm overflow-visible cursor-pointer p-1 text-center mb-1 ${getColor(asig.estado)}`}
+            className={`w-full aspect-[3/2] border text-[11px] rounded shadow-sm overflow-visible cursor-pointer px-2 py-1 text-center ${getColor(asig.estado)}`}
             onClick={() => handleAsignaturaClick(asig.nombre)}
             title="Haz clic para cambiar color"
           >
@@ -170,7 +171,7 @@ const MallaCurricular = () => {
   return (
     <PagGeneral>
       <div className="p-4 sm:p-6 lg:p-8">
-        <div className="max-w-full mx-auto space-y-4 sm:space-y-6">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
           {/* Encabezado */}
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
@@ -182,30 +183,42 @@ const MallaCurricular = () => {
           </div>
 
           {/* Controles */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                <img src="/IconMalla.png"
+                  alt="Icono Malla"
+                  className="w-5 h-5"
+                />
                 Herramientas de Malla
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Personaliza tu progreso académico y descarga tu malla.
+                  </p>
+                </HelpTooltip>
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                Personaliza tu progreso académico y descarga tu malla
-              </p>
             </div>
-            
+
             <div className="flex flex-wrap gap-3 justify-center">
               <button
                 onClick={handleDownloadPDF}
                 className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                <img src="/IconPdf.png" alt="Icono PDF" className="w-5 h-5" />
+                <img src="/IconPdf.png"
+                  alt="Icono PDF"
+                  className="w-5 h-5"
+                />
                 Descargar PDF
               </button>
               <button
                 onClick={handleResetMalla}
                 className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
+                <img src="/IconRegreso.png"
+                  alt="Icono Restablecer"
+                  className="w-5 h-5"
+                />
                 Restablecer
               </button>
             </div>
@@ -215,12 +228,18 @@ const MallaCurricular = () => {
           <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                <img src="/IconMalla.png"
+                  alt="Icono Malla"
+                  className="w-5 h-5"
+                />
                 Plan de Estudios
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">Guía de personalización académica</h3>
+                  <p className="text-gray-600 text-xs">
+                    Haz Clic en las asignaturas para cambiar su color
+                  </p>
+                </HelpTooltip>
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                Clic en las asignaturas para cambiar su color
-              </p>
             </div>
 
             <div className="p-4 sm:p-6">
@@ -233,17 +252,17 @@ const MallaCurricular = () => {
           </div>
 
           {/* Información adicional */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                <img src="/IconMalla.png"
+                  alt="Icono Malla"
+                  className="w-5 h-5"
+                />
                 Información del Programa
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                Detalles del plan de estudios
-              </p>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
               <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
                 <p className="font-medium text-blue-900">Duración</p>
