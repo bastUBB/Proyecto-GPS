@@ -34,15 +34,28 @@ export async function asignarAsignaturas(asignaturasCursadas) {
         // Función para verificar prerrequisitos de prácticas
         const verificarPrerrequisitosEspeciales = (asig) => {
             if (esPractica(asig.nombre)) {
-                // Para prácticas: verificar que todas las materias de semestres anteriores estén aprobadas
-                const materiasAnteriores = malla.filter(materia => 
-                    materia.semestre < asig.semestre && 
+                // Para prácticas: verificar que todas las materias del semestre inmediatamente anterior estén aprobadas
+                const semestreAnterior = asig.semestre - 1;
+                const materiasDelSemestreAnterior = malla.filter(materia => 
+                    materia.semestre === semestreAnterior && 
                     !esPractica(materia.nombre) // No considerar otras prácticas como prerrequisito
                 );
                 
-                return materiasAnteriores.every(materia => 
+                // Si no hay materias en el semestre anterior, permitir la práctica
+                if (materiasDelSemestreAnterior.length === 0) {
+                    return true;
+                }
+                
+                // Verificar que todas las materias del semestre anterior estén cursadas
+                const todasAprobadas = materiasDelSemestreAnterior.every(materia => 
                     cursadasSet.has(materia.nombre?.toLowerCase())
                 );
+                
+                console.log(`Práctica ${asig.nombre} (semestre ${asig.semestre}):`);
+                console.log(`- Materias del semestre ${semestreAnterior}:`, materiasDelSemestreAnterior.map(m => m.nombre));
+                console.log(`- Todas aprobadas: ${todasAprobadas}`);
+                
+                return todasAprobadas;
             }
             return true; // Para asignaturas normales, no hay restricciones especiales
         };
@@ -186,11 +199,15 @@ export async function getMallaUserService(query) {
     try {
         const { rutUser } = query;
 
-        const mallaUser = await mallaUser.findOne({ rutUser });
+        console.log('Datos recibidos para obtener la malla del usuario:', rutUser);
 
-        if (!mallaUser) return [null, 'Malla del usuario no encontrada'];
+        const MallaUser = await mallaUser.findOne({ rutUser });
 
-        return [mallaUser, null];
+        console.log('Datos obtenidos de la malla del usuario:', MallaUser);
+
+        if (!MallaUser) return [null, 'Malla del usuario no encontrada'];
+
+        return [MallaUser, null];
     } catch (error) {
         console.error('Error al obtener la malla del usuario:', error);
         return [null, 'Error interno del servidor'];
@@ -199,7 +216,10 @@ export async function getMallaUserService(query) {
 
 export async function updateMallaUserService(query, body) {
     try {
+
         const { rutUser } = query;
+
+        console.log('Datos recibidos para actualizar la malla del usuario (service):', body);
 
         const userExist = await User.findOne({ rut: rutUser });
 
@@ -207,22 +227,20 @@ export async function updateMallaUserService(query, body) {
 
         const { rutUser: nuevoRutUser, asignaturasCursadas: nuevasAsignaturasCursadas } = body;
 
-        const newUserExist = await mallaUser.findOne({ rutUser: nuevoRutUser });
+        // Si no hay nuevoRutUser, usar el rutUser de la query
+        const targetRutUser = nuevoRutUser || rutUser;
 
-        if (!newUserExist && nuevoRutUser !== rutUser) return [null, 'El nuevo rut del usuario ya está en uso'];
-        
-        // Búsqueda insensible a mayúsculas para las asignaturas
+        // Búsqueda insensible a mayúsculas para las asignaturas por nombre
         const asignaturasValidas = await Asignatura.find({ 
-            codigo: { 
-                $in: nuevasAsignaturasCursadas.map(codigo => new RegExp(`^${codigo}$`, 'i'))
+            nombre: { 
+                $in: nuevasAsignaturasCursadas.map(nombre => new RegExp(`^${nombre}$`, 'i'))
             } 
         });
 
         if (asignaturasValidas.length !== nuevasAsignaturasCursadas.length) return [null, 'Algunas asignaturas cursadas no son válidas'];
 
-        const mallaUserExist = await mallaUser.findOne({ rutUser: nuevoRutUser, asignaturasCursadas: nuevasAsignaturasCursadas });
-
-        if (mallaUserExist) return [null, 'La malla del usuario ya existe con las asignaturas cursadas proporcionadas'];
+        // Verificar si ya existe la malla del usuario
+        const existingMallaUser = await mallaUser.findOne({ rutUser: targetRutUser });
 
         const [asignaturasInscribibles, asignaturasNoInscribibles] = await asignarAsignaturas(nuevasAsignaturasCursadas);
 
@@ -231,11 +249,27 @@ export async function updateMallaUserService(query, body) {
             return [null, 'Error al asignar asignaturas'];
         }
 
-        const updatedMallaUser = await mallaUser.findOneAndUpdate(
-            { rutUser },
-            body,
-            { new: true }
-        );
+        const mallaData = {
+            rutUser: targetRutUser,
+            asignaturasCursadas: nuevasAsignaturasCursadas,
+            asignaturasInscribibles,
+            asignaturasNoInscribibles
+        };
+
+        let updatedMallaUser;
+
+        if (existingMallaUser) {
+            // Actualizar la malla existente
+            updatedMallaUser = await mallaUser.findOneAndUpdate(
+                { rutUser: targetRutUser },
+                mallaData,
+                { new: true }
+            );
+        } else {
+            // Crear nueva malla si no existe
+            updatedMallaUser = new mallaUser(mallaData);
+            await updatedMallaUser.save();
+        }
 
         if (!updatedMallaUser) return [null, 'Error al actualizar la malla del usuario'];
 
