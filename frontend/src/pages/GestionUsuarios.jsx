@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { 
-    UserPlus, 
-    Loader2, 
-    Shield, 
-    User, 
+import {
+    UserPlus,
+    Loader2,
+    Shield,
+    User,
     GraduationCap,
     AlertCircle
 } from "lucide-react";
@@ -55,7 +55,7 @@ export default function GestionUsuarios() {
     const checkAdminAccess = () => {
         const token = localStorage.getItem('token');
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        
+
         if (!token || userData.role !== 'admin') {
             navigate('/');
             return;
@@ -70,15 +70,15 @@ export default function GestionUsuarios() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            
+
             // Tu backend devuelve { statusCode: 200, message: "...", data: [...] }
             const usersData = response.data.data || [];
             setUsers(Array.isArray(usersData) ? usersData : []);
-            
+
         } catch (error) {
             console.error('Error al cargar usuarios:', error);
             setUsers([]);
-            
+
             if (error.response?.status === 403) {
                 navigate('/');
             } else {
@@ -100,29 +100,29 @@ export default function GestionUsuarios() {
 
     const validateForm = () => {
         const newErrors = {};
-        
+
         if (!formData.nombreCompleto.trim()) {
             newErrors.nombreCompleto = 'El nombre es obligatorio';
         }
-        
+
         if (!formData.email.trim()) {
             newErrors.email = 'El email es obligatorio';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'El email no es válido';
         }
-        
+
         if (!formData.rut.trim()) {
             newErrors.rut = 'El RUT es obligatorio';
         } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(formData.rut)) {
             newErrors.rut = 'El RUT debe tener el formato 12345678-9';
         }
-        
+
         if (!editingUser && !formData.password) {
             newErrors.password = 'La contraseña es obligatoria';
         } else if (formData.password && formData.password.length < 6) {
             newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
         }
-        
+
         if (!formData.role) {
             newErrors.role = 'El rol es obligatorio';
         }
@@ -133,14 +133,14 @@ export default function GestionUsuarios() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) return;
 
         setSubmitting(true);
         try {
             const token = localStorage.getItem('token');
             const dataToSend = { ...formData };
-            
+
             if (editingUser && !formData.password) {
                 delete dataToSend.password;
             }
@@ -323,25 +323,25 @@ export default function GestionUsuarios() {
     return (
         <PagGeneral>
             <div className="p-4 sm:p-6 lg:p-8 bg-transparent">
-                {/* Alerta */}
-                {alert.show && (
-                    <div className={`mb-4 p-4 rounded-lg ${alert.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}`}>
-                        {alert.message}
-                    </div>
-                )}
+                <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+                    {/* Alerta */}
+                    {alert.show && (
+                        <div className={`mb-4 p-4 rounded-lg ${alert.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}`}>
+                            {alert.message}
+                        </div>
+                    )}
 
-                {/* Título principal */}
-                <div className="mb-6">
-                    {/* Encabezado */}
-                    <div className="text-center space-y-1 sm:space-y-2 mb-6">
-                        <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
-                            Gestión de Usuarios
-                        </h1>
-                        <p className="text-sm sm:text-base text-blue-700">
-                            Administra los usuarios del sistema y sus permisos
-                        </p>
-                    </div>
-
+                    {/* Título principal */}
+                    <div className="mb-6">
+                        {/* Encabezado */}
+                        <div className="text-center space-y-1 sm:space-y-2 mb-6">
+                            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                                Gestión de Usuarios
+                            </h1>
+                            <p className="text-sm sm:text-base text-blue-700">
+                                Administra los usuarios del sistema y sus permisos
+                            </p>
+                        </div>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
                         <input
                             type="text"
@@ -479,107 +479,237 @@ export default function GestionUsuarios() {
                                             </p>
                                         )}
                                     </div>
+                        <div className="flex justify-end ">
+                            <button
+                                onClick={() => {
+                                    resetForm();
+                                    setShowModal(true);
+                                }}
+                                className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+                            >
+                                <UserPlus className="w-5 h-5" />
+                                Nuevo Usuario
+                            </button>
+                        </div>
+                    </div>
+                    {/* Tabla de usuarios */}
+                    <TablaGestion
+                        data={users}
+                        columns={columns}
+                        title="Usuarios del Sistema"
+                        icon="/IconUsers.png"
+                        searchPlaceholder="Buscar usuarios..."
+                        onEdit={handleEdit}
+                        onDelete={(user) => {
+                            setUserToDelete(user);
+                            setShowDeleteModal(true);
+                        }}
+                        emptyMessage="No hay usuarios disponibles"
+                        itemsPerPage={10}
+                    />
 
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Rol
-                                        </label>
-                                        <select
-                                            name="role"
-                                            value={formData.role}
-                                            onChange={handleInputChange}
-                                            className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.role ? 'border-red-300' : 'border-gray-300'}`}
-                                        >
-                                            <option value="">Seleccionar rol</option>
-                                            <option value="admin">Administrador</option>
-                                            <option value="profesor">Profesor</option>
-                                            <option value="estudiante">Estudiante</option>
-                                            <option value="director">Jefe de Departamento</option>
-                                        </select>
-                                        {errors.role && (
-                                            <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {errors.role}
-                                            </p>
-                                        )}
-                                    </div>
+                    {/* Modal para crear/editar usuario */}
+                    {showModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+                                <div className="p-6">
+                                    <h2 className="text-xl font-bold mb-4 text-gray-900">
+                                        {editingUser ? 'Editar Usuario' : 'Crear Usuario'}
+                                    </h2>
 
-                                    <div className="flex justify-end gap-3 pt-4">
+                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Nombre Completo
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="nombreCompleto"
+                                                value={formData.nombreCompleto}
+                                                onChange={handleInputChange}
+                                                className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.nombreCompleto ? 'border-red-300' : 'border-gray-300'}`}
+                                                placeholder="Ingresa el nombre completo"
+                                            />
+                                            {errors.nombreCompleto && (
+                                                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-4 h-4" />
+                                                    {errors.nombreCompleto}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Email
+                                            </label>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleInputChange}
+                                                className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.email ? 'border-red-300' : 'border-gray-300'}`}
+                                                placeholder="ejemplo@email.com"
+                                            />
+                                            {errors.email && (
+                                                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-4 h-4" />
+                                                    {errors.email}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                RUT
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="rut"
+                                                value={formData.rut}
+                                                onChange={handleInputChange}
+                                                className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500 ${errors.rut ? 'border-red-300' : 'border-gray-300'}`}
+                                                placeholder="12345678-9"
+                                                disabled={editingUser}
+                                            />
+                                            {editingUser && (
+                                                <p className="text-gray-600 text-sm mt-1">
+                                                    El RUT no se puede modificar
+                                                </p>
+                                            )}
+                                            {errors.rut && (
+                                                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-4 h-4" />
+                                                    {errors.rut}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Contraseña
+                                            </label>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleInputChange}
+                                                className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.password ? 'border-red-300' : 'border-gray-300'}`}
+                                                placeholder={editingUser ? "Dejar vacío para mantener actual" : "Ingresa la contraseña"}
+                                            />
+                                            {editingUser && (
+                                                <p className="text-gray-600 text-sm mt-1">
+                                                    Deja vacío para mantener la contraseña actual
+                                                </p>
+                                            )}
+                                            {errors.password && (
+                                                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-4 h-4" />
+                                                    {errors.password}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                Rol
+                                            </label>
+                                            <select
+                                                name="role"
+                                                value={formData.role}
+                                                onChange={handleInputChange}
+                                                className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.role ? 'border-red-300' : 'border-gray-300'}`}
+                                            >
+                                                <option value="">Seleccionar rol</option>
+                                                <option value="admin">Administrador</option>
+                                                <option value="profesor">Profesor</option>
+                                                <option value="estudiante">Estudiante</option>
+                                                <option value="director">Jefe de Departamento</option>
+                                            </select>
+                                            {errors.role && (
+                                                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                                                    <AlertCircle className="w-4 h-4" />
+                                                    {errors.role}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div className="flex justify-end gap-3 pt-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowModal(false);
+                                                    resetForm();
+                                                }}
+                                                className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
+                                            >
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                disabled={submitting}
+                                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                                            >
+                                                {submitting ? (
+                                                    <span className="flex items-center gap-2">
+                                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                                        Guardando...
+                                                    </span>
+                                                ) : (
+                                                    editingUser ? 'Actualizar' : 'Crear'
+                                                )}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal de confirmación para eliminar */}
+                    {showDeleteModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+                                <div className="p-6">
+                                    <h2 className="text-xl font-bold text-red-900 mb-4 flex items-center gap-2">
+                                        <AlertCircle className="w-6 h-6" />
+                                        Confirmar Eliminación
+                                    </h2>
+                                    <p className="text-gray-700 mb-6">
+                                        ¿Estás seguro de que deseas eliminar al usuario{' '}
+                                        <span className="font-semibold text-gray-900">{userToDelete?.nombreCompleto}</span>?
+                                        Esta acción no se puede deshacer.
+                                    </p>
+                                    <div className="flex justify-end gap-3">
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                setShowModal(false);
-                                                resetForm();
+                                                setShowDeleteModal(false);
+                                                setUserToDelete(null);
                                             }}
                                             className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
                                         >
                                             Cancelar
                                         </button>
                                         <button
-                                            type="submit"
+                                            onClick={handleDelete}
                                             disabled={submitting}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                                            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
                                         >
                                             {submitting ? (
                                                 <span className="flex items-center gap-2">
                                                     <Loader2 className="w-4 h-4 animate-spin" />
-                                                    Guardando...
+                                                    Eliminando...
                                                 </span>
                                             ) : (
-                                                editingUser ? 'Actualizar' : 'Crear'
+                                                'Eliminar'
                                             )}
                                         </button>
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Modal de confirmación para eliminar */}
-                {showDeleteModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-                            <div className="p-6">
-                                <h2 className="text-xl font-bold text-red-900 mb-4 flex items-center gap-2">
-                                    <AlertCircle className="w-6 h-6" />
-                                    Confirmar Eliminación
-                                </h2>
-                                <p className="text-gray-700 mb-6">
-                                    ¿Estás seguro de que deseas eliminar al usuario{' '}
-                                    <span className="font-semibold text-gray-900">{userToDelete?.nombreCompleto}</span>?
-                                    Esta acción no se puede deshacer.
-                                </p>
-                                <div className="flex justify-end gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setShowDeleteModal(false);
-                                            setUserToDelete(null);
-                                        }}
-                                        className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button
-                                        onClick={handleDelete}
-                                        disabled={submitting}
-                                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
-                                    >
-                                        {submitting ? (
-                                            <span className="flex items-center gap-2">
-                                                <Loader2 className="w-4 h-4 animate-spin" />
-                                                Eliminando...
-                                            </span>
-                                        ) : (
-                                            'Eliminar'
-                                        )}
-                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </PagGeneral>
     );

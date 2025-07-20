@@ -32,16 +32,16 @@ export const mallaUserBodyValidation = joi.object({
         .items(
             joi.string()
                 .min(6)
-                .max(50)
+                .max(70)
                 .strict()
                 .trim()
-                .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+                .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.\-\d\,]+$/)
                 .messages({
                     'string.empty': 'El nombre de la asignatura no puede estar vacío',
                     'string.base': 'El nombre de la asignatura debe ser una cadena de texto',
-                    'string.min': 'El nombre de la asignatura debe tener al menos 3 caracteres',
-                    'string.max': 'El nombre de la asignatura no puede tener más de 50 caracteres',
-                    'string.pattern.base': 'El nombre de la asignatura solo puede contener letras y espacios',
+                    'string.min': 'El nombre de la asignatura debe tener al menos 6 caracteres',
+                    'string.max': 'El nombre de la asignatura no puede tener más de 70 caracteres',
+                    'string.pattern.base': 'El nombre de la asignatura solo puede contener letras, números, puntos, guiones, comas y espacios',
                 }),
         )
         .min(1)

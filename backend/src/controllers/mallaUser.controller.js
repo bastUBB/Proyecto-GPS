@@ -28,6 +28,8 @@ export async function createMallaUser(req, res) {
 export async function getMallaUser(req, res) {
     try {
         const { rutUser } = req.query;
+        
+        console.log('Datos recibidos para obtener la malla del usuario:', rutUser);
 
         const { error } = mallaUserQueryValidation.validate(req.query);
 
@@ -47,13 +49,18 @@ export async function updateMallaUser(req, res) {
     try {
         const { rutUser } = req.query;
 
-        const { errorQuery } = mallaUserQueryValidation.validate(req.query);
+        console.log('Datos recibidos para actualizar la malla del usuario:', req.body);
+
+        const { error: errorQuery } = mallaUserQueryValidation.validate(req.query);
 
         if (errorQuery) return handleErrorClient(res, 400, "Error de validación en la consulta", errorQuery.message);
 
-        const { errorBody } = mallaUserBodyValidation.validate(req.body);
+        const { error: errorBody } = mallaUserBodyValidation.validate(req.body);
 
-        if (errorBody) return handleErrorClient(res, 400, "Error de validación en el cuerpo de la solicitud", errorBody.message);
+        if (errorBody) {
+            console.log('Error de validación en el cuerpo:', errorBody.details);
+            return handleErrorClient(res, 400, "Error de validación en el cuerpo de la solicitud", errorBody.message);
+        }
 
         const [updatedMallaUser, errorUpdate] = await updateMallaUserService({ rutUser }, req.body);
 
