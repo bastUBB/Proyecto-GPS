@@ -107,7 +107,7 @@ export default function SugerenciaHorarios() {
   return (
     <PagGeneral>
       <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
-        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
           {/* Encabezado */}
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
