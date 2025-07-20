@@ -22,6 +22,11 @@ export function extractSubjects(data) {
         const nombreAsignaturaDocente = row[4]?.toString().trim() || '';
         const [nombreAsignatura, docente] = nombreAsignaturaDocente.split('-').map(s => s.trim());
 
+        // // Solo primera letra en mayúscula, resto en minúscula, respetando tildes
+        // if (nombreAsignatura) {
+        //     nombreAsignatura = nombreAsignatura.charAt(0).toUpperCase() + nombreAsignatura.slice(1).toLowerCase();
+        // }
+
         const bloques = [];
         for (let j = 5; j < row.length; j++) {
             const cell = row[j]?.toString().trim();

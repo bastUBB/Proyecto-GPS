@@ -76,15 +76,36 @@ export const asignaturaBodyValidation = joi.object({
             'array.max': 'Debe tener como máximo 3 prerrequisitos',
             'array.min': 'Debe tener al menos 0 prerrequisitos'
         }),
-    semestre: joi.string()
-        .pattern(/^(I{1,3}|IV|V|VI{0,3}|IX|X)$/)
+    semestre: joi.number()
+        .min(1)
+        .max(10)
+        .integer()
+        .strict()
+        .messages({
+            'number.base': 'El semestre debe ser un número',
+            'number.min': 'El semestre debe ser al menos 1',
+            'number.max': 'La carrera solo contempla hasta 10 semestres',
+            'number.integer': 'El semestre debe ser un número entero',
+        }),
+    ambito: joi.string()
+        .valid('Ámbito Competencias Genéricas', 'Ámbito Ciencias Básicas y de la Ingeniería', 'Ámbito Ingeniería Aplicada')
         .trim()
         .strict()
-        .uppercase()
         .messages({
-            'string.empty': 'El semestre no puede estar vacío',
-            'string.base': 'El semestre debe ser una cadena de texto',
-            'string.pattern.base': 'El semestre debe ser un número romano válido (I, II, III, IV, V, VI, VII, VIII, IX, X)',
+            'string.empty': 'El ámbito no puede estar vacío',
+            'string.base': 'El ámbito debe ser una cadena de texto',
+            'any.only': 'El ámbito debe ser uno de los siguientes: Ámbito Competencias Genéricas, Ámbito Ciencias Básicas y de la Ingeniería o Ámbito Ingeniería Aplicada',
+        }),
+    area: joi.string()
+        .valid('Área Form. Integral Profesional', 'Área Ciencias Básicas', 'Área Ciencias de la Ingeniería', 
+            'Área Ingeniería de Software y Base de Datos', 'Área de Sistemas Computacionales', 'Área de Gestión Informática',
+            'Una de las áreas anteriores')
+        .trim()
+        .strict()
+        .messages({
+            'string.empty': 'El área no puede estar vacío',
+            'string.base': 'El área debe ser una cadena de texto',
+            'any.only': 'El área debe ser uno de los siguientes: Área Form. Integral Profesional, Área Ciencias Básicas, Área Ciencias de la Ingeniería, Área Ingeniería de Software y Base de Datos, Área de Sistemas Computacionales, Área de Gestión Informática o Una de las áreas anteriores',
         }),
 })
     .or(
@@ -92,10 +113,11 @@ export const asignaturaBodyValidation = joi.object({
         'codigo',
         'creditos',
         'prerrequisitos',
-        'semestre'
+        'semestre', 
+        'ambito'
     )
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales',
-        'object.missing': 'Debe proporcionar al menos uno de los campos: nombre, código, créditos, prerrequisitos o semestre',
+        'object.missing': 'Debe proporcionar al menos uno de los campos: nombre, código, créditos, prerrequisitos, semestre o ámbito',
     });

@@ -1,4 +1,4 @@
-import Joi from "joi";
+import joi from "joi";
 
 const domainEmailValidator = (value, helper) => {
     const domainRegex = /@(gmail\.cl|ubiobio\.cl|alumnos\.ubiobio\.cl)$/;
@@ -8,8 +8,8 @@ const domainEmailValidator = (value, helper) => {
     return value;
 };
 
-export const userQueryValidation = Joi.object({
-    rut: Joi.string()
+export const userQueryValidation = joi.object({
+    rut: joi.string()
         .pattern(/^(?:(?:[1-9]\d{0}|[1-2]\d{1})(\.\d{3}){2}|[1-9]\d{6}|[1-2]\d{7}|29\.999\.999|29999999)-[\dkK]$/)
         .messages({
             "string.empty": "El rut no puede estar vacío.",
@@ -25,8 +25,8 @@ export const userQueryValidation = Joi.object({
         'object.missing': 'Debe proporcionar al menos uno de los campos: name, rut, email o role',
     });
 
-export const userBodyValidation = Joi.object({
-    nombreCompleto: Joi.string()
+export const userBodyValidation = joi.object({
+    nombreCompleto: joi.string()
         .min(15)
         .max(50)
         .trim()
@@ -41,7 +41,7 @@ export const userBodyValidation = Joi.object({
                 "El nombre completo solo puede contener letras y espacios.",
             "any.required": "El nombre completo es obligatorio.",
         }),
-    rut: Joi.string()
+    rut: joi.string()
         .min(9)
         .max(12)
         .trim()
@@ -55,7 +55,7 @@ export const userBodyValidation = Joi.object({
             "string.pattern.base": "Formato rut inválido, debe ser xx.xxx.xxx-x o xxxxxxxx-x.",
             "any.required": "El rut es obligatorio.",
         }),
-    email: Joi.string()
+    email: joi.string()
         .min(15)
         .max(50)
         .email()
@@ -157,7 +157,7 @@ export const userUpdateBodyValidation = Joi.object({
             "string.pattern.base":
                 "La contraseña solo puede contener letras y números.",
         }),
-    role: Joi.string()
+    role: joi.string()
         .min(5)
         .max(25)
         .trim()

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-//TODO: Representar la malla a través de mapeo y hacer dinámica (check de asignatura) a través del modelo historial
+//TODO: Considerar ambito y área, y horas
 
 const asignaturaSchema = new mongoose.Schema({
     nombre: {
@@ -24,10 +24,20 @@ const asignaturaSchema = new mongoose.Schema({
         cast: false,
     }],
     semestre: {
+        type: Number,
+        required: true,
+        cast: false,
+    },
+    ambito: {
         type: String,
         required: true,
         cast: false,
     },
+    area: {
+        type: String,
+        required: true,
+        cast: false,
+    }
 }, {
     timestamps: true,
     versionKey: false,

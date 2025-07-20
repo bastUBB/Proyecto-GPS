@@ -12,7 +12,7 @@ export default function GestionMallaCurricular() {
         codigo: "",
         creditos: "",
         semestre: "",
-        prerequisitos: "",
+        prerrequisitos: "",
         descripcion: ""
     });
     const [editando, setEditando] = useState(null);
@@ -23,20 +23,6 @@ export default function GestionMallaCurricular() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    // Función para obtener el token del usuario
-    function getAuthToken() {
-        return localStorage.getItem('token') || '';
-    }
-
-    // Configurar headers de autenticación para axios
-    const getAuthHeaders = () => {
-        const token = getAuthToken();
-        return {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        };
-    };
-
     // Cargar asignaturas desde la BD
     useEffect(() => {
         cargarAsignaturas();
@@ -45,13 +31,24 @@ export default function GestionMallaCurricular() {
     const cargarAsignaturas = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('/api/asignaturas', {
-                headers: getAuthHeaders()
-            });
+            console.log('🔍 Intentando cargar asignaturas...');
+            console.log('🔑 Token en localStorage:', localStorage.getItem('token'));
+            
+            // El interceptor de axios ya agrega automáticamente el token
+            const response = await axios.get('/api/asignaturas');
+            console.log('✅ Respuesta exitosa:', response.data);
             setAsignaturas(response.data.data || []);
         } catch (error) {
-            console.error('Error al cargar asignaturas:', error);
-            setError('Error al cargar las asignaturas');
+            console.error('❌ Error al cargar asignaturas:', error);
+            console.error('📊 Status:', error.response?.status);
+            console.error('📝 Message:', error.response?.data?.message);
+            console.error('🔍 Full response:', error.response);
+            
+            if (error.response?.status === 401) {
+                setError('Sesión expirada. Por favor, inicia sesión nuevamente.');
+            } else {
+                setError('Error al cargar las asignaturas: ' + (error.response?.data?.message || error.message));
+            }
         } finally {
             setLoading(false);
         }
@@ -78,19 +75,15 @@ export default function GestionMallaCurricular() {
                 codigo: form.codigo,
                 creditos: parseInt(form.creditos),
                 semestre: parseInt(form.semestre),
-                prerequisitos: form.prerequisitos,
+                prerrequisitos: form.prerrequisitos,
                 descripcion: form.descripcion
             };
 
             if (editando) {
-                await axios.put(`/api/asignaturas/${editando._id}`, asignaturaData, {
-                    headers: getAuthHeaders()
-                });
+                await axios.put(`/api/asignaturas/${editando._id}`, asignaturaData);
                 setSuccess('Asignatura actualizada correctamente');
             } else {
-                await axios.post('/api/asignaturas', asignaturaData, {
-                    headers: getAuthHeaders()
-                });
+                await axios.post('/api/asignaturas', asignaturaData);
                 setSuccess('Asignatura creada correctamente');
             }
 
@@ -98,7 +91,11 @@ export default function GestionMallaCurricular() {
             resetForm();
         } catch (error) {
             console.error('Error al guardar asignatura:', error);
-            setError(error.response?.data?.message || 'Error al guardar la asignatura');
+            if (error.response?.status === 401) {
+                setError('Sesión expirada. Por favor, inicia sesión nuevamente.');
+            } else {
+                setError(error.response?.data?.message || 'Error al guardar la asignatura');
+            }
         } finally {
             setLoading(false);
         }
@@ -111,7 +108,7 @@ export default function GestionMallaCurricular() {
             codigo: asignatura.codigo,
             creditos: asignatura.creditos.toString(),
             semestre: asignatura.semestre.toString(),
-            prerequisitos: asignatura.prerequisitos || '',
+            prerrequisitos: asignatura.prerrequisitos || '',
             descripcion: asignatura.descripcion || ''
         });
         setMostrarFormulario(true);
@@ -128,9 +125,7 @@ export default function GestionMallaCurricular() {
             setError('');
             setSuccess('');
 
-            await axios.put(`/api/asignaturas/${asignaturaEditada._id}`, asignaturaEditada, {
-                headers: getAuthHeaders()
-            });
+            await axios.put(`/api/asignaturas/${asignaturaEditada._id}`, asignaturaEditada);
 
             setSuccess('Asignatura actualizada correctamente');
             await cargarAsignaturas();
@@ -138,7 +133,11 @@ export default function GestionMallaCurricular() {
             setAsignaturaAEditar(null);
         } catch (error) {
             console.error('Error al actualizar asignatura:', error);
-            setError(error.response?.data?.message || 'Error al actualizar la asignatura');
+            if (error.response?.status === 401) {
+                setError('Sesión expirada. Por favor, inicia sesión nuevamente.');
+            } else {
+                setError(error.response?.data?.message || 'Error al actualizar la asignatura');
+            }
         } finally {
             setLoading(false);
         }
@@ -151,15 +150,17 @@ export default function GestionMallaCurricular() {
                 setError('');
                 setSuccess('');
 
-                await axios.delete(`/api/asignaturas/${id}`, {
-                    headers: getAuthHeaders()
-                });
+                await axios.delete(`/api/asignaturas/${id}`);
 
                 setSuccess('Asignatura eliminada correctamente');
                 await cargarAsignaturas();
             } catch (error) {
                 console.error('Error al eliminar asignatura:', error);
-                setError(error.response?.data?.message || 'Error al eliminar la asignatura');
+                if (error.response?.status === 401) {
+                    setError('Sesión expirada. Por favor, inicia sesión nuevamente.');
+                } else {
+                    setError(error.response?.data?.message || 'Error al eliminar la asignatura');
+                }
             } finally {
                 setLoading(false);
             }
@@ -172,7 +173,7 @@ export default function GestionMallaCurricular() {
             codigo: "",
             creditos: "",
             semestre: "",
-            prerequisitos: "",
+            prerrequisitos: "",
             descripcion: ""
         });
         setEditando(null);
@@ -220,11 +221,12 @@ export default function GestionMallaCurricular() {
             )
         },
         {
-            key: 'prerequisitos',
-            title: 'Prerequisitos',
+            key: 'prerrequisitos',
+            title: 'Prerrequisitos',
             render: (asignatura) => (
                 <div className="text-sm text-blue-800">
-                    {asignatura.prerequisitos || 'Ninguno'}
+                    {/* Hacer que se ponga Ninguno cuando el array esté vacío */}
+                    {asignatura.prerrequisitos.length > 0 ? asignatura.prerrequisitos.join(', ') : 'Ninguno'}
                 </div>
             )
         }
@@ -335,12 +337,12 @@ export default function GestionMallaCurricular() {
                                 </div>
 
                                 <div className="sm:col-span-2">
-                                    <label className="block text-sm font-medium text-blue-900 mb-1">Prerequisitos</label>
+                                    <label className="block text-sm font-medium text-blue-900 mb-1">prerrequisitos</label>
                                     <input
                                         type="text"
-                                        name="prerequisitos"
+                                        name="prerrequisitos"
                                         placeholder="Ej: MAT100, FIS101"
-                                        value={form.prerequisitos}
+                                        value={form.prerrequisitos}
                                         onChange={handleChange}
                                         className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 placeholder-blue-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />

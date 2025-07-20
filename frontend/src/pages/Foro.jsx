@@ -678,14 +678,12 @@ export default function Foro() {
               </div>
 
               {/* Filtros */}
-
               {/* Contenedor blanco con el recuadro cian dentro */}
               <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-4">
                 {/* Recuadro cian como encabezado delgado dentro del blanco */}
                 <div className="bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-4 rounded-lg text-white font-semibold text-lg mb-6">
                   Filtros de busqueda
                 </div>
-
                 {/* Filtros por estado */}
                 <div className="mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -755,155 +753,150 @@ export default function Foro() {
                       </select>
                     </div>
                   </div>
+                {/* Eliminar la sección separada de filtros por profesor y asignatura */}
 
-                  {/* Eliminar la sección separada de filtros por profesor y asignatura */}
+                {/* Botón para limpiar filtros */}
+                {(filtroProfesor || filtroAsignatura || filtroEstado !== 'todos') && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => {
+                        setFiltroProfesor('');
+                        setFiltroAsignatura('');
+                        setFiltroEstado('todos');
+                      }}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm"
+                    >
+                      Limpiar todos los filtros
+                    </button>
+                  </div>
+                )}
+              </div>
 
-                  {/* Botón para limpiar filtros */}
-                  {(filtroProfesor || filtroAsignatura || filtroEstado !== 'todos') && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <button
-                        onClick={() => {
-                          setFiltroProfesor('');
-                          setFiltroAsignatura('');
-                          setFiltroEstado('todos');
-                        }}
-                        className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm"
-                      >
-                        Limpiar todos los filtros
-                      </button>
-                    </div>
-                  )}
+              {loadingAdmin ? (
+                <div className="text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <p className="mt-2 text-gray-600">Cargando evaluaciones...</p>
+                </div>
+              ) : evaluacionesAdmin.length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      {getTituloFiltros()}
+                    </h3>
+                    <button
+                      onClick={reloadEvaluaciones}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
+                    >
+                      Actualizar
+                    </button>
+                  </div>
 
-                  {loadingAdmin ? (
-                    <div className="text-center py-8">
-                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                      <p className="mt-2 text-gray-600">Cargando evaluaciones...</p>
-                    </div>
-                  ) : evaluacionesAdmin.length === 0 ? (
+                  {getEvaluacionesFiltradas().length === 0 ? (
                     <div className="text-center py-8">
                       <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                       <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          {getTituloFiltros()}
-                        </h3>
-                        <button
-                          onClick={reloadEvaluaciones}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
-                        >
-                          Actualizar
-                        </button>
-                      </div>
-
-                      {getEvaluacionesFiltradas().length === 0 ? (
-                        <div className="text-center py-8">
-                          <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-500 text-lg">No se encontraron evaluaciones con los filtros aplicados.</p>
-                          <p className="text-gray-400 text-sm mt-2">
-                            Intenta ajustar los filtros o limpiarlos para ver más resultados.
-                          </p>
+                    getEvaluacionesFiltradas().map((evaluacion) => (
+                      <div
+                        key={evaluacion._id}
+                        className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
+                            evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                              'border-red-200'
+                          }`}
+                      >
+                        {/* Estado y acciones */}
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
+                            {getStatusIcon(evaluacion.estado)}
+                            <span className="capitalize">{evaluacion.estado}</span>
+                          </div>
                         </div>
-                      ) : (
-                        getEvaluacionesFiltradas().map((evaluacion) => (
-                          <div
-                            key={evaluacion._id}
-                            className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
-                              evaluacion.estado === 'aprobada' ? 'border-green-200' :
-                                'border-red-200'
-                              }`}
-                          >
-                            {/* Estado y acciones */}
-                            <div className="absolute top-4 right-4 flex items-center gap-2">
-                              <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
-                                {getStatusIcon(evaluacion.estado)}
-                                <span className="capitalize">{evaluacion.estado}</span>
-                              </div>
+
+                        <div className="flex justify-between items-start mb-4 pr-32">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <BookOpen className="w-4 h-4 text-blue-600" />
+                              <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
                             </div>
-
-                            <div className="flex justify-between items-start mb-4 pr-32">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <BookOpen className="w-4 h-4 text-blue-600" />
-                                  <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
-                                </div>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <User className="w-4 h-4 text-gray-600" />
-                                  <span className="text-gray-700">
-                                    Profesor: <strong>{evaluacion.docente}</strong>
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <User className="w-4 h-4 text-green-600" />
-                                  <span className="text-gray-700">
-                                    {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex flex-col items-end">
-                                <div className="flex items-center gap-1 mb-1">
-                                  {renderStars(evaluacion.calificacion)}
-                                  <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
-                                </div>
-                                <div className="flex items-center gap-1 text-sm text-gray-500">
-                                  <Calendar className="w-3 h-3" />
-                                  {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
-                                </div>
-                              </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="w-4 h-4 text-gray-600" />
+                              <span className="text-gray-700">
+                                Profesor: <strong>{evaluacion.docente}</strong>
+                              </span>
                             </div>
-
-                            <div className="border-t pt-4 mb-4">
-                              <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
-                            </div>
-
-                            <div className="flex justify-between items-center">
-                              <div className="text-xs text-gray-500 uppercase tracking-wide">
-                                {evaluacion.visibilidad}
-                              </div>
-
-                              {/* Botones de acción */}
-                              <div className="flex gap-2">
-                                {evaluacion.estado === 'pendiente' && (
-                                  <>
-                                    <button
-                                      onClick={() => handleAprobarEvaluacion(evaluacion._id)}
-                                      className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
-                                      disabled={loading}
-                                    >
-                                      <CheckCircle className="w-4 h-4" />
-                                      Aprobar
-                                    </button>
-                                    <button
-                                      onClick={() => handleRechazarEvaluacion(evaluacion._id)}
-                                      className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
-                                      disabled={loading}
-                                    >
-                                      <XCircle className="w-4 h-4" />
-                                      Rechazar
-                                    </button>
-                                  </>
-                                )}
-
-                                <button
-                                  onClick={() => handleDeleteEvaluacion(evaluacion._id)}
-                                  className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
-                                  disabled={loading}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                  Eliminar
-                                </button>
-                              </div>
-                            </div>
-
-                            <div className="mt-2 text-xs text-gray-400">
-                              ID: {evaluacion._id}
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="w-4 h-4 text-green-600" />
+                              <span className="text-gray-700">
+                                {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
+                              </span>
                             </div>
                           </div>
-                        ))
-                      )}
-                    </div>
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1 mb-1">
+                              {renderStars(evaluacion.calificacion)}
+                              <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-gray-500">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-4 mb-4">
+                          <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <div className="text-xs text-gray-500 uppercase tracking-wide">
+                            {evaluacion.visibilidad}
+                          </div>
+
+                          {/* Botones de acción */}
+                          <div className="flex gap-2">
+                            {evaluacion.estado === 'pendiente' && (
+                              <>
+                                <button
+                                  onClick={() => handleAprobarEvaluacion(evaluacion._id)}
+                                  className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
+                                  disabled={loading}
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                  Aprobar
+                                </button>
+                                <button
+                                  onClick={() => handleRechazarEvaluacion(evaluacion._id)}
+                                  className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
+                                  disabled={loading}
+                                >
+                                  <XCircle className="w-4 h-4" />
+                                  Rechazar
+                                </button>
+                              </>
+                            )}
+
+                            <button
+                              onClick={() => handleDeleteEvaluacion(evaluacion._id)}
+                              className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
+                              disabled={loading}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Eliminar
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-2 text-xs text-gray-400">
+                          ID: {evaluacion._id}
+                        </div>
+                      </div>
+                    ))
                   )}
                 </div>
               </div>
