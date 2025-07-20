@@ -581,46 +581,35 @@ export default function Foro() {
                   </p>
                 </div>
 
-                {/* Cuadros */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Clock className="w-5 h-5 text-yellow-600" />
-                      <h3 className="font-semibold text-gray-800">Pendientes</h3>
-                    </div>
-                    <p className="text-2xl font-bold text-yellow-600">
-                      {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
-                    </p>
+                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <h3 className="font-semibold text-gray-800">Aprobadas</h3>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                      <h3 className="font-semibold text-gray-800">Aprobadas</h3>
-                    </div>
-                    <p className="text-2xl font-bold text-green-600">
-                      {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
-                    </p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
+                  </p>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <XCircle className="w-5 h-5 text-red-600" />
+                    <h3 className="font-semibold text-gray-800">Rechazadas</h3>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <XCircle className="w-5 h-5 text-red-600" />
-                      <h3 className="font-semibold text-gray-800">Rechazadas</h3>
-                    </div>
-                    <p className="text-2xl font-bold text-red-600">
-                      {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
-                    </p>
+                  <p className="text-2xl font-bold text-red-600">
+                    {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
+                  </p>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MessageSquare className="w-5 h-5 text-blue-600" />
+                    <h3 className="font-semibold text-gray-800">Total</h3>
                   </div>
-                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MessageSquare className="w-5 h-5 text-blue-600" />
-                      <h3 className="font-semibold text-gray-800">Total</h3>
-                    </div>
-                    <p className="text-2xl font-bold text-blue-600">
-                      {evaluacionesAdmin.length}
-                    </p>
-                  </div>
+                  <p className="text-2xl font-bold text-blue-600">
+                    {evaluacionesAdmin.length}
+                  </p>
                 </div>
               </div>
+
               <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
                 <div className="mb-4">
@@ -831,7 +820,7 @@ export default function Foro() {
                     ))
                   )}
                 </div>
-              </div>
+              )}
             </div>
           )}
 
