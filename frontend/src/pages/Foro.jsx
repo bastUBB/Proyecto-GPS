@@ -7,6 +7,7 @@ import { UserContext } from '../../context/userContext';
 import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, Shield, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
+
 export default function Foro() {
   const { user } = useContext(UserContext);
   const [docentes, setDocentes] = useState([]);
@@ -370,7 +371,7 @@ export default function Foro() {
   return (
     <PagGeneral>
       <div className="p-4 sm:p-6 lg:p-8">
-        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
           {/* Encabezado */}
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
@@ -627,51 +628,62 @@ export default function Foro() {
           {/* Panel de administración para administradores */}
           {user.role === 'admin' && (
             <div className="space-y-4">
+              {/* Contenedor blanco con el recuadro cian dentro */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-4">
 
-              {/* Estadísticas del sistema */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-5 h-5 text-yellow-600" />
-                    <h3 className="font-semibold text-gray-800">Pendientes</h3>
-                  </div>
-                  <p className="text-2xl font-bold text-yellow-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
-                  </p>
+                {/* Recuadro cian como encabezado delgado dentro del blanco */}
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-4 rounded-lg text-white font-semibold text-lg mb-6">
+                  Resumen de Evaluaciones
                 </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <h3 className="font-semibold text-gray-800">Aprobadas</h3>
+
+                {/* Cuadros */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-5 h-5 text-yellow-600" />
+                      <h3 className="font-semibold text-gray-800">Pendientes</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-green-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <XCircle className="w-5 h-5 text-red-600" />
-                    <h3 className="font-semibold text-gray-800">Rechazadas</h3>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <h3 className="font-semibold text-gray-800">Aprobadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-green-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-red-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-5 h-5 text-blue-600" />
-                    <h3 className="font-semibold text-gray-800">Total</h3>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <XCircle className="w-5 h-5 text-red-600" />
+                      <h3 className="font-semibold text-gray-800">Rechazadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-red-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {evaluacionesAdmin.length}
-                  </p>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="w-5 h-5 text-blue-600" />
+                      <h3 className="font-semibold text-gray-800">Total</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {evaluacionesAdmin.length}
+                    </p>
+                  </div>
                 </div>
               </div>
 
               {/* Filtros */}
-              <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
-
+              {/* Contenedor blanco con el recuadro cian dentro */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-4">
+                {/* Recuadro cian como encabezado delgado dentro del blanco */}
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-4 rounded-lg text-white font-semibold text-lg mb-6">
+                  Filtros de busqueda
+                </div>
                 {/* Filtros por estado */}
                 <div className="mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -741,8 +753,6 @@ export default function Foro() {
                       </select>
                     </div>
                   </div>
-                </div>
-
                 {/* Eliminar la sección separada de filtros por profesor y asignatura */}
 
                 {/* Botón para limpiar filtros */}
@@ -789,10 +799,7 @@ export default function Foro() {
                   {getEvaluacionesFiltradas().length === 0 ? (
                     <div className="text-center py-8">
                       <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500 text-lg">No se encontraron evaluaciones con los filtros aplicados.</p>
-                      <p className="text-gray-400 text-sm mt-2">
-                        Intenta ajustar los filtros o limpiarlos para ver más resultados.
-                      </p>
+                      <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
                     </div>
                   ) : (
                     getEvaluacionesFiltradas().map((evaluacion) => (
@@ -892,7 +899,7 @@ export default function Foro() {
                     ))
                   )}
                 </div>
-              )}
+              </div>
             </div>
           )}
 

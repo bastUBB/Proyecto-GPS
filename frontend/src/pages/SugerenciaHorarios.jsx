@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PagGeneral from "../components/PagGeneral";
+import HelpTooltip from "../components/PuntoAyuda";
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -60,7 +61,7 @@ export default function SugerenciaHorarios() {
   const generarSugerencias = () => {
     // Algoritmo básico de sugerencias
     const nuevasSugerencias = [];
-    
+
     // Filtrar asignaturas según configuración
     const asignaturasFiltered = asignaturas.filter(asig => {
       // Aquí se pueden agregar más filtros
@@ -80,7 +81,7 @@ export default function SugerenciaHorarios() {
       asignaturasFiltered.forEach(asignatura => {
         const diaRandom = diasSemana[Math.floor(Math.random() * diasSemana.length)];
         const horaRandom = horasDisponibles[Math.floor(Math.random() * horasDisponibles.length)];
-        
+
         sugerencia.horarios.push({
           asignatura: asignatura.nombre,
           dia: diaRandom,
@@ -106,7 +107,7 @@ export default function SugerenciaHorarios() {
   return (
     <PagGeneral>
       <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
-        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
           {/* Encabezado */}
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
@@ -123,10 +124,13 @@ export default function SugerenciaHorarios() {
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <img src="/IconHorario.png" alt="Icono Horario" className="w-5 h-5" />
                 Configuración de Preferencias
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Ajusta tus preferencias para obtener mejores sugerencias
+                  </p>
+                </HelpTooltip>
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                Ajusta tus preferencias para obtener mejores sugerencias
-              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -196,14 +200,21 @@ export default function SugerenciaHorarios() {
           </div>
 
           {/* Disponibilidad Horaria */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-              <h2 className="text-base sm:text-lg font-semibold">
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 Disponibilidad Horaria
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Cómo funciona?</h3>
+                  <p className="text-gray-600 text-xs">
+                    1. Ajusta tus preferencias de horario según tus necesidades.
+                    2. Marca los horarios en los que puedes tomar clases.
+                    3. El sistema genera múltiples opciones optimizadas.
+                    4. Elige la opción que mejor se adapte a ti.
+                    5. Marca los horarios en los que estás disponible (verde = disponible)
+                  </p>
+                </HelpTooltip>
               </h2>
-              <p className="text-cyan-100 text-xs sm:text-sm mt-1">
-                Marca los horarios en los que estás disponible (verde = disponible)
-              </p>
             </div>
 
             <div className="p-4 sm:p-6 overflow-x-auto">
@@ -233,11 +244,10 @@ export default function SugerenciaHorarios() {
                           <td key={key} className="border border-blue-200 p-1">
                             <button
                               onClick={() => toggleDisponibilidad(dia, hora)}
-                              className={`w-full h-8 rounded transition-colors ${
-                                isDisponible
-                                  ? 'bg-green-500 hover:bg-green-600'
-                                  : 'bg-gray-200 hover:bg-gray-300'
-                              }`}
+                              className={`w-full h-8 rounded transition-colors ${isDisponible
+                                ? 'bg-green-500 hover:bg-green-600'
+                                : 'bg-gray-200 hover:bg-gray-300'
+                                }`}
                               title={isDisponible ? 'Disponible' : 'No disponible'}
                             />
                           </td>
@@ -256,7 +266,7 @@ export default function SugerenciaHorarios() {
               <h2 className="text-xl font-bold text-blue-900 text-center">
                 Sugerencias Generadas
               </h2>
-              
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {sugerencias.map(sugerencia => (
                   <div key={sugerencia.id} className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
@@ -266,7 +276,7 @@ export default function SugerenciaHorarios() {
                         Puntuación: {sugerencia.puntuacion}/100
                       </p>
                     </div>
-                    
+
                     <div className="p-4 space-y-2">
                       {sugerencia.horarios.map((horario, index) => (
                         <div key={index} className="bg-blue-50 p-2 rounded border border-blue-200">
@@ -282,7 +292,7 @@ export default function SugerenciaHorarios() {
                         </div>
                       ))}
                     </div>
-                    
+
                     <div className="p-3 bg-gray-50 text-center">
                       <button
                         onClick={() => aplicarSugerencia(sugerencia)}
@@ -296,39 +306,6 @@ export default function SugerenciaHorarios() {
               </div>
             </div>
           )}
-
-          {/* Información de ayuda */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-3">
-              ¿Cómo funciona?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">1. Configuración</p>
-                <p className="text-blue-700">
-                  Ajusta tus preferencias de horario según tus necesidades
-                </p>
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">2. Disponibilidad</p>
-                <p className="text-blue-700">
-                  Marca los horarios en los que puedes tomar clases
-                </p>
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">3. Generación</p>
-                <p className="text-blue-700">
-                  El sistema genera múltiples opciones optimizadas
-                </p>
-              </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <p className="font-semibold text-blue-900 mb-1">4. Selección</p>
-                <p className="text-blue-700">
-                  Elige la opción que mejor se adapte a ti
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </PagGeneral>
