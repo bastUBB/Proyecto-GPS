@@ -4,7 +4,7 @@ import EvaluacionStats from "../components/EvaluacionStats";
 import { useEvaluaciones } from "../hooks/useEvaluaciones";
 import { useAdminEvaluaciones } from "../hooks/useAdminEvaluaciones";
 import { UserContext } from '../../context/userContext';
-import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, Shield, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
+import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
 
@@ -15,11 +15,10 @@ export default function Foro() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState('todos'); // nuevo estado para filtros
-  const [filtroProfesor, setFiltroProfesor] = useState(''); // filtro por profesor
-  const [filtroAsignatura, setFiltroAsignatura] = useState(''); // filtro por asignatura
+  const [filtroEstado, setFiltroEstado] = useState('todos');
+  const [filtroProfesor, setFiltroProfesor] = useState('');
+  const [filtroAsignatura, setFiltroAsignatura] = useState('');
 
-  // Hook personalizado para evaluaciones (solo profesores)
   const {
     evaluaciones,
     nuevasEvaluaciones,
@@ -28,16 +27,15 @@ export default function Foro() {
     marcarComoLeidas
   } = useEvaluaciones(user?.role, getAuthToken());
 
-  // Hook personalizado para administradores
   const {
     evaluaciones: evaluacionesAdmin,
     loading: loadingAdmin,
     error: errorAdmin,
     deleteEvaluacion,
-    reloadEvaluaciones
+    reloadEvaluaciones,
+    updateEvaluacionLocal
   } = useAdminEvaluaciones(user?.role, getAuthToken());
 
-  // Estados para el formulario de evaluación (solo alumnos)
   const [formData, setFormData] = useState({
     docente: '',
     asignatura: '',
@@ -46,12 +44,10 @@ export default function Foro() {
     visibilidad: 'Anónima'
   });
 
-  // Función para obtener el token del usuario
   function getAuthToken() {
     return localStorage.getItem('token') || '';
   }
 
-  // Configurar headers de autenticación para axios
   const getAuthHeaders = () => {
     const token = getAuthToken();
     return {
@@ -60,7 +56,6 @@ export default function Foro() {
     };
   };
 
-  // Cargar datos iniciales
   useEffect(() => {
     if (user) {
       if (user.role === 'alumno') {
@@ -81,30 +76,33 @@ export default function Foro() {
 
   const loadDocentes = async () => {
     try {
-      const response = await axios.get('/api/evaluacionDocente/docentes', {
-        headers: getAuthHeaders()
+      const response = await axios.get('/api/users', { //TODO: No deberia tener acceso a todos los usuarios el alumno, crear un servicio que retorne solo profesores
+        headers: getAuthHeaders(),
+        params: { role: 'profesor' }
       });
-      setDocentes(response.data.data || []);
+      
+      // Filtrar solo usuarios con rol profesor o docente
+      const docentesFiltrados = (response.data.data || []).filter(usuario => 
+        usuario.role === 'profesor' || usuario.role === 'docente'
+      );
+      
+      setDocentes(docentesFiltrados);
     } catch (error) {
-      console.error('Error al cargar docentes:', error);
       setError(error.response?.data?.message || 'Error al cargar docentes');
     }
   };
 
-  // Cargar lista de asignaturas (solo para alumnos)
   const loadAsignaturas = async () => {
     try {
-      const response = await axios.get('/api/evaluacionDocente/asignaturas', {
+      const response = await axios.get('/api/asignaturas', {
         headers: getAuthHeaders()
       });
       setAsignaturas(response.data.data || []);
     } catch (error) {
-      console.error('Error al cargar asignaturas:', error);
       setError(error.response?.data?.message || 'Error al cargar asignaturas');
     }
   };
 
-  // Manejar envío del formulario de evaluación (solo alumnos)
   const handleSubmitEvaluacion = async (e) => {
     e.preventDefault();
     if (!formData.docente || !formData.asignatura || !formData.texto) {
@@ -116,16 +114,11 @@ export default function Foro() {
       setLoading(true);
       setError('');
 
-      console.log('📤 Enviando datos:', formData);
-      console.log('🔑 Token:', getAuthToken());
-
-      const response = await axios.post('/api/evaluacionDocente/alumno', formData, {
+      const response = await axios.post('/api/evaluacionDocente', formData, {
         headers: getAuthHeaders()
       });
 
-      console.log('📥 Respuesta:', response.data);
-
-      setSuccess('Evaluación enviada exitosamente. Será revisada por un administrador antes de ser publicada.');
+      setSuccess('Evaluación enviada exitosamente.');
       setFormData({
         docente: '',
         asignatura: '',
@@ -135,39 +128,40 @@ export default function Foro() {
       });
       setTimeout(() => setSuccess(''), 5000);
     } catch (error) {
-      console.error('💥 Error:', error);
       setError(error.response?.data?.message || 'Error al crear evaluación');
     } finally {
       setLoading(false);
     }
   };
 
-  // Manejar aprobación de evaluaciones (solo administradores)
   const handleAprobarEvaluacion = async (evaluacionId) => {
     try {
       setLoading(true);
       setError('');
 
-      const response = await axios.put(`/api/evaluacionDocente/aprobar/${evaluacionId}`, {}, {
-        headers: getAuthHeaders()
-      });
+      updateEvaluacionLocal(evaluacionId, { estado: 'aprobada' });
 
-      if (response.data.success) {
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`, 
+        { estado: 'aprobada' }, 
+        { headers: getAuthHeaders() }
+      );
+
+      if (response.data.success || response.status === 200) {
         setSuccess('Evaluación aprobada correctamente');
-        await reloadEvaluaciones();
         setTimeout(() => setSuccess(''), 3000);
+        setTimeout(() => reloadEvaluaciones(), 1000);
       } else {
+        await reloadEvaluaciones();
         setError(response.data.message || 'Error al aprobar evaluación');
       }
     } catch (error) {
-      console.error('Error al aprobar evaluación:', error);
+      await reloadEvaluaciones();
       setError(error.response?.data?.message || 'Error al aprobar evaluación');
     } finally {
       setLoading(false);
     }
   };
 
-  // Manejar rechazo de evaluaciones (solo administradores)
   const handleRechazarEvaluacion = async (evaluacionId) => {
     if (!window.confirm('¿Estás seguro de que deseas rechazar esta evaluación? Esta acción no se puede deshacer.')) {
       return;
@@ -177,26 +171,29 @@ export default function Foro() {
       setLoading(true);
       setError('');
 
-      const response = await axios.put(`/api/evaluacionDocente/rechazar/${evaluacionId}`, {}, {
-        headers: getAuthHeaders()
-      });
+      updateEvaluacionLocal(evaluacionId, { estado: 'rechazada' });
 
-      if (response.data.success) {
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`, 
+        { estado: 'rechazada' }, 
+        { headers: getAuthHeaders() }
+      );
+
+      if (response.data.success || response.status === 200) {
         setSuccess('Evaluación rechazada correctamente');
-        await reloadEvaluaciones();
         setTimeout(() => setSuccess(''), 3000);
+        setTimeout(() => reloadEvaluaciones(), 1000);
       } else {
+        await reloadEvaluaciones();
         setError(response.data.message || 'Error al rechazar evaluación');
       }
     } catch (error) {
-      console.error('Error al rechazar evaluación:', error);
+      await reloadEvaluaciones();
       setError(error.response?.data?.message || 'Error al rechazar evaluación');
     } finally {
       setLoading(false);
     }
   };
 
-  // Manejar eliminación de evaluaciones (solo administradores)
   const handleDeleteEvaluacion = async (evaluacionId) => {
     if (!window.confirm('¿Estás seguro de que deseas eliminar esta evaluación? Esta acción no se puede deshacer.')) {
       return;
@@ -215,30 +212,25 @@ export default function Foro() {
         setError(result.message);
       }
     } catch (error) {
-      console.error('Error al eliminar evaluación:', error);
       setError('Error inesperado al eliminar evaluación');
     } finally {
       setLoading(false);
     }
   };
 
-  // Función para obtener evaluaciones filtradas
   const getEvaluacionesFiltradas = () => {
     let evaluacionesFiltradas = evaluacionesAdmin;
 
-    // Filtrar por estado
     if (filtroEstado !== 'todos') {
       evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => evaluacion.estado === filtroEstado);
     }
 
-    // Filtrar por profesor
     if (filtroProfesor) {
       evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion =>
         evaluacion.docente.toLowerCase().includes(filtroProfesor.toLowerCase())
       );
     }
 
-    // Filtrar por asignatura
     if (filtroAsignatura) {
       evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion =>
         evaluacion.asignatura.toLowerCase().includes(filtroAsignatura.toLowerCase())
@@ -248,19 +240,16 @@ export default function Foro() {
     return evaluacionesFiltradas;
   };
 
-  // Función para obtener lista única de profesores
   const getProfesoresUnicos = () => {
     const profesores = [...new Set(evaluacionesAdmin.map(evaluacion => evaluacion.docente))];
     return profesores.sort();
   };
 
-  // Función para obtener lista única de asignaturas
   const getAsignaturasUnicas = () => {
     const asignaturas = [...new Set(evaluacionesAdmin.map(evaluacion => evaluacion.asignatura))];
     return asignaturas.sort();
   };
 
-  // Función para generar el título de los filtros aplicados
   const getTituloFiltros = () => {
     const filtros = [];
     const resultados = getEvaluacionesFiltradas();
@@ -281,7 +270,6 @@ export default function Foro() {
     return `${baseTitulo}${filtrosTexto} - ${resultados.length} resultado${resultados.length !== 1 ? 's' : ''}`;
   };
 
-  // Función para obtener el color del estado
   const getStatusColor = (estado) => {
     switch (estado) {
       case 'aprobada':
@@ -294,7 +282,6 @@ export default function Foro() {
     }
   };
 
-  // Función para obtener el icono del estado
   const getStatusIcon = (estado) => {
     switch (estado) {
       case 'aprobada':
@@ -307,33 +294,6 @@ export default function Foro() {
     }
   };
 
-  // Manejar eliminación de evaluaciones (solo administradores)
-  const handleDeleteEvaluacionOld = async (evaluacionId) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar esta evaluación?')) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError('');
-
-      const result = await deleteEvaluacion(evaluacionId);
-
-      if (result.success) {
-        setSuccess(result.message);
-        setTimeout(() => setSuccess(''), 3000);
-      } else {
-        setError(result.message);
-      }
-    } catch (error) {
-      console.error('Error al eliminar evaluación:', error);
-      setError('Error inesperado al eliminar evaluación');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Renderizar estrellas para calificación
   const renderStars = (calificacion) => {
     const stars = [];
     for (let i = 1; i <= 7; i++) {
@@ -347,13 +307,11 @@ export default function Foro() {
     return stars;
   };
 
-  // Si no hay usuario logueado
   if (!user) {
     return (
       <PagGeneral>
         <div className="p-4 sm:p-6 lg:p-8">
           <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
-            {/* Encabezado */}
             <div className="text-center space-y-1 sm:space-y-2">
               <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
                 Evaluación Docente
@@ -371,8 +329,7 @@ export default function Foro() {
   return (
     <PagGeneral>
       <div className="p-4 sm:p-6 lg:p-8">
-        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
-          {/* Encabezado */}
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
               {user.role === 'alumno'
@@ -394,7 +351,6 @@ export default function Foro() {
 
           <div className="flex items-center justify-center mb-6">
             <div></div>
-            {/* Indicador de notificaciones para profesores */}
             {user.role === 'profesor' && nuevasEvaluaciones > 0 && (
               <div className="ml-4 flex items-center gap-2 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
                 <Bell className="w-4 h-4" />
@@ -403,7 +359,6 @@ export default function Foro() {
             )}
           </div>
 
-          {/* Mensajes de error y éxito */}
           {error && (
             <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
               {error}
@@ -416,7 +371,6 @@ export default function Foro() {
             </div>
           )}
 
-          {/* Formulario para alumnos */}
           {user.role === 'alumno' && (
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -424,15 +378,13 @@ export default function Foro() {
                 Crear Nueva Evaluación
               </h2>
 
-              {/* Información del proceso */}
               <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertCircle className="w-5 h-5 text-blue-600" />
                   <h3 className="font-semibold text-blue-800">Proceso de Evaluación</h3>
                 </div>
                 <p className="text-blue-700 text-sm">
-                  Las evaluaciones son revisadas por un administrador antes de ser publicadas.
-                  Solo las evaluaciones aprobadas serán visibles para los profesores.
+                  Las evaluaciones se envían directamente y serán visibles para los profesores.
                 </p>
               </div>
 
@@ -545,21 +497,18 @@ export default function Foro() {
             </div>
           )}
 
-          {/* Lista de evaluaciones para profesores (solo aprobadas) */}
           {user.role === 'profesor' && (
             <div className="space-y-4" onClick={() => nuevasEvaluaciones > 0 && marcarComoLeidas()}>
-              {/* Información sobre el proceso */}
               <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
-                  <h3 className="font-semibold text-green-800">Evaluaciones Aprobadas</h3>
+                  <h3 className="font-semibold text-green-800">Evaluaciones Recibidas</h3>
                 </div>
                 <p className="text-green-700 text-sm">
-                  Solo se muestran las evaluaciones que han sido revisadas y aprobadas por un administrador.
+                  Aquí se muestran todas las evaluaciones que has recibido de tus estudiantes.
                 </p>
               </div>
 
-              {/* Estadísticas de evaluaciones */}
               {evaluaciones.length > 0 && <EvaluacionStats evaluaciones={evaluaciones} />}
 
               {loadingEvaluaciones ? (
@@ -570,9 +519,9 @@ export default function Foro() {
               ) : evaluaciones.length === 0 ? (
                 <div className="text-center py-8">
                   <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg">Aún no tienes evaluaciones aprobadas.</p>
+                  <p className="text-gray-500 text-lg">Aún no tienes evaluaciones.</p>
                   <p className="text-gray-400 text-sm mt-2">
-                    Las evaluaciones deben ser revisadas por un administrador antes de aparecer aquí.
+                    Las evaluaciones aparecerán aquí cuando los estudiantes las envíen.
                   </p>
                 </div>
               ) : (
@@ -581,13 +530,7 @@ export default function Foro() {
                     key={evaluacion._id}
                     className="bg-white p-6 rounded-lg shadow-md border border-gray-200 relative"
                   >
-                    {/* Indicador de evaluación aprobada */}
-                    <div className="absolute top-4 right-4 flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">
-                      <CheckCircle className="w-3 h-3" />
-                      <span>Aprobada</span>
-                    </div>
-
-                    <div className="flex justify-between items-start mb-4 pr-20">
+                    <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <BookOpen className="w-4 h-4 text-blue-600" />
@@ -625,15 +568,17 @@ export default function Foro() {
             </div>
           )}
 
-          {/* Panel de administración para administradores */}
           {user.role === 'admin' && (
             <div className="space-y-4">
-              {/* Contenedor blanco con el recuadro cian dentro */}
-              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-4">
-
-                {/* Recuadro cian como encabezado delgado dentro del blanco */}
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-4 rounded-lg text-white font-semibold text-lg mb-6">
-                  Resumen de Evaluaciones
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="w-5 h-5 text-yellow-600" />
+                    <h3 className="font-semibold text-gray-800">Pendientes</h3>
+                  </div>
+                  <p className="text-2xl font-bold text-yellow-600">
+                    {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
+                  </p>
                 </div>
 
                 {/* Cuadros */}
@@ -676,18 +621,10 @@ export default function Foro() {
                   </div>
                 </div>
               </div>
-
-              {/* Filtros */}
-              {/* Contenedor blanco con el recuadro cian dentro */}
-              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-4">
-                {/* Recuadro cian como encabezado delgado dentro del blanco */}
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 px-4 py-4 rounded-lg text-white font-semibold text-lg mb-6">
-                  Filtros de busqueda
-                </div>
-                {/* Filtros por estado */}
+              <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
                 <div className="mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                    {/* Filtro por Estado */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         <CheckCircle className="w-4 h-4 inline mr-1" />
@@ -713,7 +650,6 @@ export default function Foro() {
                       </select>
                     </div>
 
-                    {/* Filtro por Profesor */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         <User className="w-4 h-4 inline mr-1" />
@@ -733,7 +669,6 @@ export default function Foro() {
                       </select>
                     </div>
 
-                    {/* Filtro por Asignatura */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         <BookOpen className="w-4 h-4 inline mr-1" />
@@ -753,9 +688,8 @@ export default function Foro() {
                       </select>
                     </div>
                   </div>
-                {/* Eliminar la sección separada de filtros por profesor y asignatura */}
+                </div>
 
-                {/* Botón para limpiar filtros */}
                 {(filtroProfesor || filtroAsignatura || filtroEstado !== 'todos') && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <button
@@ -806,11 +740,10 @@ export default function Foro() {
                       <div
                         key={evaluacion._id}
                         className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
-                            evaluacion.estado === 'aprobada' ? 'border-green-200' :
-                              'border-red-200'
+                          evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                            'border-red-200'
                           }`}
                       >
-                        {/* Estado y acciones */}
                         <div className="absolute top-4 right-4 flex items-center gap-2">
                           <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
                             {getStatusIcon(evaluacion.estado)}
@@ -858,7 +791,6 @@ export default function Foro() {
                             {evaluacion.visibilidad}
                           </div>
 
-                          {/* Botones de acción */}
                           <div className="flex gap-2">
                             {evaluacion.estado === 'pendiente' && (
                               <>
@@ -903,7 +835,6 @@ export default function Foro() {
             </div>
           )}
 
-          {/* Mensaje para otros roles */}
           {user.role !== 'alumno' && user.role !== 'profesor' && user.role !== 'admin' && (
             <div className="text-center py-8">
               <p className="text-gray-500 text-lg">Esta página está disponible solo para alumnos, profesores y administradores.</p>
