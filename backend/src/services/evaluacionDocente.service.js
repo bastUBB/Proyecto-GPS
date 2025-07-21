@@ -2,52 +2,52 @@ import evaluacionDocente from "../models/evaluacionDocente.model.js";
 import User from "../models/user.model.js";
 import Asignatura from "../models/asignaturas.model.js";
 
-export async function createEvaluacionDocenteService(dataEvaluacion) {
+export async function createEvaluacionDocenteService(dataEvaluacion, alumnoId) {
     try {
-        const { docente, alumno, asignatura, fecha } = dataEvaluacion;
+        const { docente, asignatura, texto, calificacion, visibilidad } = dataEvaluacion;
 
-        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
-        if (!existDocente) return [null, 'El docente que desea evaluar no existe'];
-
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
-        if (!existAlumno) return [null, 'El alumno que desea evaluar no existe'];
+        const existDocente = await User.findOne({ 
+            nombreCompleto: docente, 
+            $or: [
+                { role: "profesor" },
+                { role: "docente" }
+            ]
+        });
+        if (!existDocente) return [null, 'El docente seleccionado no existe'];
 
         const existAsignatura = await Asignatura.findOne({ nombre: asignatura });
-        if (!existAsignatura) return [null, 'La asignatura que desea evaluar no existe'];
+        if (!existAsignatura) return [null, 'La asignatura seleccionada no existe'];
 
-        const currentDate = new Date();
-        if (fecha < currentDate) return [null, 'La fecha de la evaluación no puede ser anterior a la fecha actual'];
+        const alumno = await User.findById(alumnoId);
+        if (!alumno || alumno.role !== "alumno") return [null, 'Usuario no autorizado para crear evaluaciones'];
 
-        const newEvaluacion = new evaluacionDocente(dataEvaluacion);
-        if (!newEvaluacion) return [null, 'Error al crear la evaluación docente'];
+        const evaluacionExistente = await evaluacionDocente.findOne({
+            docente,
+            alumno: alumno.nombreCompleto,
+            asignatura
+        });
 
-        const evaluacionSaved = await newEvaluacion.save();
-        return [evaluacionSaved, null];
+        if (evaluacionExistente) {
+            return [null, 'Ya has evaluado a este docente en esta asignatura'];
+        }
+
+        // Crear la nueva evaluación
+        const nuevaEvaluacion = new evaluacionDocente({
+            docente,
+            alumno: alumno.nombreCompleto,
+            asignatura,
+            visibilidad: visibilidad || 'Anónima',
+            fecha: new Date(),
+            texto,
+            calificacion,
+            estado: 'pendiente'
+        });
+
+        const evaluacionGuardada = await nuevaEvaluacion.save();
+        return [evaluacionGuardada, null];
+
     } catch (error) {
-        console.error('Error al crear la evaluación docente:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}
-
-export async function getEvaluacionDocenteService(query) {
-    try {
-        const { docente, alumno, asignatura, fecha } = query;
-
-        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
-        if (!existDocente) return [null, 'El docente que desea evaluar no existe'];
-
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
-        if (!existAlumno) return [null, 'El alumno que desea evaluar no existe'];
-
-        const existAsignatura = await Asignatura.findOne({ nombre: asignatura });
-        if (!existAsignatura) return [null, 'La asignatura que desea evaluar no existe'];
-
-        const evaluacion = await evaluacionDocente.find({ docente, alumno, asignatura, fecha});
-        if (!evaluacion || evaluacion.length === 0) return [null, 'No se encontró la evaluación docente con los datos proporcionados'];
-
-        return [evaluacion, null];
-    } catch (error) {
-        console.error('Error al obtener la evaluación docente:', error);
+        console.error('Error al crear evaluación:', error);
         return [null, 'Error interno del servidor'];
     }
 }
@@ -63,23 +63,56 @@ export async function getAllEvaluacionesDocenteService() {
     }
 }
 
+export async function getEvaluacionesByDocenteService(docenteNombre) {
+    try {
+        const evaluaciones = await evaluacionDocente.find({
+            docente: docenteNombre,
+            estado: 'aprobada'
+        })
+            .select('-__v')
+            .sort({ fecha: -1 });
+
+        if (!evaluaciones || evaluaciones.length === 0) {
+            return [null, 'No tienes evaluaciones aprobadas disponibles'];
+        }
+
+        // Si la evaluación es anónima, no mostrar el nombre del alumno
+        const evaluacionesProcesadas = evaluaciones.map(evaluacion => {
+            const evalObj = evaluacion.toObject();
+            if (evalObj.visibilidad === 'Anónima' || evalObj.visibilidad === 'anónima') {
+                evalObj.alumno = 'Anónimo';
+            }
+            return evalObj;
+        });
+
+        return [evaluacionesProcesadas, null];
+    } catch (error) {
+        console.error('Error al obtener evaluaciones del docente:', error);
+        return [null, 'Error interno del servidor'];
+    }
+}
+
 export async function updateEvaluacionDocenteService(query, body) {
     try {
+        const { _id } = query;
+
+        if (_id) {
+            const evaluacion = await evaluacionDocente.findByIdAndUpdate(
+                _id,
+                body,
+                { new: true }
+            );
+
+            if (!evaluacion) return [null, 'Evaluación docente no encontrada'];
+            return [evaluacion, null];
+        }
+
+        // Lógica alternativa para actualización por campos específicos
         const { docente, alumno, asignatura, fecha } = query;
-
-        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
-        if (!existDocente) return [null, 'El docente que desea evaluar no existe'];
-
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
-        if (!existAlumno) return [null, 'El alumno que desea evaluar no existe'];
-
-        const existAsignatura = await Asignatura.findOne({ nombre: asignatura });
-        if (!existAsignatura) return [null, 'La asignatura que desea evaluar no existe'];
-
         const { docente: nuevoDocente, alumno: nuevoAlumno, asignatura: nuevaAsignatura, fecha: nuevaFecha } = body;
 
         const evaluacionExistente = await evaluacionDocente.findOne({
-            docente: nuevoDocente, 
+            docente: nuevoDocente,
             alumno: nuevoAlumno,
             asignatura: nuevaAsignatura,
             fecha: nuevaFecha
@@ -103,19 +136,18 @@ export async function updateEvaluacionDocenteService(query, body) {
 
 export async function deleteEvaluacionDocenteService(query) {
     try {
+        const { _id } = query;
+
+        if (_id) {
+            const evaluacion = await evaluacionDocente.findByIdAndDelete(_id);
+            if (!evaluacion) return [null, 'Evaluación docente no encontrada'];
+            return [evaluacion, null];
+        }
+
+        // Lógica alternativa para eliminación por campos específicos
         const { docente, alumno, asignatura, fecha } = query;
-
-        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
-        if (!existDocente) return [null, 'El docente que desea evaluar no existe'];
-
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
-        if (!existAlumno) return [null, 'El alumno que desea evaluar no existe'];
-
-        const existAsignatura = await Asignatura.findOne({ nombre: asignatura });
-        if (!existAsignatura) return [null, 'La asignatura que desea evaluar no existe'];
-
         const evaluacion = await evaluacionDocente.findOneAndDelete({
-            docente, 
+            docente,
             alumno,
             asignatura,
             fecha
@@ -125,141 +157,6 @@ export async function deleteEvaluacionDocenteService(query) {
         return [evaluacion, null];
     } catch (error) {
         console.error('Error al eliminar la evaluación docente:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}
-
-// Nuevo servicio para que alumnos creen evaluaciones
-export async function createEvaluacionByAlumnoService(dataEvaluacion, alumnoId) {
-    try {
-        const { docente, asignatura, texto, calificacion, visibilidad } = dataEvaluacion;
-
-        // Verificar que el docente existe
-        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
-        if (!existDocente) return [null, 'El docente seleccionado no existe'];
-
-        // Verificar que la asignatura existe
-        const existAsignatura = await Asignatura.findOne({ nombre: asignatura });
-        if (!existAsignatura) return [null, 'La asignatura seleccionada no existe'];
-
-        // Verificar que el alumno existe y obtener su información
-        const alumno = await User.findById(alumnoId);
-        if (!alumno || alumno.role !== "alumno") return [null, 'Usuario no autorizado para crear evaluaciones'];
-
-        // Verificar que no existe una evaluación duplicada del mismo alumno al mismo docente en la misma asignatura
-        const evaluacionExistente = await evaluacionDocente.findOne({
-            docente,
-            alumno: alumno.nombreCompleto,
-            asignatura
-        });
-
-        if (evaluacionExistente) {
-            return [null, 'Ya has evaluado a este docente en esta asignatura'];
-        }
-
-        // Crear la nueva evaluación
-        const nuevaEvaluacion = new evaluacionDocente({
-            docente,
-            alumno: alumno.nombreCompleto,
-            asignatura,
-            visibilidad: visibilidad || 'Anónima',
-            fecha: new Date(),
-            texto,
-            calificacion
-        });
-
-        const evaluacionGuardada = await nuevaEvaluacion.save();
-        return [evaluacionGuardada, null];
-
-    } catch (error) {
-        console.error('Error al crear evaluación:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}
-
-// Nuevo servicio para obtener evaluaciones de un docente específico
-export async function getEvaluacionesByDocenteService(docenteNombre) {
-    try {
-        const evaluaciones = await evaluacionDocente.find({ docente: docenteNombre })
-            .select('-__v')
-            .sort({ fecha: -1 }); // Ordenar por fecha más reciente primero
-
-        if (!evaluaciones || evaluaciones.length === 0) {
-            return [null, 'No tienes evaluaciones disponibles'];
-        }
-
-        // Si la evaluación es anónima, no mostrar el nombre del alumno
-        const evaluacionesProcesadas = evaluaciones.map(evaluacion => {
-            const evalObj = evaluacion.toObject();
-            if (evalObj.visibilidad === 'Anónima' || evalObj.visibilidad === 'anónima') {
-                evalObj.alumno = 'Anónimo';
-            }
-            return evalObj;
-        });
-
-        return [evaluacionesProcesadas, null];
-    } catch (error) {
-        console.error('Error al obtener evaluaciones del docente:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}
-
-// Servicio para obtener lista de docentes
-export async function getDocentesListService() {
-    try {
-        const docentes = await User.find({ role: "profesor" })
-            .select('nombreCompleto email')
-            .sort({ nombreCompleto: 1 });
-
-        if (!docentes || docentes.length === 0) {
-            return [null, 'No hay docentes registrados'];
-        }
-
-        return [docentes, null];
-    } catch (error) {
-        console.error('Error al obtener lista de docentes:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}
-
-// Servicio para obtener lista de asignaturas
-export async function getAsignaturasListService() {
-    try {
-        const asignaturas = await Asignatura.find()
-            .select('nombre codigo')
-            .sort({ nombre: 1 });
-
-        if (!asignaturas || asignaturas.length === 0) {
-            return [null, 'No hay asignaturas registradas'];
-        }
-
-        return [asignaturas, null];
-    } catch (error) {
-        console.error('Error al obtener lista de asignaturas:', error);
-        return [null, 'Error interno del servidor'];
-    }
-}
-
-// Nuevo servicio para eliminar evaluaciones por ID (solo administradores)
-export async function deleteEvaluacionByIdService(evaluacionId) {
-    try {
-        // Verificar que la evaluación existe
-        const evaluacionExistente = await evaluacionDocente.findById(evaluacionId);
-        if (!evaluacionExistente) {
-            return [null, 'La evaluación no existe'];
-        }
-
-        // Eliminar la evaluación
-        const evaluacionEliminada = await evaluacionDocente.findByIdAndDelete(evaluacionId);
-        
-        if (!evaluacionEliminada) {
-            return [null, 'Error al eliminar la evaluación'];
-        }
-
-        return [evaluacionEliminada, null];
-
-    } catch (error) {
-        console.error('Error al eliminar evaluación por ID:', error);
         return [null, 'Error interno del servidor'];
     }
 }

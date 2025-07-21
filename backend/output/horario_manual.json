@@ -1,0 +1,542 @@
+[
+  {
+    "nombre": "Álgebra y Trigonometría",
+    "codigo": "220143",
+    "creditos": 8,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Introducción a la Ingeniería",
+    "codigo": "620432",
+    "creditos": 6,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias de la Ingeniería"
+  },
+  {
+    "nombre": "Comunicación Oral y Escrita",
+    "codigo": "340266",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Introducción a la Programación",
+    "codigo": "620431",
+    "creditos": 9,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Formación Integral I",
+    "codigo": "340556",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Cálculo Diferencial",
+    "codigo": "220144",
+    "creditos": 6,
+    "prerrequisitos": ["Álgebra y Trigonometría"],
+    "semestre": 2,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Química General",
+    "codigo": "210020",
+    "creditos": 8,
+    "prerrequisitos": [],
+    "semestre": 2,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Estructuras Discretas para Cs. de la Computación",
+    "codigo": "620434",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 2,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Programación Orientada a Objetos",
+    "codigo": "620433",
+    "creditos": 8,
+    "prerrequisitos": ["Introducción a la Programación"],
+    "semestre": 2,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Formación Integral II",
+    "codigo": "340557",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Formación Integral III",
+    "codigo": "340558",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Cálculo Integral",
+    "codigo": "220146",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Diferencial"],
+    "semestre": 3,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Álgebra Lineal",
+    "codigo": "220145",
+    "creditos": 5,
+    "prerrequisitos": ["Cálculo Diferencial"],
+    "semestre": 3,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Física Newtoniana",
+    "codigo": "230033",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Diferencial"],
+    "semestre": 3,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Estructura de Datos",
+    "codigo": "620435",
+    "creditos": 6,
+    "prerrequisitos": ["Estructuras Discretas para Cs. de la Computación", "Programación Orientada a Objetos"],
+    "semestre": 3,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Inglés I",
+    "codigo": "340276",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": 3,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Administración General",
+    "codigo": "610227",
+    "creditos": 3,
+    "prerrequisitos": [],
+    "semestre": 3,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Cálculo en Varias Variables",
+    "codigo": "220148",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Integral"],
+    "semestre": 4,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Ecuaciones Diferenciales",
+    "codigo": "220147",
+    "creditos": 5,
+    "prerrequisitos": ["Cálculo Integral", "Álgebra Lineal"],
+    "semestre": 4,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Electro-magnetismo",
+    "codigo": "230034",
+    "creditos": 6,
+    "prerrequisitos": ["Física Newtoniana"],
+    "semestre": 4,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias de la Ingeniería"
+  },
+  {
+    "nombre": "Modelamiento de Procesos e Información",
+    "codigo": "620436",
+    "creditos": 7,
+    "prerrequisitos": [],
+    "semestre": 4,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Inglés II",
+    "codigo": "340277",
+    "creditos": 4,
+    "prerrequisitos": ["Inglés I"],
+    "semestre": 4,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Formación Integral IV",
+    "codigo": "340559",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Ondas, Óptica y Física Moderna",
+    "codigo": "230035",
+    "creditos": 6,
+    "prerrequisitos": ["Electro-magnetismo", "Ecuaciones Diferenciales"],
+    "semestre": 5,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Sistemas Digitales",
+    "codigo": "410268",
+    "creditos": 5,
+    "prerrequisitos": ["Electro-magnetismo"],
+    "semestre": 5,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias de la Ingeniería"
+  },
+  {
+    "nombre": "Fundamentos de las Ciencias de la Computación",
+    "codigo": "620437",
+    "creditos": 6,
+    "prerrequisitos": ["Estructura de Datos"],
+    "semestre": 5,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Teoría de Sistemas",
+    "codigo": "620438",
+    "creditos": 4,
+    "prerrequisitos": ["Administración General", "Cálculo Integral"],
+    "semestre": 5,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias de la Ingeniería"
+  },
+  {
+    "nombre": "Inglés III",
+    "codigo": "340278",
+    "creditos": 4,
+    "prerrequisitos": ["Inglés II"],
+    "semestre": 5,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Gestión Contable",
+    "codigo": "610228",
+    "creditos": 4,
+    "prerrequisitos": ["Administración General"],
+    "semestre": 5,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Estadística y Probabilidades",
+    "codigo": "220149",
+    "creditos": 6,
+    "prerrequisitos": ["Cálculo Integral"],
+    "semestre": 6,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias Básicas"
+  },
+  {
+    "nombre": "Economía",
+    "codigo": "611049",
+    "creditos": 4,
+    "prerrequisitos": ["Cálculo Integral"],
+    "semestre": 6,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Análisis y Diseño de Algoritmos",
+    "codigo": "620448",
+    "creditos": 5,
+    "prerrequisitos": ["Fundamentos de las Ciencias de la Computación"],
+    "semestre": 6,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Base de Datos",
+    "codigo": "620439",
+    "creditos": 6,
+    "prerrequisitos": ["Modelamiento de Procesos e Información", "Estructura de Datos"],
+    "semestre": 6,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Inglés IV",
+    "codigo": "340279",
+    "creditos": 4,
+    "prerrequisitos": ["Inglés III"],
+    "semestre": 6,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Práctica Profesional 1",
+    "codigo": "620449",
+    "creditos": 6,
+    "prerrequisitos": [],
+    "semestre": 6,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Investigación de Operaciones",
+    "codigo": "430183",
+    "creditos": 4,
+    "prerrequisitos": ["Estadística y Probabilidades"],
+    "semestre": 7,
+    "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
+    "area": "Área Ciencias de la Ingeniería"
+  },
+  {
+    "nombre": "Arquitectura de Computadores",
+    "codigo": "620450",
+    "creditos": 6,
+    "prerrequisitos": ["Sistemas Digitales"],
+    "semestre": 7,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Sistemas Computacionales"
+  },
+  {
+    "nombre": "Administración y Programación de Base de Datos",
+    "codigo": "620451",
+    "creditos": 6,
+    "prerrequisitos": ["Base de Datos"],
+    "semestre": 7,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Sistemas de Información",
+    "codigo": "620452",
+    "creditos": 4,
+    "prerrequisitos": ["Teoría de Sistemas"],
+    "semestre": 7,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Gestión Estratégica",
+    "codigo": "612239",
+    "creditos": 3,
+    "prerrequisitos": ["Gestión Contable"],
+    "semestre": 7,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Gestión Presupuestaria y Financiera",
+    "codigo": "610229",
+    "creditos": 4,
+    "prerrequisitos": ["Gestión Contable"],
+    "semestre": 7,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Formación Integral V",
+    "codigo": "340560",
+    "creditos": 2,
+    "prerrequisitos": [],
+    "semestre": 1,
+    "ambito": "Ámbito Competencias Genéricas",
+    "area": "Área Form. Integral Profesional"
+  },
+  {
+    "nombre": "Legislación",
+    "codigo": "613017",
+    "creditos": 3,
+    "prerrequisitos": [],
+    "semestre": 8,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Sistemas Operativos",
+    "codigo": "620453",
+    "creditos": 6,
+    "prerrequisitos": ["Arquitectura de Computadores", "Análisis y Diseño de Algoritmos"],
+    "semestre": 8,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Sistemas Computacionales"
+  },
+  {
+    "nombre": "Inteligencia Artificial",
+    "codigo": "620454",
+    "creditos": 4,
+    "prerrequisitos": ["Análisis y Diseño de Algoritmos"],
+    "semestre": 8,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Ingeniería de Software",
+    "codigo": "620455",
+    "creditos": 5,
+    "prerrequisitos": ["Base de Datos"],
+    "semestre": 8,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Formulación y Evaluación de Proyectos",
+    "codigo": "611050",
+    "creditos": 4,
+    "prerrequisitos": ["Gestión Presupuestaria y Financiera"],
+    "semestre": 8,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Práctica Profesional 2",
+    "codigo": "620456",
+    "creditos": 9,
+    "prerrequisitos": [],
+    "semestre": 8,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Anteproyecto de Título",
+    "codigo": "620472",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Comunicación de Datos y Redes",
+    "codigo": "620457",
+    "creditos": 5,
+    "prerrequisitos": ["Sistemas Operativos", "Ondas, Óptica y Física Moderna"],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Sistemas Computacionales"
+  },
+  {
+    "nombre": "Electivo Profesional 1",
+    "codigo": "620459",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Gestión de Proyectos de Software",
+    "codigo": "620458",
+    "creditos": 4,
+    "prerrequisitos": ["Ingeniería de Software"],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Gestión de Recursos Humanos",
+    "codigo": "610231",
+    "creditos": 3,
+    "prerrequisitos": ["Gestión Estratégica"],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Gestión Informática"
+  },
+  {
+    "nombre": "Electivo Profesional 2",
+    "codigo": "620470",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Electivo Profesional 3",
+    "codigo": "620471",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 9,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Proyecto de Título",
+    "codigo": "620477",
+    "creditos": 10,
+    "prerrequisitos": ["Anteproyecto de Título"],
+    "semestre": 10,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Seguridad Informática",
+    "codigo": "620473",
+    "creditos": 4,
+    "prerrequisitos": [],
+    "semestre": 10,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Área Ingeniería de Software y Base de Datos"
+  },
+  {
+    "nombre": "Electivo Profesional 4",
+    "codigo": "620474",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 10,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Electivo Profesional 5",
+    "codigo": "620475",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 10,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  },
+  {
+    "nombre": "Electivo Profesional 6",
+    "codigo": "620476",
+    "creditos": 5,
+    "prerrequisitos": [],
+    "semestre": 10,
+    "ambito": "Ámbito Ingeniería Aplicada",
+    "area": "Una de las áreas anteriores"
+  }
+]

@@ -1,52 +1,50 @@
 import joi from 'joi';
 
 export const evaluacionDocenteQueryValidation = joi.object({
+    _id: joi.string()
+        .pattern(/^[0-9a-fA-F]{24}$/)
+        .messages({
+            'string.pattern.base': 'El ID debe ser un ObjectId válido de MongoDB',
+        }),
     docente: joi.string()
         .min(5)
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
-        .required()
         .messages({
             'string.empty': 'El campo docente no puede estar vacío',
             'string.base': 'El campo docente debe ser una cadena de texto',
             'string.min': 'El campo docente debe tener al menos 5 caracteres',
             'string.max': 'El campo docente no puede tener más de 100 caracteres',
             'string.pattern.base': 'El campo docente solo puede contener letras, espacios y puntos',
-            'any.required': 'El campo docente es obligatorio',
         }),
     alumno: joi.string()
         .min(5)
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
-        .required()
         .messages({
             'string.empty': 'El campo alumno no puede estar vacío',
             'string.base': 'El campo alumno debe ser una cadena de texto',
             'string.min': 'El campo alumno debe tener al menos 5 caracteres',
             'string.max': 'El campo alumno no puede tener más de 100 caracteres',
             'string.pattern.base': 'El campo alumno solo puede contener letras, espacios y puntos',
-            'any.required': 'El campo alumno es obligatorio',
         }),
     asignatura: joi.string()
         .min(3)
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
-        .required()
         .messages({
             'string.empty': 'El campo asignatura no puede estar vacío',
             'string.base': 'El campo asignatura debe ser una cadena de texto',
             'string.min': 'El campo asignatura debe tener al menos 3 caracteres',
             'string.max': 'El campo asignatura no puede tener más de 100 caracteres',
             'string.pattern.base': 'El campo asignatura solo puede contener letras, espacios y puntos',
-            'any.required': 'El campo asignatura es obligatorio',
         }),
     fecha: joi.string()
         .pattern(/^((0[1-9]|1[0-9]|2[0-8])-(0[1-9]|1[0-2])|(29)-(02)-(19|20)([02468][048]|[13579][26])|(29)-(02)-(19|20)\d{2}|(30)-(0[13-9]|1[0-2])|(31)-(0[13578]|1[02]))-(19|20)\d{2}$/)
-        .required()
         .custom((value, helpers) => {
             const [day, month, year] = value.split('-').map(Number);
             const inputDate = new Date(year, month - 1, day);
-            const minDate = new Date(2024, 0, 1); // 01-01-2024
+            const minDate = new Date(2024, 0, 1);
 
             if (inputDate < minDate) {
                 return helpers.error('date.min', { limit: '01-01-2024' });
@@ -56,13 +54,13 @@ export const evaluacionDocenteQueryValidation = joi.object({
         .messages({
             'date.base': 'La fecha debe ser una fecha válida',
             'date.min': 'La fecha debe ser posterior al 01-01-2024',
-            'any.required': 'El campo fecha es obligatorio',
         }),
 })
+    .or('_id', 'docente', 'alumno', 'asignatura')
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales en la consulta',
-        'object.missing': 'Debe proporcionar todos los campos: docente, alumno, asignatura y fecha',
+        'object.missing': 'Debe proporcionar al menos un campo para la consulta (_id, docente, alumno o asignatura)',
     });
 
 export const evaluacionDocenteBodyValidation = joi.object({
@@ -121,7 +119,7 @@ export const evaluacionDocenteBodyValidation = joi.object({
         .custom((value, helpers) => {
             const [day, month, year] = value.split('-').map(Number);
             const inputDate = new Date(year, month - 1, day);
-            const minDate = new Date(2024, 0, 1); // 01-01-2024
+            const minDate = new Date(2024, 0, 1);
 
             if (inputDate < minDate) {
                 return helpers.error('date.min', { limit: '01-01-2024' });
@@ -152,23 +150,20 @@ export const evaluacionDocenteBodyValidation = joi.object({
             'number.min': 'La calificación debe ser al menos 1',
             'number.max': 'La calificación no puede ser más de 7',
         }),
+    estado: joi.string()
+        .valid('pendiente', 'aprobada', 'rechazada')
+        .messages({
+            'string.base': 'El estado debe ser una cadena de texto',
+            'any.only': 'El estado debe ser "pendiente", "aprobada" o "rechazada"',
+        }),
 })
-    .or(
-        'docente',
-        'alumno',
-        'asignatura',
-        'visibilidad',
-        'fecha',
-        'texto',
-        'calificacion'
-    )
+    .or('docente', 'alumno', 'asignatura', 'visibilidad', 'fecha', 'texto', 'calificacion', 'estado')
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales en el cuerpo de la solicitud',
-        'object.missing': 'Debe proporcionar al menos uno de los campos: docente, alumno, asignatura, visibilidad, fecha, texto o calificacion',
+        'object.missing': 'Debe proporcionar al menos uno de los campos: docente, alumno, asignatura, visibilidad, fecha, texto, calificacion o estado',
     });
 
-// Nueva validación para cuando un alumno crea una evaluación
 export const createEvaluacionAlumnoValidation = joi.object({
     docente: joi.string()
         .min(5)

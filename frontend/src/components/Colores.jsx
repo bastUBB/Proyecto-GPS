@@ -6,7 +6,7 @@ const colorOpciones = [
   { nombre: "Azul", clase: "bg-blue-300 border-blue-600" },
   { nombre: "Verde", clase: "bg-green-300 border-green-600" },
   { nombre: "Amarillo", clase: "bg-yellow-300 border-yellow-600" },
-  { nombre: "Gris", clase: "bg-gray-200" },
+  { nombre: "Blanco", clase: "bg-white-200" },
   { nombre: "Violeta", clase: "bg-purple-300 border-purple-600" },
 ];
 

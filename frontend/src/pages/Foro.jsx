@@ -4,35 +4,58 @@ import EvaluacionStats from "../components/EvaluacionStats";
 import { useEvaluaciones } from "../hooks/useEvaluaciones";
 import { useAdminEvaluaciones } from "../hooks/useAdminEvaluaciones";
 import { UserContext } from '../../context/userContext';
-import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, Shield } from 'lucide-react';
+import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, CheckCircle, XCircle, Clock, AlertCircle, Search } from 'lucide-react';
+import Alert from "../components/Alert";
+import axios from 'axios';
+import HelpTooltip from "../components/PuntoAyuda";
+
 
 export default function Foro() {
   const { user } = useContext(UserContext);
   const [docentes, setDocentes] = useState([]);
   const [asignaturas, setAsignaturas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [alert, setAlert] = useState({ isVisible: false, type: '', title: '', message: '' });
+  const [filtroEstado, setFiltroEstado] = useState('todos');
+  const [confirmAction, setConfirmAction] = useState({ isVisible: false, type: '', evaluacionId: null, message: '' });
 
-  // Hook personalizado para evaluaciones (solo profesores)
-  const { 
-    evaluaciones, 
-    nuevasEvaluaciones, 
-    loading: loadingEvaluaciones, 
-    error: errorEvaluaciones, 
-    marcarComoLeidas 
+  // Funciones helper para alertas
+  const showAlert = (type, title, message) => {
+    setAlert({ isVisible: true, type, title, message });
+  };
+
+  const hideAlert = () => {
+    setAlert({ isVisible: false, type: '', title: '', message: '' });
+  };
+
+  // Funciones helper para confirmaciones
+  const showConfirmAction = (type, evaluacionId, message) => {
+    setConfirmAction({ isVisible: true, type, evaluacionId, message });
+  };
+
+  const hideConfirmAction = () => {
+    setConfirmAction({ isVisible: false, type: '', evaluacionId: null, message: '' });
+  };
+  const [filtroProfesor, setFiltroProfesor] = useState('');
+  const [filtroAsignatura, setFiltroAsignatura] = useState('');
+
+  const {
+    evaluaciones,
+    nuevasEvaluaciones,
+    loading: loadingEvaluaciones,
+    error: errorEvaluaciones,
+    marcarComoLeidas
   } = useEvaluaciones(user?.role, getAuthToken());
 
-  // Hook personalizado para administradores
   const {
     evaluaciones: evaluacionesAdmin,
     loading: loadingAdmin,
     error: errorAdmin,
     deleteEvaluacion,
-    reloadEvaluaciones
+    reloadEvaluaciones,
+    updateEvaluacionLocal
   } = useAdminEvaluaciones(user?.role, getAuthToken());
 
-  // Estados para el formulario de evaluación (solo alumnos)
   const [formData, setFormData] = useState({
     docente: '',
     asignatura: '',
@@ -41,147 +64,259 @@ export default function Foro() {
     visibilidad: 'Anónima'
   });
 
-  // Función para obtener el token del usuario
   function getAuthToken() {
     return localStorage.getItem('token') || '';
   }
 
-  // Función para realizar peticiones autenticadas
-  const authenticatedFetch = async (url, options = {}) => {
+  const getAuthHeaders = () => {
     const token = getAuthToken();
-    return fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        ...options.headers,
-      },
-    });
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
   };
 
-  // Cargar datos iniciales
   useEffect(() => {
     if (user) {
       if (user.role === 'alumno') {
         loadDocentes();
         loadAsignaturas();
       }
-      // Para profesores, el hook useEvaluaciones se encarga de cargar las evaluaciones
     }
   }, [user]);
 
-  // Usar errores del hook si es profesor o admin
   useEffect(() => {
     if (user?.role === 'profesor' && errorEvaluaciones) {
-      setError(errorEvaluaciones);
+      showAlert('error', 'Error de Carga', errorEvaluaciones);
     }
-    if (user?.role === 'admin' && errorAdmin) {
-      setError(errorAdmin);
+    if ((user?.role === 'admin' || user?.role === 'director') && errorAdmin) {
+      showAlert('error', 'Error de Carga', errorAdmin);
     }
   }, [errorEvaluaciones, errorAdmin, user?.role]);
 
-  // Cargar lista de docentes (solo para alumnos)
   const loadDocentes = async () => {
     try {
-      const response = await authenticatedFetch('http://localhost:5500/api/evaluacionDocente/docentes');
-      const data = await response.json();
-      if (response.ok) {
-        setDocentes(data.data || []);
-      } else {
-        setError(data.message || 'Error al cargar docentes');
-      }
+      const response = await axios.get('/api/users', { //TODO: No deberia tener acceso a todos los usuarios el alumno, crear un servicio que retorne solo profesores
+        headers: getAuthHeaders(),
+        params: { role: 'profesor' }
+      });
+
+      // Filtrar solo usuarios con rol profesor o docente
+      const docentesFiltrados = (response.data.data || []).filter(usuario =>
+        usuario.role === 'profesor' || usuario.role === 'docente'
+      );
+
+      setDocentes(docentesFiltrados);
     } catch (error) {
-      setError('Error de conexión al cargar docentes');
+      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar docentes');
     }
   };
 
-  // Cargar lista de asignaturas (solo para alumnos)
   const loadAsignaturas = async () => {
     try {
-      const response = await authenticatedFetch('http://localhost:5500/api/evaluacionDocente/asignaturas');
-      const data = await response.json();
-      if (response.ok) {
-        setAsignaturas(data.data || []);
-      } else {
-        setError(data.message || 'Error al cargar asignaturas');
-      }
+      const response = await axios.get('/api/asignaturas', {
+        headers: getAuthHeaders()
+      });
+      setAsignaturas(response.data.data || []);
     } catch (error) {
-      setError('Error de conexión al cargar asignaturas');
+      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar asignaturas');
     }
   };
 
-  // Manejar envío del formulario de evaluación (solo alumnos)
   const handleSubmitEvaluacion = async (e) => {
     e.preventDefault();
     if (!formData.docente || !formData.asignatura || !formData.texto) {
-      setError('Todos los campos son obligatorios');
+      showAlert('warning', 'Campos obligatorios', 'Todos los campos son obligatorios');
       return;
     }
 
     try {
       setLoading(true);
-      setError('');
-      
-      console.log('📤 Enviando datos:', formData);
-      console.log('🔑 Token:', getAuthToken());
-      
-      const response = await authenticatedFetch('http://localhost:5500/api/evaluacionDocente/alumno', {
-        method: 'POST',
-        body: JSON.stringify(formData),
+
+      const response = await axios.post('/api/evaluacionDocente', formData, {
+        headers: getAuthHeaders()
       });
-      
-      console.log('📥 Respuesta status:', response.status);
-      const data = await response.json();
-      console.log('📥 Respuesta data:', data);
-      
-      if (response.ok) {
-        setSuccess('Evaluación creada exitosamente');
-        setFormData({
-          docente: '',
-          asignatura: '',
-          texto: '',
-          calificacion: 5,
-          visibilidad: 'Anónima'
-        });
-        setTimeout(() => setSuccess(''), 3000);
-      } else {
-        setError(data.message || 'Error al crear evaluación');
-      }
+
+      showAlert('success', 'Evaluación Enviada', 'La evaluación ha sido enviada exitosamente');
+      setFormData({
+        docente: '',
+        asignatura: '',
+        texto: '',
+        calificacion: 5,
+        visibilidad: 'Anónima'
+      });
     } catch (error) {
-      console.error('💥 Error en fetch:', error);
-      setError('Error de conexión al crear evaluación');
+      showAlert('error', 'Error al crear evaluación', error.response?.data?.message || 'Error al crear evaluación');
     } finally {
       setLoading(false);
     }
   };
 
-  // Manejar eliminación de evaluaciones (solo administradores)
-  const handleDeleteEvaluacion = async (evaluacionId) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar esta evaluación?')) {
-      return;
-    }
-
+  const handleAprobarEvaluacion = async (evaluacionId) => {
     try {
       setLoading(true);
-      setError('');
-      
-      const result = await deleteEvaluacion(evaluacionId);
-      
-      if (result.success) {
-        setSuccess(result.message);
-        setTimeout(() => setSuccess(''), 3000);
+
+      updateEvaluacionLocal(evaluacionId, { estado: 'aprobada' });
+
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`,
+        { estado: 'aprobada' },
+        { headers: getAuthHeaders() }
+      );
+
+      if (response.data.success || response.status === 200) {
+        showAlert('success', 'Evaluación Aprobada', 'La evaluación ha sido aprobada correctamente');
+        setTimeout(() => reloadEvaluaciones(), 1000);
       } else {
-        setError(result.message);
+        await reloadEvaluaciones();
+        showAlert('error', 'Error al aprobar', response.data.message || 'Error al aprobar evaluación');
       }
     } catch (error) {
-      console.error('Error al eliminar evaluación:', error);
-      setError('Error inesperado al eliminar evaluación');
+      await reloadEvaluaciones();
+      showAlert('error', 'Error al aprobar', error.response?.data?.message || 'Error al aprobar evaluación');
     } finally {
       setLoading(false);
     }
   };
 
-  // Renderizar estrellas para calificación
+  const handleRechazarEvaluacion = async (evaluacionId) => {
+    try {
+      setLoading(true);
+
+      updateEvaluacionLocal(evaluacionId, { estado: 'rechazada' });
+
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`,
+        { estado: 'rechazada' },
+        { headers: getAuthHeaders() }
+      );
+
+      if (response.data.success || response.status === 200) {
+        showAlert('success', 'Evaluación Rechazada', 'La evaluación ha sido rechazada correctamente');
+        setTimeout(() => reloadEvaluaciones(), 1000);
+      } else {
+        await reloadEvaluaciones();
+        showAlert('error', 'Error al rechazar', response.data.message || 'Error al rechazar evaluación');
+      }
+    } catch (error) {
+      await reloadEvaluaciones();
+      showAlert('error', 'Error al rechazar', error.response?.data?.message || 'Error al rechazar evaluación');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteEvaluacion = async (evaluacionId) => {
+    try {
+      setLoading(true);
+
+      const result = await deleteEvaluacion(evaluacionId);
+
+      if (result.success) {
+        showAlert('success', 'Evaluación Eliminada', result.message);
+      } else {
+        showAlert('error', 'Error al eliminar', result.message);
+      }
+    } catch (error) {
+      showAlert('error', 'Error al eliminar', 'Error inesperado al eliminar evaluación');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Funciones para mostrar confirmaciones
+  const handleConfirmRechazar = (evaluacionId) => {
+    showConfirmAction('rechazar', evaluacionId, '¿Estás seguro de que deseas rechazar esta evaluación? Esta acción no se puede deshacer.');
+  };
+
+  const handleConfirmEliminar = (evaluacionId) => {
+    showConfirmAction('eliminar', evaluacionId, '¿Estás seguro de que deseas eliminar esta evaluación? Esta acción no se puede deshacer.');
+  };
+
+  // Función para ejecutar la acción confirmada
+  const executeConfirmedAction = () => {
+    if (confirmAction.type === 'rechazar') {
+      handleRechazarEvaluacion(confirmAction.evaluacionId);
+    } else if (confirmAction.type === 'eliminar') {
+      handleDeleteEvaluacion(confirmAction.evaluacionId);
+    }
+    hideConfirmAction();
+  };
+
+  const getEvaluacionesFiltradas = () => {
+    let evaluacionesFiltradas = evaluacionesAdmin;
+
+    if (filtroEstado !== 'todos') {
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion => evaluacion.estado === filtroEstado);
+    }
+
+    if (filtroProfesor) {
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion =>
+        evaluacion.docente.toLowerCase().includes(filtroProfesor.toLowerCase())
+      );
+    }
+
+    if (filtroAsignatura) {
+      evaluacionesFiltradas = evaluacionesFiltradas.filter(evaluacion =>
+        evaluacion.asignatura.toLowerCase().includes(filtroAsignatura.toLowerCase())
+      );
+    }
+
+    return evaluacionesFiltradas;
+  };
+
+  const getProfesoresUnicos = () => {
+    const profesores = [...new Set(evaluacionesAdmin.map(evaluacion => evaluacion.docente))];
+    return profesores.sort();
+  };
+
+  const getAsignaturasUnicas = () => {
+    const asignaturas = [...new Set(evaluacionesAdmin.map(evaluacion => evaluacion.asignatura))];
+    return asignaturas.sort();
+  };
+
+  const getTituloFiltros = () => {
+    const filtros = [];
+    const resultados = getEvaluacionesFiltradas();
+
+    if (filtroEstado !== 'todos') {
+      filtros.push(`Estado: ${filtroEstado}`);
+    }
+    if (filtroProfesor) {
+      filtros.push(`Profesor: ${filtroProfesor}`);
+    }
+    if (filtroAsignatura) {
+      filtros.push(`Asignatura: ${filtroAsignatura}`);
+    }
+
+    const baseTitulo = filtros.length > 0 ? 'Evaluaciones Filtradas' : 'Todas las Evaluaciones';
+    const filtrosTexto = filtros.length > 0 ? ` (${filtros.join(', ')})` : '';
+
+    return `${baseTitulo}${filtrosTexto} - ${resultados.length} resultado${resultados.length !== 1 ? 's' : ''}`;
+  };
+
+  const getStatusColor = (estado) => {
+    switch (estado) {
+      case 'aprobada':
+        return 'text-green-600 bg-green-100';
+      case 'rechazada':
+        return 'text-red-600 bg-red-100';
+      case 'pendiente':
+      default:
+        return 'text-yellow-600 bg-yellow-100';
+    }
+  };
+
+  const getStatusIcon = (estado) => {
+    switch (estado) {
+      case 'aprobada':
+        return <CheckCircle className="w-4 h-4" />;
+      case 'rechazada':
+        return <XCircle className="w-4 h-4" />;
+      case 'pendiente':
+      default:
+        return <Clock className="w-4 h-4" />;
+    }
+  };
+
   const renderStars = (calificacion) => {
     const stars = [];
     for (let i = 1; i <= 7; i++) {
@@ -195,16 +330,19 @@ export default function Foro() {
     return stars;
   };
 
-  // Si no hay usuario logueado
   if (!user) {
     return (
       <PagGeneral>
-        <div className="min-h-screen pt-4">
-          <div className="max-w-2xl mx-auto px-4 text-center">
-            <h1 className="text-3xl font-bold mb-4 text-blue-600">
-              Evaluación Docente
-            </h1>
-            <p className="text-gray-600">Debes iniciar sesión para acceder a esta página.</p>
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6">
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                Evaluación Docente
+              </h1>
+              <p className="text-sm sm:text-base text-blue-700">
+                Debes iniciar sesión para acceder a esta página
+              </p>
+            </div>
           </div>
         </div>
       </PagGeneral>
@@ -213,18 +351,29 @@ export default function Foro() {
 
   return (
     <PagGeneral>
-      <div className="min-h-screen pt-4">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex items-center justify-center mb-6">
-            <h1 className="text-3xl font-bold text-blue-600">
-              {user.role === 'alumno' 
-                ? 'Evaluar Docentes' 
-                : user.role === 'profesor' 
-                ? 'Mis Evaluaciones Recibidas'
-                : 'Gestión de Evaluaciones Docentes'
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+          <div className="text-center space-y-1 sm:space-y-2">
+            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+              {user.role === 'alumno'
+                ? 'Evaluar Docentes'
+                : user.role === 'profesor'
+                  ? 'Mis Evaluaciones Recibidas'
+                  : 'Gestión de Evaluaciones Docentes'
               }
             </h1>
-            {/* Indicador de notificaciones para profesores */}
+            <p className="text-sm sm:text-base text-blue-700">
+              {user.role === 'alumno'
+                ? 'Evalúa a tus docentes y ayuda a mejorar la calidad educativa'
+                : user.role === 'profesor'
+                  ? 'Revisa las evaluaciones que has recibido de tus estudiantes'
+                  : 'Administra las evaluaciones docentes del sistema'
+              }
+            </p>
+          </div>
+
+          <div className="flex items-center justify-center mb-6">
+            <div></div>
             {user.role === 'profesor' && nuevasEvaluaciones > 0 && (
               <div className="ml-4 flex items-center gap-2 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
                 <Bell className="w-4 h-4" />
@@ -233,27 +382,43 @@ export default function Foro() {
             )}
           </div>
 
-          {/* Mensajes de error y éxito */}
-          {error && (
+          {/* {error && (
             <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
               {error}
             </div>
-          )}
-          
-          {success && (
+          )} */}
+
+          {/* {success && (
             <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
               {success}
             </div>
-          )}
+          )} */}
 
-          {/* Formulario para alumnos */}
           {user.role === 'alumno' && (
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5" />
-                Crear Nueva Evaluación
-              </h2>
-              
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Crear Nueva Evaluación
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí puedes crear una nueva evaluación para un docente, seleccionando la asignatura y proporcionando una calificación y comentarios. Ademas, puedes elegir si la evaluación será anónima o pública a la vista del profesor.
+                    </p>
+                  </HelpTooltip>
+                </h2>
+              </div>
+
+              {/* <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="w-5 h-5 text-blue-600" />
+                  <h3 className="font-semibold text-blue-800">Proceso de Evaluación</h3>
+                </div>
+                <p className="text-blue-700 text-sm">
+                  Las evaluaciones se envían directamente y serán visibles para los profesores.
+                </p>
+              </div> */}
+
               <form onSubmit={handleSubmitEvaluacion} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -263,7 +428,7 @@ export default function Foro() {
                     </label>
                     <select
                       value={formData.docente}
-                      onChange={(e) => setFormData({...formData, docente: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, docente: e.target.value })}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
@@ -283,7 +448,7 @@ export default function Foro() {
                     </label>
                     <select
                       value={formData.asignatura}
-                      onChange={(e) => setFormData({...formData, asignatura: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, asignatura: e.target.value })}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
@@ -307,7 +472,7 @@ export default function Foro() {
                       min="1"
                       max="7"
                       value={formData.calificacion}
-                      onChange={(e) => setFormData({...formData, calificacion: parseInt(e.target.value)})}
+                      onChange={(e) => setFormData({ ...formData, calificacion: parseInt(e.target.value) })}
                       className="flex-1"
                     />
                     <div className="flex items-center gap-2">
@@ -325,7 +490,7 @@ export default function Foro() {
                   </label>
                   <textarea
                     value={formData.texto}
-                    onChange={(e) => setFormData({...formData, texto: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, texto: e.target.value })}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows="4"
                     placeholder="Comparte tu experiencia con este docente..."
@@ -344,7 +509,7 @@ export default function Foro() {
                   </label>
                   <select
                     value={formData.visibilidad}
-                    onChange={(e) => setFormData({...formData, visibilidad: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, visibilidad: e.target.value })}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="Anónima">Anónima (recomendado)</option>
@@ -363,12 +528,20 @@ export default function Foro() {
             </div>
           )}
 
-          {/* Lista de evaluaciones para profesores */}
           {user.role === 'profesor' && (
             <div className="space-y-4" onClick={() => nuevasEvaluaciones > 0 && marcarComoLeidas()}>
-              {/* Estadísticas de evaluaciones */}
+              {/* <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                  <h3 className="font-semibold text-green-800">Evaluaciones Recibidas</h3>
+                </div>
+                <p className="text-green-700 text-sm">
+                  Aquí se muestran todas las evaluaciones que has recibido de tus estudiantes.
+                </p>
+              </div> */}
+
               {evaluaciones.length > 0 && <EvaluacionStats evaluaciones={evaluaciones} />}
-              
+
               {loadingEvaluaciones ? (
                 <div className="text-center py-8">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -377,13 +550,16 @@ export default function Foro() {
               ) : evaluaciones.length === 0 ? (
                 <div className="text-center py-8">
                   <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg">Aún no tienes evaluaciones recibidas.</p>
+                  <p className="text-gray-500 text-lg">Aún no tienes evaluaciones.</p>
+                  <p className="text-gray-400 text-sm mt-2">
+                    Las evaluaciones aparecerán aquí cuando los estudiantes las envíen.
+                  </p>
                 </div>
               ) : (
                 evaluaciones.map((evaluacion) => (
                   <div
                     key={evaluacion._id}
-                    className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
+                    className="bg-white p-6 rounded-lg shadow-md border border-gray-200 relative"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
@@ -409,11 +585,11 @@ export default function Foro() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="border-t pt-4">
                       <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
                     </div>
-                    
+
                     <div className="mt-3 text-xs text-gray-500 uppercase tracking-wide">
                       {evaluacion.visibilidad}
                     </div>
@@ -423,22 +599,154 @@ export default function Foro() {
             </div>
           )}
 
-          {/* Panel de administración para administradores */}
-          {user.role === 'admin' && (
+          {(user.role === 'admin' || user.role === 'director') && (
             <div className="space-y-4">
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
-                  <h2 className="text-lg font-semibold text-blue-800">Panel de Administración</h2>
+              {/* Estadísticas de evaluaciones */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    Estadísticas de Evaluaciones
+                  </h2>
                 </div>
-                <p className="text-blue-700 text-sm">
-                  Como administrador, puedes revisar todas las evaluaciones del sistema y eliminar aquellas que consideres inapropiadas.
-                </p>
+                <div className="grid grid-cols-4 lg:grid-cols-4 gap-4">
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-5 h-5 text-yellow-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Pendientes</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Aprobadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-green-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
+                    </p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <XCircle className="w-5 h-5 text-red-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Rechazadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-red-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
+                    </p>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="w-5 h-5 text-blue-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Total</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {evaluacionesAdmin.length}
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Estadísticas generales */}
-              {evaluacionesAdmin.length > 0 && <EvaluacionStats evaluaciones={evaluacionesAdmin} />}
-              
+              <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+                  <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    <Search className="w-5 h-5" />
+                    Filtros de Búsqueda
+                    <HelpTooltip>
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Puedes filtrar las evaluaciones por estado, profesor y asignatura para encontrar rápidamente lo que necesitas.
+                      </p>
+                    </HelpTooltip>
+                  </h3>
+                </div>
+                <div className="mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <CheckCircle className="w-4 h-4 inline mr-1" />
+                        Estado de la Evaluación:
+                      </label>
+                      <select
+                        value={filtroEstado}
+                        onChange={(e) => setFiltroEstado(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="todos">
+                          Todas las evaluaciones ({evaluacionesAdmin.length})
+                        </option>
+                        <option value="pendiente">
+                          Pendientes ({evaluacionesAdmin.filter(e => e.estado === 'pendiente').length})
+                        </option>
+                        <option value="aprobada">
+                          Aprobadas ({evaluacionesAdmin.filter(e => e.estado === 'aprobada').length})
+                        </option>
+                        <option value="rechazada">
+                          Rechazadas ({evaluacionesAdmin.filter(e => e.estado === 'rechazada').length})
+                        </option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <User className="w-4 h-4 inline mr-1" />
+                        Filtrar por Profesor:
+                      </label>
+                      <select
+                        value={filtroProfesor}
+                        onChange={(e) => setFiltroProfesor(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="">Todos los profesores</option>
+                        {getProfesoresUnicos().map((profesor) => (
+                          <option key={profesor} value={profesor}>
+                            {profesor}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <BookOpen className="w-4 h-4 inline mr-1" />
+                        Filtrar por Asignatura:
+                      </label>
+                      <select
+                        value={filtroAsignatura}
+                        onChange={(e) => setFiltroAsignatura(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                      >
+                        <option value="">Todas las asignaturas</option>
+                        {getAsignaturasUnicas().map((asignatura) => (
+                          <option key={asignatura} value={asignatura}>
+                            {asignatura}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {(filtroProfesor || filtroAsignatura || filtroEstado !== 'todos') && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <button
+                      onClick={() => {
+                        setFiltroProfesor('');
+                        setFiltroAsignatura('');
+                        setFiltroEstado('todos');
+                      }}
+                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm"
+                    >
+                      Limpiar todos los filtros
+                    </button>
+                  </div>
+                )}
+              </div>
+
               {loadingAdmin ? (
                 <div className="text-center py-8">
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -452,8 +760,11 @@ export default function Foro() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between mb-4">
+                    {/* <div> */}
+
+
                     <h3 className="text-lg font-semibold text-gray-800">
-                      Todas las Evaluaciones ({evaluacionesAdmin.length})
+                      {getTituloFiltros()}
                     </h3>
                     <button
                       onClick={reloadEvaluaciones}
@@ -462,80 +773,141 @@ export default function Foro() {
                       Actualizar
                     </button>
                   </div>
-                  
-                  {evaluacionesAdmin.map((evaluacion) => (
-                    <div
-                      key={evaluacion._id}
-                      className="bg-white p-6 rounded-lg shadow-md border border-gray-200 relative"
-                    >
-                      {/* Botón de eliminar */}
-                      <button
-                        onClick={() => handleDeleteEvaluacion(evaluacion._id)}
-                        className="absolute top-4 right-4 p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition"
-                        title="Eliminar evaluación"
-                        disabled={loading}
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
 
-                      <div className="flex justify-between items-start mb-4 pr-12">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <BookOpen className="w-4 h-4 text-blue-600" />
-                            <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
-                          </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="w-4 h-4 text-gray-600" />
-                            <span className="text-gray-700">
-                              Profesor: <strong>{evaluacion.docente}</strong>
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <User className="w-4 h-4 text-green-600" />
-                            <span className="text-gray-700">
-                              {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center gap-1 mb-1">
-                            {renderStars(evaluacion.calificacion)}
-                            <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-gray-500">
-                            <Calendar className="w-3 h-3" />
-                            {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+                  {getEvaluacionesFiltradas().length === 0 ? (
+                    <div className="text-center py-8">
+                      <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
+                    </div>
+                  ) : (
+                    getEvaluacionesFiltradas().map((evaluacion) => (
+                      <div
+                        key={evaluacion._id}
+                        className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
+                          evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                            'border-red-200'
+                          }`}
+                      >
+                        <div className="absolute top-4 right-4 flex items-center gap-2">
+                          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
+                            {getStatusIcon(evaluacion.estado)}
+                            <span className="capitalize">{evaluacion.estado}</span>
                           </div>
                         </div>
-                      </div>
-                      
-                      <div className="border-t pt-4">
-                        <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
-                      </div>
-                      
-                      <div className="mt-3 flex justify-between items-center">
-                        <div className="text-xs text-gray-500 uppercase tracking-wide">
-                          {evaluacion.visibilidad}
+
+                        <div className="flex justify-between items-start mb-4 pr-32">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <BookOpen className="w-4 h-4 text-blue-600" />
+                              <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="w-4 h-4 text-gray-600" />
+                              <span className="text-gray-700">
+                                Profesor: <strong>{evaluacion.docente}</strong>
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="w-4 h-4 text-green-600" />
+                              <span className="text-gray-700">
+                                {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center gap-1 mb-1">
+                              {renderStars(evaluacion.calificacion)}
+                              <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-gray-500">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-xs text-gray-400">
+
+                        <div className="border-t pt-4 mb-4">
+                          <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                          <div className="text-xs text-gray-500 uppercase tracking-wide">
+                            {evaluacion.visibilidad}
+                          </div>
+
+                          <div className="flex gap-2">
+                            {evaluacion.estado === 'pendiente' && (
+                              <>
+                                <button
+                                  onClick={() => handleAprobarEvaluacion(evaluacion._id)}
+                                  className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
+                                  disabled={loading}
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                  Aprobar
+                                </button>
+                                <button
+                                  onClick={() => handleConfirmRechazar(evaluacion._id)}
+                                  className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
+                                  disabled={loading}
+                                >
+                                  <XCircle className="w-4 h-4" />
+                                  Rechazar
+                                </button>
+                              </>
+                            )}
+
+                            <button
+                              onClick={() => handleConfirmEliminar(evaluacion._id)}
+                              className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
+                              disabled={loading}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Eliminar
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="mt-2 text-xs text-gray-400">
                           ID: {evaluacion._id}
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               )}
             </div>
           )}
 
-          {/* Mensaje para otros roles */}
-          {user.role !== 'alumno' && user.role !== 'profesor' && user.role !== 'admin' && (
+          {user.role !== 'alumno' && user.role !== 'profesor' && user.role !== 'admin' && user.role !== 'director' && (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">Esta página está disponible solo para alumnos, profesores y administradores.</p>
+              <p className="text-gray-500 text-lg">Esta página está disponible solo para alumnos, profesores, administradores y directores.</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* Componente de Alerta */}
+      <Alert
+        type={alert.type}
+        title={alert.title}
+        message={alert.message}
+        isVisible={alert.isVisible}
+        onClose={hideAlert}
+        autoCloseTime={3000}
+      />
+
+      {/* Componente de Confirmación */}
+      <Alert
+        type="confirm"
+        title="Confirmar Acción"
+        message={confirmAction.message}
+        isVisible={confirmAction.isVisible}
+        onClose={hideConfirmAction}
+        onConfirm={executeConfirmedAction}
+        acceptButtonText={confirmAction.type === 'rechazar' ? 'Rechazar' : 'Eliminar'}
+        cancelButtonText="Cancelar"
+      />
     </PagGeneral>
   );
 }

@@ -13,24 +13,21 @@ export default function Login() {
     e.preventDefault();
     const { email, password } = data;
     try {
+      console.log("Attempting to log in with:", { email, password });
       const { data: response } = await axios.post('api/auth/login', { email, password });
+      console.log("Login response:", response);
       if (response.error) {
         toast.error(response.error);
       } else {
         // Guardar en localStorage
         localStorage.setItem('token', response.token);
         localStorage.setItem('userData', JSON.stringify(response.user));
-        
+
         // Actualizar el contexto
         setUser(response.user);
-        
+
         setData({ email: "", password: "" });
-        
-        // console.log('Usuario logueado:', response.user); // Debug
-        // console.log('Datos guardados en localStorage:', JSON.parse(localStorage.getItem('userData'))); // Debug
-        // console.log('Token:', response.token); // Debug
-        
-        toast.success('Login exitoso');
+
         navigate('/');
       }
     } catch (error) {
@@ -42,15 +39,14 @@ export default function Login() {
   return (
     <div className="w-screen h-screen relative overflow-hidden">
       {/* Imagen de fondo */}
-      <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0"
         style={{
           backgroundImage: "url('/FondoL.jpg')",
-          zIndex: 1
         }}
       />
 
-      <div className="relative w-full h-full flex justify-end items-center pr-40 z-20">
+      <div className="relative w-full h-full flex justify-center items-center z-20">
         {/* Cuadro de login */}
         <div className="bg-gradient-to-b from-[#0c549c] to-[#b4ecff] p-4 h-[470px] rounded shadow-[0_0_25px_rgba(0,191,255,0.9)]">
           <img

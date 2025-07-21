@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PagGeneral from "../components/PagGeneral";
+import HelpTooltip from "../components/PuntoAyuda";
 
 const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const hours = [
@@ -24,8 +25,17 @@ export default function Horario() {
 
   const agregarHorario = (e) => {
     e.preventDefault();
+    if (!form.asignatura || !form.sala) {
+      alert("Por favor completa todos los campos requeridos");
+      return;
+    }
     setHorarios([...horarios, { ...form }]);
     setForm({ ...form, asignatura: "", sala: "" });
+  };
+
+  const eliminarHorario = (index) => {
+    const nuevosHorarios = horarios.filter((_, i) => i !== index);
+    setHorarios(nuevosHorarios);
   };
 
   const renderCelda = (dia, hora) => {
@@ -35,106 +45,196 @@ export default function Horario() {
     const key = `${dia}-${hora}`;
     if (item) {
       return (
-        <td key={key} className="border px-2 py-1 bg-blue-100 text-gray-900 text-sm border-gray-300">
-          <strong>{item.asignatura}</strong>
-          <br />
-          {item.sala}
-          <br />
-          {item.horaInicio} - {item.horaFin}
+        <td key={key} className="border px-2 py-1 bg-blue-100 text-blue-900 text-sm border-blue-200 relative group">
+          <div className="space-y-1">
+            <p className="font-semibold text-blue-900">{item.asignatura}</p>
+            <p className="text-blue-700">{item.sala}</p>
+            <p className="text-blue-600 text-xs">{item.horaInicio} - {item.horaFin}</p>
+          </div>
+          <button
+            onClick={() => eliminarHorario(horarios.indexOf(item))}
+            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Eliminar"
+          >
+            ×
+          </button>
         </td>
       );
     }
-    return <td key={key} className="border px-2 py-1 bg-white border-gray-300"></td>;
+    return <td key={key} className="border px-2 py-1 bg-white border-blue-200 h-16"></td>;
   };
 
   return (
     <PagGeneral>
-      <div className="w-full max-w-6xl mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900">Horario UBB</h2>
-
-        <form onSubmit={agregarHorario} className="space-y-2 mb-6">
-          <div className="flex gap-2 flex-wrap justify-center">
-            <select 
-              name="dia" 
-              value={form.dia} 
-              onChange={handleChange}
-              className="border px-2 py-1 bg-white text-gray-900 border-gray-300 rounded"
-            >
-              {days.map((d) => (
-                <option key={d}>{d}</option>
-              ))}
-            </select>
-
-            <select 
-              name="horaInicio" 
-              value={form.horaInicio} 
-              onChange={handleChange}
-              className="border px-2 py-1 bg-white text-gray-900 border-gray-300 rounded"
-            >
-              {hours.map((h) => (
-                <option key={h}>{h}</option>
-              ))}
-            </select>
-
-            <select 
-              name="horaFin" 
-              value={form.horaFin} 
-              onChange={handleChange}
-              className="border px-2 py-1 bg-white text-gray-900 border-gray-300 rounded"
-            >
-              {hours.map((h) => (
-                <option key={h}>{h}</option>
-              ))}
-            </select>
-
-            <input
-              type="text"
-              name="asignatura"
-              placeholder="Asignatura"
-              value={form.asignatura}
-              onChange={handleChange}
-              className="border px-2 py-1 bg-white text-gray-900 placeholder-gray-500 border-gray-300 rounded"
-            />
-            <input
-              type="text"
-              name="sala"
-              placeholder="Sala"
-              value={form.sala}
-              onChange={handleChange}
-              className="border px-2 py-1 bg-white text-gray-900 placeholder-gray-500 border-gray-300 rounded"
-            />
-            <button
-              type="submit"
-              className="bg-[#145C9E] text-white px-3 py-1 rounded hover:bg-blue-700 transition"
-            >
-              Agregar
-            </button>
+      <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+          {/* Encabezado */}
+          <div className="text-center space-y-1 sm:space-y-2">
+            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">Horario UBB</h1>
+            <p className="text-sm sm:text-base text-blue-700">Gestiona y visualiza tus horarios de clases</p>
           </div>
-        </form>
 
-        <div className="overflow-auto border rounded shadow bg-white">
-          <table className="border-collapse border w-full bg-white">
-            <thead>
-              <tr>
-                <th className="border px-2 py-1 bg-gray-100 text-gray-900 border-gray-300">Hora</th>
-                {days.map((dia) => (
-                  <th key={dia} className="border px-2 py-1 bg-blue-500 text-white border-gray-300">
-                    {dia}
-                  </th>
+          {/* Formulario para agregar horarios */}
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                Agregar clase al horario
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Completa los datos para agregar una nueva clase.
+                  </p>
+                </HelpTooltip>
+              </h2>
+            </div>
+
+            <form onSubmit={agregarHorario} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-1">Día</label>
+                  <select
+                    name="dia"
+                    value={form.dia}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {days.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-1">Hora Inicio</label>
+                  <select
+                    name="horaInicio"
+                    value={form.horaInicio}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {hours.map((h) => (
+                      <option key={h} value={h}>{h}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-1">Hora Fin</label>
+                  <select
+                    name="horaFin"
+                    value={form.horaFin}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {hours.map((h) => (
+                      <option key={h} value={h}>{h}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-1">Asignatura *</label>
+                  <input
+                    type="text"
+                    name="asignatura"
+                    placeholder="Ej: Matemáticas"
+                    value={form.asignatura}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 placeholder-blue-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-1">Sala *</label>
+                  <input
+                    type="text"
+                    name="sala"
+                    placeholder="Ej: A-101"
+                    value={form.sala}
+                    onChange={handleChange}
+                    className="w-full border border-blue-300 px-3 py-2 bg-white text-blue-900 placeholder-blue-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  Agregar al Horario
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Tabla de horarios */}
+          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
+            < div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                Horario Actual
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Aquí puedes ver tu horario actual con las clases que has agregado.
+                  </p>
+                </HelpTooltip>
+              </h2>
+            </div>
+            <div className="p-4 sm:p-6 overflow-x-auto">
+              <table className="w-full border-collapse min-w-[600px]">
+                <thead>
+                  <tr className="bg-blue-50">
+                    <th className="border border-blue-200 px-3 py-2 text-blue-900 font-semibold text-sm">
+                      Hora
+                    </th>
+                    {days.map((dia) => (
+                      <th
+                        key={dia}
+                        className="border border-blue-200 px-3 py-2 text-blue-900 font-semibold text-sm"
+                      >
+                        {dia}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {hours.map((hora) => (
+                    <tr key={hora}>
+                      <td className="border border-blue-200 px-3 py-2 text-blue-900 font-medium text-sm bg-blue-50">
+                        {hora}
+                      </td>
+                      {days.map((dia) => renderCelda(dia, hora))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+          {/* Resumen de horarios */}
+          {horarios.length > 0 && (
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-3">
+                Resumen de Clases ({horarios.length} clase{horarios.length !== 1 ? 's' : ''})
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {horarios.map((horario, index) => (
+                  <div key={index} className="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <p className="font-semibold text-blue-900">{horario.asignatura}</p>
+                    <p className="text-blue-700 text-sm">{horario.dia} - {horario.sala}</p>
+                    <p className="text-blue-600 text-xs">{horario.horaInicio} - {horario.horaFin}</p>
+                  </div>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {hours.map((hora) => (
-                <tr key={hora}>
-                  <td className="border px-2 py-1 font-medium bg-white text-gray-900 border-gray-300">{hora}</td>
-                  {days.map((dia) => renderCelda(dia, hora))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-    </PagGeneral>
+      </div >
+    </PagGeneral >
   );
 }

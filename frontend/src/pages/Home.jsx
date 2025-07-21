@@ -7,7 +7,10 @@ import {
   Users, 
   FileSpreadsheet, 
   GraduationCap, 
-  History 
+  History,
+  Settings,
+  Clock,
+  PlusCircle
 } from "lucide-react";
 
 export default function Home() {
@@ -25,7 +28,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log('UserRole actual:', userRole); // Debug
+    //console.log('UserRole actual:', userRole); // Debug
     
     // Definir páginas disponibles según el rol
     const getAvailablePages = (role) => {
@@ -40,25 +43,36 @@ export default function Home() {
           ...basePages,
           { id: "usuarios", route: "/gestion-usuarios", icon: Users, label: "Usuarios" },
           { id: "excel", route: "/subida-excel", icon: FileSpreadsheet, label: "Excel" },
+          { id: "gestion-malla", route: "/gestion-malla", icon: Settings, label: "Gestión Malla" },
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
         ],
         profesor: [
           ...basePages,
-          { id: "evaluaciones", route: "/evaluaciones", icon: GraduationCap, label: "Evaluaciones" },
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
+        ],
+        alumno: [
+          ...basePages,
+          // { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
         estudiante: [
           ...basePages,
-          { id: "historial", route: "/historial", icon: History, label: "Historial" },
+          // { id: "historial", route: "/historial", icon: History, label: "Historial" },
+        ],
+        director: [
+          ...basePages,
+          { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
+          { id: "gestion-malla", route: "/gestion-malla", icon: Settings, label: "Gestión Malla" },
         ],
       };
 
-      console.log('Páginas disponibles para rol', role, ':', roleSpecificPages[role] || basePages); // Debug
+      //console.log('Páginas disponibles para rol', role, ':', roleSpecificPages[role] || basePages); // Debug
       return roleSpecificPages[role] || basePages;
     };
 
     if (userRole) {
       const pages = getAvailablePages(userRole);
       setAvailablePages(pages);
-      console.log('Páginas configuradas:', pages); // Debug
+      //console.log('Páginas configuradas:', pages); // Debug
     }
   }, [userRole]);
 
@@ -91,13 +105,15 @@ export default function Home() {
       return "grid-cols-2 lg:grid-cols-4";
     } else if (itemCount <= 6) {
       return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3";
-    } else {
+    } else if (itemCount <= 8) {
       return "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4";
+    } else {
+      return "grid-cols-3 sm:grid-cols-4 lg:grid-cols-5";
     }
   };
 
   return (
-    <div className="w-screen h-screen bg-[url('/FondoHome.jpg')] bg-cover bg-center flex flex-col">
+    <div className="w-screen h-screen bg-[url('/FondoHome.svg')] bg-cover bg-center flex flex-col">
       <div className="flex flex-col items-center justify-start flex-1 p-8 pt-24 overflow-y-auto perspective-[1000px]">
         <img
           src="/Escudo.svg"

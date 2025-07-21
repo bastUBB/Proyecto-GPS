@@ -1,31 +1,42 @@
-import{
-createEvaluacionDocenteService,
-getEvaluacionDocenteService,
-getAllEvaluacionesDocenteService,
-getEvaluacionesByDocenteService,
-updateEvaluacionDocenteService,
-deleteEvaluacionDocenteService,
-createEvaluacionByAlumnoService,
-getDocentesListService,
-getAsignaturasListService,
-deleteEvaluacionByIdService
+import {
+    createEvaluacionDocenteService,
+    getAllEvaluacionesDocenteService,
+    getEvaluacionesByDocenteService,
+    updateEvaluacionDocenteService,
+    deleteEvaluacionDocenteService
 } from '../services/evaluacionDocente.service.js';
-import { evaluacionDocenteQueryValidation, evaluacionDocenteBodyValidation, createEvaluacionAlumnoValidation } from '../validations/evaluacionDocente.validation.js';
+import { 
+    evaluacionDocenteQueryValidation, 
+    evaluacionDocenteBodyValidation, 
+    createEvaluacionAlumnoValidation 
+} from '../validations/evaluacionDocente.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
 export async function createEvaluacionDocente(req, res) {
     try {
-        const evaluacionDocente = req.body;
+        if (!req.user || !req.user._id) {
+            return handleErrorClient(res, 401, "Usuario no autenticado", "No se encontró información del usuario en el token");
+        }
 
-        const { value, error } = evaluacionDocenteBodyValidation.validate(evaluacionDocente);
+        const evaluacionData = req.body;
+        const alumnoId = req.user._id;
+        const alumnoNombre = req.user.nombreCompleto;
 
-        if (error) return handleErrorClient(res, 400, "Error de validación", error.message);
+        const { value, error } = createEvaluacionAlumnoValidation.validate(evaluacionData);
+        
+        if (error) {
+            return handleErrorClient(res, 400, "Error de validación", error.message);
+        }
 
-        const [newEvaluacionDocente, errorNewEvaluacionDocente] = await createEvaluacionDocenteService(value);
+        value.alumno = alumnoNombre;
 
-        if (errorNewEvaluacionDocente) return handleErrorClient(res, 400, "Error registrando la evaluación docente", errorNewEvaluacionDocente);
+        const [newEvaluacion, errorEvaluacion] = await createEvaluacionDocenteService(value, alumnoId);
 
-        handleSuccess(res, 201, "Evaluación docente registrada con éxito", newEvaluacionDocente);
+        if (errorEvaluacion) {
+            return handleErrorClient(res, 400, "Error creando evaluación", errorEvaluacion);
+        }
+
+        handleSuccess(res, 201, "Evaluación creada exitosamente", newEvaluacion);
     } catch (error) {
         handleErrorServer(res, 500, error.message);
     }
@@ -33,17 +44,17 @@ export async function createEvaluacionDocente(req, res) {
 
 export async function getEvaluacionDocente(req, res) {
     try {
-        const evaluacionDocenteQuery = req.query;
+        if (!req.user || !req.user.nombreCompleto) {
+            return handleErrorClient(res, 401, "Usuario no autenticado", "No se encontró información del usuario en el token");
+        }
 
-        const { errorQuery } = evaluacionDocenteQueryValidation.validate(evaluacionDocenteQuery);
+        const docenteNombre = req.user.nombreCompleto;
+        
+        const [evaluaciones, error] = await getEvaluacionesByDocenteService(docenteNombre);
 
-        if (errorQuery) return handleErrorClient(res, 400, "Error de validación", errorQuery.message);
+        if (error) return handleErrorClient(res, 404, "No se encontraron evaluaciones", error);
 
-        const [evaluacionDocente, errorEvaluacionDocente] = await getEvaluacionDocenteService(evaluacionDocenteQuery);
-
-        if (errorEvaluacionDocente) return handleErrorClient(res, 404, "Evaluación docente no encontrada", errorEvaluacionDocente);
-
-        handleSuccess(res, 200, "Evaluación docente encontrada", evaluacionDocente);
+        handleSuccess(res, 200, "Evaluaciones encontradas", evaluaciones);
     } catch (error) {
         handleErrorServer(res, 500, error.message);
     }
@@ -51,11 +62,13 @@ export async function getEvaluacionDocente(req, res) {
 
 export async function getAllEvaluacionesDocente(req, res) {
     try {
-        const [evaluacionesDocente, errorEvaluacionesDocente] = await getAllEvaluacionesDocenteService();
+        const [evaluaciones, errorEvaluaciones] = await getAllEvaluacionesDocenteService();
 
-        if (errorEvaluacionesDocente) return handleErrorClient(res, 404, "No hay evaluaciones docentes registradas", errorEvaluacionesDocente);
+        if (errorEvaluaciones) {
+            return handleErrorClient(res, 404, "Error al obtener evaluaciones", errorEvaluaciones);
+        }
 
-        handleSuccess(res, 200, "Evaluaciones docentes encontradas", evaluacionesDocente);
+        handleSuccess(res, 200, "Evaluaciones obtenidas exitosamente", evaluaciones);
     } catch (error) {
         handleErrorServer(res, 500, error.message);
     }
@@ -63,17 +76,16 @@ export async function getAllEvaluacionesDocente(req, res) {
 
 export async function updateEvaluacionDocente(req, res) {
     try {
-        const evaluacionDocenteQuery = req.query;
+        const evaluacionId = req.params.id || req.query._id;
+        const evaluacionDocenteQuery = evaluacionId ? { _id: evaluacionId } : req.query;
 
-        const { errorQuery } = evaluacionDocenteQueryValidation.validate(evaluacionDocenteQuery);
-
+        const { value: queryValue, error: errorQuery } = evaluacionDocenteQueryValidation.validate(evaluacionDocenteQuery);
         if (errorQuery) return handleErrorClient(res, 400, "Error de validación en la consulta", errorQuery.message);
 
-        const { value, errorBody } = evaluacionDocenteBodyValidation.validate(req.body);
-
+        const { value: bodyValue, error: errorBody } = evaluacionDocenteBodyValidation.validate(req.body);
         if (errorBody) return handleErrorClient(res, 400, "Error de validación en el cuerpo", errorBody.message);
 
-        const [updatedEvaluacionDocente, errorUpdatedEvaluacionDocente] = await updateEvaluacionDocenteService(evaluacionDocenteQuery, value);
+        const [updatedEvaluacionDocente, errorUpdatedEvaluacionDocente] = await updateEvaluacionDocenteService(queryValue, bodyValue);
 
         if (errorUpdatedEvaluacionDocente) return handleErrorClient(res, 404, "Evaluación docente no encontrada", errorUpdatedEvaluacionDocente);
 
@@ -85,13 +97,13 @@ export async function updateEvaluacionDocente(req, res) {
 
 export async function deleteEvaluacionDocente(req, res) {
     try {
-        const evaluacionDocenteQuery = req.query;
+        const evaluacionId = req.params.id || req.query._id;
+        const evaluacionDocenteQuery = evaluacionId ? { _id: evaluacionId } : req.query;
 
-        const { errorQuery } = evaluacionDocenteQueryValidation.validate(evaluacionDocenteQuery);
-
+        const { value: queryValue, error: errorQuery } = evaluacionDocenteQueryValidation.validate(evaluacionDocenteQuery);
         if (errorQuery) return handleErrorClient(res, 400, "Error de validación", errorQuery.message);
 
-        const [deletedEvaluacionDocente, errorDeletedEvaluacionDocente] = await deleteEvaluacionDocenteService(evaluacionDocenteQuery);
+        const [deletedEvaluacionDocente, errorDeletedEvaluacionDocente] = await deleteEvaluacionDocenteService(queryValue);
 
         if (errorDeletedEvaluacionDocente) return handleErrorClient(res, 404, "Evaluación docente no encontrada", errorDeletedEvaluacionDocente);
 
@@ -101,120 +113,3 @@ export async function deleteEvaluacionDocente(req, res) {
     }
 }
 
-export async function createEvaluacionByAlumno(req, res) {
-    try {
-        console.log('📝 Datos recibidos:', req.body);
-        console.log('👤 Usuario autenticado:', req.user);
-        
-        const evaluacionData = req.body;
-        const alumnoId = req.user._id; // Obtener del JWT
-        const alumnoNombre = req.user.nombreCompleto;
-
-        // Validar los datos de entrada
-        console.log('🔍 Validando datos:', evaluacionData);
-        const { value, error } = createEvaluacionAlumnoValidation.validate(evaluacionData);
-        
-        if (error) {
-            console.log('❌ Error de validación:', error.message);
-            return handleErrorClient(res, 400, "Error de validación", error.message);
-        }
-
-        console.log('✅ Validación exitosa:', value);
-
-        // Agregar información del alumno autenticado
-        value.alumno = alumnoNombre;
-
-        console.log('🚀 Enviando al servicio:', value);
-        const [newEvaluacion, errorEvaluacion] = await createEvaluacionByAlumnoService(value, alumnoId);
-
-        if (errorEvaluacion) {
-            console.log('❌ Error del servicio:', errorEvaluacion);
-            return handleErrorClient(res, 400, "Error creando evaluación", errorEvaluacion);
-        }
-
-        console.log('✅ Evaluación creada exitosamente:', newEvaluacion);
-        handleSuccess(res, 201, "Evaluación creada exitosamente", newEvaluacion);
-    } catch (error) {
-        console.log('💥 Error inesperado:', error);
-        handleErrorServer(res, 500, error.message);
-    }
-}
-
-export async function getEvaluacionesByDocente(req, res) {
-    try {
-        const docenteNombre = req.user.nombreCompleto; // Obtener del JWT
-
-        const [evaluaciones, error] = await getEvaluacionesByDocenteService(docenteNombre);
-
-        if (error) return handleErrorClient(res, 404, "No se encontraron evaluaciones", error);
-
-        handleSuccess(res, 200, "Evaluaciones encontradas", evaluaciones);
-    } catch (error) {
-        handleErrorServer(res, 500, error.message);
-    }
-}
-
-export async function getDocentesList(req, res) {
-    try {
-        const [docentes, error] = await getDocentesListService();
-
-        if (error) return handleErrorClient(res, 404, "No se encontraron docentes", error);
-
-        handleSuccess(res, 200, "Docentes encontrados", docentes);
-    } catch (error) {
-        handleErrorServer(res, 500, error.message);
-    }
-}
-
-export async function getAsignaturasList(req, res) {
-    try {
-        const [asignaturas, error] = await getAsignaturasListService();
-
-        if (error) return handleErrorClient(res, 404, "No se encontraron asignaturas", error);
-
-        handleSuccess(res, 200, "Asignaturas encontradas", asignaturas);
-    } catch (error) {
-        handleErrorServer(res, 500, error.message);
-    }
-}
-
-// Función para que administradores obtengan todas las evaluaciones
-export async function getAllEvaluacionesForAdmin(req, res) {
-    try {
-        console.log('👨‍💼 Administrador solicitando todas las evaluaciones');
-        
-        const [evaluaciones, errorEvaluaciones] = await getAllEvaluacionesDocenteService();
-
-        if (errorEvaluaciones) {
-            console.log('❌ Error al obtener evaluaciones:', errorEvaluaciones);
-            return handleErrorClient(res, 404, "Error al obtener evaluaciones", errorEvaluaciones);
-        }
-
-        console.log('✅ Evaluaciones obtenidas exitosamente:', evaluaciones.length);
-        handleSuccess(res, 200, "Evaluaciones obtenidas exitosamente", evaluaciones);
-    } catch (error) {
-        console.log('💥 Error inesperado:', error);
-        handleErrorServer(res, 500, error.message);
-    }
-}
-
-// Función para que administradores eliminen evaluaciones
-export async function deleteEvaluacionByAdmin(req, res) {
-    try {
-        const { id } = req.params;
-        console.log('🗑️ Administrador eliminando evaluación ID:', id);
-        
-        const [evaluacionEliminada, errorEliminacion] = await deleteEvaluacionByIdService(id);
-
-        if (errorEliminacion) {
-            console.log('❌ Error al eliminar evaluación:', errorEliminacion);
-            return handleErrorClient(res, 400, "Error al eliminar evaluación", errorEliminacion);
-        }
-
-        console.log('✅ Evaluación eliminada exitosamente');
-        handleSuccess(res, 200, "Evaluación eliminada exitosamente", evaluacionEliminada);
-    } catch (error) {
-        console.log('💥 Error inesperado:', error);
-        handleErrorServer(res, 500, error.message);
-    }
-}

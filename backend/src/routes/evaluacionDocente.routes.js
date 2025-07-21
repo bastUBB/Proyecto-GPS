@@ -4,33 +4,19 @@ import {
     getEvaluacionDocente, 
     getAllEvaluacionesDocente, 
     updateEvaluacionDocente, 
-    deleteEvaluacionDocente,
-    createEvaluacionByAlumno,
-    getEvaluacionesByDocente,
-    getDocentesList,
-    getAsignaturasList,
-    getAllEvaluacionesForAdmin,
-    deleteEvaluacionByAdmin
+    deleteEvaluacionDocente
 } from '../controllers/evaluacionDocente.controller.js';
 import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
+router.use(authenticateJWT);
+
 router
-    .get('/detail', getEvaluacionDocente)
-    .get('/', getAllEvaluacionesDocente)
-    .post('/', createEvaluacionDocente)
-    .patch('/detail', updateEvaluacionDocente)
-    .delete('/detail', deleteEvaluacionDocente)
-    
-    // Nuevas rutas para alumnos y profesores
-    .post('/alumno', authenticateJWT, authorizeRoles('alumno'), createEvaluacionByAlumno)
-    .get('/profesor/mis-evaluaciones', authenticateJWT, authorizeRoles('profesor'), getEvaluacionesByDocente)
-    .get('/docentes', authenticateJWT, authorizeRoles('alumno', 'admin'), getDocentesList)
-    .get('/asignaturas', authenticateJWT, authorizeRoles('alumno', 'admin'), getAsignaturasList)
-    
-    // Rutas para administradores
-    .get('/admin/todas', authenticateJWT, authorizeRoles('admin'), getAllEvaluacionesForAdmin)
-    .delete('/admin/:id', authenticateJWT, authorizeRoles('admin'), deleteEvaluacionByAdmin)
+    .get('/detail', authorizeRoles('docente', 'profesor', 'admin', 'director'), getEvaluacionDocente)
+    .get('/', authorizeRoles('admin', 'director'), getAllEvaluacionesDocente)
+    .post('/', authorizeRoles('alumno'), createEvaluacionDocente)
+    .patch('/detail', authorizeRoles('alumno', 'admin', 'director'), updateEvaluacionDocente)
+    .delete('/detail', authorizeRoles('admin', 'director'), deleteEvaluacionDocente);
 
 export default router;
