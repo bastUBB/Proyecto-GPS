@@ -1,92 +1,48 @@
-import joi from 'joi';
+import Joi from "joi";
 
-export const disponibilidadQueryValidation = joi.object({
-    profesor: joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
+// Validación para los bloques de disponibilidad
+const bloqueSchema = Joi.object({
+    dia: Joi.string()
+        .valid("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")
         .required()
         .messages({
-            'string.empty': 'El ID del profesor no puede estar vacío',
-            'string.base': 'El ID del profesor debe ser una cadena de texto',
-            'string.pattern.base': 'El ID del profesor debe ser un ObjectId válido',
+            "any.required": "El día es obligatorio",
+            "any.only": "El día debe ser válido (Lunes a Domingo)"
         }),
-})
-    .unknown(false)
-    .messages({
-        'object.unknown': 'No se permiten propiedades adicionales en la consulta',
-        'object.missing': 'Debe proporcionar el campo: profesor',
-    });
-
-export const disponibilidadBodyValidation = joi.object({
-    profesor: joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
-        .messages({
-            'string.empty': 'El ID del profesor no puede estar vacío',
-            'string.base': 'El ID del profesor debe ser una cadena de texto',
-            'string.pattern.base': 'El ID del profesor debe ser un ObjectId válido',
-            'any.required': 'El ID del profesor es obligatorio',
-        }),
-    bloques: joi.array()
-        .items(
-            joi.object({
-                dia: joi.string()
-                    .valid('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado')
-                    .required()
-                    .messages({
-                        'string.empty': 'El día no puede estar vacío',
-                        'string.base': 'El día debe ser una cadena de texto',
-                        'any.only': 'El día debe ser uno de los siguientes: Lunes, Martes, Miércoles, Jueves, Viernes o Sábado',
-                        'any.required': 'El día es obligatorio',
-                    }),
-                horaInicio: joi.string()
-                    .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
-                    .required()
-                    .messages({
-                        'string.empty': 'La hora de inicio no puede estar vacía',
-                        'string.base': 'La hora de inicio debe ser una cadena de texto',
-                        'string.pattern.base': 'La hora de inicio debe tener el formato HH:MM (24 horas) y estar entre las 07:00 y 23:59',
-                        'any.required': 'La hora de inicio es obligatoria',
-                    }),
-                horaFin: joi.string()
-                    .pattern(/^(0[7-9]|1\d|2[0-3]):[0-5]\d$/)
-                    .required()
-                    .messages({
-                        'string.empty': 'La hora de fin no puede estar vacía',
-                        'string.base': 'La hora de fin debe ser una cadena de texto',
-                        'string.pattern.base': 'La hora de fin debe tener el formato HH:MM (24 horas) y estar entre las 07:00 y 23:59',
-                        'any.required': 'La hora de fin es obligatoria',
-                    }),
-            })
-        )
-        .min(0)
-        .max(30)
-        .messages({
-            'array.base': 'Los bloques deben ser un arreglo',
-            'array.min': 'Debe tener al menos 0 bloques',
-            'array.max': 'No puede tener más de 30 bloques',
-        }),
-})
-    .or(
-        'profesor',
-        'bloques'
-    )
-    .unknown(false)
-    .messages({
-        'object.unknown': 'No se permiten propiedades adicionales en el cuerpo de la solicitud',
-        'object.missing': 'Debe proporcionar al menos uno de los campos: profesor o bloques',
-    });
-
-export const disponibilidadIdValidation = joi.object({
-    objectId: joi.string()
-        .pattern(/^[0-9a-fA-F]{24}$/)
+    horaInicio: Joi.string()
+        .pattern(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
         .required()
         .messages({
-            'string.empty': 'El ID de la disponibilidad no puede estar vacío',
-            'string.base': 'El ID de la disponibilidad debe ser una cadena de texto',
-            'string.pattern.base': 'El ID de la disponibilidad debe ser un ObjectId válido',
+            "any.required": "La hora de inicio es obligatoria",
+            "string.pattern.base": "La hora de inicio debe tener formato HH:MM"
         }),
-})
-    .unknown(false)
-    .messages({
-        'object.unknown': 'No se permiten propiedades adicionales en la consulta',
-        'object.missing': 'Debe proporcionar el campo: objectId',
-    });
+    horaFin: Joi.string()
+        .pattern(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/)
+        .required()
+        .messages({
+            "any.required": "La hora de fin es obligatoria",
+            "string.pattern.base": "La hora de fin debe tener formato HH:MM"
+        })
+});
+
+// Validación para el cuerpo de la petición (crear/actualizar disponibilidad)
+export const disponibilidadBodyValidation = Joi.object({
+    bloques: Joi.array()
+        .items(bloqueSchema)
+        .min(1)
+        .required()
+        .messages({
+            "any.required": "Los bloques de disponibilidad son obligatorios",
+            "array.min": "Debe haber al menos un bloque de disponibilidad"
+        })
+});
+
+// Validación para query parameters (obtener disponibilidad)
+export const disponibilidadQueryValidation = Joi.object({
+    profesorId: Joi.string()
+        .pattern(/^[0-9a-fA-F]{24}$/)
+        .optional()
+        .messages({
+            "string.pattern.base": "El ID del profesor debe ser un ObjectId válido"
+        })
+});

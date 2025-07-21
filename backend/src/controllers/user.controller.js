@@ -7,6 +7,8 @@ deleteUserService,
 } from '../services/user.service.js';
 import { userQueryValidation, userBodyValidation, userUpdateBodyValidation } from '../validations/user.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
+import User from '../models/user.model.js';
+import { hashPassword } from '../helpers/bcrypt.helper.js';
 
 export async function createUser(req, res) {
     try {
@@ -24,6 +26,12 @@ export async function createUser(req, res) {
         if (error) {
             console.log('❌ Error de validación:', error.details);
             return handleErrorClient(res, 400, "Error de validación", error.message);
+        }
+
+        if (value.password) {
+            console.log('Encriptando contraseña...');
+            value.password = await hashPassword(value.password);
+            console.log('Contraseña encriptada correctamente');
         }
 
         console.log('✅ Datos validados correctamente:', value);
@@ -116,3 +124,23 @@ export async function deleteUser(req, res) {
         handleErrorServer(res, 500, error.message);
     }
 }
+
+export const getFilterUsers = async (req, res) => {
+    try {
+        const { role } = req.query;
+        
+        let filter = {};
+        if (role) {
+            filter.role = role;
+        }
+        
+        const users = await User.find(filter)
+            .select('-password') // Excluir contraseñas
+            .sort({ createdAt: -1 });
+        
+        handleSuccess(res, 200, 'Usuarios obtenidos exitosamente', users);
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        handleErrorServer(res, 500, 'Error interno del servidor al obtener usuarios');
+    }
+};
