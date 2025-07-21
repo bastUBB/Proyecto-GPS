@@ -5,8 +5,8 @@ import fs from 'fs';
 const extraerTodosLosDatos = async () => {
     const url = 'https://app.powerbi.com/view?r=eyJrIjoiNDJmZjMzNDgtZDI3Yi00NTlhLTgyMjctN2M5MzI0YzcxZjg4IiwidCI6IjMyYTQ3ZjJkLTZlYjItNDIyNC04YjExLTI1MTk3NTQ1ODFjNSIsImMiOjR9';
     
-    console.log('🚀 Extractor Completo de Datos Power BI');
-    console.log('🎯 Extrayendo TODOS los datos disponibles...');
+    //console.log('🚀 Extractor Completo de Datos Power BI');
+    //console.log('🎯 Extrayendo TODOS los datos disponibles...');
     
     const browser = await puppeteer.launch({ 
         headless: false,
@@ -16,14 +16,14 @@ const extraerTodosLosDatos = async () => {
     const page = await browser.newPage();
     
     try {
-        console.log('🌐 Cargando Power BI...');
+        //console.log('🌐 Cargando Power BI...');
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 150000 });
         
-        console.log('⏳ Esperando carga inicial (90 segundos)...');
+        //console.log('⏳ Esperando carga inicial (90 segundos)...');
         await new Promise(resolve => setTimeout(resolve, 90000));
         
         // Intentar expandir más datos
-        console.log('🔄 Expandiendo datos...');
+        //console.log('🔄 Expandiendo datos...');
         await page.evaluate(() => {
             // Scroll completo
             window.scrollTo(0, 0);
@@ -49,10 +49,10 @@ const extraerTodosLosDatos = async () => {
             });
         });
         
-        console.log('⏳ Esperando carga adicional (60 segundos)...');
+        //console.log('⏳ Esperando carga adicional (60 segundos)...');
         await new Promise(resolve => setTimeout(resolve, 60000));
         
-        console.log('📊 Extrayendo TODOS los datos...');
+        //console.log('📊 Extrayendo TODOS los datos...');
         
         // Extraer datos con patrones mejorados
         const datosCompletos = await page.evaluate(() => {
@@ -176,33 +176,33 @@ const extraerTodosLosDatos = async () => {
             return resultado;
         });
         
-        console.log('✅ Extracción completada');
-        console.log(`📊 Total elementos analizados: ${datosCompletos.estadisticas.totalElementos}`);
-        console.log(`📋 Elementos con datos: ${datosCompletos.estadisticas.elementosConDatos}`);
-        console.log(`📈 Datos por carrera: ${datosCompletos.rendimientoPorCarrera.length} registros`);
-        console.log(`📚 Datos por asignatura: ${datosCompletos.rendimientoPorAsignatura.length} registros`);
-        console.log(`🎯 Años encontrados: ${datosCompletos.estadisticas.añosEncontrados.join(', ')}`);
-        console.log(`📖 Asignaturas encontradas: ${datosCompletos.estadisticas.asignaturasEncontradas.length}`);
+        //console.log('✅ Extracción completada');
+        //console.log(`📊 Total elementos analizados: ${datosCompletos.estadisticas.totalElementos}`);
+        //console.log(`📋 Elementos con datos: ${datosCompletos.estadisticas.elementosConDatos}`);
+        //console.log(`📈 Datos por carrera: ${datosCompletos.rendimientoPorCarrera.length} registros`);
+        //console.log(`📚 Datos por asignatura: ${datosCompletos.rendimientoPorAsignatura.length} registros`);
+        //console.log(`🎯 Años encontrados: ${datosCompletos.estadisticas.añosEncontrados.join(', ')}`);
+        //console.log(`📖 Asignaturas encontradas: ${datosCompletos.estadisticas.asignaturasEncontradas.length}`);
         
         // Mostrar algunas asignaturas encontradas
         if (datosCompletos.estadisticas.asignaturasEncontradas.length > 0) {
-            console.log('\n📚 Ejemplos de asignaturas:');
+            //console.log('\n📚 Ejemplos de asignaturas:');
             datosCompletos.estadisticas.asignaturasEncontradas.slice(0, 10).forEach((asignatura, i) => {
-                console.log(`   ${i + 1}. ${asignatura}`);
+                //console.log(`   ${i + 1}. ${asignatura}`);
             });
             
             if (datosCompletos.estadisticas.asignaturasEncontradas.length > 10) {
-                console.log(`   ... y ${datosCompletos.estadisticas.asignaturasEncontradas.length - 10} más`);
+                //console.log(`   ... y ${datosCompletos.estadisticas.asignaturasEncontradas.length - 10} más`);
             }
         }
         
         // Mostrar estadísticas por año
         if (datosCompletos.rendimientoPorCarrera.length > 0) {
-            console.log('\n📈 Rendimiento por año:');
+            //console.log('\n📈 Rendimiento por año:');
             datosCompletos.rendimientoPorCarrera
                 .sort((a, b) => b.año - a.año)
                 .forEach(dato => {
-                    console.log(`   ${dato.año}: ${dato.porcentajeAprobacion}% (${dato.numeroAprobadas}/${dato.inscritosSinActa})`);
+                    //console.log(`   ${dato.año}: ${dato.porcentajeAprobacion}% (${dato.numeroAprobadas}/${dato.inscritosSinActa})`);
                 });
         }
         
@@ -231,7 +231,7 @@ const extraerTodosLosDatos = async () => {
         
         // Guardar resultado completo
         fs.writeFileSync('datos_completos_final.json', JSON.stringify(resultadoFinal, null, 2));
-        console.log('\n💾 Datos completos guardados en: datos_completos_final.json');
+        //console.log('\n💾 Datos completos guardados en: datos_completos_final.json');
         
         // Crear CSV para análisis
         const csvCarrera = datosCompletos.rendimientoPorCarrera
@@ -248,20 +248,20 @@ const extraerTodosLosDatos = async () => {
         fs.writeFileSync('rendimiento_asignaturas.csv', 
             'Año,Semestre,Código Sección,Asignatura,Inscritos,Aprobados,% Aprobación\n' + csvAsignaturas);
         
-        console.log('📄 Archivos CSV generados:');
-        console.log('   - rendimiento_carrera.csv');
-        console.log('   - rendimiento_asignaturas.csv');
+        //console.log('📄 Archivos CSV generados:');
+        //console.log('   - rendimiento_carrera.csv');
+        //console.log('   - rendimiento_asignaturas.csv');
         
         // Capturar screenshot
         await page.screenshot({ path: 'extraccion_completa_screenshot.png', fullPage: true });
-        console.log('📸 Screenshot guardado: extraccion_completa_screenshot.png');
+        //console.log('📸 Screenshot guardado: extraccion_completa_screenshot.png');
         
-        console.log('\n📊 Estadísticas finales:');
-        console.log(`   🎯 Promedio aprobación carrera: ${estadisticasAdicionales.promedioAprobacionCarrera}%`);
-        console.log(`   📖 Promedio aprobación asignaturas: ${estadisticasAdicionales.promedioAprobacionAsignaturas}%`);
-        console.log(`   📅 Años completos: ${estadisticasAdicionales.añosCompletos}`);
-        console.log(`   📚 Asignaturas únicas: ${estadisticasAdicionales.asignaturasUnicas}`);
-        console.log(`   📋 Datos raw procesados: ${estadisticasAdicionales.datosRawProcesados}`);
+        //console.log('\n📊 Estadísticas finales:');
+        //console.log(`   🎯 Promedio aprobación carrera: ${estadisticasAdicionales.promedioAprobacionCarrera}%`);
+        //console.log(`   📖 Promedio aprobación asignaturas: ${estadisticasAdicionales.promedioAprobacionAsignaturas}%`);
+        //console.log(`   📅 Años completos: ${estadisticasAdicionales.añosCompletos}`);
+        //console.log(`   📚 Asignaturas únicas: ${estadisticasAdicionales.asignaturasUnicas}`);
+        //console.log(`   📋 Datos raw procesados: ${estadisticasAdicionales.datosRawProcesados}`);
         
         return resultadoFinal;
         
@@ -277,16 +277,16 @@ const extraerTodosLosDatos = async () => {
 extraerTodosLosDatos()
     .then(result => {
         if (result.success !== false) {
-            console.log('\n🎉 ¡EXTRACCIÓN COMPLETA EXITOSA!');
-            console.log('📁 Archivos generados:');
-            console.log('   - datos_completos_final.json (datos completos)');
-            console.log('   - rendimiento_carrera.csv (CSV para análisis)');
-            console.log('   - rendimiento_asignaturas.csv (CSV para análisis)');
-            console.log('   - extraccion_completa_screenshot.png (captura)');
-            console.log('\n✅ TODOS los datos extraídos exitosamente');
-            console.log('🚀 Listos para usar en el sistema académico');
+            //console.log('\n🎉 ¡EXTRACCIÓN COMPLETA EXITOSA!');
+            //console.log('📁 Archivos generados:');
+            //console.log('   - datos_completos_final.json (datos completos)');
+            //console.log('   - rendimiento_carrera.csv (CSV para análisis)');
+            //console.log('   - rendimiento_asignaturas.csv (CSV para análisis)');
+            //console.log('   - extraccion_completa_screenshot.png (captura)');
+            //console.log('\n✅ TODOS los datos extraídos exitosamente');
+            //console.log('🚀 Listos para usar en el sistema académico');
         } else {
-            console.log('❌ Error en la extracción:', result.error);
+            //console.log('❌ Error en la extracción:', result.error);
         }
     })
     .catch(console.error);

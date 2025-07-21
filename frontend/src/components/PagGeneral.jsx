@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default function PagGeneral({ children }) {
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[url('/FondoHome.svg')] pt-20">
+    <div className="w-screen h-screen bg-[url('/FondoHome.svg')] bg-cover bg-center flex flex-col pt-20">
       {/* Contenido principal */}
       <main className="w-full h-full overflow-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-full">

@@ -39,16 +39,16 @@ function generarEmail(nombreCompleto) {
     const nombres = nombreCompleto.toLowerCase().split(' ');
     let primerNombre = nombres[0];
     let apellido = nombres[nombres.length - 1];
-    
+
     // Si el apellido es muy corto, usar el penúltimo
     if (apellido.length <= 2 && nombres.length > 2) {
         apellido = nombres[nombres.length - 2];
     }
-    
+
     // Limpiar caracteres especiales
     primerNombre = primerNombre.replace(/[^a-z]/g, '');
     apellido = apellido.replace(/[^a-z]/g, '');
-    
+
     return `${primerNombre}.${apellido}@ubiobio.cl`;
 }
 
@@ -57,34 +57,34 @@ function generarRutFicticio(index) {
     if (index < RUTS_FICTICIOS.length) {
         return RUTS_FICTICIOS[index];
     }
-    
+
     // Generar RUT aleatorio
     const numero = Math.floor(Math.random() * 90000000) + 10000000;
     const digitos = numero.toString().split('').reverse();
     let suma = 0;
     let multiplicador = 2;
-    
+
     for (let digito of digitos) {
         suma += parseInt(digito) * multiplicador;
         multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
     }
-    
+
     const resto = suma % 11;
     const dv = resto === 0 ? '0' : resto === 1 ? 'k' : (11 - resto).toString();
-    
+
     return `${numero}-${dv}`;
 }
 
 // Función para extraer nombres únicos del archivo horario
 function extraerNombresUnicos() {
     try {
-        console.log('📖 Leyendo archivo de horario...');
-        
+        //console.log('📖 Leyendo archivo de horario...');
+
         const data = fs.readFileSync(HORARIO_FILE, 'utf8');
         const horarios = JSON.parse(data);
-        
+
         const nombresUnicos = new Set();
-        
+
         horarios.forEach(item => {
             if (item.docente && item.docente.trim()) {
                 const nombreNormalizado = normalizarNombre(item.docente);
@@ -92,10 +92,10 @@ function extraerNombresUnicos() {
                 nombresUnicos.add(nombreFormateado);
             }
         });
-        
-        console.log(`📋 Se encontraron ${nombresUnicos.size} profesores únicos`);
+
+        //console.log(`📋 Se encontraron ${nombresUnicos.size} profesores únicos`);
         return Array.from(nombresUnicos).sort();
-        
+
     } catch (error) {
         console.error('❌ Error al leer el archivo de horario:', error.message);
         process.exit(1);
@@ -104,18 +104,18 @@ function extraerNombresUnicos() {
 
 // Función principal simplificada
 async function generarProfesoresSimple() {
-    console.log('🚀 Generando profesores con RUTs ficticios...\n');
-    
+    //console.log('🚀 Generando profesores con RUTs ficticios...\n');
+
     try {
         // Extraer nombres únicos
         const nombres = extraerNombresUnicos();
-        
+
         const profesores = [];
-        
+
         // Procesar cada profesor
         nombres.forEach((nombreCompleto, index) => {
-            console.log(`📝 Procesando ${index + 1}/${nombres.length}: ${nombreCompleto}`);
-            
+            //console.log(`📝 Procesando ${index + 1}/${nombres.length}: ${nombreCompleto}`);
+
             const profesor = {
                 nombreCompleto: nombreCompleto,
                 email: generarEmail(nombreCompleto),
@@ -123,13 +123,13 @@ async function generarProfesoresSimple() {
                 password: 'profesor123', // Password por defecto
                 role: 'profesor'
             };
-            
+
             profesores.push(profesor);
         });
-        
+
         // Guardar resultado
-        console.log('\n💾 Guardando resultado...');
-        
+        //console.log('\n💾 Guardando resultado...');
+
         const resultado = {
             metadata: {
                 fechaGeneracion: new Date().toISOString(),
@@ -139,38 +139,38 @@ async function generarProfesoresSimple() {
             },
             profesores: profesores
         };
-        
+
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(resultado, null, 2), 'utf8');
-        
-        console.log(`\n✅ ¡Proceso completado!`);
-        console.log(`📁 Archivo generado: ${OUTPUT_FILE}`);
-        console.log(`👥 Total de profesores: ${profesores.length}`);
-        
+
+        //console.log(`\n✅ ¡Proceso completado!`);
+        //console.log(`📁 Archivo generado: ${OUTPUT_FILE}`);
+        //console.log(`👥 Total de profesores: ${profesores.length}`);
+
         // Mostrar algunos ejemplos
-        console.log('\n📋 Primeros 5 profesores generados:');
+        //console.log('\n📋 Primeros 5 profesores generados:');
         profesores.slice(0, 5).forEach((prof, index) => {
-            console.log(`${index + 1}. ${prof.nombreCompleto}`);
-            console.log(`   RUT: ${prof.rut}`);
-            console.log(`   Email: ${prof.email}\n`);
+            //console.log(`${index + 1}. ${prof.nombreCompleto}`);
+            //console.log(`   RUT: ${prof.rut}`);
+            //console.log(`   Email: ${prof.email}\n`);
         });
-        
+
         // Generar código para initialSetup.js
-        console.log('\n📋 Código para agregar a initialSetup.js:\n');
-        console.log('// Agregar estos profesores al array usersData:');
+        //console.log('\n📋 Código para agregar a initialSetup.js:\n');
+        //console.log('// Agregar estos profesores al array usersData:');
         profesores.slice(0, 3).forEach((prof) => {
             console.log(`{
-    nombreCompleto: '${prof.nombreCompleto}',
-    email: '${prof.email}',
-    rut: '${prof.rut}',
-    password: 'profesor123',
-    role: 'profesor'
-},`);
+                nombreCompleto: '${prof.nombreCompleto}',
+                email: '${prof.email}',
+                rut: '${prof.rut}',
+                password: 'profesor123',
+                role: 'profesor'
+            },`);
         });
-        
+
         if (profesores.length > 3) {
-            console.log(`// ... y ${profesores.length - 3} profesores más en el archivo JSON`);
+            //console.log(`// ... y ${profesores.length - 3} profesores más en el archivo JSON`);
         }
-        
+
     } catch (error) {
         console.error('\n❌ Error en el proceso:', error.message);
         process.exit(1);
@@ -178,11 +178,11 @@ async function generarProfesoresSimple() {
 }
 
 // Ejecutar script directamente
-console.log('🔄 Iniciando script...');
+//console.log('🔄 Iniciando script...');
 
 generarProfesoresSimple()
     .then(() => {
-        console.log('\n🎉 Script ejecutado exitosamente');
+        //console.log('\n🎉 Script ejecutado exitosamente');
         process.exit(0);
     })
     .catch((error) => {

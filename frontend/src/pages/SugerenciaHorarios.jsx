@@ -57,7 +57,7 @@ export default function SugerenciaHorarios() {
       
       if (response.data && response.data.data) {
         setProfesores(response.data.data);
-        console.log('Profesores cargados:', response.data.data);
+        //console.log('Profesores cargados:', response.data.data);
       } else {
         setMensaje('No se encontraron profesores');
         setProfesores([]);
@@ -96,7 +96,7 @@ export default function SugerenciaHorarios() {
           disponibilidadFormateada[key] = true;
         });
         setDisponibilidadProfesor(disponibilidadFormateada);
-        console.log('Disponibilidad del profesor cargada:', disponibilidadFormateada);
+        //console.log('Disponibilidad del profesor cargada:', disponibilidadFormateada);
       } else {
         setDisponibilidadProfesor({});
       }
@@ -145,7 +145,7 @@ export default function SugerenciaHorarios() {
           disponibilidadFormateada[key] = true;
         });
         setDisponibilidad(disponibilidadFormateada);
-        console.log('Mi disponibilidad cargada:', disponibilidadFormateada);
+        //console.log('Mi disponibilidad cargada:', disponibilidadFormateada);
       } else {
         setDisponibilidad({});
       }
@@ -154,7 +154,7 @@ export default function SugerenciaHorarios() {
       if (error.response?.status === 404) {
         // No hay disponibilidad guardada, inicializar vacía
         setDisponibilidad({});
-        console.log('No hay disponibilidad guardada, iniciando con tabla vacía');
+        //console.log('No hay disponibilidad guardada, iniciando con tabla vacía');
       } else if (error.response?.status === 401) {
         setMensaje('No tienes autorización para acceder a esta función');
       } else {
@@ -189,9 +189,9 @@ export default function SugerenciaHorarios() {
         }
       });
 
-      console.log('Datos a enviar:', { bloques });
-      console.log('Usuario:', user);
-      console.log('ID del usuario:', user?.id || user?._id);
+      //console.log('Datos a enviar:', { bloques });
+      //console.log('Usuario:', user);
+      //console.log('ID del usuario:', user?.id || user?._id);
 
       const response = await axios.post(
         'http://localhost:5500/api/disponibilidad',
@@ -201,7 +201,7 @@ export default function SugerenciaHorarios() {
 
       if (response.data) {
         setMensaje('Disponibilidad guardada exitosamente');
-        console.log('Disponibilidad guardada:', response.data);
+        //console.log('Disponibilidad guardada:', response.data);
         setTimeout(() => setMensaje(''), 3000);
       }
     } catch (error) {
@@ -574,15 +574,18 @@ export default function SugerenciaHorarios() {
             )}
 
             {/* Disponibilidad Horaria */}
-            <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4">
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
                 <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <img src="/IconHorario.png" alt="Icono Horario" className="w-5 h-5" />
                   Mi Disponibilidad Horaria
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí debes marcar las casillas en las que puedes dictar clases. Si están marcadas en verde, significa que estas disponible para dictar clases en ese horario.
+                    </p>
+                  </HelpTooltip>
                 </h2>
-                <p className="text-cyan-100 text-xs sm:text-sm mt-1">
-                  Marca los horarios en los que puedes dictar clases (verde = disponible)
-                </p>
               </div>
 
               <div className="p-4 sm:p-6 overflow-x-auto">

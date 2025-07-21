@@ -2,8 +2,8 @@
   "metadatos": {
     "descripcion": "Datos de rendimiento académico - Ingeniería Civil en Informática",
     "fuente": "Archivo Excel - Tasas de Aprobación, Reprobación y NCR",
-    "archivoOrigen": "temp_rendimiento_2025-07-19T21-31-52-397Z.xlsx",
-    "fechaProcesamiento": "2025-07-19T21:31:53.037Z",
+    "archivoOrigen": "temp_rendimiento_2025-07-21T04-35-27-937Z.xlsx",
+    "fechaProcesamiento": "2025-07-21T04:35:28.585Z",
     "estadisticas": {
       "totalRegistros": 1073,
       "registrosPrincipales": 747,
@@ -19,7 +19,7 @@
         "Semestre I",
         "Semestre II"
       ],
-      "fechaProcesamiento": "2025-07-19T21:31:53.036Z"
+      "fechaProcesamiento": "2025-07-21T04:35:28.582Z"
     }
   },
   "datos": [

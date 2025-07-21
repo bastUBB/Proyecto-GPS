@@ -5,30 +5,8 @@ import Colores from "../components/Colores";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
 import { HelpCircle } from "lucide-react";
-
-// Componente HelpTooltip funcional
-const HelpTooltip = ({ children, className }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  
-  return (
-    <div className="relative inline-block">
-      <span 
-        className={`inline-flex items-center justify-center cursor-help ${className}`}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <HelpCircle size={18} className="text-blue-200 hover:text-yellow-300 transition-colors duration-200" />
-      </span>
-      {showTooltip && (
-        <div className="absolute z-50 w-64 p-3 bg-white border border-gray-300 rounded-lg shadow-lg top-6 left-0">
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
-
-
+import HelpTooltip from "../components/PuntoAyuda";
+import Alert from "../components/Alert";
 
 
 const mallaOriginal = [
@@ -127,10 +105,19 @@ const MallaCurricular = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [asignaturaSeleccionada, setAsignaturaSeleccionada] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [alert, setAlert] = useState({ show: false, type: '', title: '', message: '' });
   const [cambiosPendientes, setCambiosPendientes] = useState(false);
   const [asignaturasCompletadasLocal, setAsignaturasCompletadasLocal] = useState([]);
   const [loadingPDF, setLoadingPDF] = useState(false);
+
+  // Funciones helper para alertas
+  const showAlert = (type, title, message) => {
+    setAlert({ show: true, type, title, message });
+  };
+
+  const hideAlert = () => {
+    setAlert({ show: false, type: '', title: '', message: '' });
+  };
 
   // Función para obtener el token de autenticación
   const getAuthToken = () => {
@@ -178,14 +165,13 @@ const MallaCurricular = () => {
 
     try {
       setLoading(true);
-      setError('');
 
       const response = await axios.get('/api/mallaUser/detail', {
         headers: getAuthHeaders(),
         params: { rutUser: user.rut }
       });
 
-      console.log('Respuesta del backend (Carga):', response.data);
+      //console.log('Respuesta del backend (Carga):', response.data);
       // console.log('Response completo:', response);
       // console.log('Tipo de response.data:', typeof response.data);
       // console.log('response.data.status:', response.data?.status);
@@ -205,7 +191,7 @@ const MallaCurricular = () => {
         // Malla no encontrada, crear malla inicial con primeras asignaturas inscribibles
         crearMallaInicial();
       } else {
-        setError('Error al cargar los datos de la malla');
+        showAlert('error', 'Error de Carga', 'Error al cargar los datos de la malla');
         // console.error('Error al cargar malla del usuario:', error);
         crearMallaInicial(); // Fallback a malla inicial
       }
@@ -223,7 +209,7 @@ const MallaCurricular = () => {
 
     // Debug: mostrar nombres del frontend
     // console.log('Nombres de asignaturas en el frontend:');
-    // mallaOriginal.forEach(asig => console.log(`- "${asig.nombre}"`));
+    // mallaOriginal.forEach(asig => //console.log(`- "${asig.nombre}"`));
 
     const mallaConEstados = mallaOriginal.map(asignatura => {
       let estado = 'default';
@@ -268,7 +254,7 @@ const MallaCurricular = () => {
       return { ...asignatura, estado };
     });
 
-    console.log('Malla con estados aplicados:', mallaConEstados);
+    //console.log('Malla con estados aplicados:', mallaConEstados);
     setAsignaturas(mallaConEstados);
     // Actualizar la lista local de asignaturas completadas
     setAsignaturasCompletadasLocal(mallaData.asignaturasCursadas || []);
@@ -300,13 +286,13 @@ const MallaCurricular = () => {
       if (response.data && (response.data.success || response.data.status === 'Success')) {
         // console.log('Malla actualizada exitosamente');
         setCambiosPendientes(false);
-        setError('');
+        showAlert('success', 'Éxito', 'Malla actualizada correctamente');
         // Recargar la malla para obtener los nuevos estados
         setTimeout(() => cargarMallaUsuario(), 500);
       }
     } catch (error) {
       console.error('Error al actualizar la malla:', error);
-      setError('Error al actualizar la malla del usuario');
+      showAlert('error', 'Error de Actualización', 'Error al actualizar la malla del usuario');
     } finally {
       setLoading(false);
     }
@@ -427,7 +413,7 @@ const MallaCurricular = () => {
         return;
       }
 
-      console.log('Elemento encontrado para PDF:', element);
+      //console.log('Elemento encontrado para PDF:', element);
 
       // Ocultar elementos que no queremos en el PDF
       const elementsToHide = document.querySelectorAll('.hide-in-pdf');
@@ -461,10 +447,10 @@ const MallaCurricular = () => {
         },
       };
 
-      console.log('Iniciando generación de PDF...');
+      //console.log('Iniciando generación de PDF...');
 
       await html2pdf().set(opt).from(element).save();
-      console.log('PDF generado exitosamente');
+      //console.log('PDF generado exitosamente');
 
       // Restaurar elementos ocultos
       elementsToHide.forEach(el => {
@@ -499,7 +485,7 @@ const MallaCurricular = () => {
           params: { rutUser: user.rut }
         });
 
-        console.log('Malla del usuario eliminada del backend');
+        //console.log('Malla del usuario eliminada del backend');
 
         // Crear malla inicial (solo semestre 1 inscribible)
         crearMallaInicial();
@@ -508,7 +494,7 @@ const MallaCurricular = () => {
       } catch (error) {
         if (error.response?.status === 404) {
           // Si no existe la malla, simplemente crear malla inicial
-          console.log('No existía malla para eliminar, creando malla inicial');
+          //console.log('No existía malla para eliminar, creando malla inicial');
           crearMallaInicial();
         } else {
           console.error('Error al eliminar la malla:', error);
@@ -547,37 +533,37 @@ const MallaCurricular = () => {
             }
           };
 
-            return (
+          return (
             <button
               key={asig.id || asig.nombre}
               type="button"
               className={`relative w-24 h-16 border text-[9px] rounded shadow-sm overflow-hidden p-1 text-center mb-1 transition-all duration-200 ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
-              }`}
+                }`}
               onClick={() => isClickable && handleAsignaturaClick(asig.nombre)}
               title={
-              user && user.role === 'alumno' && isSystemState
-                ? `${asig.estado === 'completada' ? 'Aprobada - Clic para desmarcar' :
-                asig.estado === 'inscribible' ? 'Disponible - Clic para marcar como aprobada' :
-                  'Requiere prerrequisitos - No se puede inscribir'}`
-                : isSystemState
-                ? `${asig.estado === 'completada' ? 'Asignatura aprobada' :
-                  asig.estado === 'inscribible' ? 'Asignatura inscribible' :
-                  'Requiere prerrequisitos'}`
-                : "Haz clic para cambiar color"
+                user && user.role === 'alumno' && isSystemState
+                  ? `${asig.estado === 'completada' ? 'Aprobada - Clic para desmarcar' :
+                    asig.estado === 'inscribible' ? 'Disponible - Clic para marcar como aprobada' :
+                      'Requiere prerrequisitos - No se puede inscribir'}`
+                  : isSystemState
+                    ? `${asig.estado === 'completada' ? 'Asignatura aprobada' :
+                      asig.estado === 'inscribible' ? 'Asignatura inscribible' :
+                        'Requiere prerrequisitos'}`
+                    : "Haz clic para cambiar color"
               }
             >
               {/* Símbolo de fondo */}
               {getSymbol() && (
-              <span
-                className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none hide-in-pdf"
-                style={{
-                opacity: 0.18, // más transparente
-                zIndex: 0, // fondo
-                color: '#2563eb', // azul-600
-                }}
-              >
-                {getSymbol()}
-              </span>
+                <span
+                  className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none hide-in-pdf"
+                  style={{
+                    opacity: 0.18, // más transparente
+                    zIndex: 0, // fondo
+                    color: '#2563eb', // azul-600
+                  }}
+                >
+                  {getSymbol()}
+                </span>
               )}
 
               {/* Contenido principal */}
@@ -586,7 +572,7 @@ const MallaCurricular = () => {
                 <p className="text-blue-700 text-[8px] mt-auto text-center">Créditos: {asig.creditos}</p>
               </div>
             </button>
-            );
+          );
         })}
     </div>
   );
@@ -623,8 +609,16 @@ const MallaCurricular = () => {
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
                 Herramientas y Estados de Malla
+                <HelpTooltip>
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Aquí puedes ver las opciones disponibles para interactuar con tu malla curricular.
+                  </p>
+                </HelpTooltip>
               </h2>
             </div>
+
+
 
             {/* Leyenda de colores para alumnos */}
             {user && user.role === 'alumno' && (
@@ -708,15 +702,16 @@ const MallaCurricular = () => {
                   )}
                 </>
               )}
-
-              <button
-                onClick={handleResetMalla}
-                disabled={loading}
-                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
-                {loading ? 'Restableciendo...' : (user && user.role === 'alumno' ? 'Restablecer Progreso' : 'Restablecer')}
-              </button>
+              {user && user.role === 'alumno' && (
+                <button
+                  onClick={handleResetMalla}
+                  disabled={loading}
+                  className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
+                  {loading ? 'Restableciendo...' : (user && user.role === 'alumno' ? 'Restablecer Progreso' : 'Restablecer')}
+                </button>
+              )}
             </div>
           </div>
 
@@ -734,7 +729,7 @@ const MallaCurricular = () => {
                     {user && user.role === 'alumno' ? 'Guía para estudiantes' : 'Guía de personalización'}
                   </h3>
                   <p className="text-gray-600 text-xs">
-                    {user && user.role === 'alumno' 
+                    {user && user.role === 'alumno'
                       ? 'Haz clic en las asignaturas azules (inscribibles) o verdes (aprobadas) para cambiar su estado. Las rojas requieren prerrequisitos.'
                       : 'Haz clic en las asignaturas para cambiar su color y personalizar tu vista.'
                     }
@@ -763,11 +758,28 @@ const MallaCurricular = () => {
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
-                {user && user.role === 'alumno' ? 'Mi Progreso Académico' : 'Información del Programa'}
+                {user && user.role === 'alumno' ? (
+                  <>
+                    Mi Progreso Académico
+                    <HelpTooltip>
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Aquí puedes ver información del programa de la carrera con relación a tu progreso académico.
+                      </p>
+                    </HelpTooltip>
+                  </>
+                ) : (
+                  <>
+                    Información del Programa
+                    <HelpTooltip>
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Aquí puedes ver información del programa de la carrera.
+                      </p>
+                    </HelpTooltip>
+                  </>
+                )}
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                {user && user.role === 'alumno' ? 'Estadísticas personalizadas de tu avance' : 'Detalles del plan de estudios'}
-              </p>
             </div>
 
             {user && user.role === 'alumno' ? (
@@ -862,13 +874,6 @@ const MallaCurricular = () => {
             </div>
           )} */}
 
-          {/* Mensaje de error */}
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg hide-in-pdf">
-              {error}
-            </div>
-          )}
-
           {/* Indicador de carga */}
           {loading && (
             <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2 hide-in-pdf">
@@ -883,6 +888,17 @@ const MallaCurricular = () => {
           onClose={() => setModalVisible(false)}
           onSelect={aplicarColor}
         />
+
+        {/* Componente Alert */}
+        {alert.show && (
+          <Alert
+            type={alert.type}
+            title={alert.title}
+            message={alert.message}
+            onClose={hideAlert}
+            autoClose={3000}
+          />
+        )}
       </div>
     </PagGeneral>
   );
