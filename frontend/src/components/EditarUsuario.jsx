@@ -216,7 +216,7 @@ const EditarUsuario = ({ visible, onClose, onSave, usuario, submitting = false }
                 <option value="admin">Administrador</option>
                 <option value="profesor">Profesor</option>
                 <option value="estudiante">Estudiante</option>
-                <option value="jefeDepartamento">Jefe de Departamento</option>
+                <option value="director">Director de Departamento</option>
               </select>
               {errors.role && (
                 <p className="text-red-600 text-sm mt-1 flex items-center gap-1">

@@ -87,10 +87,10 @@ export default function Foro() {
 
   useEffect(() => {
     if (user?.role === 'profesor' && errorEvaluaciones) {
-      setError(errorEvaluaciones);
+      showAlert('error', 'Error de Carga', errorEvaluaciones);
     }
-    if (user?.role === 'admin' && errorAdmin) {
-      setError(errorAdmin);
+    if ((user?.role === 'admin' || user?.role === 'director') && errorAdmin) {
+      showAlert('error', 'Error de Carga', errorAdmin);
     }
   }, [errorEvaluaciones, errorAdmin, user?.role]);
 
@@ -108,7 +108,7 @@ export default function Foro() {
 
       setDocentes(docentesFiltrados);
     } catch (error) {
-      setError(error.response?.data?.message || 'Error al cargar docentes');
+      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar docentes');
     }
   };
 
@@ -119,7 +119,7 @@ export default function Foro() {
       });
       setAsignaturas(response.data.data || []);
     } catch (error) {
-      setError(error.response?.data?.message || 'Error al cargar asignaturas');
+      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar asignaturas');
     }
   };
 
@@ -397,17 +397,17 @@ export default function Foro() {
           {user.role === 'alumno' && (
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
               <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <MessageSquare className="w-5 h-5" />
-                Crear Nueva Evaluación
-                <HelpTooltip>
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
-                  <p className="text-gray-600 text-xs">
-                    Aquí puedes crear una nueva evaluación para un docente, seleccionando la asignatura y proporcionando una calificación y comentarios. Ademas, puedes elegir si la evaluación será anónima o pública a la vista del profesor.
-                  </p>
-                </HelpTooltip>
-              </h2>
-            </div>
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5" />
+                  Crear Nueva Evaluación
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí puedes crear una nueva evaluación para un docente, seleccionando la asignatura y proporcionando una calificación y comentarios. Ademas, puedes elegir si la evaluación será anónima o pública a la vista del profesor.
+                    </p>
+                  </HelpTooltip>
+                </h2>
+              </div>
 
               {/* <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -599,45 +599,55 @@ export default function Foro() {
             </div>
           )}
 
-          {user.role === 'admin' && (
+          {(user.role === 'admin' || user.role === 'director') && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-5 h-5 text-yellow-600" />
-                    <h3 className="font-semibold text-gray-800">Pendientes</h3>
-                  </div>
-                  <p className="text-2xl font-bold text-yellow-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
-                  </p>
+              {/* Estadísticas de evaluaciones */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    Estadísticas de Evaluaciones
+                  </h2>
                 </div>
+                <div className="grid grid-cols-4 lg:grid-cols-4 gap-4">
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-5 h-5 text-yellow-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Pendientes</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
+                    </p>
+                  </div>
 
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <h3 className="font-semibold text-gray-800">Aprobadas</h3>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Aprobadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-green-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-green-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <XCircle className="w-5 h-5 text-red-600" />
-                    <h3 className="font-semibold text-gray-800">Rechazadas</h3>
+                  
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <XCircle className="w-5 h-5 text-red-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Rechazadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-red-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-red-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-5 h-5 text-blue-600" />
-                    <h3 className="font-semibold text-gray-800">Total</h3>
+                  
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="w-5 h-5 text-blue-600" />
+                      <h3 className="font-semibold text-gray-800 text-sm">Total</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {evaluacionesAdmin.length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {evaluacionesAdmin.length}
-                  </p>
                 </div>
               </div>
 
@@ -869,9 +879,9 @@ export default function Foro() {
             </div>
           )}
 
-          {user.role !== 'alumno' && user.role !== 'profesor' && user.role !== 'admin' && (
+          {user.role !== 'alumno' && user.role !== 'profesor' && user.role !== 'admin' && user.role !== 'director' && (
             <div className="text-center py-8">
-              <p className="text-gray-500 text-lg">Esta página está disponible solo para alumnos, profesores y administradores.</p>
+              <p className="text-gray-500 text-lg">Esta página está disponible solo para alumnos, profesores, administradores y directores.</p>
             </div>
           )}
         </div>
