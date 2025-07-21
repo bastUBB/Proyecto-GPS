@@ -6,9 +6,9 @@ import User from '../models/user.model.js';
 
 const datosRendimiento = path.resolve('output/datos_rendimiento.json');
 const datosRendimientoRaw = fs.readFileSync(datosRendimiento);
-const datosRendimientoParsed = JSON.parse(datosRendimientoRaw);
+const datosRendimientoParsed = JSON.parse(datosRendimientoRaw).datos;
 
-const horarioPath = path.resolve('output/horario_manual.json');
+const horarioPath = path.resolve('output/horario_extraido.json');
 const horarioRaw = fs.readFileSync(horarioPath);
 const horario = JSON.parse(horarioRaw);
 
@@ -25,25 +25,35 @@ export async function buscarRendimiento(docente, asignatura, seccion, semestre, 
 
         const apellido2 = partesNombre.length > 0 ? partesNombre[partesNombre.length - 1].toUpperCase() : '';
 
-        const docenteFormateado = `${apellido1} ${apellido2}, ${nombre}`;
+        const docenteFormateado = `${apellido1} ${apellido2} ,${nombre}`;
 
-        const horarioAsignatura = horario.find((h) =>
-            h.asignatura === asignatura &&
-            h.seccion === seccion &&
-            h.docente === docenteFormateado
-        );
+        const horarioAsignatura = horario.find((h) => {
+            return h.asignatura === asignatura &&
+                   h.seccion === seccion &&
+                   h.docente === docenteFormateado;
+        });
+
+        console.log('Horario Asignatura encontrada:', horarioAsignatura);
 
         if (!horarioAsignatura) return [null, 'No se encontró la asignatura en el horario de ofertas para el docente especificado'];
         
         const codigoSeccion = `${horarioAsignatura.asignaturaCodigo}-${seccion}`;
 
-        const rendimiento = datosRendimientoParsed.find((r) =>
-            r.codigoSeccion === codigoSeccion &&
-            r.año === String(año) &&
-            r.semestre === parseInt(semestre)
-        );
+        console.log('Código Sección Buscado:', codigoSeccion);
+        console.log('Año Buscado:', año, 'Tipo:', typeof año);
+        console.log('Semestre Buscado:', semestre, 'Tipo:', typeof semestre);
 
-        if (!rendimiento) return [null, 'No se encontró rendimiento asociado para la asignatura'];
+        // Buscar el rendimiento y agregar logs detallados
+        const rendimiento = datosRendimientoParsed.find((r) => {
+            return r.codigoSeccion === codigoSeccion &&
+                   r.año === año &&
+                   r.semestre === semestre;
+        });
+
+        if (!rendimiento) {
+            console.log('Primeros 3 elementos de datosRendimientoParsed:', datosRendimientoParsed.slice(0, 3));
+            return [null, 'No se encontró rendimiento asociado para la asignatura'];
+        }
         
         return [{
             porcentajeAprob: rendimiento.porcentajeAprobacion,
@@ -56,7 +66,6 @@ export async function buscarRendimiento(docente, asignatura, seccion, semestre, 
     }
 }
 
-
 export async function createRendimientoAsignaturaService(dataRendimiento) {
     try {
 
@@ -66,11 +75,10 @@ export async function createRendimientoAsignaturaService(dataRendimiento) {
 
         if (!existAsignatura) return [null, 'La asignatura que desea crear no existe'];
 
-        const existDocente = await User.findOne({ nombreCompleto: docente, rol: "profesor" });
+        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
 
         if (!existDocente) return [null, 'El docente que desea crear no existe'];
 
-        //asignar datos de rendimiento
         const [rendimientoData, error] = await buscarRendimiento(docente, asignatura, seccion, semestre, año);
 
         if (error) return [null, error];
@@ -104,7 +112,7 @@ export async function getRendimientoAsignaturaService(query) {
 
         if (!existAsignatura) return [null, 'La asignatura que desea consultar no existe'];
 
-        const existDocente = await User.findOne({ nombreCompleto: docente, rol: "profesor" });
+        const existDocente = await User.findOne({ nombreCompleto: docente, rolee: "profesor" });
 
         if (!existDocente) return [null, 'El docente que desea consultar no existe'];
 
@@ -146,7 +154,7 @@ export async function updateRendimientoAsignaturaService(query, body) {
 
         if (!asignaturaExist) return [null, 'La asignatura que desea actualizar no existe'];
 
-        const existDocente = await User.findOne({ nombreCompleto: docente, rol: "profesor" });
+        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
 
         if (!existDocente) return [null, 'El docente que desea actualizar no existe'];
 
@@ -157,7 +165,7 @@ export async function updateRendimientoAsignaturaService(query, body) {
 
         if (!nuevaAsignaturaExist) return [null, 'La nueva asignatura no existe'];
 
-        const nuevoDocenteExist = await User.findOne({ nombreCompleto: nuevoDocente, rol: "profesor" });
+        const nuevoDocenteExist = await User.findOne({ nombreCompleto: nuevoDocente, role: "profesor" });
 
         if (!nuevoDocenteExist) return [null, 'El nuevo docente no existe'];
 
@@ -195,7 +203,7 @@ export async function deleteRendimientoAsignaturaService(query) {
 
         if (!existAsignatura) return [null, 'La asignatura que desea eliminar no existe'];
 
-        const existDocente = await User.findOne({ nombreCompleto: docente, rol: "profesor" });
+        const existDocente = await User.findOne({ nombreCompleto: docente, role: "profesor" });
 
         if (!existDocente) return [null, 'El docente que desea eliminar no existe'];
 
