@@ -18,12 +18,14 @@ import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware.
 
 const router = Router();
 
+router.use(authenticateJWT);
+
 router
-    .get('/detail', getEvaluacionDocente)
-    .get('/', getAllEvaluacionesDocente)
-    .post('/', createEvaluacionDocente)
-    .patch('/detail', updateEvaluacionDocente)
-    .delete('/detail', deleteEvaluacionDocente)
+    .get('/detail', authorizeRoles("admin", "director de departamento"),getEvaluacionDocente)
+    .get('/', authorizeRoles("admin", "director de departamento"), getAllEvaluacionesDocente)
+    .post('/', authorizeRoles("admin", "director de departamento", "alumno"), createEvaluacionDocente)
+    .patch('/detail', authorizeRoles("admin", "director de departamento", "alumno"), updateEvaluacionDocente)
+    .delete('/detail', authorizeRoles("admin", "director de departamento"), deleteEvaluacionDocente)
     
     // Nuevas rutas para alumnos y profesores
     .post('/alumno', authenticateJWT, authorizeRoles('alumno'), createEvaluacionByAlumno)
