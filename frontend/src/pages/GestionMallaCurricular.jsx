@@ -214,7 +214,7 @@ export default function GestionMallaCurricular() {
                     {asignaturas.length > 0 && (
                         <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
                             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-2 rounded-lg mb-4">
-                                <h3 className="text-lg font-semibold text-white mb-4">Estadísticas
+                                <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">Estadísticas
                                     <HelpTooltip className="text-white hover:text-yellow-300">
                                         <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
                                         <p className="text-gray-600 text-xs">

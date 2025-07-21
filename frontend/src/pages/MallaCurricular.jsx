@@ -395,7 +395,7 @@ const MallaCurricular = () => {
   const handleDownloadPDF = async () => {
     try {
       setLoadingPDF(true);
-      setError(''); // Limpiar errores previos
+      // setError(''); // Limpiar errores previos
 
       let element = mallaRef.current;
 
