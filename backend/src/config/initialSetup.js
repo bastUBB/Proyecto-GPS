@@ -9,6 +9,10 @@ const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
 const Asignaturas = JSON.parse(asignaturasRaw);
 
+const profesoresPath = path.resolve('output/profesores_sin_rut.json');
+const profesoresRaw = fs.readFileSync(profesoresPath);
+const Profesores = JSON.parse(profesoresRaw).profesores;
+
 async function createInitialUsers() {
     try {
         // Verificar si ya existen los usuarios iniciales
@@ -23,7 +27,7 @@ async function createInitialUsers() {
             {
                 nombreCompleto: 'Administrador',
                 email: 'admin@ubiobio.cl',
-                rut: '12345678-9',
+                rut: '12245678-9',
                 password: 'admin1234',
                 role: 'admin'
             },
@@ -72,9 +76,6 @@ async function createInitialUsers() {
         await Promise.all(usersPromises);
 
         console.log('Usuarios iniciales creados exitosamente:');
-        usersData.forEach(user => {
-            console.log(`- ${user.nombreCompleto} (${user.role}): ${user.email}`);
-        });
     } catch (error) {
         console.error('Error al crear usuarios iniciales:', error.message);
     }
@@ -118,9 +119,52 @@ async function createAsignaturas() {
     }
 }
 
+async function createProfesores() {
+    try {
+        if (!Profesores || Profesores.length === 0) {
+            console.log('No hay profesores en el JSON para crear.');
+            return;
+        }
+
+        const profesoresACrear = Profesores.slice(0, 20);
+        
+        const profesoresExistentes = await User.find({ 
+            rut: { $in: profesoresACrear.map(p => p.rut) },
+            role: 'profesor'
+        });
+        const rutsExistentes = profesoresExistentes.map(p => p.rut);
+
+        const profesoresNuevos = profesoresACrear.filter(profesor => 
+            !rutsExistentes.includes(profesor.rut)
+        );
+
+        if (profesoresNuevos.length === 0) {
+            console.log('Todos los profesores ya existen en la base de datos.');
+            return;
+        }
+
+        const profesoresPromises = profesoresNuevos.map(async (profesor) => {
+            const hashedPassword = await hashPassword(profesor.password);
+            return User.create({
+                nombreCompleto: profesor.nombreCompleto,
+                email: profesor.email,
+                rut: profesor.rut,
+                password: hashedPassword,
+                role: 'profesor'
+            });
+        });
+
+        await Promise.all(profesoresPromises);
+
+    } catch (error) {
+        console.error('Error al crear profesores iniciales:', error.message);
+    }
+}
+
 async function initialSetup() {
     await createInitialUsers();
     await createAsignaturas();
+    await createProfesores();
 }
 
 export { initialSetup };
