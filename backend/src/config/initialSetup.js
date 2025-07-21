@@ -35,6 +35,13 @@ async function createInitialUsers() {
                 role: 'profesor'
             },
             {
+                nombreCompleto: 'Pedro Arturo Flores Paredes',
+                email: 'predro.flores@ubiobio.cl',
+                rut: '14342134-5',
+                password: 'profesor123',
+                role: 'profesor'
+            },
+            {
                 nombreCompleto: 'María Fernanda González',
                 email: 'maria.gonzalez@alumnos.ubiobio.cl',
                 rut: '19876543-5',
