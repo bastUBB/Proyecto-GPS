@@ -6,33 +6,39 @@ import mongoose from "mongoose";
 
 const rendimientoAsignaturaSchema = new mongoose.Schema({
     asignatura: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Asignatura',
-        required: true
+        type: String,
+        required: true,
+        cast: false,
     },
     docente: {
         type: String,
         required: true,
+        cast: false,
+    },
+    seccion: {
+        type: Number,
+        required: true,
+        cast: false,
+    },
+    semestre: {
+        type: Number,
+        required: true,
+        cast: false,
     },
     porcentajeAprob: {
         type: Number,
         required: true,
+        cast: false,
     },
-    porcentajeDesaprob: {
-        type: Number,
-        required: true,
-    },
-    porcentajeNCR:{
-        type: Number,
-        required: true,
-    },
-    añoRegistro: {
+    año: {
         type: String,
         required: true,
+        cast: false,
     },
     totalInscritos: {
         type: Number,
         required: true,
+        cast: false,
     },
 }, {
     timestamps: true,
