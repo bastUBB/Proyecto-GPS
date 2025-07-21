@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Edit, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Edit, Trash2, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
 const TablaGestion = ({
   data = [],
@@ -8,9 +8,12 @@ const TablaGestion = ({
   icon = null,
   onEdit = null,
   onDelete = null,
+  onCreate = null, // Nueva prop para manejar creación
+  createButtonText = "Nuevo", // Texto personalizable del botón
   searchPlaceholder = "Buscar...",
   itemsPerPage = 10,
   showActions = true,
+  showCreateButton = true, // Nueva prop para mostrar/ocultar botón
   emptyMessage = "No hay datos disponibles"
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,14 +62,14 @@ const TablaGestion = ({
       {/* Encabezado */}
       <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
         <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-          {icon && <img src={icon} alt="Icono" className="w-5 h-5" />}
+          {icon}
           {title} ({filteredData.length})
         </h2>
       </div>
 
-      {/* Barra de búsqueda */}
-      <div className=" mt-1 mb-6">
-        <div className="relative max-w-md">
+      {/* Barra de búsqueda y botón de crear */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 w-4 h-4" />
           <input
             type="text"
@@ -76,6 +79,16 @@ const TablaGestion = ({
             className="w-full pl-10 pr-4 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-blue-900 placeholder-blue-400"
           />
         </div>
+        
+        {showCreateButton && onCreate && (
+          <button
+            onClick={onCreate}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors whitespace-nowrap"
+          >
+            <Plus className="w-5 h-5" />
+            {createButtonText}
+          </button>
+        )}
       </div>
 
       {/* Tabla */}

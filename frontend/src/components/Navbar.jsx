@@ -162,7 +162,7 @@ export default function Navbar() {
         </div>
         
         {/* Menú de navegación - Versión escritorio */}
-        <div className="hidden md:flex items-center space-x-1">
+        <div className="hidden md:flex items-center space-x-2">
           {navigationItems.map((item, index) => (
             item.visible && (
               <div key={index} className="relative">

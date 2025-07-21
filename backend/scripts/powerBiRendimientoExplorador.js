@@ -5,8 +5,8 @@ import fs from 'fs';
 const explorarDatosPowerBI = async () => {
     const url = 'https://app.powerbi.com/view?r=eyJrIjoiNDJmZjMzNDgtZDI3Yi00NTlhLTgyMjctN2M5MzI0YzcxZjg4IiwidCI6IjMyYTQ3ZjJkLTZlYjItNDIyNC04YjExLTI1MTk3NTQ1ODFjNSIsImMiOjR9';
     
-    console.log('🔍 Explorador Completo de Datos Power BI');
-    console.log('🎯 Buscando TODOS los datos disponibles...');
+    //console.log('🔍 Explorador Completo de Datos Power BI');
+    //console.log('🎯 Buscando TODOS los datos disponibles...');
     
     const browser = await puppeteer.launch({ 
         headless: false,
@@ -16,14 +16,14 @@ const explorarDatosPowerBI = async () => {
     const page = await browser.newPage();
     
     try {
-        console.log('🌐 Cargando Power BI...');
+        //console.log('🌐 Cargando Power BI...');
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 150000 });
         
-        console.log('⏳ Esperando carga inicial (90 segundos)...');
+        //console.log('⏳ Esperando carga inicial (90 segundos)...');
         await new Promise(resolve => setTimeout(resolve, 90000));
         
         // Explorar la estructura completa
-        console.log('🔍 Explorando estructura completa de la página...');
+        //console.log('🔍 Explorando estructura completa de la página...');
         const exploracion = await page.evaluate(() => {
             const resultados = {
                 elementosConRole: [],
@@ -112,18 +112,18 @@ const explorarDatosPowerBI = async () => {
             return resultados;
         });
         
-        console.log('📊 Resultados de exploración:');
-        console.log(`   🎯 Elementos con role: ${exploracion.elementosConRole.length}`);
-        console.log(`   📝 Elementos con texto relevante: ${exploracion.elementosConTexto.length}`);
-        console.log(`   📋 Tablas encontradas: ${exploracion.tablas.length}`);
-        console.log(`   📦 Divs con contenido: ${exploracion.divs.length}`);
+        //console.log('📊 Resultados de exploración:');
+        //console.log(`   🎯 Elementos con role: ${exploracion.elementosConRole.length}`);
+        //console.log(`   📝 Elementos con texto relevante: ${exploracion.elementosConTexto.length}`);
+        //console.log(`   📋 Tablas encontradas: ${exploracion.tablas.length}`);
+        //console.log(`   📦 Divs con contenido: ${exploracion.divs.length}`);
         
         // Guardar exploración completa
         fs.writeFileSync('exploracion_powerbi.json', JSON.stringify(exploracion, null, 2));
-        console.log('💾 Exploración guardada en: exploracion_powerbi.json');
+        //console.log('💾 Exploración guardada en: exploracion_powerbi.json');
         
         // Analizar los datos encontrados
-        console.log('\n🔍 Analizando datos encontrados...');
+        //console.log('\n🔍 Analizando datos encontrados...');
         
         // Procesar todos los textos para encontrar patrones
         const todosTextos = [
@@ -181,37 +181,37 @@ const explorarDatosPowerBI = async () => {
             }
         });
         
-        console.log(`📊 Patrones encontrados: ${datosExtraidos.patronesEncontrados.length}`);
-        console.log(`📋 Datos raw encontrados: ${datosExtraidos.datosRaw.length}`);
+        //console.log(`📊 Patrones encontrados: ${datosExtraidos.patronesEncontrados.length}`);
+        //console.log(`📋 Datos raw encontrados: ${datosExtraidos.datosRaw.length}`);
         
         // Mostrar algunos ejemplos
         if (datosExtraidos.patronesEncontrados.length > 0) {
-            console.log('\n🎯 Ejemplos de patrones encontrados:');
+            //console.log('\n🎯 Ejemplos de patrones encontrados:');
             datosExtraidos.patronesEncontrados.slice(0, 5).forEach((patron, i) => {
-                console.log(`   ${i + 1}. ${patron.match}`);
+                //console.log(`   ${i + 1}. ${patron.match}`);
             });
         }
         
         if (datosExtraidos.datosRaw.length > 0) {
-            console.log('\n📋 Ejemplos de datos raw:');
+            //console.log('\n📋 Ejemplos de datos raw:');
             datosExtraidos.datosRaw
                 .filter(d => d.tieneAño && d.tienePorcentaje)
                 .slice(0, 3)
                 .forEach((dato, i) => {
-                    console.log(`   ${i + 1}. ${dato.texto.substring(0, 150)}...`);
+                    //console.log(`   ${i + 1}. ${dato.texto.substring(0, 150)}...`);
                 });
         }
         
         // Guardar análisis completo
         fs.writeFileSync('analisis_completo.json', JSON.stringify(datosExtraidos, null, 2));
-        console.log('💾 Análisis completo guardado en: analisis_completo.json');
+        //console.log('💾 Análisis completo guardado en: analisis_completo.json');
         
         // Capturar screenshot
         await page.screenshot({ path: 'exploracion_screenshot.png', fullPage: true });
-        console.log('📸 Screenshot de exploración guardado: exploracion_screenshot.png');
+        //console.log('📸 Screenshot de exploración guardado: exploracion_screenshot.png');
         
-        console.log('\n✅ Exploración completada');
-        console.log('🎯 Revisa los archivos generados para encontrar más datos');
+        //console.log('\n✅ Exploración completada');
+        //console.log('🎯 Revisa los archivos generados para encontrar más datos');
         
         return datosExtraidos;
         
@@ -227,13 +227,13 @@ const explorarDatosPowerBI = async () => {
 explorarDatosPowerBI()
     .then(result => {
         if (result.success !== false) {
-            console.log('\n🎉 ¡EXPLORACIÓN COMPLETADA!');
-            console.log('📁 Archivos generados:');
-            console.log('   - exploracion_powerbi.json (estructura completa)');
-            console.log('   - analisis_completo.json (análisis de datos)');
-            console.log('   - exploracion_screenshot.png (captura)');
+            //console.log('\n🎉 ¡EXPLORACIÓN COMPLETADA!');
+            //console.log('📁 Archivos generados:');
+            //console.log('   - exploracion_powerbi.json (estructura completa)');
+            //console.log('   - analisis_completo.json (análisis de datos)');
+            //console.log('   - exploracion_screenshot.png (captura)');
         } else {
-            console.log('❌ Error:', result.error);
+            //console.log('❌ Error:', result.error);
         }
     })
     .catch(console.error);

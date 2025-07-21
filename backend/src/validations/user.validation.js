@@ -89,7 +89,7 @@ export const userBodyValidation = joi.object({
         .min(5)
         .max(25)
         .trim()
-        .valid("admin", "alumno", "profesor", "director", "estudiante")
+        .valid("admin", "alumno", "profesor", "director", "estudiante", "jefeDepartamento")
         .required()
         .messages({
             "string.empty": "El rol no puede estar vacío.",

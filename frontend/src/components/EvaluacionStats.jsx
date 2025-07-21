@@ -1,4 +1,5 @@
 import { Star, TrendingUp, Users, MessageSquare } from 'lucide-react';
+import HelpTooltip from './PuntoAyuda';
 
 export default function EvaluacionStats({ evaluaciones }) {
   if (!evaluaciones || evaluaciones.length === 0) {
@@ -19,7 +20,7 @@ export default function EvaluacionStats({ evaluaciones }) {
     const stars = [];
     const fullStars = Math.floor(calificacion);
     const hasHalfStar = calificacion % 1 !== 0;
-    
+
     for (let i = 1; i <= 7; i++) {
       if (i <= fullStars) {
         stars.push(
@@ -43,15 +44,21 @@ export default function EvaluacionStats({ evaluaciones }) {
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
         <TrendingUp className="w-5 h-5" />
         Resumen de Evaluaciones
+        <HelpTooltip>
+          <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+          <p className="text-gray-600 text-xs">
+            Aquí puedes ver un resumen de todas las evaluaciones recibidas, incluyendo estadísticas clave y detalles importantes.
+          </p>
+        </HelpTooltip>
       </h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white/10 rounded-lg p-4 text-center">
           <MessageSquare className="w-8 h-8 mx-auto mb-2" />
           <div className="text-2xl font-bold">{totalEvaluaciones}</div>
           <div className="text-sm opacity-90">Evaluaciones Totales</div>
         </div>
-        
+
         <div className="bg-white/10 rounded-lg p-4 text-center">
           <div className="flex justify-center mb-2">
             {renderStars(promedioCalificacion)}
@@ -59,13 +66,13 @@ export default function EvaluacionStats({ evaluaciones }) {
           <div className="text-2xl font-bold">{promedioCalificacion.toFixed(1)}/7</div>
           <div className="text-sm opacity-90">Promedio General</div>
         </div>
-        
+
         <div className="bg-white/10 rounded-lg p-4 text-center">
           <Users className="w-8 h-8 mx-auto mb-2" />
           <div className="text-2xl font-bold">{evaluacionesAnonimas}</div>
           <div className="text-sm opacity-90">Evaluaciones Anónimas</div>
         </div>
-        
+
         <div className="bg-white/10 rounded-lg p-4 text-center">
           <TrendingUp className="w-8 h-8 mx-auto mb-2" />
           <div className="text-2xl font-bold">{evaluacionesRecientes}</div>

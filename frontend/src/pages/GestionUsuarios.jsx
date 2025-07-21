@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { Users } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import {
-    UserPlus,
     Loader2,
     Shield,
     User,
     GraduationCap,
     AlertCircle
 } from "lucide-react";
+import Alert from "../components/Alert";
 import PagGeneral from "../components/PagGeneral";
 import TablaGestion from "../components/TablaGestion";
+import EditarUsuario from "../components/EditarUsuario";
 
 export default function GestionUsuarios() {
     const [users, setUsers] = useState([]);
@@ -30,8 +32,17 @@ export default function GestionUsuarios() {
     });
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
-    const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+    const [alert, setAlert] = useState({ isVisible: false, type: '', title: '', message: '' });
     const navigate = useNavigate();
+
+    // Funciones helper para alertas
+    const showAlert = (type, title, message) => {
+        setAlert({ isVisible: true, type, title, message });
+    };
+
+    const hideAlert = () => {
+        setAlert({ isVisible: false, type: '', title: '', message: '' });
+    };
 
     useEffect(() => {
         checkAdminAccess();
@@ -83,7 +94,7 @@ export default function GestionUsuarios() {
                 navigate('/');
             } else {
                 const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al cargar usuarios';
-                showAlert(errorMessage, 'error');
+                showAlert('error', 'Error de acceso', errorMessage);
             }
         } finally {
             setLoading(false);
@@ -99,31 +110,35 @@ export default function GestionUsuarios() {
     };
 
     const validateForm = () => {
+        return validateUserData(formData);
+    };
+
+    const validateUserData = (data) => {
         const newErrors = {};
 
-        if (!formData.nombreCompleto.trim()) {
+        if (!data.nombreCompleto.trim()) {
             newErrors.nombreCompleto = 'El nombre es obligatorio';
         }
 
-        if (!formData.email.trim()) {
+        if (!data.email.trim()) {
             newErrors.email = 'El email es obligatorio';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
             newErrors.email = 'El email no es válido';
         }
 
-        if (!formData.rut.trim()) {
+        if (!data.rut.trim()) {
             newErrors.rut = 'El RUT es obligatorio';
-        } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(formData.rut)) {
+        } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(data.rut)) {
             newErrors.rut = 'El RUT debe tener el formato 12345678-9';
         }
 
-        if (!editingUser && !formData.password) {
+        if (!editingUser && !data.password) {
             newErrors.password = 'La contraseña es obligatoria';
-        } else if (formData.password && formData.password.length < 6) {
+        } else if (data.password && data.password.length < 6) {
             newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
         }
 
-        if (!formData.role) {
+        if (!data.role) {
             newErrors.role = 'El rol es obligatorio';
         }
 
@@ -131,17 +146,21 @@ export default function GestionUsuarios() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, userData = null) => {
         e.preventDefault();
 
-        if (!validateForm()) return;
+        // Determinar qué datos usar
+        const dataToUse = userData || formData;
+        
+        // Validar datos
+        if (!validateUserData(dataToUse)) return;
 
         setSubmitting(true);
         try {
             const token = localStorage.getItem('token');
-            const dataToSend = { ...formData };
+            const dataToSend = { ...dataToUse };
 
-            if (editingUser && !formData.password) {
+            if (editingUser && !dataToSend.password) {
                 delete dataToSend.password;
             }
 
@@ -166,11 +185,11 @@ export default function GestionUsuarios() {
             setShowModal(false);
             resetForm();
             loadUsers();
-            showAlert('Usuario guardado exitosamente', 'success');
+            showAlert('success', 'Usuario Guardado', 'Usuario guardado exitosamente');
         } catch (error) {
             console.error('Error al guardar usuario:', error);
             const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al guardar usuario';
-            showAlert(errorMessage, 'error');
+            showAlert('error', 'Error al guardar', errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -204,11 +223,11 @@ export default function GestionUsuarios() {
             setShowDeleteModal(false);
             setUserToDelete(null);
             loadUsers();
-            showAlert('Usuario eliminado exitosamente', 'success');
+            showAlert('success', 'Usuario Eliminado', 'Usuario eliminado exitosamente');
         } catch (error) {
             console.error('Error al eliminar usuario:', error);
             const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al eliminar usuario';
-            showAlert(errorMessage, 'error');
+            showAlert('error', 'Error al eliminar', errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -224,13 +243,6 @@ export default function GestionUsuarios() {
         });
         setEditingUser(null);
         setErrors({});
-    };
-
-    const showAlert = (message, type) => {
-        setAlert({ show: true, message, type });
-        setTimeout(() => {
-            setAlert({ show: false, message: '', type: '' });
-        }, 5000);
     };
 
     const getRoleIcon = (role) => {
@@ -324,12 +336,6 @@ export default function GestionUsuarios() {
         <PagGeneral>
             <div className="p-4 sm:p-6 lg:p-8 bg-transparent">
                 <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
-                    {/* Alerta */}
-                    {alert.show && (
-                        <div className={`mb-4 p-4 rounded-lg ${alert.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}`}>
-                            {alert.message}
-                        </div>
-                    )}
 
                     {/* Título principal */}
                     <div className="mb-6">
@@ -342,34 +348,20 @@ export default function GestionUsuarios() {
                                 Administra los usuarios del sistema y sus permisos
                             </p>
                         </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
-                        <input
-                            type="text"
-                            value={searchTerm}
-                            onChange={e => setSearchTerm(e.target.value)}
-                            placeholder="Buscar por nombre o RUT..."
-                            className="w-full sm:w-1/3 px-3 py-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-blue-900 bg-white shadow-sm"
-                        />
-                        <button
-                            onClick={() => {
-                                resetForm();
-                                setShowModal(true);
-                            }}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
-                        >
-                            <UserPlus className="w-5 h-5" />
-                            Nuevo Usuario
-                        </button>
                     </div>
-                </div>
 
                 {/* Tabla de usuarios */}
                 <TablaGestion
                     data={filteredUsers}
                     columns={columns}
                     title="Usuarios del Sistema"
-                    icon="/IconUsers.png"
-                    searchPlaceholder="Buscar usuarios..."
+                    icon={<Users className="w-5 h-5" />}
+                    searchPlaceholder="Buscar por nombre o RUT..."
+                    onCreate={() => {
+                        resetForm();
+                        setShowModal(true);
+                    }}
+                    createButtonText="Nuevo Usuario"
                     onEdit={handleEdit}
                     onDelete={(user) => {
                         setUserToDelete(user);
@@ -380,161 +372,17 @@ export default function GestionUsuarios() {
                 />
 
                 {/* Modal para crear/editar usuario */}
-                {showModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-                            <div className="p-6">
-                                <h2 className="text-xl font-bold mb-4 text-gray-900">
-                                    {editingUser ? 'Editar Usuario' : 'Crear Usuario'}
-                                </h2>
-                                
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Nombre Completo
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="nombreCompleto"
-                                            value={formData.nombreCompleto}
-                                            onChange={handleInputChange}
-                                            className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.nombreCompleto ? 'border-red-300' : 'border-gray-300'}`}
-                                            placeholder="Ingresa el nombre completo"
-                                        />
-                                        {errors.nombreCompleto && (
-                                            <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {errors.nombreCompleto}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.email ? 'border-red-300' : 'border-gray-300'}`}
-                                            placeholder="ejemplo@email.com"
-                                        />
-                                        {errors.email && (
-                                            <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {errors.email}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            RUT
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="rut"
-                                            value={formData.rut}
-                                            onChange={handleInputChange}
-                                            className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500 ${errors.rut ? 'border-red-300' : 'border-gray-300'}`}
-                                            placeholder="12345678-9"
-                                            disabled={editingUser}
-                                        />
-                                        {editingUser && (
-                                            <p className="text-gray-600 text-sm mt-1">
-                                                El RUT no se puede modificar
-                                            </p>
-                                        )}
-                                        {errors.rut && (
-                                            <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {errors.rut}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Contraseña
-                                        </label>
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleInputChange}
-                                            className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.password ? 'border-red-300' : 'border-gray-300'}`}
-                                            placeholder={editingUser ? "Dejar vacío para mantener actual" : "Ingresa la contraseña"}
-                                        />
-                                        {editingUser && (
-                                            <p className="text-gray-600 text-sm mt-1">
-                                                Deja vacío para mantener la contraseña actual
-                                            </p>
-                                        )}
-                                        {errors.password && (
-                                            <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {errors.password}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Rol
-                                        </label>
-                                        <select
-                                            name="role"
-                                            value={formData.role}
-                                            onChange={handleInputChange}
-                                            className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.role ? 'border-red-300' : 'border-gray-300'}`}
-                                        >
-                                            <option value="">Seleccionar rol</option>
-                                            <option value="admin">Administrador</option>
-                                            <option value="profesor">Profesor</option>
-                                            <option value="estudiante">Estudiante</option>
-                                            <option value="director">Jefe de Departamento</option>
-                                        </select>
-                                        {errors.role && (
-                                            <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
-                                                <AlertCircle className="w-4 h-4" />
-                                                {errors.role}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="flex justify-end gap-3 pt-4">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setShowModal(false);
-                                                resetForm();
-                                            }}
-                                            className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
-                                        >
-                                            Cancelar
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            disabled={submitting}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                                        >
-                                            {submitting ? (
-                                                <span className="flex items-center gap-2">
-                                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                                    Guardando...
-                                                </span>
-                                            ) : (
-                                                editingUser ? 'Actualizar' : 'Crear'
-                                            )}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <EditarUsuario
+                    visible={showModal}
+                    onClose={() => {
+                        setShowModal(false);
+                        setEditingUser(null);
+                        resetForm();
+                    }}
+                    onSave={handleSubmit}
+                    usuario={editingUser}
+                    submitting={submitting}
+                />
 
                 {/* Modal de confirmación para eliminar */}
                 {showDeleteModal && (
@@ -580,6 +428,16 @@ export default function GestionUsuarios() {
                         </div>
                     </div>
                 )}
+
+                {/* Componente de Alerta */}
+                <Alert
+                    type={alert.type}
+                    title={alert.title}
+                    message={alert.message}
+                    isVisible={alert.isVisible}
+                    onClose={hideAlert}
+                    autoCloseTime={3000}
+                />
             </div>
         </div>
     </PagGeneral>

@@ -4,8 +4,10 @@ import EvaluacionStats from "../components/EvaluacionStats";
 import { useEvaluaciones } from "../hooks/useEvaluaciones";
 import { useAdminEvaluaciones } from "../hooks/useAdminEvaluaciones";
 import { UserContext } from '../../context/userContext';
-import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
+import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, CheckCircle, XCircle, Clock, AlertCircle, Search } from 'lucide-react';
+import Alert from "../components/Alert";
 import axios from 'axios';
+import HelpTooltip from "../components/PuntoAyuda";
 
 
 export default function Foro() {
@@ -13,9 +15,27 @@ export default function Foro() {
   const [docentes, setDocentes] = useState([]);
   const [asignaturas, setAsignaturas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [alert, setAlert] = useState({ isVisible: false, type: '', title: '', message: '' });
   const [filtroEstado, setFiltroEstado] = useState('todos');
+  const [confirmAction, setConfirmAction] = useState({ isVisible: false, type: '', evaluacionId: null, message: '' });
+
+  // Funciones helper para alertas
+  const showAlert = (type, title, message) => {
+    setAlert({ isVisible: true, type, title, message });
+  };
+
+  const hideAlert = () => {
+    setAlert({ isVisible: false, type: '', title: '', message: '' });
+  };
+
+  // Funciones helper para confirmaciones
+  const showConfirmAction = (type, evaluacionId, message) => {
+    setConfirmAction({ isVisible: true, type, evaluacionId, message });
+  };
+
+  const hideConfirmAction = () => {
+    setConfirmAction({ isVisible: false, type: '', evaluacionId: null, message: '' });
+  };
   const [filtroProfesor, setFiltroProfesor] = useState('');
   const [filtroAsignatura, setFiltroAsignatura] = useState('');
 
@@ -80,12 +100,12 @@ export default function Foro() {
         headers: getAuthHeaders(),
         params: { role: 'profesor' }
       });
-      
+
       // Filtrar solo usuarios con rol profesor o docente
-      const docentesFiltrados = (response.data.data || []).filter(usuario => 
+      const docentesFiltrados = (response.data.data || []).filter(usuario =>
         usuario.role === 'profesor' || usuario.role === 'docente'
       );
-      
+
       setDocentes(docentesFiltrados);
     } catch (error) {
       setError(error.response?.data?.message || 'Error al cargar docentes');
@@ -106,19 +126,18 @@ export default function Foro() {
   const handleSubmitEvaluacion = async (e) => {
     e.preventDefault();
     if (!formData.docente || !formData.asignatura || !formData.texto) {
-      setError('Todos los campos son obligatorios');
+      showAlert('warning', 'Campos obligatorios', 'Todos los campos son obligatorios');
       return;
     }
 
     try {
       setLoading(true);
-      setError('');
 
       const response = await axios.post('/api/evaluacionDocente', formData, {
         headers: getAuthHeaders()
       });
 
-      setSuccess('Evaluación enviada exitosamente.');
+      showAlert('success', 'Evaluación Enviada', 'La evaluación ha sido enviada exitosamente');
       setFormData({
         docente: '',
         asignatura: '',
@@ -126,9 +145,8 @@ export default function Foro() {
         calificacion: 5,
         visibilidad: 'Anónima'
       });
-      setTimeout(() => setSuccess(''), 5000);
     } catch (error) {
-      setError(error.response?.data?.message || 'Error al crear evaluación');
+      showAlert('error', 'Error al crear evaluación', error.response?.data?.message || 'Error al crear evaluación');
     } finally {
       setLoading(false);
     }
@@ -137,85 +155,90 @@ export default function Foro() {
   const handleAprobarEvaluacion = async (evaluacionId) => {
     try {
       setLoading(true);
-      setError('');
 
       updateEvaluacionLocal(evaluacionId, { estado: 'aprobada' });
 
-      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`, 
-        { estado: 'aprobada' }, 
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`,
+        { estado: 'aprobada' },
         { headers: getAuthHeaders() }
       );
 
       if (response.data.success || response.status === 200) {
-        setSuccess('Evaluación aprobada correctamente');
-        setTimeout(() => setSuccess(''), 3000);
+        showAlert('success', 'Evaluación Aprobada', 'La evaluación ha sido aprobada correctamente');
         setTimeout(() => reloadEvaluaciones(), 1000);
       } else {
         await reloadEvaluaciones();
-        setError(response.data.message || 'Error al aprobar evaluación');
+        showAlert('error', 'Error al aprobar', response.data.message || 'Error al aprobar evaluación');
       }
     } catch (error) {
       await reloadEvaluaciones();
-      setError(error.response?.data?.message || 'Error al aprobar evaluación');
+      showAlert('error', 'Error al aprobar', error.response?.data?.message || 'Error al aprobar evaluación');
     } finally {
       setLoading(false);
     }
   };
 
   const handleRechazarEvaluacion = async (evaluacionId) => {
-    if (!window.confirm('¿Estás seguro de que deseas rechazar esta evaluación? Esta acción no se puede deshacer.')) {
-      return;
-    }
-
     try {
       setLoading(true);
-      setError('');
 
       updateEvaluacionLocal(evaluacionId, { estado: 'rechazada' });
 
-      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`, 
-        { estado: 'rechazada' }, 
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`,
+        { estado: 'rechazada' },
         { headers: getAuthHeaders() }
       );
 
       if (response.data.success || response.status === 200) {
-        setSuccess('Evaluación rechazada correctamente');
-        setTimeout(() => setSuccess(''), 3000);
+        showAlert('success', 'Evaluación Rechazada', 'La evaluación ha sido rechazada correctamente');
         setTimeout(() => reloadEvaluaciones(), 1000);
       } else {
         await reloadEvaluaciones();
-        setError(response.data.message || 'Error al rechazar evaluación');
+        showAlert('error', 'Error al rechazar', response.data.message || 'Error al rechazar evaluación');
       }
     } catch (error) {
       await reloadEvaluaciones();
-      setError(error.response?.data?.message || 'Error al rechazar evaluación');
+      showAlert('error', 'Error al rechazar', error.response?.data?.message || 'Error al rechazar evaluación');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteEvaluacion = async (evaluacionId) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar esta evaluación? Esta acción no se puede deshacer.')) {
-      return;
-    }
-
     try {
       setLoading(true);
-      setError('');
 
       const result = await deleteEvaluacion(evaluacionId);
 
       if (result.success) {
-        setSuccess(result.message);
-        setTimeout(() => setSuccess(''), 3000);
+        showAlert('success', 'Evaluación Eliminada', result.message);
       } else {
-        setError(result.message);
+        showAlert('error', 'Error al eliminar', result.message);
       }
     } catch (error) {
-      setError('Error inesperado al eliminar evaluación');
+      showAlert('error', 'Error al eliminar', 'Error inesperado al eliminar evaluación');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Funciones para mostrar confirmaciones
+  const handleConfirmRechazar = (evaluacionId) => {
+    showConfirmAction('rechazar', evaluacionId, '¿Estás seguro de que deseas rechazar esta evaluación? Esta acción no se puede deshacer.');
+  };
+
+  const handleConfirmEliminar = (evaluacionId) => {
+    showConfirmAction('eliminar', evaluacionId, '¿Estás seguro de que deseas eliminar esta evaluación? Esta acción no se puede deshacer.');
+  };
+
+  // Función para ejecutar la acción confirmada
+  const executeConfirmedAction = () => {
+    if (confirmAction.type === 'rechazar') {
+      handleRechazarEvaluacion(confirmAction.evaluacionId);
+    } else if (confirmAction.type === 'eliminar') {
+      handleDeleteEvaluacion(confirmAction.evaluacionId);
+    }
+    hideConfirmAction();
   };
 
   const getEvaluacionesFiltradas = () => {
@@ -359,17 +382,17 @@ export default function Foro() {
             )}
           </div>
 
-          {error && (
+          {/* {error && (
             <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
               {error}
             </div>
-          )}
+          )} */}
 
-          {success && (
+          {/* {success && (
             <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
               {success}
             </div>
-          )}
+          )} */}
 
           {user.role === 'alumno' && (
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -499,7 +522,7 @@ export default function Foro() {
 
           {user.role === 'profesor' && (
             <div className="space-y-4" onClick={() => nuevasEvaluaciones > 0 && marcarComoLeidas()}>
-              <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
+              {/* <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                   <h3 className="font-semibold text-green-800">Evaluaciones Recibidas</h3>
@@ -507,7 +530,7 @@ export default function Foro() {
                 <p className="text-green-700 text-sm">
                   Aquí se muestran todas las evaluaciones que has recibido de tus estudiantes.
                 </p>
-              </div>
+              </div> */}
 
               {evaluaciones.length > 0 && <EvaluacionStats evaluaciones={evaluaciones} />}
 
@@ -611,7 +634,18 @@ export default function Foro() {
               </div>
 
               <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+                  <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                    <Search className="w-5 h-5" />
+                    Filtros de Búsqueda
+                    <HelpTooltip>
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Puedes filtrar las evaluaciones por estado, profesor y asignatura para encontrar rápidamente lo que necesitas.
+                      </p>
+                    </HelpTooltip>
+                  </h3>
+                </div>
                 <div className="mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <div>
@@ -708,6 +742,9 @@ export default function Foro() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between mb-4">
+                    {/* <div> */}
+
+
                     <h3 className="text-lg font-semibold text-gray-800">
                       {getTituloFiltros()}
                     </h3>
@@ -792,7 +829,7 @@ export default function Foro() {
                                   Aprobar
                                 </button>
                                 <button
-                                  onClick={() => handleRechazarEvaluacion(evaluacion._id)}
+                                  onClick={() => handleConfirmRechazar(evaluacion._id)}
                                   className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
                                   disabled={loading}
                                 >
@@ -803,7 +840,7 @@ export default function Foro() {
                             )}
 
                             <button
-                              onClick={() => handleDeleteEvaluacion(evaluacion._id)}
+                              onClick={() => handleConfirmEliminar(evaluacion._id)}
                               className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
                               disabled={loading}
                             >
@@ -831,6 +868,28 @@ export default function Foro() {
           )}
         </div>
       </div>
+
+      {/* Componente de Alerta */}
+      <Alert
+        type={alert.type}
+        title={alert.title}
+        message={alert.message}
+        isVisible={alert.isVisible}
+        onClose={hideAlert}
+        autoCloseTime={3000}
+      />
+
+      {/* Componente de Confirmación */}
+      <Alert
+        type="confirm"
+        title="Confirmar Acción"
+        message={confirmAction.message}
+        isVisible={confirmAction.isVisible}
+        onClose={hideConfirmAction}
+        onConfirm={executeConfirmedAction}
+        acceptButtonText={confirmAction.type === 'rechazar' ? 'Rechazar' : 'Eliminar'}
+        cancelButtonText="Cancelar"
+      />
     </PagGeneral>
   );
 }

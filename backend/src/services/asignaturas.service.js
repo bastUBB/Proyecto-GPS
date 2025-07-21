@@ -60,11 +60,11 @@ export async function getAllAsignaturasService() {
 
 export async function updateAsignaturaService(query, body) {
     try {
-        const { codigo } = query; 
+        const { _id } = query; 
 
         const { codigo: nuevoCodigo, prerrequisitos: nuevosPrerrequisitos } = body; 
 
-        const existingAsignatura = await Asignatura.findOne({ codigo });
+        const existingAsignatura = await Asignatura.findById(_id);
 
         if (!existingAsignatura) return [null, 'Asignatura que desea actualizar no existe'];
 
@@ -76,15 +76,15 @@ export async function updateAsignaturaService(query, body) {
         }
 
         // verificar que el codigo del body no exista en otra asignatura 
-        if (nuevoCodigo && nuevoCodigo !== codigo) {
+        if (nuevoCodigo && nuevoCodigo !== existingAsignatura.codigo) {
             
             const existingCodigo = await Asignatura.findOne({ codigo: nuevoCodigo });
 
             if (existingCodigo) return [null, 'El código al que desea actualizar ya existe en otra asignatura'];
         }
 
-        const updatedAsignatura = await Asignatura.findOneAndUpdate(
-            { codigo },
+        const updatedAsignatura = await Asignatura.findByIdAndUpdate(
+            _id,
             body,
             { new: true }
         );
@@ -102,13 +102,13 @@ export async function updateAsignaturaService(query, body) {
 
 export async function deleteAsignaturaService(query) {
     try{
-        const { codigo } = query;
+        const { _id } = query; 
 
-        const existingAsignatura = await Asignatura.findOne({ codigo });
+        const existingAsignatura = await Asignatura.findById(_id);
 
         if (!existingAsignatura) return [null, 'Asignatura no encontrada'];
 
-        const deletedAsignatura = await Asignatura.findOneAndDelete({ codigo });
+        const deletedAsignatura = await Asignatura.findByIdAndDelete(_id);
 
         if (!deletedAsignatura) return [null, 'Error al eliminar la asignatura'];
 

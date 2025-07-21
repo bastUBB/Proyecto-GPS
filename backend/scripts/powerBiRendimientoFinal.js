@@ -29,9 +29,9 @@ const verificarAño2020 = async (page) => {
 const procesarDatosRendimiento = async () => {
     const url = 'https://app.powerbi.com/view?r=eyJrIjoiNDJmZjMzNDgtZDI3Yi00NTlhLTgyMjctN2M5MzI0YzcxZjg4IiwidCI6IjMyYTQ3ZjJkLTZlYjItNDIyNC04YjExLTI1MTk3NTQ1ODFjNSIsImMiOjR9';
     
-    console.log('🎯 Procesamiento Final - Datos Ordenados de Rendimiento');
-    console.log('📊 Extrayendo datos específicos del cajón "Rendimiento por Asignatura"');
-    console.log('⏸️  El script se pausará después de cargar la página');
+    //console.log('🎯 Procesamiento Final - Datos Ordenados de Rendimiento');
+    //console.log('📊 Extrayendo datos específicos del cajón "Rendimiento por Asignatura"');
+    //console.log('⏸️  El script se pausará después de cargar la página');
     
     const browser = await puppeteer.launch({ 
         headless: false,
@@ -42,21 +42,21 @@ const procesarDatosRendimiento = async () => {
     const page = await browser.newPage();
     
     try {
-        console.log('🌐 Cargando Power BI...');
+        //console.log('🌐 Cargando Power BI...');
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 120000 });
         
-        console.log('⏳ Esperando carga inicial (30 segundos)...');
+        //console.log('⏳ Esperando carga inicial (30 segundos)...');
         await new Promise(resolve => setTimeout(resolve, 30000));
         
-        console.log('✅ Página cargada completamente');
-        console.log('📋 Revisa la página y posiciónate donde necesites');
-        console.log('🎯 Cuando estés listo para comenzar la extracción...');
+        //console.log('✅ Página cargada completamente');
+        //console.log('📋 Revisa la página y posiciónate donde necesites');
+        //console.log('🎯 Cuando estés listo para comenzar la extracción...');
         
         // PAUSA - Esperar input del usuario
         await esperarTecla('🔄 La extracción comenzará y hará scroll hasta encontrar el año 2020');
         
-        console.log('� Iniciando extracción automática...');
-        console.log('📊 Buscando datos hasta llegar al año 2020...');
+        //console.log('� Iniciando extracción automática...');
+        //console.log('📊 Buscando datos hasta llegar al año 2020...');
         
         let encontrado2020 = false;
         let intentos = 0;
@@ -66,7 +66,7 @@ const procesarDatosRendimiento = async () => {
         
         while (!encontrado2020 && intentos < maxIntentos) {
             intentos++;
-            console.log(`🔄 Intento ${intentos}/${maxIntentos} - Extrayendo datos visibles...`);
+            //console.log(`🔄 Intento ${intentos}/${maxIntentos} - Extrayendo datos visibles...`);
             
             // Extraer datos de la vista actual
             const datosActuales = await page.evaluate(() => {
@@ -123,18 +123,18 @@ const procesarDatosRendimiento = async () => {
             const tiene2020 = datosActuales.some(dato => dato.año === 2020);
             if (tiene2020) {
                 encontrado2020 = true;
-                console.log('🎉 ¡Año 2020 encontrado! Extracción completada.');
+                //console.log('🎉 ¡Año 2020 encontrado! Extracción completada.');
                 break;
             }
             
             // Mostrar años encontrados en este intento
             const añosUnicos = [...new Set(datosActuales.map(d => d.año))].sort((a, b) => b - a);
             if (añosUnicos.length > 0) {
-                console.log(`   📅 Años encontrados: ${añosUnicos.join(', ')}`);
+                //console.log(`   📅 Años encontrados: ${añosUnicos.join(', ')}`);
             }
             
             // Hacer scroll hacia abajo
-            console.log('📜 Haciendo scroll hacia abajo...');
+            //console.log('📜 Haciendo scroll hacia abajo...');
             await page.evaluate(() => {
                 window.scrollBy(0, 500);
                 
@@ -156,23 +156,23 @@ const procesarDatosRendimiento = async () => {
         }
         
         if (!encontrado2020) {
-            console.log('⚠️  No se encontró el año 2020 después de 50 intentos');
-            console.log('📊 Continuando con los datos extraídos hasta ahora...');
+            //console.log('⚠️  No se encontró el año 2020 después de 50 intentos');
+            //console.log('📊 Continuando con los datos extraídos hasta ahora...');
         }
         
-        console.log('✅ Extracción completada');
-        console.log(`📊 Total de registros encontrados: ${datosEncontrados.length}`);
+        //console.log('✅ Extracción completada');
+        //console.log(`📊 Total de registros encontrados: ${datosEncontrados.length}`);
         
         // Procesar y organizar datos finales
         const años = [...new Set(datosEncontrados.map(d => d.año))].sort((a, b) => b - a);
-        console.log(`📅 Años extraídos: ${años.join(', ')}`);
+        //console.log(`📅 Años extraídos: ${años.join(', ')}`);
         
         // Separar datos de rendimiento de datos generales
         const datosRendimiento = datosEncontrados.filter(d => d.esRendimiento);
         const datosGenerales = datosEncontrados.filter(d => !d.esRendimiento);
         
-        console.log(`📚 Datos de rendimiento: ${datosRendimiento.length}`);
-        console.log(`� Datos generales: ${datosGenerales.length}`);
+        //console.log(`📚 Datos de rendimiento: ${datosRendimiento.length}`);
+        //console.log(`� Datos generales: ${datosGenerales.length}`);
         
         // Continuar con el procesamiento anterior pero solo con los datos encontrados...
         
@@ -258,48 +258,48 @@ const procesarDatosRendimiento = async () => {
             return resultado;
         }, datosEncontrados);
         
-        console.log('✅ Procesamiento completado');
-        console.log(`📊 Datos por carrera: ${datosOrdenados.rendimientoPorCarrera.length} registros`);
-        console.log(`📚 Datos por asignatura: ${datosOrdenados.rendimientoPorAsignatura.length} registros`);
+        //console.log('✅ Procesamiento completado');
+        //console.log(`📊 Datos por carrera: ${datosOrdenados.rendimientoPorCarrera.length} registros`);
+        //console.log(`📚 Datos por asignatura: ${datosOrdenados.rendimientoPorAsignatura.length} registros`);
         
         // Verificar rango de años extraídos
         const añosCarrera = [...new Set(datosOrdenados.rendimientoPorCarrera.map(d => d.año))].sort();
         const añosAsignatura = [...new Set(datosOrdenados.rendimientoPorAsignatura.map(d => d.año))].sort();
         
-        console.log(`📅 Años en datos de carrera: ${añosCarrera.join(', ')}`);
-        console.log(`📅 Años en datos de asignatura: ${añosAsignatura.join(', ')}`);
+        //console.log(`📅 Años en datos de carrera: ${añosCarrera.join(', ')}`);
+        //console.log(`📅 Años en datos de asignatura: ${añosAsignatura.join(', ')}`);
         
         // Verificar si llegamos hasta 2020
         const tieneAño2020Carrera = añosCarrera.includes(2020);
         const tieneAño2020Asignatura = añosAsignatura.includes(2020);
         
-        console.log(`🎯 ¿Datos de carrera hasta 2020? ${tieneAño2020Carrera ? '✅ SÍ' : '❌ NO'}`);
-        console.log(`🎯 ¿Datos de asignatura hasta 2020? ${tieneAño2020Asignatura ? '✅ SÍ' : '❌ NO'}`);
+        //console.log(`🎯 ¿Datos de carrera hasta 2020? ${tieneAño2020Carrera ? '✅ SÍ' : '❌ NO'}`);
+        //console.log(`🎯 ¿Datos de asignatura hasta 2020? ${tieneAño2020Asignatura ? '✅ SÍ' : '❌ NO'}`);
         
         // Mostrar resumen de datos por carrera
         if (datosOrdenados.rendimientoPorCarrera.length > 0) {
-            console.log('\n📈 Rendimiento por Carrera (2020+):');
+            //console.log('\n📈 Rendimiento por Carrera (2020+):');
             datosOrdenados.rendimientoPorCarrera
                 .sort((a, b) => b.año - a.año)
                 .forEach(dato => {
-                    console.log(`   ${dato.año}: ${dato.porcentajeAprobacion}% aprobación (${dato.numeroAprobadas})`);
+                    //console.log(`   ${dato.año}: ${dato.porcentajeAprobacion}% aprobación (${dato.numeroAprobadas})`);
                 });
         }
         
         // Mostrar resumen de asignaturas recientes
         if (datosOrdenados.rendimientoPorAsignatura.length > 0) {
-            console.log('\n📚 Asignaturas encontradas (años recientes):');
+            //console.log('\n📚 Asignaturas encontradas (años recientes):');
             const asignaturasRecientes = datosOrdenados.rendimientoPorAsignatura
                 .filter(a => a.año >= 2022)
                 .map(a => a.nombreAsignatura);
             const asignaturasUnicas = [...new Set(asignaturasRecientes)];
             
             asignaturasUnicas.slice(0, 10).forEach((asignatura, i) => {
-                console.log(`   ${i + 1}. ${asignatura}`);
+                //console.log(`   ${i + 1}. ${asignatura}`);
             });
             
             if (asignaturasUnicas.length > 10) {
-                console.log(`   ... y ${asignaturasUnicas.length - 10} más`);
+                //console.log(`   ... y ${asignaturasUnicas.length - 10} más`);
             }
         }
         
@@ -338,7 +338,7 @@ const procesarDatosRendimiento = async () => {
         const nombreArchivo = `rendimiento_hasta_2020_${timestamp}.json`;
         
         fs.writeFileSync(nombreArchivo, JSON.stringify(resultadoFinal, null, 2));
-        console.log(`💾 Datos guardados en: ${nombreArchivo}`);
+        //console.log(`💾 Datos guardados en: ${nombreArchivo}`);
         
         // Crear resumen ejecutivo con información de la extracción
         const resumenEjecutivo = {
@@ -368,19 +368,19 @@ const procesarDatosRendimiento = async () => {
         };
         
         fs.writeFileSync('resumen_ejecutivo_2020.json', JSON.stringify(resumenEjecutivo, null, 2));
-        console.log('📋 Resumen ejecutivo guardado en: resumen_ejecutivo_2020.json');
+        //console.log('📋 Resumen ejecutivo guardado en: resumen_ejecutivo_2020.json');
         
         // Capturar screenshot
         await page.screenshot({ path: 'rendimiento_2020_final.png', fullPage: true });
-        console.log('📸 Screenshot guardado: rendimiento_2020_final.png');
+        //console.log('📸 Screenshot guardado: rendimiento_2020_final.png');
         
-        console.log('\n📊 Estadísticas finales:');
-        console.log(`   🎯 Objetivo: Extraer datos hasta año 2020`);
-        console.log(`   ✅ ¿Objetivo cumplido? ${encontrado2020 ? 'SÍ' : 'PARCIALMENTE'}`);
-        console.log(`   📈 Rendimiento por carrera: ${añosCarrera.length} años (${añosCarrera.join(', ')})`);
-        console.log(`   📚 Rendimiento por asignatura: ${[...new Set(datosOrdenados.rendimientoPorAsignatura.map(d => d.nombreAsignatura))].length} asignaturas únicas`);
-        console.log(`   🔄 Intentos de scroll realizados: ${intentos}`);
-        console.log(`   � Rango de años extraído: ${Math.min(...añosCarrera, ...añosAsignatura)} - ${Math.max(...añosCarrera, ...añosAsignatura)}`);
+        //console.log('\n📊 Estadísticas finales:');
+        //console.log(`   🎯 Objetivo: Extraer datos hasta año 2020`);
+        //console.log(`   ✅ ¿Objetivo cumplido? ${encontrado2020 ? 'SÍ' : 'PARCIALMENTE'}`);
+        //console.log(`   📈 Rendimiento por carrera: ${añosCarrera.length} años (${añosCarrera.join(', ')})`);
+        //console.log(`   📚 Rendimiento por asignatura: ${[...new Set(datosOrdenados.rendimientoPorAsignatura.map(d => d.nombreAsignatura))].length} asignaturas únicas`);
+        //console.log(`   🔄 Intentos de scroll realizados: ${intentos}`);
+        //console.log(`   � Rango de años extraído: ${Math.min(...añosCarrera, ...añosAsignatura)} - ${Math.max(...añosCarrera, ...añosAsignatura)}`);
         
         return resultadoFinal;
         
@@ -396,16 +396,16 @@ const procesarDatosRendimiento = async () => {
 procesarDatosRendimiento()
     .then(result => {
         if (result.success !== false) {
-            console.log('\n🎉 ¡EXTRACCIÓN COMPLETADA!');
-            console.log('📁 Archivos generados:');
-            console.log(`   - ${nombreArchivo ? nombreArchivo : 'rendimiento_hasta_2020_[fecha].json'} (datos completos)`);
-            console.log('   - resumen_ejecutivo_2020.json (resumen ejecutivo)');
-            console.log('   - rendimiento_2020_final.png (captura de pantalla)');
-            console.log('\n✅ Datos extraídos hasta el año 2020');
-            console.log(`🎯 ${encontrado2020 ? 'Objetivo cumplido exitosamente' : 'Extracción parcial realizada'}`);
-            console.log('📊 Listos para usar en el sistema académico');
+            //console.log('\n🎉 ¡EXTRACCIÓN COMPLETADA!');
+            //console.log('📁 Archivos generados:');
+            //console.log(`   - ${nombreArchivo ? nombreArchivo : 'rendimiento_hasta_2020_[fecha].json'} (datos completos)`);
+            //console.log('   - resumen_ejecutivo_2020.json (resumen ejecutivo)');
+            //console.log('   - rendimiento_2020_final.png (captura de pantalla)');
+            //console.log('\n✅ Datos extraídos hasta el año 2020');
+            //console.log(`🎯 ${encontrado2020 ? 'Objetivo cumplido exitosamente' : 'Extracción parcial realizada'}`);
+            //console.log('📊 Listos para usar en el sistema académico');
         } else {
-            console.log('❌ Error en el procesamiento:', result.error);
+            //console.log('❌ Error en el procesamiento:', result.error);
         }
     })
     .catch(console.error);

@@ -20,7 +20,7 @@ const buscarArchivosExcel = (directorio) => {
 };
 
 const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
-    console.log('📊 Iniciando procesamiento de datos de rendimiento desde Excel...');
+    //console.log('📊 Iniciando procesamiento de datos de rendimiento desde Excel...');
 
     try {
         let archivoPath;
@@ -40,18 +40,18 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
 
             // Tomar el primer archivo Excel encontrado
             archivoPath = path.join(__dirname, archivosExcel[0]);
-            console.log(`📁 Archivo Excel encontrado: ${archivosExcel[0]}`);
+            //console.log(`📁 Archivo Excel encontrado: ${archivosExcel[0]}`);
         }
 
         // Leer archivo Excel
-        console.log('📖 Leyendo archivo Excel...');
+        //console.log('📖 Leyendo archivo Excel...');
         const workbook = XLSX.readFile(archivoPath);
 
         // Obtener la primera hoja
         const nombreHoja = workbook.SheetNames[0];
         const hoja = workbook.Sheets[nombreHoja];
 
-        console.log(`� Procesando hoja: ${nombreHoja}`);
+        //console.log(`� Procesando hoja: ${nombreHoja}`);
 
         // Convertir a JSON (mantiene las celdas vacías como undefined)
         const datosRaw = XLSX.utils.sheet_to_json(hoja, { header: 1, defval: '' });
@@ -62,7 +62,7 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
 
         // La primera fila son los headers
         const headers = datosRaw[0];
-        console.log('📋 Headers encontrados:', headers);
+        //console.log('📋 Headers encontrados:', headers);
 
         const datosCompletos = [];
         const asignaturasExcluidas = [];
@@ -139,8 +139,8 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
             }
         }
 
-        console.log(`✅ Procesadas ${datosCompletos.length} asignaturas principales`);
-        console.log(`🚫 Excluidas ${asignaturasExcluidas.length} asignaturas (códigos 34*/35* excepto comunicación oral e inglés)`);
+        //console.log(`✅ Procesadas ${datosCompletos.length} asignaturas principales`);
+        //console.log(`🚫 Excluidas ${asignaturasExcluidas.length} asignaturas (códigos 34*/35* excepto comunicación oral e inglés)`);
 
         // Ordenar datos por año, semestre y código
         datosCompletos.sort((a, b) => {
@@ -241,39 +241,41 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
         }
 
         // Mostrar resumen
-        console.log('\n📊 RESUMEN DEL PROCESAMIENTO:');
-        console.log(`📅 Años procesados: ${estadisticas.años.join(', ')}`);
-        console.log(`📚 Total asignaturas principales: ${estadisticas.registrosPrincipales}`);
-        console.log(`🚫 Total asignaturas excluidas: ${estadisticas.registrosExcluidos}`);
-        console.log(`📊 Registros por año:`);
+        //console.log('\n📊 RESUMEN DEL PROCESAMIENTO:');
+        //console.log(`📅 Años procesados: ${estadisticas.años.join(', ')}`);
+        //console.log(`📚 Total asignaturas principales: ${estadisticas.registrosPrincipales}`);
+        //console.log(`🚫 Total asignaturas excluidas: ${estadisticas.registrosExcluidos}`);
+        //console.log(`📊 Registros por año:`);
 
         estadisticas.años.forEach(año => {
             const registrosAño = datosCompletos.filter(r => r.año === año);
+            //console.log(`   ${año}: ${registrosAño.length} total (Sem I: ${semestreI.length}, Sem II: ${semestreII.length})`);
             const semestreI = registrosAño.filter(r => r.semestre === 1);
             const semestreII = registrosAño.filter(r => r.semestre === 2);
-            console.log(`   ${año}: ${registrosAño.length} total (Sem I: ${semestreI.length}, Sem II: ${semestreII.length})`);
+            // console.log(`   ${año}: ${registrosAño.length} total (Sem I: ${semestreI.length}, Sem II: ${semestreII.length})`);
         });
 
         // Mostrar ejemplos de asignaturas excluidas
         if (asignaturasExcluidas.length > 0) {
-            console.log('\n🚫 EJEMPLOS DE ASIGNATURAS EXCLUIDAS:');
+            //console.log('\n🚫 EJEMPLOS DE ASIGNATURAS EXCLUIDAS:');
             const ejemplos = asignaturasExcluidas.slice(0, 10);
             ejemplos.forEach(asig => {
-                console.log(`   ${asig.codigoSeccion}: ${asig.nombreAsignatura}`);
+                //console.log(`   ${asig.codigoSeccion}: ${asig.nombreAsignatura}`);
             });
             if (asignaturasExcluidas.length > 10) {
-                console.log(`   ... y ${asignaturasExcluidas.length - 10} más`);
+                //console.log(`   ... y ${asignaturasExcluidas.length - 10} más`);
             }
         }
 
         // Mostrar asignaturas con menor % de aprobación
-        console.log('\n📉 ASIGNATURAS CON MENOR % DE APROBACIÓN (2024):');
+        //console.log('\n📉 ASIGNATURAS CON MENOR % DE APROBACIÓN (2024):');
         const asignaturas2024 = datosCompletos.filter(r => r.año === '2024');
         const menorAprobacion = asignaturas2024
             .sort((a, b) => a.porcentajeAprobacion - b.porcentajeAprobacion)
             .slice(0, 10);
 
         menorAprobacion.forEach(asig => {
+            //console.log(`   ${asig.codigoSeccion}: ${asig.nombreAsignatura} - ${asig.porcentajeAprobacion}`);
             console.log(`   ${asig.codigoSeccion}: ${asig.nombreAsignatura} - ${asig.porcentajeAprobacion.toFixed(1)}%`);
         });
 
@@ -291,17 +293,17 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
 };
 
 // Ejecutar el script
-console.log('🚀 Iniciando procesamiento de datos de rendimiento académico desde Excel...');
+//console.log('🚀 Iniciando procesamiento de datos de rendimiento académico desde Excel...');
 
 // Permitir especificar archivo como argumento de línea de comandos
 const archivoEspecificado = process.argv[2];
 const resultado = procesarDatosRendimiento(archivoEspecificado);
 
 if (resultado) {
-    console.log('\n✅ ¡PROCESAMIENTO COMPLETADO!');
-    console.log(`📁 Archivo generado: ${resultado.archivo}`);
-    console.log(`📂 Ruta completa: ${resultado.rutaCompleta}`);
-    console.log(`📊 Total registros procesados: ${resultado.estadisticas.totalRegistros}`);
+    //console.log('\n✅ ¡PROCESAMIENTO COMPLETADO!');
+    //console.log(`📁 Archivo generado: ${resultado.archivo}`);
+    //console.log(`📂 Ruta completa: ${resultado.rutaCompleta}`);
+    //console.log(`📊 Total registros procesados: ${resultado.estadisticas.totalRegistros}`);
 } else {
-    console.log('❌ Error en el procesamiento');
+    //console.log('❌ Error en el procesamiento');
 }
