@@ -19,33 +19,33 @@ export async function createUser(req, res) {
             user.role = "alumno";
         }
         
-        console.log('🔍 Datos recibidos para crear usuario:', user);
+        //console.log('🔍 Datos recibidos para crear usuario:', user);
 
         const { value, error } = userBodyValidation.validate(user);
         
         if (error) {
-            console.log('❌ Error de validación:', error.details);
+            //console.log('❌ Error de validación:', error.details);
             return handleErrorClient(res, 400, "Error de validación", error.message);
         }
 
         if (value.password) {
-            console.log('Encriptando contraseña...');
+            //console.log('Encriptando contraseña...');
             value.password = await hashPassword(value.password);
-            console.log('Contraseña encriptada correctamente');
+            //console.log('Contraseña encriptada correctamente');
         }
 
-        console.log('✅ Datos validados correctamente:', value);
+        //console.log('✅ Datos validados correctamente:', value);
         const [newUser, errorNewUser] = await createUserService(value);
 
         if (errorNewUser) {
-            console.log('❌ Error al crear usuario:', errorNewUser);
+            //console.log('❌ Error al crear usuario:', errorNewUser);
             return handleErrorClient(res, 400, "Error registrando el usuario", errorNewUser);
         }
 
-        console.log('✅ Usuario creado exitosamente:', newUser);
+        //console.log('✅ Usuario creado exitosamente:', newUser);
         handleSuccess(res, 201, "Usuario registrado con éxito", newUser);
     } catch (error) {
-        console.log('💥 Error inesperado:', error);
+        //console.log('💥 Error inesperado:', error);
         handleErrorServer(res, 500, error.message);
     }
 }

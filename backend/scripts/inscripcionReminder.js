@@ -236,13 +236,13 @@ async function getInscripcionDatesWithPuppeteer() {
         await page.setDefaultNavigationTimeout(60000);
         await page.setDefaultTimeout(20000);
 
-        console.log('Navegando a la página...');
+        //console.log('Navegando a la página...');
         await page.goto('https://www.ubiobio.cl/w/Calendario_Academico/', {
             waitUntil: 'domcontentloaded',
             timeout: 60000
         });
 
-        console.log('Página cargada. Extrayendo contenido...');
+        //console.log('Página cargada. Extrayendo contenido...');
 
         // Obtener todo el contenido de texto de la página
         const contenido = await page.evaluate(() => {
@@ -251,7 +251,7 @@ async function getInscripcionDatesWithPuppeteer() {
 
         // Guardar para depuración (fuera del contexto del navegador)
         await fs.writeFile('page-content.txt', contenido);
-        console.log('Contenido de la página guardado en page-content.txt');
+        //console.log('Contenido de la página guardado en page-content.txt');
 
         // Buscar fechas de inscripción usando expresiones regulares
         const eventos = [];
@@ -270,7 +270,7 @@ async function getInscripcionDatesWithPuppeteer() {
 
         // Si no encontramos resultados, intentar un método alternativo
         if (eventos.length === 0) {
-            console.log('Usando método alternativo de búsqueda...');
+            //console.log('Usando método alternativo de búsqueda...');
             const lineas = contenido.split('\n');
             let currentPeriod = '';
 
@@ -330,7 +330,7 @@ async function sendStartupTestEmail(testReminder = false) {
                 text: textTemplates.reminder(testReminderData),
                 html: emailTemplates.reminder(testReminderData)
             });
-            console.log('✅ Correo de prueba (recordatorio) enviado.');
+            //console.log('✅ Correo de prueba (recordatorio) enviado.');
         } else {
             const currentDate = new Date().toLocaleString('es-CL');
             await transporter.sendMail({
@@ -341,7 +341,7 @@ async function sendStartupTestEmail(testReminder = false) {
                 text: textTemplates.startup(currentDate),
                 html: emailTemplates.startup(currentDate)
             });
-            console.log('✅ Correo de prueba (inicio) enviado al iniciar el backend.');
+            //console.log('✅ Correo de prueba (inicio) enviado al iniciar el backend.');
         }
     } catch (error) {
         console.error('❌ Error al enviar correo de prueba:', error.message);
@@ -430,7 +430,7 @@ cron.schedule('0 22 * * *', async () => {
     try {
         let fechas = await getInscripcionDatesWithPuppeteer();
 
-        console.log(`Fechas de inscripción obtenidas: ${fechas.length} evento(s)`);
+        //console.log(`Fechas de inscripción obtenidas: ${fechas.length} evento(s)`);
 
         // Transformar la fecha para extraer el inicio y convertirlo en Date
         fechas = fechas.map(f => {
@@ -441,18 +441,18 @@ cron.schedule('0 22 * * *', async () => {
         });
 
         fechas.forEach(({ periodo, evento, fecha, inicio }) => {
-            console.log(`📌 [${periodo}] ${evento}: ${fecha} (Inicio: ${inicio.toDateString()})`);
+            //console.log(`📌 [${periodo}] ${evento}: ${fecha} (Inicio: ${inicio.toDateString()})`);
         });
 
         const reminders = checkReminder(fechas);
         if (!reminders.length) {
-            console.log('No hay recordatorios para enviar hoy.');
+            //console.log('No hay recordatorios para enviar hoy.');
             return;
         }
 
         const alumnos = await User.find({ rol: 'alumno' });
         await sendReminder(reminders, alumnos);
-        console.log(`✅ Correos enviados a ${alumnos.length} alumno(s) con ${reminders.length} recordatorio(s).`);
+        //console.log(`✅ Correos enviados a ${alumnos.length} alumno(s) con ${reminders.length} recordatorio(s).`);
 
     } catch (err) {
         console.error('❌ Error en tarea programada:', err.message);

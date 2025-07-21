@@ -18,15 +18,15 @@ export const processExcelFile = async (req, res) => {
             });
         }
 
-        console.log('🔄 Procesando archivo Excel:', req.file.originalname);
+        //console.log('🔄 Procesando archivo Excel:', req.file.originalname);
         
         // Procesar el archivo usando SOLO la función del script
         const subjects = processExcelFromBuffer(req.file.buffer);
         
-        console.log('✅ Extracción completada');
-        console.log(`📊 Total de asignaturas extraídas: ${subjects.length}`);
-        console.log('📄 JSON generado por el script:');
-        console.log(JSON.stringify(subjects, null, 2));
+        //console.log('✅ Extracción completada');
+        //console.log(`📊 Total de asignaturas extraídas: ${subjects.length}`);
+        //console.log('📄 JSON generado por el script:');
+        //console.log(JSON.stringify(subjects, null, 2));
 
         // Generar archivo .json físico
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -42,7 +42,7 @@ export const processExcelFile = async (req, res) => {
 
         // Guardar archivo JSON
         fs.writeFileSync(jsonFilePath, JSON.stringify(subjects, null, 2), 'utf8');
-        console.log(`💾 Archivo JSON guardado en: ${jsonFilePath}`);
+        //console.log(`💾 Archivo JSON guardado en: ${jsonFilePath}`);
 
         // Respuesta sin base de datos
         return res.status(200).json({
@@ -79,7 +79,7 @@ export const processRendimientoFile = async (req, res) => {
             });
         }
 
-        console.log('📊 Procesando archivo de rendimiento:', req.file.originalname);
+        //console.log('📊 Procesando archivo de rendimiento:', req.file.originalname);
         
         // Guardar archivo temporalmente
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -94,9 +94,9 @@ export const processRendimientoFile = async (req, res) => {
             const scriptsDir = path.join(__dirname, '..', '..', 'scripts');
             const command = `cd "${scriptsDir}" && node procesarDatosRendimiento.js "${tempFileName}"`;
             
-            console.log('🔄 Ejecutando script de procesamiento...');
+            //console.log('🔄 Ejecutando script de procesamiento...');
             const output = execSync(command, { encoding: 'utf8', timeout: 30000 });
-            console.log('✅ Script ejecutado:', output);
+            //console.log('✅ Script ejecutado:', output);
             
             // Buscar archivo JSON generado
             const outputDir = path.join(__dirname, '..', '..', 'output');
@@ -110,8 +110,8 @@ export const processRendimientoFile = async (req, res) => {
             // Leer archivo JSON generado
             const jsonContent = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
             
-            console.log(`📄 Archivo JSON leído: datos_rendimiento.json`);
-            console.log(`📊 Total de registros: ${jsonContent.datos?.length || 0}`);
+            //console.log(`📄 Archivo JSON leído: datos_rendimiento.json`);
+            //console.log(`📊 Total de registros: ${jsonContent.datos?.length || 0}`);
             
             // Respuesta
             return res.status(200).json({
@@ -133,7 +133,7 @@ export const processRendimientoFile = async (req, res) => {
             // Limpiar archivo temporal
             if (fs.existsSync(tempFilePath)) {
                 fs.unlinkSync(tempFilePath);
-                console.log('🧹 Archivo temporal eliminado');
+                //console.log('🧹 Archivo temporal eliminado');
             }
         }
 

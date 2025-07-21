@@ -51,9 +51,9 @@ export async function asignarAsignaturas(asignaturasCursadas) {
                     cursadasSet.has(materia.nombre?.toLowerCase())
                 );
                 
-                console.log(`Práctica ${asig.nombre} (semestre ${asig.semestre}):`);
-                console.log(`- Materias del semestre ${semestreAnterior}:`, materiasDelSemestreAnterior.map(m => m.nombre));
-                console.log(`- Todas aprobadas: ${todasAprobadas}`);
+                //console.log(`Práctica ${asig.nombre} (semestre ${asig.semestre}):`);
+                //console.log(`- Materias del semestre ${semestreAnterior}:`, materiasDelSemestreAnterior.map(m => m.nombre));
+                //console.log(`- Todas aprobadas: ${todasAprobadas}`);
                 
                 return todasAprobadas;
             }
@@ -122,9 +122,9 @@ export async function asignarAsignaturas(asignaturasCursadas) {
             })
             .map(asig => asig.nombre);
 
-        console.log(`Semestre actual del estudiante: ${semestreActual}`);
-        console.log(`Máximo semestre permitido: ${maxSemestrePermitido}`);
-        console.log(`Total asignaturas inscribibles: ${asignaturasInscribibles.length}`);
+        //console.log(`Semestre actual del estudiante: ${semestreActual}`);
+        //console.log(`Máximo semestre permitido: ${maxSemestrePermitido}`);
+        //console.log(`Total asignaturas inscribibles: ${asignaturasInscribibles.length}`);
 
         // Para las no inscribibles: incluir TODAS las asignaturas que no están en inscribibles
         // (tanto las no disponibles como las que exceden el límite de semestres)
@@ -199,11 +199,11 @@ export async function getMallaUserService(query) {
     try {
         const { rutUser } = query;
 
-        console.log('Datos recibidos para obtener la malla del usuario:', rutUser);
+        //console.log('Datos recibidos para obtener la malla del usuario:', rutUser);
 
         const MallaUser = await mallaUser.findOne({ rutUser });
 
-        console.log('Datos obtenidos de la malla del usuario:', MallaUser);
+        //console.log('Datos obtenidos de la malla del usuario:', MallaUser);
 
         if (!MallaUser) return [null, 'Malla del usuario no encontrada'];
 
@@ -219,7 +219,7 @@ export async function updateMallaUserService(query, body) {
 
         const { rutUser } = query;
 
-        console.log('Datos recibidos para actualizar la malla del usuario (service):', body);
+        //console.log('Datos recibidos para actualizar la malla del usuario (service):', body);
 
         const userExist = await User.findOne({ rut: rutUser });
 

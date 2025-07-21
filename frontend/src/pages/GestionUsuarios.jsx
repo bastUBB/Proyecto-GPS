@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { Users } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import {
-    UserPlus,
     Loader2,
     Shield,
     User,
     GraduationCap,
     AlertCircle
 } from "lucide-react";
+import Alert from "../components/Alert";
 import PagGeneral from "../components/PagGeneral";
 import TablaGestion from "../components/TablaGestion";
+import EditarUsuario from "../components/EditarUsuario";
 
 export default function GestionUsuarios() {
     const [users, setUsers] = useState([]);
@@ -30,8 +32,17 @@ export default function GestionUsuarios() {
     });
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
-    const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+    const [alert, setAlert] = useState({ isVisible: false, type: '', title: '', message: '' });
     const navigate = useNavigate();
+
+    // Funciones helper para alertas
+    const showAlert = (type, title, message) => {
+        setAlert({ isVisible: true, type, title, message });
+    };
+
+    const hideAlert = () => {
+        setAlert({ isVisible: false, type: '', title: '', message: '' });
+    };
 
     useEffect(() => {
         checkAdminAccess();
@@ -83,7 +94,7 @@ export default function GestionUsuarios() {
                 navigate('/');
             } else {
                 const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al cargar usuarios';
-                showAlert(errorMessage, 'error');
+                showAlert('error', 'Error de acceso', errorMessage);
             }
         } finally {
             setLoading(false);
@@ -99,31 +110,35 @@ export default function GestionUsuarios() {
     };
 
     const validateForm = () => {
+        return validateUserData(formData);
+    };
+
+    const validateUserData = (data) => {
         const newErrors = {};
 
-        if (!formData.nombreCompleto.trim()) {
+        if (!data.nombreCompleto.trim()) {
             newErrors.nombreCompleto = 'El nombre es obligatorio';
         }
 
-        if (!formData.email.trim()) {
+        if (!data.email.trim()) {
             newErrors.email = 'El email es obligatorio';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
             newErrors.email = 'El email no es válido';
         }
 
-        if (!formData.rut.trim()) {
+        if (!data.rut.trim()) {
             newErrors.rut = 'El RUT es obligatorio';
-        } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(formData.rut)) {
+        } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(data.rut)) {
             newErrors.rut = 'El RUT debe tener el formato 12345678-9';
         }
 
-        if (!editingUser && !formData.password) {
+        if (!editingUser && !data.password) {
             newErrors.password = 'La contraseña es obligatoria';
-        } else if (formData.password && formData.password.length < 6) {
+        } else if (data.password && data.password.length < 6) {
             newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
         }
 
-        if (!formData.role) {
+        if (!data.role) {
             newErrors.role = 'El rol es obligatorio';
         }
 
@@ -131,17 +146,21 @@ export default function GestionUsuarios() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, userData = null) => {
         e.preventDefault();
 
-        if (!validateForm()) return;
+        // Determinar qué datos usar
+        const dataToUse = userData || formData;
+        
+        // Validar datos
+        if (!validateUserData(dataToUse)) return;
 
         setSubmitting(true);
         try {
             const token = localStorage.getItem('token');
-            const dataToSend = { ...formData };
+            const dataToSend = { ...dataToUse };
 
-            if (editingUser && !formData.password) {
+            if (editingUser && !dataToSend.password) {
                 delete dataToSend.password;
             }
 
@@ -166,11 +185,11 @@ export default function GestionUsuarios() {
             setShowModal(false);
             resetForm();
             loadUsers();
-            showAlert('Usuario guardado exitosamente', 'success');
+            showAlert('success', 'Usuario Guardado', 'Usuario guardado exitosamente');
         } catch (error) {
             console.error('Error al guardar usuario:', error);
             const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al guardar usuario';
-            showAlert(errorMessage, 'error');
+            showAlert('error', 'Error al guardar', errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -204,11 +223,11 @@ export default function GestionUsuarios() {
             setShowDeleteModal(false);
             setUserToDelete(null);
             loadUsers();
-            showAlert('Usuario eliminado exitosamente', 'success');
+            showAlert('success', 'Usuario Eliminado', 'Usuario eliminado exitosamente');
         } catch (error) {
             console.error('Error al eliminar usuario:', error);
             const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al eliminar usuario';
-            showAlert(errorMessage, 'error');
+            showAlert('error', 'Error al eliminar', errorMessage);
         } finally {
             setSubmitting(false);
         }
@@ -224,13 +243,6 @@ export default function GestionUsuarios() {
         });
         setEditingUser(null);
         setErrors({});
-    };
-
-    const showAlert = (message, type) => {
-        setAlert({ show: true, message, type });
-        setTimeout(() => {
-            setAlert({ show: false, message: '', type: '' });
-        }, 5000);
     };
 
     const getRoleIcon = (role) => {
@@ -324,12 +336,6 @@ export default function GestionUsuarios() {
         <PagGeneral>
             <div className=" p-4 sm:p-6 lg:p-8 bg-transparent">
                 <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
-                    {/* Alerta */}
-                    {alert.show && (
-                        <div className={`mb-4 p-4 rounded-lg ${alert.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}`}>
-                            {alert.message}
-                        </div>
-                    )}
 
                     {/* Título principal */}
                     <div className="mb-6">

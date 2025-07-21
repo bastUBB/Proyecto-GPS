@@ -28,7 +28,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log('UserRole actual:', userRole); // Debug
+    //console.log('UserRole actual:', userRole); // Debug
     
     // Definir páginas disponibles según el rol
     const getAvailablePages = (role) => {
@@ -52,11 +52,11 @@ export default function Home() {
         ],
         alumno: [
           ...basePages,
-          { id: "historial", route: "/historial", icon: History, label: "Historial" },
+          // { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
         estudiante: [
           ...basePages,
-          { id: "historial", route: "/historial", icon: History, label: "Historial" },
+          // { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
         director: [
           ...basePages,
@@ -65,14 +65,14 @@ export default function Home() {
         ],
       };
 
-      console.log('Páginas disponibles para rol', role, ':', roleSpecificPages[role] || basePages); // Debug
+      //console.log('Páginas disponibles para rol', role, ':', roleSpecificPages[role] || basePages); // Debug
       return roleSpecificPages[role] || basePages;
     };
 
     if (userRole) {
       const pages = getAvailablePages(userRole);
       setAvailablePages(pages);
-      console.log('Páginas configuradas:', pages); // Debug
+      //console.log('Páginas configuradas:', pages); // Debug
     }
   }, [userRole]);
 

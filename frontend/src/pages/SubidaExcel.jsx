@@ -17,11 +17,12 @@ import {
     TableHeader,
     TableRow
 } from "../components/ui/table";
-import { Upload, FileSpreadsheet, Loader2 } from "lucide-react";
+import { Upload, FileSpreadsheet, Loader2, BarChart3, Calendar } from "lucide-react";
 import * as XLSX from "xlsx";
 import Alert from "../components/Alert";
 import useAlert from "../hooks/useAlert";
 import PagGeneral from "../components/PagGeneral";
+import TablaGestion from "../components/TablaGestion";
 
 function SubidaExcel() {
     const [file, setFile] = useState(null);
@@ -79,7 +80,7 @@ function SubidaExcel() {
             formData.append("excelFile", file);
             formData.append("fileType", fileType);
 
-            console.log(`🔄 Enviando archivo de ${fileType} al servidor...`);
+            //console.log(`🔄 Enviando archivo de ${fileType} al servidor...`);
 
             // Seleccionar endpoint según el tipo de archivo
             const endpoint = fileType === 'rendimiento'
@@ -92,7 +93,7 @@ function SubidaExcel() {
                 }
             });
 
-            console.log('✅ Respuesta del servidor:', response.data);
+            //console.log('✅ Respuesta del servidor:', response.data);
 
             if (fileType === 'rendimiento') {
                 // Estructura de datos para rendimiento
@@ -118,7 +119,7 @@ function SubidaExcel() {
             }
 
             if (response.data.success) {
-                console.log('📄 Formato JSON del script:', JSON.stringify(response.data.data, null, 2));
+                //console.log('📄 Formato JSON del script:', JSON.stringify(response.data.data, null, 2));
 
                 const jsonFileInfo = response.data.jsonFile
                     ? `\nArchivo JSON generado: ${response.data.jsonFile.name}\nRuta: ${response.data.jsonFile.path}`
@@ -166,20 +167,123 @@ function SubidaExcel() {
         setData(null);
     };
 
+    // Función para cambiar tipo de archivo y limpiar datos
+    const handleFileTypeChange = (newFileType) => {
+        setFileType(newFileType);
+        // Limpiar datos anteriores cuando se cambia el tipo de archivo
+        setData(null);
+        // También limpiar el archivo seleccionado para evitar confusión
+        setFile(null);
+    };
+
     const getFileTypeInfo = () => {
         if (fileType === 'rendimiento') {
             return {
                 title: 'Datos de Rendimiento Académico',
-                icon: '📊',
-                color: 'from-green-500 to-emerald-500'
+                icon: <BarChart3 className="w-5 h-5" />,
+                color: 'from-green-500 to-emerald-500',
+                description: 'Datos de aprobación y reprobación'
             };
         } else {
             return {
                 title: 'Horarios de Asignaturas',
-                icon: '📅',
-                color: 'from-blue-500 to-cyan-500'
+                icon: <Calendar className="w-5 h-5" />,
+                color: 'from-blue-500 to-cyan-500',
+                description: 'Archivos con horarios y asignaturas'
             };
         }
+    };
+
+    // Configuración de columnas para datos de rendimiento
+    const getRendimientoColumns = () => [
+        {
+            key: 'año',
+            title: 'Año',
+            align: 'center'
+        },
+        {
+            key: 'semestre',
+            title: 'Semestre',
+            align: 'center'
+        },
+        {
+            key: 'codigoSeccion',
+            title: 'Código',
+            align: 'left'
+        },
+        {
+            key: 'nombreAsignatura',
+            title: 'Asignatura',
+            align: 'left'
+        },
+        {
+            key: 'porcentajeAprobacion',
+            title: '% Aprobación',
+            align: 'center',
+            render: (item) => (
+                <span className="font-semibold text-green-700">
+                    {item.porcentajeAprobacion}
+                </span>
+            )
+        },
+        {
+            key: 'inscritos',
+            title: 'Inscritos',
+            align: 'center'
+        },
+        {
+            key: 'aprobados',
+            title: 'Aprobados',
+            align: 'center'
+        }
+    ];
+
+    // Configuración de columnas para datos de horario
+    const getHorarioColumns = () => [
+        {
+            key: 'asignaturaCodigo',
+            title: 'Código',
+            align: 'left'
+        },
+        {
+            key: 'seccion',
+            title: 'Sección',
+            align: 'center'
+        },
+        {
+            key: 'asignatura',
+            title: 'Asignatura',
+            align: 'left'
+        },
+        {
+            key: 'docente',
+            title: 'Docente',
+            align: 'left'
+        },
+        {
+            key: 'bloques',
+            title: 'Bloques',
+            align: 'left',
+            render: (item) => (
+                <div className="space-y-1">
+                    {item.bloques.map((bloque, bIndex) => (
+                        <div key={bIndex} className="text-xs bg-blue-100 px-2 py-1 rounded">
+                            {bloque.tipo}: {bloque.dia} {bloque.horaInicio}-{bloque.horaFin}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+    ];
+
+    // Procesar datos para agregar ID único requerido por TablaGestion
+    const getProcessedData = () => {
+        if (!data?.subjects) return [];
+        
+        return data.subjects.map((subject, index) => ({
+            ...subject,
+            id: index + 1 // Agregar ID único
+        }));
     };
 
     return (
@@ -211,10 +315,12 @@ function SubidaExcel() {
                                     ? 'border-blue-500 bg-blue-50'
                                     : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
                                     }`}
-                                onClick={() => setFileType('horario')}
+                                onClick={() => handleFileTypeChange('horario')}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="text-2xl">📅</div>
+                                    <div className="text-blue-600">
+                                        <Calendar className="w-8 h-8" />
+                                    </div>
                                     <div>
                                         <h4 className="font-semibold text-blue-900">Horarios</h4>
                                         <p className="text-sm text-blue-700">Archivos con horarios y asignaturas</p>
@@ -227,10 +333,12 @@ function SubidaExcel() {
                                     ? 'border-green-500 bg-green-50'
                                     : 'border-gray-300 hover:border-green-300 hover:bg-green-50'
                                     }`}
-                                onClick={() => setFileType('rendimiento')}
+                                onClick={() => handleFileTypeChange('rendimiento')}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="text-2xl">📊</div>
+                                    <div className="text-green-600">
+                                        <BarChart3 className="w-8 h-8" />
+                                    </div>
                                     <div>
                                         <h4 className="font-semibold text-green-900">Rendimiento</h4>
                                         <p className="text-sm text-green-700">Datos de aprobación y reprobación</p>
@@ -243,7 +351,7 @@ function SubidaExcel() {
                     <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
                         <div className={`bg-gradient-to-r ${getFileTypeInfo().color} text-white p-3 sm:p-4 rounded-lg mb-4`}>
                             <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                                <span className="text-xl">{getFileTypeInfo().icon}</span>
+                                {getFileTypeInfo().icon}
                                 {getFileTypeInfo().title}
                             </h2>
                             <p className="text-white/90 text-xs sm:text-sm mt-1">
@@ -324,19 +432,20 @@ function SubidaExcel() {
                     </div>
 
                     {data && (
-                        <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+                        // <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+                        <div>
+                            {/* <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
                                 <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                                    <span className="text-xl">{getFileTypeInfo().icon}</span>
+                                    {getFileTypeInfo().icon}
                                     Datos Procesados - {getFileTypeInfo().title}
                                 </h2>
                                 <p className="text-cyan-100 text-xs sm:text-sm mt-1">
                                     Archivo: {data.fileName} | Total: {data.totalSubjects} {fileType === 'rendimiento' ? 'registros' : 'asignaturas'}
                                 </p>
-                            </div>
+                            </div> */}
 
                             <div className="p-4 sm:p-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     <div className="bg-blue-50 p-4 rounded-lg">
                                         <div className="flex items-center gap-2">
                                             <FileSpreadsheet className="w-5 h-5 text-blue-600" />
@@ -356,10 +465,10 @@ function SubidaExcel() {
                                             {data.jsonFile ? data.jsonFile.name : 'Ver abajo ↓'}
                                         </p>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 {/* Información del archivo JSON generado */}
-                                {data.jsonFile && (
+                                {/* {data.jsonFile && (
                                     <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
                                         <h4 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
                                             <span className="text-green-600">💾</span>
@@ -376,106 +485,21 @@ function SubidaExcel() {
                                             </div>
                                         </div>
                                     </div>
-                                )}
+                                )} */}
 
                                 <div className="space-y-3">
-                                    <h3 className="text-base font-semibold text-blue-900 flex items-center gap-2">
-                                        <span className="text-xl">{getFileTypeInfo().icon}</span>
-                                        {fileType === 'rendimiento' ? 'Datos de Rendimiento' : 'Asignaturas Extraídas'}
-                                    </h3>
-
                                     {data.subjects && data.subjects.length > 0 ? (
-                                        <div className="overflow-x-auto bg-white rounded-lg border border-blue-200">
-                                            {fileType === 'rendimiento' ? (
-                                                // Tabla para datos de rendimiento
-                                                <Table className="w-full">
-                                                    <TableHeader>
-                                                        <TableRow className="bg-green-50">
-                                                            <TableHead className="text-green-900 font-semibold">Año</TableHead>
-                                                            <TableHead className="text-green-900 font-semibold">Semestre</TableHead>
-                                                            <TableHead className="text-green-900 font-semibold">Código</TableHead>
-                                                            <TableHead className="text-green-900 font-semibold">Asignatura</TableHead>
-                                                            <TableHead className="text-green-900 font-semibold">% Aprobación</TableHead>
-                                                            <TableHead className="text-green-900 font-semibold">Inscritos</TableHead>
-                                                            <TableHead className="text-green-900 font-semibold">Aprobados</TableHead>
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {data.subjects.slice(0, 20).map((subject, index) => (
-                                                            <TableRow key={index} className="hover:bg-green-50">
-                                                                <TableCell className="font-medium text-green-900">
-                                                                    {subject.año}
-                                                                </TableCell>
-                                                                <TableCell className="text-green-700">
-                                                                    {subject.semestre}
-                                                                </TableCell>
-                                                                <TableCell className="text-green-700">
-                                                                    {subject.codigoSeccion}
-                                                                </TableCell>
-                                                                <TableCell className="text-green-700">
-                                                                    {subject.nombreAsignatura}
-                                                                </TableCell>
-                                                                <TableCell className="text-green-700 font-semibold">
-                                                                    {subject.porcentajeAprobacion}
-                                                                </TableCell>
-                                                                <TableCell className="text-green-700">
-                                                                    {subject.inscritos}
-                                                                </TableCell>
-                                                                <TableCell className="text-green-700">
-                                                                    {subject.aprobados}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                </Table>
-                                            ) : (
-                                                // Tabla para datos de horario (existente)
-                                                <Table className="w-full">
-                                                    <TableHeader>
-                                                        <TableRow className="bg-blue-50">
-                                                            <TableHead className="text-blue-900 font-semibold">Código</TableHead>
-                                                            <TableHead className="text-blue-900 font-semibold">Sección</TableHead>
-                                                            <TableHead className="text-blue-900 font-semibold">Asignatura</TableHead>
-                                                            <TableHead className="text-blue-900 font-semibold">Docente</TableHead>
-                                                            <TableHead className="text-blue-900 font-semibold">Bloques</TableHead>
-                                                        </TableRow>
-                                                    </TableHeader>
-                                                    <TableBody>
-                                                        {data.subjects.map((subject, index) => (
-                                                            <TableRow key={index} className="hover:bg-blue-50">
-                                                                <TableCell className="font-medium text-blue-900">
-                                                                    {subject.asignaturaCodigo}
-                                                                </TableCell>
-                                                                <TableCell className="text-blue-700">
-                                                                    {subject.seccion}
-                                                                </TableCell>
-                                                                <TableCell className="text-blue-700">
-                                                                    {subject.asignatura}
-                                                                </TableCell>
-                                                                <TableCell className="text-blue-700">
-                                                                    {subject.docente}
-                                                                </TableCell>
-                                                                <TableCell className="text-blue-700">
-                                                                    <div className="space-y-1">
-                                                                        {subject.bloques.map((bloque, bIndex) => (
-                                                                            <div key={bIndex} className="text-xs bg-gray-100 px-2 py-1 rounded">
-                                                                                {bloque.tipo}: {bloque.dia} {bloque.horaInicio}-{bloque.horaFin}
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                </Table>
-                                            )}
-
-                                            {data.subjects.length > 20 && fileType === 'rendimiento' && (
-                                                <div className="p-4 bg-gray-50 text-center text-sm text-gray-600">
-                                                    Mostrando 20 de {data.subjects.length} registros. Ver archivo JSON para datos completos.
-                                                </div>
-                                            )}
-                                        </div>
+                                        <TablaGestion
+                                            data={getProcessedData()}
+                                            columns={fileType === 'rendimiento' ? getRendimientoColumns() : getHorarioColumns()}
+                                            title={fileType === 'rendimiento' ? 'Datos de Rendimiento Académico' : 'Asignaturas Extraídas'}
+                                            icon={getFileTypeInfo().icon}
+                                            searchPlaceholder={fileType === 'rendimiento' ? 'Buscar por asignatura, código...' : 'Buscar por asignatura, docente...'}
+                                            showActions={false}
+                                            showCreateButton={false}
+                                            itemsPerPage={20}
+                                            emptyMessage="No se encontraron datos para mostrar"
+                                        />
                                     ) : (
                                         <div className="text-center py-8 text-gray-500">
                                             <FileSpreadsheet className="w-12 h-12 mx-auto mb-4 text-gray-400" />

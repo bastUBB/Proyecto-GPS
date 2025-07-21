@@ -16,8 +16,8 @@ const router = Router();
 router.use(authenticateJWT);
 
 router
-    .get('/detail', authorizeRoles("administrador", "admin", "director de departamento", "alumno", "docente"), getAsignatura) 
-    .get('/', authorizeRoles("administrador", "admin", "director de departamento", "alumno", "docente"), getAllAsignaturas) 
+    .get('/detail', authorizeRoles("administrador", "admin", "director de departamento", "alumno", "profesor"), getAsignatura) 
+    .get('/', authorizeRoles("administrador", "admin", "director de departamento", "alumno", "profesor"), getAllAsignaturas) 
     .post('/', authorizeRoles("administrador", "admin", "director de departamento"), createAsignatura) 
     .put('/:id', authorizeRoles("administrador", "admin", "director de departamento"), updateAsignatura) 
     .delete('/:id', authorizeRoles("administrador", "admin", "director de departamento"), deleteAsignatura) 

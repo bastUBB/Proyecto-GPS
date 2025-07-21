@@ -90,12 +90,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     
     try {
         const extractedSubjects = processExcelFromPath(excelPath);
-        console.log('✅ Extracción completada');
-        console.log(`📊 Total de asignaturas extraídas: ${extractedSubjects.length}`);
+        //console.log('✅ Extracción completada');
+        //console.log(`📊 Total de asignaturas extraídas: ${extractedSubjects.length}`);
         
         // Guardar como JSON
         fs.writeFileSync('output.json', JSON.stringify(extractedSubjects, null, 2), 'utf8');
-        console.log('💾 Datos guardados en output.json');
+        //console.log('💾 Datos guardados en output.json');
     } catch (error) {
         console.error('❌ Error en la extracción:', error);
     }
