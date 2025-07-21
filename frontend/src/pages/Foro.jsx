@@ -6,6 +6,7 @@ import { useAdminEvaluaciones } from "../hooks/useAdminEvaluaciones";
 import { UserContext } from '../../context/userContext';
 import { Star, User, BookOpen, Calendar, MessageSquare, Bell, Trash2, CheckCircle, XCircle, Clock, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import HelpTooltip from "../components/PuntoAyuda";
 
 
 export default function Foro() {
@@ -80,12 +81,12 @@ export default function Foro() {
         headers: getAuthHeaders(),
         params: { role: 'profesor' }
       });
-      
+
       // Filtrar solo usuarios con rol profesor o docente
-      const docentesFiltrados = (response.data.data || []).filter(usuario => 
+      const docentesFiltrados = (response.data.data || []).filter(usuario =>
         usuario.role === 'profesor' || usuario.role === 'docente'
       );
-      
+
       setDocentes(docentesFiltrados);
     } catch (error) {
       setError(error.response?.data?.message || 'Error al cargar docentes');
@@ -141,8 +142,8 @@ export default function Foro() {
 
       updateEvaluacionLocal(evaluacionId, { estado: 'aprobada' });
 
-      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`, 
-        { estado: 'aprobada' }, 
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`,
+        { estado: 'aprobada' },
         { headers: getAuthHeaders() }
       );
 
@@ -173,8 +174,8 @@ export default function Foro() {
 
       updateEvaluacionLocal(evaluacionId, { estado: 'rechazada' });
 
-      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`, 
-        { estado: 'rechazada' }, 
+      const response = await axios.patch(`/api/evaluacionDocente/detail?_id=${evaluacionId}`,
+        { estado: 'rechazada' },
         { headers: getAuthHeaders() }
       );
 
@@ -570,49 +571,57 @@ export default function Foro() {
 
           {user.role === 'admin' && (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Clock className="w-5 h-5 text-yellow-600" />
-                    <h3 className="font-semibold text-gray-800">Pendientes</h3>
-                  </div>
-                  <p className="text-2xl font-bold text-yellow-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
-                  </p>
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-2 rounded-lg mb-4">
+                  <h2 className="text-lg font-semibold text-white mb-4">
+                    Evaluaciones
+                  </h2>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-5 h-5 text-yellow-600" />
+                      <h3 className="font-semibold text-gray-800">Pendientes</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-yellow-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'pendiente').length}
+                    </p>
+                  </div>
 
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <h3 className="font-semibold text-gray-800">Aprobadas</h3>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CheckCircle className="w-5 h-5 text-green-600" />
+                      <h3 className="font-semibold text-gray-800">Aprobadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-green-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-green-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <XCircle className="w-5 h-5 text-red-600" />
-                    <h3 className="font-semibold text-gray-800">Rechazadas</h3>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <XCircle className="w-5 h-5 text-red-600" />
+                      <h3 className="font-semibold text-gray-800">Rechazadas</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-red-600">
+                      {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-red-600">
-                    {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
-                  </p>
-                </div>
-                <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-5 h-5 text-blue-600" />
-                    <h3 className="font-semibold text-gray-800">Total</h3>
+                  <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="w-5 h-5 text-blue-600" />
+                      <h3 className="font-semibold text-gray-800">Total</h3>
+                    </div>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {evaluacionesAdmin.length}
+                    </p>
                   </div>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {evaluacionesAdmin.length}
-                  </p>
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Filtros de Búsqueda</h3>
-                <div className="mb-4">
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-2 rounded-lg mb-4">
+                  <h3 className="text-lg font-semibold text-white mb-4">Filtros de Búsqueda</h3>
+                </div>                  <div className="mb-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -693,134 +702,135 @@ export default function Foro() {
                     </button>
                   </div>
                 )}
-              </div>
 
-              {loadingAdmin ? (
-                <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  <p className="mt-2 text-gray-600">Cargando evaluaciones...</p>
-                </div>
-              ) : evaluacionesAdmin.length === 0 ? (
-                <div className="text-center py-8">
-                  <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {getTituloFiltros()}
-                    </h3>
-                    <button
-                      onClick={reloadEvaluaciones}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
-                    >
-                      Actualizar
-                    </button>
+
+                {loadingAdmin ? (
+                  <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <p className="mt-2 text-gray-600">Cargando evaluaciones...</p>
                   </div>
-
-                  {getEvaluacionesFiltradas().length === 0 ? (
-                    <div className="text-center py-8">
-                      <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
-                    </div>
-                  ) : (
-                    getEvaluacionesFiltradas().map((evaluacion) => (
-                      <div
-                        key={evaluacion._id}
-                        className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
-                          evaluacion.estado === 'aprobada' ? 'border-green-200' :
-                            'border-red-200'
-                          }`}
+                ) : evaluacionesAdmin.length === 0 ? (
+                  <div className="text-center py-8">
+                    <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {getTituloFiltros()}
+                      </h3>
+                      <button
+                        onClick={reloadEvaluaciones}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm"
                       >
-                        <div className="absolute top-4 right-4 flex items-center gap-2">
-                          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
-                            {getStatusIcon(evaluacion.estado)}
-                            <span className="capitalize">{evaluacion.estado}</span>
-                          </div>
-                        </div>
+                        Actualizar
+                      </button>
+                    </div>
 
-                        <div className="flex justify-between items-start mb-4 pr-32">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <BookOpen className="w-4 h-4 text-blue-600" />
-                              <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <User className="w-4 h-4 text-gray-600" />
-                              <span className="text-gray-700">
-                                Profesor: <strong>{evaluacion.docente}</strong>
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <User className="w-4 h-4 text-green-600" />
-                              <span className="text-gray-700">
-                                {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <div className="flex items-center gap-1 mb-1">
-                              {renderStars(evaluacion.calificacion)}
-                              <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-sm text-gray-500">
-                              <Calendar className="w-3 h-3" />
-                              {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="border-t pt-4 mb-4">
-                          <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <div className="text-xs text-gray-500 uppercase tracking-wide">
-                            {evaluacion.visibilidad}
-                          </div>
-
-                          <div className="flex gap-2">
-                            {evaluacion.estado === 'pendiente' && (
-                              <>
-                                <button
-                                  onClick={() => handleAprobarEvaluacion(evaluacion._id)}
-                                  className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
-                                  disabled={loading}
-                                >
-                                  <CheckCircle className="w-4 h-4" />
-                                  Aprobar
-                                </button>
-                                <button
-                                  onClick={() => handleRechazarEvaluacion(evaluacion._id)}
-                                  className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
-                                  disabled={loading}
-                                >
-                                  <XCircle className="w-4 h-4" />
-                                  Rechazar
-                                </button>
-                              </>
-                            )}
-
-                            <button
-                              onClick={() => handleDeleteEvaluacion(evaluacion._id)}
-                              className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
-                              disabled={loading}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                              Eliminar
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="mt-2 text-xs text-gray-400">
-                          ID: {evaluacion._id}
-                        </div>
+                    {getEvaluacionesFiltradas().length === 0 ? (
+                      <div className="text-center py-8">
+                        <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 text-lg">No hay evaluaciones en el sistema.</p>
                       </div>
-                    ))
-                  )}
-                </div>
-              )}
+                    ) : (
+                      getEvaluacionesFiltradas().map((evaluacion) => (
+                        <div
+                          key={evaluacion._id}
+                          className={`bg-white p-6 rounded-lg shadow-md border-2 relative ${evaluacion.estado === 'pendiente' ? 'border-yellow-200' :
+                            evaluacion.estado === 'aprobada' ? 'border-green-200' :
+                              'border-red-200'
+                            }`}
+                        >
+                          <div className="absolute top-4 right-4 flex items-center gap-2">
+                            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(evaluacion.estado)}`}>
+                              {getStatusIcon(evaluacion.estado)}
+                              <span className="capitalize">{evaluacion.estado}</span>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-start mb-4 pr-32">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <BookOpen className="w-4 h-4 text-blue-600" />
+                                <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <User className="w-4 h-4 text-gray-600" />
+                                <span className="text-gray-700">
+                                  Profesor: <strong>{evaluacion.docente}</strong>
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-2">
+                                <User className="w-4 h-4 text-green-600" />
+                                <span className="text-gray-700">
+                                  {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : `Alumno: ${evaluacion.alumno}`}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                              <div className="flex items-center gap-1 mb-1">
+                                {renderStars(evaluacion.calificacion)}
+                                <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
+                              </div>
+                              <div className="flex items-center gap-1 text-sm text-gray-500">
+                                <Calendar className="w-3 h-3" />
+                                {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="border-t pt-4 mb-4">
+                            <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
+                          </div>
+
+                          <div className="flex justify-between items-center">
+                            <div className="text-xs text-gray-500 uppercase tracking-wide">
+                              {evaluacion.visibilidad}
+                            </div>
+
+                            <div className="flex gap-2">
+                              {evaluacion.estado === 'pendiente' && (
+                                <>
+                                  <button
+                                    onClick={() => handleAprobarEvaluacion(evaluacion._id)}
+                                    className="flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm"
+                                    disabled={loading}
+                                  >
+                                    <CheckCircle className="w-4 h-4" />
+                                    Aprobar
+                                  </button>
+                                  <button
+                                    onClick={() => handleRechazarEvaluacion(evaluacion._id)}
+                                    className="flex items-center gap-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm"
+                                    disabled={loading}
+                                  >
+                                    <XCircle className="w-4 h-4" />
+                                    Rechazar
+                                  </button>
+                                </>
+                              )}
+
+                              <button
+                                onClick={() => handleDeleteEvaluacion(evaluacion._id)}
+                                className="flex items-center gap-1 px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition text-sm"
+                                disabled={loading}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Eliminar
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="mt-2 text-xs text-gray-400">
+                            ID: {evaluacion._id}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

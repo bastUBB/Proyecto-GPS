@@ -4,6 +4,7 @@ import PagGeneral from "../components/PagGeneral";
 import Colores from "../components/Colores";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
+import HelpTooltip from "../components/PuntoAyuda";
 
 
 const mallaOriginal = [
@@ -515,7 +516,7 @@ const MallaCurricular = () => {
             <button
               key={asig.id || asig.nombre} // Usar ID único como key
               type="button"
-              className={`w-28 min-h-[4rem] border text-[11px] rounded shadow-sm overflow-visible p-1 text-center mb-1 transition-all duration-200 ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
+              className={`w-full aspect-[3/2] border text-[11px] rounded shadow-sm overflow-visible cursor-pointer px-2 py-1 text-center ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
                 }`}
               onClick={() => isClickable && handleAsignaturaClick(asig.nombre)}
               title={
@@ -530,8 +531,8 @@ const MallaCurricular = () => {
                     : "Haz clic para cambiar color"
               }
             >
-              <p className="font-medium break-words leading-tight">{asig.nombre}</p>
-              <p className="opacity-80">Créditos: {asig.creditos}</p>
+              <p className="font-medium break-words leading-tight text-blue-900">{asig.nombre}</p>
+              <p className="opacity-80 text-blue-700">Créditos: {asig.creditos}</p>
               {isSystemState && user && user.role === 'alumno' && (
                 <div className="mt-1">
                   {asig.estado === 'completada' && <span className="text-xs">✓</span>}
@@ -577,6 +578,12 @@ const MallaCurricular = () => {
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
                 Herramientas y Estados de Malla
+                <HelpTooltip className="text-white hover:text-yellow-300">
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                  <p className="text-gray-600 text-xs">
+                    Personaliza tu progreso académico y descarga tu malla.
+                  </p>
+                </HelpTooltip>
               </h2>
             </div>
 
@@ -686,16 +693,12 @@ const MallaCurricular = () => {
                 <HelpTooltip className="text-white hover:text-yellow-300">
                   <h3 className="text-blue-700 font-bold text-sm mb-1">Guía de personalización académica</h3>
                   <p className="text-gray-600 text-xs">
-                    Haz Clic en las asignaturas para cambiar su color
+                    {user && user.role === 'alumno'
+                      ? 'Haz clic en las asignaturas azules o verdes para alternar: Inscribible ↔ Aprobada'
+                      : "Haz Clic en las asignaturas para cambiar su color"}
                   </p>
                 </HelpTooltip>
               </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                {user && user.role === 'alumno'
-                  ? 'Haz clic en las asignaturas azules o verdes para alternar: Inscribible ↔ Aprobada'
-                  : 'Clic en las asignaturas para cambiar su color'
-                }
-              </p>
             </div>
 
             <div className="p-4 sm:p-6">
@@ -709,7 +712,7 @@ const MallaCurricular = () => {
 
           {/* Información adicional */}
           <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-2 rounded-lg mb-4 hide-in-pdf">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                 <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
                 {user && user.role === 'alumno' ? 'Mi Progreso Académico' : 'Información del Programa'}
@@ -762,21 +765,21 @@ const MallaCurricular = () => {
             ) : (
               // Información general del programa
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Duración</p>
-                  <p className="text-blue-700">10 semestres</p>
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <p className="text-2xl font-bold text-blue-600">Duración</p>
+                  <p className="text-blue-600">10 semestres</p>
                 </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Total Créditos</p>
-                  <p className="text-blue-700">{mallaOriginal.reduce((acc, asig) => acc + asig.creditos, 0)} créditos</p>
+                <div className="bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                  <p className="text-2xl font-bold text-cyan-900">Total Créditos</p>
+                  <p className="text-cyan-600">{mallaOriginal.reduce((acc, asig) => acc + asig.creditos, 0)} créditos</p>
                 </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Asignaturas</p>
-                  <p className="text-blue-700">{mallaOriginal.length} asignaturas</p>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <p className="text-2xl font-bold text-green-900">Asignaturas</p>
+                  <p className="text-green-600">{mallaOriginal.length} asignaturas</p>
                 </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Prácticas</p>
-                  <p className="text-blue-700">2 prácticas profesionales</p>
+                <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                  <p className="text-2xl font-bold text-purple-900">Prácticas</p>
+                  <p className="text-purple-600">2 prácticas profesionales</p>
                 </div>
               </div>
             )}
