@@ -683,12 +683,12 @@ const MallaCurricular = () => {
                   className="w-5 h-5"
                 />
                 Plan de Estudios
-                <HelpTooltip className="text-white hover:text-yellow-300">
+                {/* <HelpTooltip className="text-white hover:text-yellow-300">
                   <h3 className="text-blue-700 font-bold text-sm mb-1">Guía de personalización académica</h3>
                   <p className="text-gray-600 text-xs">
                     Haz Clic en las asignaturas para cambiar su color
                   </p>
-                </HelpTooltip>
+                </HelpTooltip> */}
               </h2>
               <p className="text-blue-100 text-xs sm:text-sm mt-1">
                 {user && user.role === 'alumno'
