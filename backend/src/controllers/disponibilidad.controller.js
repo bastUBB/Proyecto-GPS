@@ -4,22 +4,35 @@ import {
     eliminarDisponibilidad as eliminarDisponibilidadService 
 } from '../services/disponibilidad.service.js';
 import User from '../models/user.model.js';
+import mongoose from 'mongoose';
 import { 
     disponibilidadBodyValidation, 
     disponibilidadQueryValidation 
 } from '../validations/disponibilidad.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
 
+// Función auxiliar para validar ObjectId
+const isValidObjectId = (id) => {
+    return mongoose.Types.ObjectId.isValid(id);
+};
+
 export const subirDisponibilidad = async (req, res) => {
     try {
         const { bloques } = req.body;
-        const profesorId = req.user?.id || req.body.profesorId;
+        const profesorId = req.user?.id || req.user?._id;
         
-        // Validar datos de entrada
-        const datosValidar = { profesor: profesorId, bloques };
-        const { value, error } = disponibilidadBodyValidation.validate(datosValidar);
+        console.log('Datos recibidos:', { bloques, profesorId, user: req.user });
+        
+        // Validar que profesorId sea un ObjectId válido
+        if (!isValidObjectId(profesorId)) {
+            return handleErrorClient(res, 400, "ID de profesor inválido");
+        }
+        
+        // Validar solo los bloques (no incluir profesor en la validación)
+        const { value, error } = disponibilidadBodyValidation.validate({ bloques });
         
         if (error) {
+            console.log('Error de validación:', error.details);
             return handleErrorClient(res, 400, "Error de validación", error.details.map(detail => detail.message));
         }
         
@@ -30,8 +43,9 @@ export const subirDisponibilidad = async (req, res) => {
         }
 
         // Guardar disponibilidad
-        const disponibilidad = await guardarDisponibilidad(profesorId, bloques);
+        const disponibilidad = await guardarDisponibilidad(profesorId, value.bloques);
         
+        console.log('Disponibilidad guardada exitosamente:', disponibilidad);
         handleSuccess(res, 200, 'Disponibilidad guardada exitosamente', disponibilidad);
     } catch (error) {
         console.error('Error al guardar disponibilidad:', error);
@@ -43,19 +57,18 @@ export const verDisponibilidad = async (req, res) => {
     try {
         const { profesorId } = req.query;
         
-        // Validar parámetros de consulta si se proporciona profesorId
-        if (profesorId) {
-            const { value, error } = disponibilidadQueryValidation.validate({ profesor: profesorId });
-            
-            if (error) {
-                return handleErrorClient(res, 400, "Error de validación", error.details.map(detail => detail.message));
-            }
+        // Si no se proporciona profesorId, usar el ID del usuario autenticado
+        const idProfesor = profesorId || req.user?.id || req.user?._id;
+        
+        // Validar que profesorId sea un ObjectId válido
+        if (!isValidObjectId(idProfesor)) {
+            return handleErrorClient(res, 400, "ID de profesor inválido");
         }
         
         // Obtener disponibilidad
-        const disponibilidad = await obtenerDisponibilidad(profesorId);
+        const disponibilidad = await obtenerDisponibilidad(idProfesor);
         
-        if (!disponibilidad || (Array.isArray(disponibilidad) && disponibilidad.length === 0)) {
+        if (!disponibilidad) {
             return handleErrorClient(res, 404, 'No se encontró disponibilidad');
         }
         
@@ -70,11 +83,9 @@ export const eliminarDisponibilidad = async (req, res) => {
     try {
         const { profesorId } = req.params;
         
-        // Validar parámetros
-        const { value, error } = disponibilidadQueryValidation.validate({ profesor: profesorId });
-        
-        if (error) {
-            return handleErrorClient(res, 400, "Error de validación", error.details.map(detail => detail.message));
+        // Validar que profesorId sea un ObjectId válido
+        if (!isValidObjectId(profesorId)) {
+            return handleErrorClient(res, 400, "ID de profesor inválido");
         }
         
         // Verificar que el usuario sea profesor
