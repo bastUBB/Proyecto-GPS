@@ -48,13 +48,13 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       // Usar el endpoint con filtro por rol
       const response = await axios.get(
-        'http://localhost:5500/api/users/filter?role=profesor', 
+        'http://localhost:5500/api/users/filter?role=profesor',
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         setProfesores(response.data.data);
         console.log('Profesores cargados:', response.data.data);
@@ -82,12 +82,12 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       const response = await axios.get(
-        `http://localhost:5500/api/disponibilidad?profesorId=${profesorId}`, 
+        `http://localhost:5500/api/disponibilidad?profesorId=${profesorId}`,
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         // Convertir los bloques del backend al formato de disponibilidad del frontend
         const disponibilidadFormateada = {};
@@ -131,12 +131,12 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       const response = await axios.get(
-        'http://localhost:5500/api/disponibilidad', 
+        'http://localhost:5500/api/disponibilidad',
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         // Convertir los bloques del backend al formato de disponibilidad del frontend
         const disponibilidadFormateada = {};
@@ -180,7 +180,7 @@ export default function SugerenciaHorarios() {
           const [dia, horaInicio] = key.split('-');
           const horaInicioIndex = horasDisponibles.indexOf(horaInicio);
           const horaFin = horasDisponibles[horaInicioIndex + 1] || horaInicio;
-          
+
           bloques.push({
             dia,
             horaInicio,
@@ -208,7 +208,7 @@ export default function SugerenciaHorarios() {
       console.error('Error al guardar disponibilidad:', error);
       console.error('Respuesta del servidor:', error.response?.data);
       console.error('Código de estado:', error.response?.status);
-      
+
       if (error.response?.status === 401) {
         setMensaje('No tienes autorización para realizar esta acción');
       } else if (error.response?.status === 403) {
@@ -268,7 +268,7 @@ export default function SugerenciaHorarios() {
       ...prev,
       [key]: !prev[key]
     }));
-    
+
     // Para profesores, no guardar en localStorage ya que se maneja en el backend
     if (user?.role !== 'profesor') {
       // Guardar en localStorage para otros roles
@@ -364,13 +364,12 @@ export default function SugerenciaHorarios() {
 
             {/* Mensajes */}
             {mensaje && (
-              <div className={`p-4 rounded-lg text-center ${
-                mensaje.includes('exitosamente') || mensaje.includes('cargado') 
-                  ? 'bg-green-100 text-green-700 border border-green-300' 
-                  : mensaje.includes('no ha configurado') 
+              <div className={`p-4 rounded-lg text-center ${mensaje.includes('exitosamente') || mensaje.includes('cargado')
+                  ? 'bg-green-100 text-green-700 border border-green-300'
+                  : mensaje.includes('no ha configurado')
                     ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
                     : 'bg-red-100 text-red-700 border border-red-300'
-              }`}>
+                }`}>
                 <div className="flex items-center justify-center gap-2">
                   {mensaje.includes('exitosamente') || mensaje.includes('cargado') ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -424,11 +423,10 @@ export default function SugerenciaHorarios() {
                         <div
                           key={profesor._id}
                           onClick={() => seleccionarProfesor(profesor)}
-                          className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${
-                            profesorSeleccionado?._id === profesor._id
+                          className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${profesorSeleccionado?._id === profesor._id
                               ? 'bg-blue-50 border-blue-500 shadow-md'
                               : 'bg-gray-50 border-gray-200 hover:bg-blue-50'
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center justify-between">
                             <div>
@@ -509,11 +507,10 @@ export default function SugerenciaHorarios() {
                                 return (
                                   <td key={key} className="border border-blue-200 p-1">
                                     <div
-                                      className={`w-full h-6 rounded transition-colors ${
-                                        isDisponible
+                                      className={`w-full h-6 rounded transition-colors ${isDisponible
                                           ? 'bg-green-500'
                                           : 'bg-gray-200'
-                                      }`}
+                                        }`}
                                       title={isDisponible ? 'Disponible' : 'No disponible'}
                                     />
                                   </td>
@@ -553,7 +550,7 @@ export default function SugerenciaHorarios() {
     return (
       <PagGeneral>
         <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
-          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+          <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
             {/* Encabezado para profesores */}
             <div className="text-center space-y-1 sm:space-y-2">
               <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
@@ -566,9 +563,8 @@ export default function SugerenciaHorarios() {
 
             {/* Mensajes */}
             {mensaje && (
-              <div className={`p-4 rounded-lg text-center ${
-                mensaje.includes('exitosamente') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-              }`}>
+              <div className={`p-4 rounded-lg text-center ${mensaje.includes('exitosamente') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>
                 {mensaje}
               </div>
             )}
@@ -613,11 +609,10 @@ export default function SugerenciaHorarios() {
                               <button
                                 onClick={() => toggleDisponibilidad(dia, hora)}
                                 disabled={loading}
-                                className={`w-full h-8 rounded transition-colors ${
-                                  isDisponible
+                                className={`w-full h-8 rounded transition-colors ${isDisponible
                                     ? 'bg-green-500 hover:bg-green-600'
                                     : 'bg-gray-200 hover:bg-gray-300'
-                                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                  } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 title={isDisponible ? 'Disponible' : 'No disponible'}
                               />
                             </td>
@@ -634,9 +629,8 @@ export default function SugerenciaHorarios() {
                 <button
                   onClick={guardarDisponibilidadProfesor}
                   disabled={loading}
-                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 mx-auto ${
-                    loading ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 mx-auto ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                 >
                   {loading ? (
                     <>
