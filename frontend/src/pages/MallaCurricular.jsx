@@ -734,7 +734,7 @@ const MallaCurricular = () => {
                       : 'Haz clic en las asignaturas para cambiar su color y personalizar tu vista.'
                     }
                   </p>
-                </HelpTooltip>
+                </HelpTooltip> */}
               </h2>
               <p className="text-blue-100 text-xs sm:text-sm mt-1">
                 {/* {user && user.role === 'alumno'
