@@ -41,7 +41,10 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("Login attempt with email:", email);
+        console.log("Login attempt with password:", password);
         const { error } = loginValidation.validate(req.body);
+        console.log(error);
         if (error) {
             return res.status(400).json({
                 error: error.details[0].message

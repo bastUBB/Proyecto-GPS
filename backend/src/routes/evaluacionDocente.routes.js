@@ -13,10 +13,10 @@ const router = Router();
 router.use(authenticateJWT);
 
 router
-    .get('/detail', authorizeRoles('docente', 'profesor', 'admin'), getEvaluacionDocente)
-    .get('/', authorizeRoles('admin'), getAllEvaluacionesDocente)
+    .get('/detail', authorizeRoles('docente', 'profesor', 'admin', 'director'), getEvaluacionDocente)
+    .get('/', authorizeRoles('admin', 'director'), getAllEvaluacionesDocente)
     .post('/', authorizeRoles('alumno'), createEvaluacionDocente)
-    .patch('/detail', authorizeRoles('alumno', 'admin'), updateEvaluacionDocente)
-    .delete('/detail', authorizeRoles('admin'), deleteEvaluacionDocente);
+    .patch('/detail', authorizeRoles('alumno', 'admin', 'director'), updateEvaluacionDocente)
+    .delete('/detail', authorizeRoles('admin', 'director'), deleteEvaluacionDocente);
 
 export default router;

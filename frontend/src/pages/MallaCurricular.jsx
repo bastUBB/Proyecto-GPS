@@ -555,7 +555,7 @@ const MallaCurricular = () => {
               {/* Símbolo de fondo */}
               {getSymbol() && (
                 <span
-                  className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none hide-in-pdf"
+                  className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none"
                   style={{
                     opacity: 0.18, // más transparente
                     zIndex: 0, // fondo
@@ -580,272 +580,273 @@ const MallaCurricular = () => {
   return (
     <PagGeneral>
       <div className="p-4 sm:p-6 lg:p-8 ">
-        <div ref={mallaRef} data-pdf-content className="malla-container w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 ">
-          {/* Encabezado */}
-          <div className="text-center space-y-1 sm:space-y-2">
-            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
-              Malla Curricular
-            </h1>
-            <p className="text-sm sm:text-base text-blue-700">
-              Ingeniería Civil en Informática - Universidad del Bío-Bío
-            </p>
-            {user && user.role === 'alumno' && (
-              <p className="text-xs sm:text-sm text-blue-600">
-                Estudiante: {user.nombreCompleto} - RUT: {user.rut}
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+          <div ref={mallaRef} data-pdf-content className="malla-container w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 ">
+            {/* Encabezado */}
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                Malla Curricular
+              </h1>
+              <p className="text-sm sm:text-base text-blue-700">
+                Ingeniería Civil en Informática - Universidad del Bío-Bío
               </p>
-            )}
-            <p className="text-xs text-gray-500">
-              Generado el: {new Date().toLocaleDateString('es-CL', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </p>
-          </div>
-
-          {/* Controles y Leyenda combinados */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
-                Herramientas y Estados de Malla
-                <HelpTooltip>
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
-                  <p className="text-gray-600 text-xs">
-                    Aquí puedes ver las opciones disponibles para interactuar con tu malla curricular.
-                  </p>
-                </HelpTooltip>
-              </h2>
+              {user && user.role === 'alumno' && (
+                <p className="text-xs sm:text-sm text-blue-600">
+                  Estudiante: {user.nombreCompleto} - RUT: {user.rut}
+                </p>
+              )}
+              <p className="text-xs text-gray-500">
+                Generado el: {new Date().toLocaleDateString('es-CL', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
             </div>
 
+            {/* Controles y Leyenda combinados */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                  Herramientas y Estados de Malla
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí puedes ver las opciones disponibles para interactuar con tu malla curricular.
+                    </p>
+                  </HelpTooltip>
+                </h2>
+              </div>
 
 
-            {/* Leyenda de colores para alumnos */}
-            {user && user.role === 'alumno' && (
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Estado de Asignaturas</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-200">
-                    <div className="w-4 h-4 bg-green-200 border border-green-400 rounded"></div>
-                    <div>
-                      <p className="font-medium text-green-800">Aprobadas</p>
-                      <p className="text-xs text-green-600">Asignaturas completadas</p>
+
+              {/* Leyenda de colores para alumnos */}
+              {user && user.role === 'alumno' && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Estado de Asignaturas</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-200">
+                      <div className="w-4 h-4 bg-green-200 border border-green-400 rounded"></div>
+                      <div>
+                        <p className="font-medium text-green-800">Aprobadas</p>
+                        <p className="text-xs text-green-600">Asignaturas completadas</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 border border-blue-200">
-                    <div className="w-4 h-4 bg-blue-200 border border-blue-400 rounded"></div>
-                    <div>
-                      <p className="font-medium text-blue-800">Inscribibles</p>
-                      <p className="text-xs text-blue-600">Disponibles para inscribir</p>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 border border-blue-200">
+                      <div className="w-4 h-4 bg-blue-200 border border-blue-400 rounded"></div>
+                      <div>
+                        <p className="font-medium text-blue-800">Inscribibles</p>
+                        <p className="text-xs text-blue-600">Disponibles para inscribir</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-red-50 border border-red-200">
-                    <div className="w-4 h-4 bg-red-200 border border-red-400 rounded"></div>
-                    <div>
-                      <p className="font-medium text-red-800">No Inscribibles</p>
-                      <p className="text-xs text-red-600">Requieren prerrequisitos</p>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-red-50 border border-red-200">
+                      <div className="w-4 h-4 bg-red-200 border border-red-400 rounded"></div>
+                      <div>
+                        <p className="font-medium text-red-800">No Inscribibles</p>
+                        <p className="text-xs text-red-600">Requieren prerrequisitos</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Botones de control */}
-            <div className="flex flex-wrap gap-3 justify-center mb-6">
-              <button
-                onClick={handleDownloadPDF}
-                disabled={loadingPDF}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loadingPDF ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <img src="/IconPdf.png" alt="Icono PDF" className="w-5 h-5" />
-                )}
-                {loadingPDF ? 'Generando PDF...' : 'Descargar PDF'}
-              </button>
-
-              {user && user.role === 'alumno' && (
-                <>
-                  <button
-                    onClick={cargarMallaUsuario}
-                    disabled={loading}
-                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <img src="/IconRegreso.png" alt="Icono Actualizar" className="w-5 h-5" />
-                    {loading ? 'Cargando...' : 'Actualizar Datos'}
-                  </button>
-
-                  {cambiosPendientes && (
-                    <>
-                      <button
-                        onClick={guardarCambiosEnBackend}
-                        disabled={loading}
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <img src="/IconMalla.png" alt="Icono Guardar" className="w-5 h-5" />
-                        {loading ? 'Guardando...' : 'Guardar Cambios'}
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          cargarMallaUsuario();
-                          setCambiosPendientes(false);
-                        }}
-                        disabled={loading}
-                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <img src="/IconRegreso.png" alt="Icono Descartar" className="w-5 h-5" />
-                        Descartar Cambios
-                      </button>
-                    </>
-                  )}
-                </>
               )}
-              {user && user.role === 'alumno' && (
+
+              {/* Botones de control */}
+              <div className="flex flex-wrap gap-3 justify-center mb-6">
                 <button
-                  onClick={handleResetMalla}
-                  disabled={loading}
-                  className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleDownloadPDF}
+                  disabled={loadingPDF}
+                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
-                  {loading ? 'Restableciendo...' : (user && user.role === 'alumno' ? 'Restablecer Progreso' : 'Restablecer')}
+                  {loadingPDF ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <img src="/IconPdf.png" alt="Icono PDF" className="w-5 h-5" />
+                  )}
+                  {loadingPDF ? 'Generando PDF...' : 'Descargar PDF'}
                 </button>
-              )}
-            </div>
-          </div>
 
-          {/* Malla Curricular */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png"
-                  alt="Icono Malla"
-                  className="w-5 h-5"
-                />
-                Plan de Estudios
-                <HelpTooltip className="text-white hover:text-yellow-300">
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">
-                    {user && user.role === 'alumno' ? 'Guía para estudiantes' : 'Guía de personalización'}
-                  </h3>
-                  <p className="text-gray-600 text-xs">
-                    {user && user.role === 'alumno'
-                      ? 'Haz clic en las asignaturas azules (inscribibles) o verdes (aprobadas) para cambiar su estado. Las rojas requieren prerrequisitos.'
-                      : 'Haz clic en las asignaturas para cambiar su color y personalizar tu vista.'
-                    }
-                  </p>
-                </HelpTooltip>
-              </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                {/* {user && user.role === 'alumno'
+                {user && user.role === 'alumno' && (
+                  <>
+                    <button
+                      onClick={cargarMallaUsuario}
+                      disabled={loading}
+                      className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <img src="/IconRegreso.png" alt="Icono Actualizar" className="w-5 h-5" />
+                      {loading ? 'Cargando...' : 'Actualizar Datos'}
+                    </button>
+
+                    {cambiosPendientes && (
+                      <>
+                        <button
+                          onClick={guardarCambiosEnBackend}
+                          disabled={loading}
+                          className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <img src="/IconMalla.png" alt="Icono Guardar" className="w-5 h-5" />
+                          {loading ? 'Guardando...' : 'Guardar Cambios'}
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            cargarMallaUsuario();
+                            setCambiosPendientes(false);
+                          }}
+                          disabled={loading}
+                          className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <img src="/IconRegreso.png" alt="Icono Descartar" className="w-5 h-5" />
+                          Descartar Cambios
+                        </button>
+                      </>
+                    )}
+                  </>
+                )}
+                {user && user.role === 'alumno' && (
+                  <button
+                    onClick={handleResetMalla}
+                    disabled={loading}
+                    className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
+                    {loading ? 'Restableciendo...' : (user && user.role === 'alumno' ? 'Restablecer Progreso' : 'Restablecer')}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Malla Curricular */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconMalla.png"
+                    alt="Icono Malla"
+                    className="w-5 h-5"
+                  />
+                  Plan de Estudios
+                  <HelpTooltip className="text-white hover:text-yellow-300">
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">
+                      {user && user.role === 'alumno' ? 'Guía para estudiantes' : 'Guía de personalización'}
+                    </h3>
+                    <p className="text-gray-600 text-xs">
+                      {user && user.role === 'alumno'
+                        ? 'Haz clic en las asignaturas azules (inscribibles) o verdes (aprobadas) para cambiar su estado. Las rojas requieren prerrequisitos.'
+                        : 'Haz clic en las asignaturas para cambiar su color y personalizar tu vista.'
+                      }
+                    </p>
+                  </HelpTooltip>
+                </h2>
+                <p className="text-blue-100 text-xs sm:text-sm mt-1">
+                  {/* {user && user.role === 'alumno'
                   ? 'Haz clic en las asignaturas azules o verdes para alternar: Inscribible ↔ Aprobada'
                   : 'Clic en las asignaturas para cambiar su color'
                 } */}
-              </p>
-            </div>
+                </p>
+              </div>
 
-            <div className="p-2 sm:p-4">
-              <div className="overflow-x-auto">
-                <div className="grid grid-cols-10 min-w-max gap-3 mx-auto justify-center">
-                  {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
+              <div className="p-2 sm:p-4">
+                <div className="overflow-x-auto">
+                  <div className="grid grid-cols-10 min-w-max gap-3 mx-auto justify-center">
+                    {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Información adicional */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
-                {user && user.role === 'alumno' ? (
-                  <>
-                    Mi Progreso Académico
-                    <HelpTooltip>
-                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
-                      <p className="text-gray-600 text-xs">
-                        Aquí puedes ver información del programa de la carrera con relación a tu progreso académico.
-                      </p>
-                    </HelpTooltip>
-                  </>
-                ) : (
-                  <>
-                    Información del Programa
-                    <HelpTooltip>
-                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
-                      <p className="text-gray-600 text-xs">
-                        Aquí puedes ver información del programa de la carrera.
-                      </p>
-                    </HelpTooltip>
-                  </>
-                )}
-              </h2>
+            {/* Información adicional */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                  {user && user.role === 'alumno' ? (
+                    <>
+                      Mi Progreso Académico
+                      <HelpTooltip>
+                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                        <p className="text-gray-600 text-xs">
+                          Aquí puedes ver información del programa de la carrera con relación a tu progreso académico.
+                        </p>
+                      </HelpTooltip>
+                    </>
+                  ) : (
+                    <>
+                      Información del Programa
+                      <HelpTooltip>
+                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                        <p className="text-gray-600 text-xs">
+                          Aquí puedes ver información del programa de la carrera.
+                        </p>
+                      </HelpTooltip>
+                    </>
+                  )}
+                </h2>
+              </div>
+
+              {user && user.role === 'alumno' ? (
+                // Estadísticas personalizadas para alumnos
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                  <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+                    <p className="font-medium text-green-900">Completadas</p>
+                    <p className="text-green-700 text-lg font-bold">
+                      {asignaturas.filter(a => a.estado === 'completada').length}
+                    </p>
+                    <p className="text-green-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'completada').reduce((acc, a) => acc + a.creditos, 0)} créditos
+                    </p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Inscribibles</p>
+                    <p className="text-blue-700 text-lg font-bold">
+                      {asignaturas.filter(a => a.estado === 'inscribible').length}
+                    </p>
+                    <p className="text-blue-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
+                    </p>
+                  </div>
+                  <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
+                    <p className="font-medium text-red-900">Pendientes</p>
+                    <p className="text-red-700 text-lg font-bold">
+                      {asignaturas.filter(a => a.estado === 'no-inscribible').length}
+                    </p>
+                    <p className="text-red-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'no-inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
+                    </p>
+                  </div>
+                  <div className="bg-purple-50 border border-purple-200 p-3 rounded-lg">
+                    <p className="font-medium text-purple-900">Progreso</p>
+                    <p className="text-purple-700 text-lg font-bold">
+                      {Math.round((asignaturas.filter(a => a.estado === 'completada').length / mallaOriginal.length) * 100)}%
+                    </p>
+                    <p className="text-purple-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'completada').length}/{mallaOriginal.length} asignaturas
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                // Información general del programa
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Duración</p>
+                    <p className="text-blue-700">10 semestres</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Total Créditos</p>
+                    <p className="text-blue-700">{mallaOriginal.reduce((acc, asig) => acc + asig.creditos, 0)} créditos</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Asignaturas</p>
+                    <p className="text-blue-700">{mallaOriginal.length} asignaturas</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Prácticas</p>
+                    <p className="text-blue-700">2 prácticas profesionales</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {user && user.role === 'alumno' ? (
-              // Estadísticas personalizadas para alumnos
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
-                  <p className="font-medium text-green-900">Completadas</p>
-                  <p className="text-green-700 text-lg font-bold">
-                    {asignaturas.filter(a => a.estado === 'completada').length}
-                  </p>
-                  <p className="text-green-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'completada').reduce((acc, a) => acc + a.creditos, 0)} créditos
-                  </p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Inscribibles</p>
-                  <p className="text-blue-700 text-lg font-bold">
-                    {asignaturas.filter(a => a.estado === 'inscribible').length}
-                  </p>
-                  <p className="text-blue-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
-                  </p>
-                </div>
-                <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
-                  <p className="font-medium text-red-900">Pendientes</p>
-                  <p className="text-red-700 text-lg font-bold">
-                    {asignaturas.filter(a => a.estado === 'no-inscribible').length}
-                  </p>
-                  <p className="text-red-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'no-inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
-                  </p>
-                </div>
-                <div className="bg-purple-50 border border-purple-200 p-3 rounded-lg">
-                  <p className="font-medium text-purple-900">Progreso</p>
-                  <p className="text-purple-700 text-lg font-bold">
-                    {Math.round((asignaturas.filter(a => a.estado === 'completada').length / mallaOriginal.length) * 100)}%
-                  </p>
-                  <p className="text-purple-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'completada').length}/{mallaOriginal.length} asignaturas
-                  </p>
-                </div>
-              </div>
-            ) : (
-              // Información general del programa
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Duración</p>
-                  <p className="text-blue-700">10 semestres</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Total Créditos</p>
-                  <p className="text-blue-700">{mallaOriginal.reduce((acc, asig) => acc + asig.creditos, 0)} créditos</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Asignaturas</p>
-                  <p className="text-blue-700">{mallaOriginal.length} asignaturas</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Prácticas</p>
-                  <p className="text-blue-700">2 prácticas profesionales</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Notificación de cambios pendientes
+            {/* Notificación de cambios pendientes
           {user && user.role === 'alumno' && cambiosPendientes && (
             <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 hide-in-pdf">
               <div className="flex items-center gap-2 mb-2">
@@ -874,31 +875,32 @@ const MallaCurricular = () => {
             </div>
           )} */}
 
-          {/* Indicador de carga */}
-          {loading && (
-            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2 hide-in-pdf">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-              Cargando datos de progreso académico...
-            </div>
+            {/* Indicador de carga */}
+            {loading && (
+              <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2 hide-in-pdf">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                Cargando datos de progreso académico...
+              </div>
+            )}
+          </div>
+
+          <Colores
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onSelect={aplicarColor}
+          />
+
+          {/* Componente Alert */}
+          {alert.show && (
+            <Alert
+              type={alert.type}
+              title={alert.title}
+              message={alert.message}
+              onClose={hideAlert}
+              autoClose={3000}
+            />
           )}
         </div>
-
-        <Colores
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onSelect={aplicarColor}
-        />
-
-        {/* Componente Alert */}
-        {alert.show && (
-          <Alert
-            type={alert.type}
-            title={alert.title}
-            message={alert.message}
-            onClose={hideAlert}
-            autoClose={3000}
-          />
-        )}
       </div>
     </PagGeneral>
   );

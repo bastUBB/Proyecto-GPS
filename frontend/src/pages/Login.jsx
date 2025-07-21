@@ -13,7 +13,9 @@ export default function Login() {
     e.preventDefault();
     const { email, password } = data;
     try {
+      console.log("Attempting to log in with:", { email, password });
       const { data: response } = await axios.post('api/auth/login', { email, password });
+      console.log("Login response:", response);
       if (response.error) {
         toast.error(response.error);
       } else {

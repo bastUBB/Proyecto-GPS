@@ -7,7 +7,7 @@ export const useAdminEvaluaciones = (userRole, token) => {
   const [error, setError] = useState('');
 
   const loadAllEvaluaciones = async () => {
-    if (userRole !== 'admin' || !token) return;
+    if ((userRole !== 'admin' && userRole !== 'director') || !token) return;
 
     try {
       setLoading(true);
