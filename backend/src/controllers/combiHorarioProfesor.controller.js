@@ -1,46 +1,48 @@
 import { 
-    generarHorarioProfesor, 
-    obtenerSalasDisponibles, 
+    obtenerListaProfesores,
+    obtenerSalasDisponibles,
+    obtenerTiposBloques,
     validarDisponibilidadProfesor,
-    obtenerTiposBloques
+    generarHorarioProfesor,
+    generarHorarioConValidacion as generarHorarioConValidacionService,
+    obtenerEstadisticasHorarios as obtenerEstadisticasHorariosService,
+    generarCombinacionGlobalService
 } from '../services/combiHorarioProfesor.service.js';
 import { handleErrorClient, handleErrorServer, handleSuccess } from '../handlers/responseHandlers.js';
+import User from '../models/user.model.js';
 
 /**
- * Controlador para generar horario de un profesor
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * Generar horario básico para un profesor
  */
 export const generarHorario = async (req, res) => {
     try {
-        const { profesorId, bloques } = req.body;
+        const { profesorId, asignaturas, preferencias } = req.body;
 
         // Validaciones básicas
         if (!profesorId) {
             return handleErrorClient(res, 400, 'El ID del profesor es requerido');
         }
 
-        if (!bloques || !Array.isArray(bloques) || bloques.length === 0) {
-            return handleErrorClient(res, 400, 'Los bloques son requeridos y deben ser un array');
-        }
-
-        // Validar que todos los bloques tengan cantidad positiva
-        for (const bloque of bloques) {
-            if (!bloque.cantidad || bloque.cantidad <= 0) {
-                return handleErrorClient(res, 400, `La cantidad del bloque ${bloque.tipo} debe ser mayor a 0`);
-            }
+        if (!asignaturas || !Array.isArray(asignaturas) || asignaturas.length === 0) {
+            return handleErrorClient(res, 400, 'Debe especificar al menos una asignatura');
         }
 
         // Generar horario
-        const horario = await generarHorarioProfesor(profesorId, bloques);
+        const resultado = await generarHorarioProfesor({
+            profesorId,
+            asignaturas,
+            preferencias: preferencias || {}
+        });
 
-        handleSuccess(res, 200, 'Horario generado exitosamente', horario);
+        if (resultado.combinacionesGeneradas === 0) {
+            return handleErrorClient(res, 404, 'No se pudieron generar combinaciones válidas de horario');
+        }
+
+        handleSuccess(res, 200, 'Horario generado exitosamente', resultado);
     } catch (error) {
         console.error('Error al generar horario:', error);
         
-        if (error.message.includes('Profesor no encontrado') || 
-            error.message.includes('No se encontró disponibilidad') ||
-            error.message.includes('No se pudo asignar el bloque')) {
+        if (error.message.includes('no encontrado') || error.message.includes('no configurada')) {
             return handleErrorClient(res, 404, error.message);
         }
         
@@ -49,14 +51,73 @@ export const generarHorario = async (req, res) => {
 };
 
 /**
- * Controlador para obtener la lista de salas disponibles
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * Generar horario con validaciones previas
+ */
+export const generarHorarioValidado = async (req, res) => {
+    try {
+        const { profesorId, asignaturas, preferencias } = req.body;
+
+        // Validaciones básicas
+        if (!profesorId) {
+            return handleErrorClient(res, 400, 'El ID del profesor es requerido');
+        }
+
+        if (!asignaturas || !Array.isArray(asignaturas) || asignaturas.length === 0) {
+            return handleErrorClient(res, 400, 'Debe especificar al menos una asignatura');
+        }
+
+        // Generar horario con validación
+        const resultado = await generarHorarioConValidacionService({
+            profesorId,
+            asignaturas,
+            preferencias: preferencias || {}
+        });
+
+        if (!resultado.exito) {
+            return handleErrorClient(res, 400, 'Errores en la validación', {
+                errores: resultado.errores,
+                advertencias: resultado.advertencias
+            });
+        }
+
+        handleSuccess(res, 200, 'Horario validado y generado exitosamente', {
+            ...resultado,
+            mensaje: resultado.validaciones?.length > 0 ? 'Horario generado con advertencias' : 'Horario generado exitosamente'
+        });
+    } catch (error) {
+        console.error('Error al generar horario con validación:', error);
+        handleErrorServer(res, 500, 'Error interno del servidor al generar horario con validación');
+    }
+};
+
+/**
+ * Obtener lista de profesores
+ */
+export const obtenerProfesores = async (req, res) => {
+    try {
+        const profesores = await obtenerListaProfesores();
+        
+        handleSuccess(res, 200, 'Lista de profesores obtenida exitosamente', {
+            total: profesores.length,
+            profesores
+        });
+    } catch (error) {
+        console.error('Error al obtener profesores:', error);
+        handleErrorServer(res, 500, 'Error interno del servidor al obtener profesores');
+    }
+};
+
+/**
+ * Obtener salas disponibles
  */
 export const obtenerSalas = async (req, res) => {
     try {
         const salas = obtenerSalasDisponibles();
-        handleSuccess(res, 200, 'Salas obtenidas exitosamente', { salas, total: salas.length });
+        
+        handleSuccess(res, 200, 'Salas obtenidas exitosamente', {
+            total: salas.length,
+            salas
+        });
     } catch (error) {
         console.error('Error al obtener salas:', error);
         handleErrorServer(res, 500, 'Error interno del servidor al obtener salas');
@@ -64,14 +125,15 @@ export const obtenerSalas = async (req, res) => {
 };
 
 /**
- * Controlador para obtener los tipos de bloques disponibles
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * Obtener tipos de bloques disponibles
  */
 export const obtenerTiposBloquesController = async (req, res) => {
     try {
         const tiposBloques = obtenerTiposBloques();
-        handleSuccess(res, 200, 'Tipos de bloques obtenidos exitosamente', tiposBloques);
+        
+        handleSuccess(res, 200, 'Tipos de bloques obtenidos exitosamente', {
+            tipos: tiposBloques
+        });
     } catch (error) {
         console.error('Error al obtener tipos de bloques:', error);
         handleErrorServer(res, 500, 'Error interno del servidor al obtener tipos de bloques');
@@ -79,87 +141,68 @@ export const obtenerTiposBloquesController = async (req, res) => {
 };
 
 /**
- * Controlador para validar la disponibilidad de un profesor
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * Obtener asignaturas disponibles desde la base de datos
+ */
+export const obtenerAsignaturasDisponibles = async (req, res) => {
+    try {
+        // Importar el servicio de asignaturas
+        const { getAllAsignaturasService } = await import('../services/asignaturas.service.js');
+        
+        const [asignaturas, errorAsignaturas] = await getAllAsignaturasService();
+
+        if (errorAsignaturas) {
+            return handleErrorClient(res, 404, 'No hay asignaturas registradas', errorAsignaturas);
+        }
+
+        handleSuccess(res, 200, 'Asignaturas obtenidas exitosamente', asignaturas);
+    } catch (error) {
+        console.error('Error al obtener asignaturas disponibles:', error);
+        handleErrorServer(res, 500, 'Error interno del servidor al obtener asignaturas');
+    }
+};
+
+/**
+ * Validar disponibilidad de un profesor
  */
 export const validarDisponibilidad = async (req, res) => {
     try {
         const { profesorId } = req.params;
+        const { dia, horaInicio, horaFin } = req.query;
 
         if (!profesorId) {
             return handleErrorClient(res, 400, 'El ID del profesor es requerido');
         }
 
-        const validacion = await validarDisponibilidadProfesor(profesorId);
-
-        if (!validacion.valido) {
-            return handleErrorClient(res, 404, validacion.mensaje);
+        // Si no se proporcionan parámetros de validación específica, obtener disponibilidad general
+        if (!dia || !horaInicio || !horaFin) {
+            const estadisticas = await obtenerEstadisticasHorarios(profesorId);
+            return handleSuccess(res, 200, 'Disponibilidad general obtenida', {
+                disponibilidadGeneral: estadisticas.estadisticas,
+                bloques: estadisticas.disponibilidad
+            });
         }
 
-        handleSuccess(res, 200, 'Validación exitosa', validacion);
+        // Validar disponibilidad específica
+        const resultado = await validarDisponibilidadProfesor(profesorId, dia, horaInicio, horaFin);
+        
+        const mensaje = resultado.disponible 
+            ? 'Profesor disponible en el horario solicitado'
+            : 'Profesor no disponible en el horario solicitado';
+
+        handleSuccess(res, 200, mensaje, resultado);
     } catch (error) {
         console.error('Error al validar disponibilidad:', error);
+        
+        if (error.message.includes('no encontrado')) {
+            return handleErrorClient(res, 404, error.message);
+        }
+        
         handleErrorServer(res, 500, 'Error interno del servidor al validar disponibilidad');
     }
 };
 
 /**
- * Controlador para generar horario con validación previa
- * @param {Object} req - Request object
- * @param {Object} res - Response object
- */
-export const generarHorarioConValidacion = async (req, res) => {
-    try {
-        const { profesorId, bloques } = req.body;
-
-        // Validaciones básicas
-        if (!profesorId) {
-            return handleErrorClient(res, 400, 'El ID del profesor es requerido');
-        }
-
-        if (!bloques || !Array.isArray(bloques) || bloques.length === 0) {
-            return handleErrorClient(res, 400, 'Los bloques son requeridos y deben ser un array');
-        }
-
-        // Validar disponibilidad primero
-        const validacion = await validarDisponibilidadProfesor(profesorId);
-        
-        if (!validacion.valido) {
-            return handleErrorClient(res, 404, validacion.mensaje);
-        }
-
-        // Verificar si hay suficiente capacidad para cada tipo de bloque
-        for (const bloqueRequerido of bloques) {
-            const capacidadDisponible = validacion.capacidadPorTipo[bloqueRequerido.tipo] || 0;
-            if (capacidadDisponible < bloqueRequerido.cantidad) {
-                return handleErrorClient(res, 400, 
-                    `No hay suficiente capacidad para el bloque ${bloqueRequerido.tipo}. Disponible: ${capacidadDisponible}, Requerido: ${bloqueRequerido.cantidad}`
-                );
-            }
-        }
-
-        // Generar horario
-        const horario = await generarHorarioProfesor(profesorId, bloques);
-
-        handleSuccess(res, 200, 'Horario generado exitosamente', {
-            ...horario,
-            validacion: {
-                diasDisponibles: validacion.diasDisponibles,
-                capacidadPorTipo: validacion.capacidadPorTipo,
-                totalHorasDisponibles: validacion.totalHorasDisponibles
-            }
-        });
-    } catch (error) {
-        console.error('Error al generar horario con validación:', error);
-        handleErrorServer(res, 500, 'Error interno del servidor al generar horario');
-    }
-};
-
-/**
- * Controlador para obtener estadísticas de horarios
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * Obtener estadísticas de horarios de un profesor
  */
 export const obtenerEstadisticasHorarios = async (req, res) => {
     try {
@@ -169,43 +212,94 @@ export const obtenerEstadisticasHorarios = async (req, res) => {
             return handleErrorClient(res, 400, 'El ID del profesor es requerido');
         }
 
-        const validacion = await validarDisponibilidadProfesor(profesorId);
-
-        if (!validacion.valido) {
-            return handleErrorClient(res, 404, validacion.mensaje);
-        }
-
-        // Agrupar slots por día
-        const slotsPorDia = {};
-        validacion.slotsDisponibles.forEach(slot => {
-            if (!slotsPorDia[slot.dia]) {
-                slotsPorDia[slot.dia] = [];
-            }
-            slotsPorDia[slot.dia].push(slot);
-        });
-
-        // Calcular estadísticas
-        const estadisticas = {
-            profesor: validacion.profesor,
-            totalSlotsDisponibles: validacion.totalSlotsDisponibles,
-            totalHorasDisponibles: validacion.totalHorasDisponibles,
-            diasDisponibles: validacion.diasDisponibles,
-            capacidadPorTipo: validacion.capacidadPorTipo,
-            distribucionPorDia: Object.keys(slotsPorDia).map(dia => ({
-                dia,
-                slots: slotsPorDia[dia].length,
-                totalMinutos: slotsPorDia[dia].reduce((sum, slot) => sum + slot.duracionMinutos, 0),
-                totalHoras: Math.round((slotsPorDia[dia].reduce((sum, slot) => sum + slot.duracionMinutos, 0) / 60) * 100) / 100,
-                primerHora: slotsPorDia[dia][0]?.horaInicio || 'N/A',
-                ultimaHora: slotsPorDia[dia][slotsPorDia[dia].length - 1]?.horaFin || 'N/A'
-            })),
-            tiposBloqueDisponibles: validacion.tiposBloqueDisponibles,
-            salasDisponibles: obtenerSalasDisponibles().length
-        };
-
+        const estadisticas = await obtenerEstadisticasHorariosService(profesorId);
+        
         handleSuccess(res, 200, 'Estadísticas obtenidas exitosamente', estadisticas);
     } catch (error) {
         console.error('Error al obtener estadísticas:', error);
+        
+        if (error.message.includes('no encontrado')) {
+            return handleErrorClient(res, 404, error.message);
+        }
+        
         handleErrorServer(res, 500, 'Error interno del servidor al obtener estadísticas');
     }
+};
+
+/**
+ * Guardar asignaturas que impartirá un profesor
+ */
+export const guardarAsignaturasProfesor = async (req, res) => {
+    try {
+        const { profesorId } = req.params;
+        const { asignaturas } = req.body;
+
+        if (!profesorId) {
+            return handleErrorClient(res, 400, 'El ID del profesor es requerido');
+        }
+
+        if (!asignaturas || !Array.isArray(asignaturas)) {
+            return handleErrorClient(res, 400, 'Las asignaturas deben ser un array válido');
+        }
+
+        // Guardar en el usuario (profesor)
+        const profesor = await User.findByIdAndUpdate(
+            profesorId,
+            { asignaturasImpartidas: asignaturas },
+            { new: true }
+        );
+
+        if (!profesor) {
+            return handleErrorClient(res, 404, 'Profesor no encontrado');
+        }
+
+        handleSuccess(res, 200, 'Asignaturas guardadas exitosamente', {
+            profesorId,
+            asignaturas: profesor.asignaturasImpartidas,
+            fechaActualizacion: new Date()
+        });
+    } catch (error) {
+        console.error('Error al guardar asignaturas del profesor:', error);
+        handleErrorServer(res, 500, 'Error interno del servidor al guardar asignaturas');
+    }
+};
+
+/**
+ * Obtener asignaturas de un profesor
+ */
+export const obtenerAsignaturasProfesor = async (req, res) => {
+    try {
+        const { profesorId } = req.params;
+
+        if (!profesorId) {
+            return handleErrorClient(res, 400, 'El ID del profesor es requerido');
+        }
+
+        const profesor = await User.findById(profesorId).lean();
+
+        if (!profesor) {
+            return handleErrorClient(res, 404, 'Profesor no encontrado');
+        }
+
+        handleSuccess(res, 200, 'Asignaturas obtenidas exitosamente', {
+            profesorId,
+            asignaturas: profesor.asignaturasImpartidas || [],
+            fechaConsulta: new Date()
+        });
+    } catch (error) {
+        console.error('Error al obtener asignaturas del profesor:', error);
+        handleErrorServer(res, 500, 'Error interno del servidor al obtener asignaturas');
+    }
+};
+
+export const generarCombinacionGlobal = async (req, res) => {
+  try {
+    // Llama a un servicio que genere la mejor combinación para todos los profesores
+    const resultado = await generarCombinacionGlobalService();
+    res.json({ success: true, data: resultado });
+  } catch (error) {
+    // Mejorar el log para ver el error real en consola
+    console.error('Error al generar la combinación global:', error);
+    res.status(500).json({ success: false, message: 'Error al generar la combinación global', error: error.message });
+  }
 };
