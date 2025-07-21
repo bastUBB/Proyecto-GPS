@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PagGeneral from "../components/PagGeneral";
 import EditarAsignaturaMalla from "../components/EditarAsignaturaMalla";
 import TablaGestion from "../components/TablaGestion";
 import { Table2 } from 'lucide-react';
 import Alert from "../components/Alert";
 import axios from 'axios';
+import HelpTooltip from "../components/PuntoAyuda";
 
 export default function GestionMallaCurricular() {
     const [asignaturas, setAsignaturas] = useState([]);
@@ -52,7 +53,7 @@ export default function GestionMallaCurricular() {
             console.error('📊 Status:', error.response?.status);
             console.error('📝 Message:', error.response?.data?.message);
             console.error('🔍 Full response:', error.response);
-            
+
             if (error.response?.status === 401) {
                 showAlert('error', 'Sesión Expirada', 'Por favor, inicia sesión nuevamente.');
             } else {
@@ -209,36 +210,45 @@ export default function GestionMallaCurricular() {
                     itemsPerPage={10}
                 />
 
-                {/* Estadísticas */}
-                {asignaturas.length > 0 && (
-                    <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 mt-6">
-                        <h3 className="text-lg font-semibold text-blue-900 mb-4">Estadísticas</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                                <p className="text-blue-600 text-sm">Total Asignaturas</p>
-                                <p className="text-2xl font-bold text-blue-900">{asignaturas.length}</p>
+                    {/* Estadísticas */}
+                    {asignaturas.length > 0 && (
+                        <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-2 rounded-lg mb-4">
+                                <h3 className="text-base sm:text-lg font-semibold flex items-center gap-2">Estadísticas
+                                    <HelpTooltip className="text-white hover:text-yellow-300">
+                                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                                        <p className="text-gray-600 text-xs">
+                                            Aquí puedes ver un resumen académico.
+                                        </p>
+                                    </HelpTooltip>
+                                </h3>
                             </div>
-                            <div className="bg-cyan-50 p-4 rounded-lg border border-cyan-200">
-                                <p className="text-cyan-600 text-sm">Total Créditos</p>
-                                <p className="text-2xl font-bold text-cyan-900">
-                                    {asignaturas.reduce((sum, asig) => sum + asig.creditos, 0)}
-                                </p>
-                            </div>
-                            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                                <p className="text-green-600 text-sm">Semestres</p>
-                                <p className="text-2xl font-bold text-green-900">
-                                    {asignaturas.length > 0 ? Math.max(...asignaturas.map(asig => asig.semestre)) : 0}
-                                </p>
-                            </div>
-                            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                                <p className="text-purple-600 text-sm">Promedio Créditos</p>
-                                <p className="text-2xl font-bold text-purple-900">
-                                    {asignaturas.length > 0 ? (asignaturas.reduce((sum, asig) => sum + asig.creditos, 0) / asignaturas.length).toFixed(1) : 0}
-                                </p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                    <p className="text-blue-600 text-sm">Total Asignaturas</p>
+                                    <p className="text-2xl font-bold text-blue-900">{asignaturas.length}</p>
+                                </div>
+                                <div className="bg-cyan-50 p-4 rounded-lg border border-cyan-200">
+                                    <p className="text-cyan-600 text-sm">Total Créditos</p>
+                                    <p className="text-2xl font-bold text-cyan-900">
+                                        {asignaturas.reduce((sum, asig) => sum + asig.creditos, 0)}
+                                    </p>
+                                </div>
+                                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                                    <p className="text-green-600 text-sm">Semestres</p>
+                                    <p className="text-2xl font-bold text-green-900">
+                                        {asignaturas.length > 0 ? Math.max(...asignaturas.map(asig => asig.semestre)) : 0}
+                                    </p>
+                                </div>
+                                <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                                    <p className="text-purple-600 text-sm">Promedio Créditos</p>
+                                    <p className="text-2xl font-bold text-purple-900">
+                                        {asignaturas.length > 0 ? (asignaturas.reduce((sum, asig) => sum + asig.creditos, 0) / asignaturas.length).toFixed(1) : 0}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
                 </div>
             </div>
 
