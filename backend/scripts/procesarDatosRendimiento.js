@@ -249,12 +249,10 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
 
         estadisticas.años.forEach(año => {
             const registrosAño = datosCompletos.filter(r => r.año === año);
-            const semestreI = registrosAño.filter(r => r.semestre.includes('I') && !r.semestre.includes('II'));
-            const semestreII = registrosAño.filter(r => r.semestre.includes('II'));
             //console.log(`   ${año}: ${registrosAño.length} total (Sem I: ${semestreI.length}, Sem II: ${semestreII.length})`);
             const semestreI = registrosAño.filter(r => r.semestre === 1);
             const semestreII = registrosAño.filter(r => r.semestre === 2);
-            console.log(`   ${año}: ${registrosAño.length} total (Sem I: ${semestreI.length}, Sem II: ${semestreII.length})`);
+            // console.log(`   ${año}: ${registrosAño.length} total (Sem I: ${semestreI.length}, Sem II: ${semestreII.length})`);
         });
 
         // Mostrar ejemplos de asignaturas excluidas
