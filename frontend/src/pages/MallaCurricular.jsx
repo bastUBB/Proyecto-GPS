@@ -4,6 +4,31 @@ import PagGeneral from "../components/PagGeneral";
 import Colores from "../components/Colores";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
+import { HelpCircle } from "lucide-react";
+
+// Componente HelpTooltip funcional
+const HelpTooltip = ({ children, className }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  
+  return (
+    <div className="relative inline-block">
+      <span 
+        className={`inline-flex items-center justify-center cursor-help ${className}`}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <HelpCircle size={18} className="text-blue-200 hover:text-yellow-300 transition-colors duration-200" />
+      </span>
+      {showTooltip && (
+        <div className="absolute z-50 w-64 p-3 bg-white border border-gray-300 rounded-lg shadow-lg top-6 left-0">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 
 
 const mallaOriginal = [
@@ -501,8 +526,8 @@ const MallaCurricular = () => {
   };
 
   const renderSemestre = (sem) => (
-    <div key={sem} className="flex flex-col items-center gap-2">
-      <h2 className="text-sm font-medium text-blue-900 text-center">Semestre {sem}</h2>
+    <div key={sem} className="flex flex-col items-center gap-1">
+      <h2 className="text-xs font-medium text-blue-900 text-center mb-1">Semestre {sem}</h2>
       {asignaturas
         .filter((asig) => asig.semestre === sem)
         .map((asig) => {
@@ -511,44 +536,65 @@ const MallaCurricular = () => {
             ? ['inscribible', 'completada'].includes(asig.estado)
             : !isSystemState;
 
-          return (
+          // Obtener símbolo según el estado
+          const getSymbol = () => {
+            if (!isSystemState || !user || user.role !== 'alumno') return '';
+            switch (asig.estado) {
+              case 'completada': return '✓';
+              case 'inscribible': return '◯';
+              case 'no-inscribible': return '✕';
+              default: return '';
+            }
+          };
+
+            return (
             <button
-              key={asig.id || asig.nombre} // Usar ID único como key
+              key={asig.id || asig.nombre}
               type="button"
-              className={`w-28 min-h-[4rem] border text-[11px] rounded shadow-sm overflow-visible p-1 text-center mb-1 transition-all duration-200 ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
-                }`}
+              className={`relative w-24 h-16 border text-[9px] rounded shadow-sm overflow-hidden p-1 text-center mb-1 transition-all duration-200 ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
+              }`}
               onClick={() => isClickable && handleAsignaturaClick(asig.nombre)}
               title={
-                user && user.role === 'alumno' && isSystemState
-                  ? `${asig.estado === 'completada' ? 'Aprobada - Clic para desmarcar' :
-                    asig.estado === 'inscribible' ? 'Disponible - Clic para marcar como aprobada' :
-                      'Requiere prerrequisitos - No se puede inscribir'}`
-                  : isSystemState
-                    ? `${asig.estado === 'completada' ? 'Asignatura aprobada' :
-                      asig.estado === 'inscribible' ? 'Asignatura inscribible' :
-                        'Requiere prerrequisitos'}`
-                    : "Haz clic para cambiar color"
+              user && user.role === 'alumno' && isSystemState
+                ? `${asig.estado === 'completada' ? 'Aprobada - Clic para desmarcar' :
+                asig.estado === 'inscribible' ? 'Disponible - Clic para marcar como aprobada' :
+                  'Requiere prerrequisitos - No se puede inscribir'}`
+                : isSystemState
+                ? `${asig.estado === 'completada' ? 'Asignatura aprobada' :
+                  asig.estado === 'inscribible' ? 'Asignatura inscribible' :
+                  'Requiere prerrequisitos'}`
+                : "Haz clic para cambiar color"
               }
             >
-              <p className="font-medium break-words leading-tight">{asig.nombre}</p>
-              <p className="opacity-80">Créditos: {asig.creditos}</p>
-              {isSystemState && user && user.role === 'alumno' && (
-                <div className="mt-1">
-                  {asig.estado === 'completada' && <span className="text-xs">✓</span>}
-                  {asig.estado === 'inscribible' && <span className="text-xs">◯</span>}
-                  {asig.estado === 'no-inscribible' && <span className="text-xs">✕</span>}
-                </div>
+              {/* Símbolo de fondo */}
+              {getSymbol() && (
+              <span
+                className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none hide-in-pdf"
+                style={{
+                opacity: 0.18, // más transparente
+                zIndex: 0, // fondo
+                color: '#2563eb', // azul-600
+                }}
+              >
+                {getSymbol()}
+              </span>
               )}
+
+              {/* Contenido principal */}
+              <div className="relative z-10 h-full flex flex-col justify-between">
+                <p className="font-medium break-words text-[10px] leading-tight text-blue-900 text-center mb-auto">{asig.nombre}</p>
+                <p className="text-blue-700 text-[8px] mt-auto text-center">Créditos: {asig.creditos}</p>
+              </div>
             </button>
-          );
+            );
         })}
     </div>
   );
 
   return (
     <PagGeneral>
-      <div className="p-4 sm:p-6 lg:p-8 hide-in-pdf">
-        <div ref={mallaRef} data-pdf-content className="malla-container max-w-full mx-auto space-y-4 sm:space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 ">
+        <div ref={mallaRef} data-pdf-content className="malla-container w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 ">
           {/* Encabezado */}
           <div className="text-center space-y-1 sm:space-y-2">
             <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
@@ -684,23 +730,28 @@ const MallaCurricular = () => {
                 />
                 Plan de Estudios
                 <HelpTooltip className="text-white hover:text-yellow-300">
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">Guía de personalización académica</h3>
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">
+                    {user && user.role === 'alumno' ? 'Guía para estudiantes' : 'Guía de personalización'}
+                  </h3>
                   <p className="text-gray-600 text-xs">
-                    Haz Clic en las asignaturas para cambiar su color
+                    {user && user.role === 'alumno' 
+                      ? 'Haz clic en las asignaturas azules (inscribibles) o verdes (aprobadas) para cambiar su estado. Las rojas requieren prerrequisitos.'
+                      : 'Haz clic en las asignaturas para cambiar su color y personalizar tu vista.'
+                    }
                   </p>
                 </HelpTooltip>
               </h2>
               <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                {user && user.role === 'alumno'
+                {/* {user && user.role === 'alumno'
                   ? 'Haz clic en las asignaturas azules o verdes para alternar: Inscribible ↔ Aprobada'
                   : 'Clic en las asignaturas para cambiar su color'
-                }
+                } */}
               </p>
             </div>
 
-            <div className="p-4 sm:p-6">
+            <div className="p-2 sm:p-4">
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-10 min-w-full gap-3">
+                <div className="grid grid-cols-10 min-w-max gap-3 mx-auto justify-center">
                   {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
                 </div>
               </div>
@@ -782,7 +833,7 @@ const MallaCurricular = () => {
             )}
           </div>
 
-          {/* Notificación de cambios pendientes */}
+          {/* Notificación de cambios pendientes
           {user && user.role === 'alumno' && cambiosPendientes && (
             <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 hide-in-pdf">
               <div className="flex items-center gap-2 mb-2">
@@ -809,7 +860,7 @@ const MallaCurricular = () => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
           {/* Mensaje de error */}
           {error && (
