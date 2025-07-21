@@ -4,15 +4,17 @@ import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 /**
  * Componente de Alerta Popup Centrado
  * @param {Object} props
- * @param {string} props.type - Tipo de alerta: 'success', 'error', 'warning', 'info'
+ * @param {string} props.type - Tipo de alerta: 'success', 'error', 'warning', 'info', 'confirm'
  * @param {string} props.title - Título de la alerta
  * @param {string} props.message - Mensaje principal de la alerta
  * @param {string} props.details - Detalles adicionales (opcional)
  * @param {boolean} props.isVisible - Controla la visibilidad de la alerta
  * @param {function} props.onClose - Función que se ejecuta al cerrar la alerta
+ * @param {function} props.onConfirm - Función que se ejecuta al confirmar (solo para tipo 'confirm')
  * @param {number} props.autoCloseTime - Tiempo en ms para auto-cerrar (opcional)
  * @param {boolean} props.showCloseButton - Mostrar botón de cerrar (default: true)
  * @param {string} props.acceptButtonText - Texto del botón aceptar (default: "Aceptar")
+ * @param {string} props.cancelButtonText - Texto del botón cancelar (default: "Cancelar")
  */
 const Alert = ({ 
     type = 'info', 
@@ -21,9 +23,11 @@ const Alert = ({
     details,
     isVisible = false, 
     onClose, 
+    onConfirm,
     autoCloseTime = null,
     showCloseButton = true,
-    acceptButtonText = "Aceptar"
+    acceptButtonText = "Aceptar",
+    cancelButtonText = "Cancelar"
 }) => {
     const [visible, setVisible] = useState(isVisible);
 
@@ -32,14 +36,14 @@ const Alert = ({
     }, [isVisible]);
 
     useEffect(() => {
-        if (visible && autoCloseTime) {
+        if (visible && autoCloseTime && type !== 'confirm') {
             const timer = setTimeout(() => {
                 handleClose();
             }, autoCloseTime);
 
             return () => clearTimeout(timer);
         }
-    }, [visible, autoCloseTime]);
+    }, [visible, autoCloseTime, type]);
 
     const handleClose = () => {
         setVisible(false);
@@ -93,6 +97,22 @@ const Alert = ({
                     buttonColor: 'bg-yellow-600 hover:bg-yellow-700',
                     closeButtonColor: 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100',
                     overlayColor: 'bg-yellow-900/20',
+                    animation: 'animate-pulse'
+                };
+            case 'confirm':
+                return {
+                    icon: AlertTriangle,
+                    bgColor: 'bg-gradient-to-br from-blue-50 to-indigo-50',
+                    borderColor: 'border-blue-300',
+                    iconColor: 'text-blue-600',
+                    iconBgColor: 'bg-blue-100',
+                    titleColor: 'text-blue-900',
+                    messageColor: 'text-blue-700',
+                    detailsColor: 'text-blue-600',
+                    buttonColor: 'bg-blue-600 hover:bg-blue-700',
+                    cancelButtonColor: 'bg-gray-500 hover:bg-gray-600',
+                    closeButtonColor: 'text-blue-600 hover:text-blue-800 hover:bg-blue-100',
+                    overlayColor: 'bg-blue-900/20',
                     animation: 'animate-pulse'
                 };
             case 'info':
@@ -166,26 +186,36 @@ const Alert = ({
 
                     {/* Botones de acción */}
                     <div className="flex items-center justify-center gap-3 p-6 pt-2">
-                        <button
-                            onClick={handleClose}
-                            className={`px-6 py-3 ${config.buttonColor} text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl`}
-                        >
-                            {acceptButtonText}
-                        </button>
-                        
-                        {/* {showCloseButton && (
+                        {type === 'confirm' ? (
+                            <>
+                                <button
+                                    onClick={handleClose}
+                                    className={`px-6 py-3 ${config.cancelButtonColor} text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl`}
+                                >
+                                    {cancelButtonText}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        if (onConfirm) onConfirm();
+                                        handleClose();
+                                    }}
+                                    className={`px-6 py-3 ${config.buttonColor} text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl`}
+                                >
+                                    {acceptButtonText}
+                                </button>
+                            </>
+                        ) : (
                             <button
                                 onClick={handleClose}
-                                className={`p-2 rounded-lg transition-colors duration-200 ${config.closeButtonColor}`}
-                                aria-label="Cerrar alerta"
+                                className={`px-6 py-3 ${config.buttonColor} text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl`}
                             >
-                                <X className="w-5 h-5" />
+                                {acceptButtonText}
                             </button>
-                        )} */}
+                        )}
                     </div>
 
                     {/* Barra de progreso para auto-cierre */}
-                    {autoCloseTime && visible && (
+                    {autoCloseTime && visible && type !== 'confirm' && (
                         <div className="px-6 pb-4">
                             <div className="w-full bg-gray-200 rounded-full h-1 overflow-hidden">
                                 <div 

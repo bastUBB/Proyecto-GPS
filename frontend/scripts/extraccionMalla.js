@@ -50,9 +50,9 @@ async function extraerMalla() {
         return resultado;
     });
 
-    console.log(JSON.stringify(resultado, null, 2));
+    //console.log(JSON.stringify(resultado, null, 2));
     fs.writeFileSync('malla_informatica_ubb.json', JSON.stringify(resultado, null, 2));
-    console.log('✅ Malla guardada correctamente con', resultado.length, 'semestres');
+    //console.log('✅ Malla guardada correctamente con', resultado.length, 'semestres');
     await browser.close();
 }
 

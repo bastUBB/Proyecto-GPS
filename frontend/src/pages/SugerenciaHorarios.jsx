@@ -56,16 +56,16 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       // Usar el endpoint con filtro por rol
       const response = await axios.get(
-        'http://localhost:5500/api/users/filter?role=profesor', 
+        'http://localhost:5500/api/users/filter?role=profesor',
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         setProfesores(response.data.data);
-        console.log('Profesores cargados:', response.data.data);
+        //console.log('Profesores cargados:', response.data.data);
       } else {
         setMensaje('No se encontraron profesores');
         setProfesores([]);
@@ -90,12 +90,12 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       const response = await axios.get(
-        `http://localhost:5500/api/disponibilidad?profesorId=${profesorId}`, 
+        `http://localhost:5500/api/disponibilidad?profesorId=${profesorId}`,
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         // Convertir los bloques del backend al formato de disponibilidad del frontend
         const disponibilidadFormateada = {};
@@ -104,7 +104,7 @@ export default function SugerenciaHorarios() {
           disponibilidadFormateada[key] = true;
         });
         setDisponibilidadProfesor(disponibilidadFormateada);
-        console.log('Disponibilidad del profesor cargada:', disponibilidadFormateada);
+        //console.log('Disponibilidad del profesor cargada:', disponibilidadFormateada);
       } else {
         setDisponibilidadProfesor({});
       }
@@ -162,12 +162,12 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       const response = await axios.get(
-        'http://localhost:5500/api/disponibilidad', 
+        'http://localhost:5500/api/disponibilidad',
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         // Convertir los bloques del backend al formato de disponibilidad del frontend
         const disponibilidadFormateada = {};
@@ -176,7 +176,7 @@ export default function SugerenciaHorarios() {
           disponibilidadFormateada[key] = true;
         });
         setDisponibilidad(disponibilidadFormateada);
-        console.log('Mi disponibilidad cargada:', disponibilidadFormateada);
+        //console.log('Mi disponibilidad cargada:', disponibilidadFormateada);
       } else {
         setDisponibilidad({});
       }
@@ -185,7 +185,7 @@ export default function SugerenciaHorarios() {
       if (error.response?.status === 404) {
         // No hay disponibilidad guardada, inicializar vacía
         setDisponibilidad({});
-        console.log('No hay disponibilidad guardada, iniciando con tabla vacía');
+        //console.log('No hay disponibilidad guardada, iniciando con tabla vacía');
       } else if (error.response?.status === 401) {
         setMensaje('No tienes autorización para acceder a esta función');
       } else {
@@ -211,7 +211,7 @@ export default function SugerenciaHorarios() {
           const [dia, horaInicio] = key.split('-');
           const horaInicioIndex = horasDisponibles.indexOf(horaInicio);
           const horaFin = horasDisponibles[horaInicioIndex + 1] || horaInicio;
-          
+
           bloques.push({
             dia,
             horaInicio,
@@ -220,9 +220,9 @@ export default function SugerenciaHorarios() {
         }
       });
 
-      console.log('Datos a enviar:', { bloques });
-      console.log('Usuario:', user);
-      console.log('ID del usuario:', user?.id || user?._id);
+      //console.log('Datos a enviar:', { bloques });
+      //console.log('Usuario:', user);
+      //console.log('ID del usuario:', user?.id || user?._id);
 
       const response = await axios.post(
         'http://localhost:5500/api/disponibilidad',
@@ -232,14 +232,14 @@ export default function SugerenciaHorarios() {
 
       if (response.data) {
         setMensaje('Disponibilidad guardada exitosamente');
-        console.log('Disponibilidad guardada:', response.data);
+        //console.log('Disponibilidad guardada:', response.data);
         setTimeout(() => setMensaje(''), 3000);
       }
     } catch (error) {
       console.error('Error al guardar disponibilidad:', error);
       console.error('Respuesta del servidor:', error.response?.data);
       console.error('Código de estado:', error.response?.status);
-      
+
       if (error.response?.status === 401) {
         setMensaje('No tienes autorización para realizar esta acción');
       } else if (error.response?.status === 403) {
@@ -397,7 +397,7 @@ export default function SugerenciaHorarios() {
       ...prev,
       [key]: !prev[key]
     }));
-    
+
     // Para profesores, no guardar en localStorage ya que se maneja en el backend
     if (user?.role !== 'profesor') {
       // Guardar en localStorage para otros roles
@@ -501,13 +501,12 @@ export default function SugerenciaHorarios() {
 
             {/* Mensajes */}
             {mensaje && (
-              <div className={`p-4 rounded-lg text-center ${
-                mensaje.includes('exitosamente') || mensaje.includes('cargado') 
-                  ? 'bg-green-100 text-green-700 border border-green-300' 
-                  : mensaje.includes('no ha configurado') 
+              <div className={`p-4 rounded-lg text-center ${mensaje.includes('exitosamente') || mensaje.includes('cargado')
+                  ? 'bg-green-100 text-green-700 border border-green-300'
+                  : mensaje.includes('no ha configurado')
                     ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
                     : 'bg-red-100 text-red-700 border border-red-300'
-              }`}>
+                }`}>
                 <div className="flex items-center justify-center gap-2">
                   {mensaje.includes('exitosamente') || mensaje.includes('cargado') ? (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -571,11 +570,10 @@ export default function SugerenciaHorarios() {
                         <div
                           key={profesor._id}
                           onClick={() => seleccionarProfesor(profesor)}
-                          className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${
-                            profesorSeleccionado?._id === profesor._id
+                          className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${profesorSeleccionado?._id === profesor._id
                               ? 'bg-blue-50 border-blue-500 shadow-md'
                               : 'bg-gray-50 border-gray-200 hover:bg-blue-50'
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center justify-between">
                             <div>
@@ -656,11 +654,10 @@ export default function SugerenciaHorarios() {
                                 return (
                                   <td key={key} className="border border-blue-200 p-1">
                                     <div
-                                      className={`w-full h-6 rounded transition-colors ${
-                                        isDisponible
+                                      className={`w-full h-6 rounded transition-colors ${isDisponible
                                           ? 'bg-green-500'
                                           : 'bg-gray-200'
-                                      }`}
+                                        }`}
                                       title={isDisponible ? 'Disponible' : 'No disponible'}
                                     />
                                   </td>
@@ -728,7 +725,7 @@ export default function SugerenciaHorarios() {
     return (
       <PagGeneral>
         <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
-          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+          <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
             {/* Encabezado para profesores */}
             <div className="text-center space-y-1 sm:space-y-2">
               <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
@@ -741,23 +738,25 @@ export default function SugerenciaHorarios() {
 
             {/* Mensajes */}
             {mensaje && (
-              <div className={`p-4 rounded-lg text-center ${
-                mensaje.includes('exitosamente') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-              }`}>
+              <div className={`p-4 rounded-lg text-center ${mensaje.includes('exitosamente') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>
                 {mensaje}
               </div>
             )}
 
             {/* Disponibilidad Horaria */}
-            <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4">
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
                 <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <img src="/IconHorario.png" alt="Icono Horario" className="w-5 h-5" />
                   Mi Disponibilidad Horaria
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí debes marcar las casillas en las que puedes dictar clases. Si están marcadas en verde, significa que estas disponible para dictar clases en ese horario.
+                    </p>
+                  </HelpTooltip>
                 </h2>
-                <p className="text-cyan-100 text-xs sm:text-sm mt-1">
-                  Marca los horarios en los que puedes dictar clases (verde = disponible)
-                </p>
               </div>
 
               <div className="p-4 sm:p-6 overflow-x-auto">
@@ -788,11 +787,10 @@ export default function SugerenciaHorarios() {
                               <button
                                 onClick={() => toggleDisponibilidad(dia, hora)}
                                 disabled={loading}
-                                className={`w-full h-8 rounded transition-colors ${
-                                  isDisponible
+                                className={`w-full h-8 rounded transition-colors ${isDisponible
                                     ? 'bg-green-500 hover:bg-green-600'
                                     : 'bg-gray-200 hover:bg-gray-300'
-                                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                  } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 title={isDisponible ? 'Disponible' : 'No disponible'}
                               />
                             </td>
@@ -809,9 +807,8 @@ export default function SugerenciaHorarios() {
                 <button
                   onClick={guardarDisponibilidadProfesor}
                   disabled={loading}
-                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 mx-auto ${
-                    loading ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                  className={`bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 mx-auto ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                 >
                   {loading ? (
                     <>

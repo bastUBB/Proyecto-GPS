@@ -2,15 +2,15 @@ import fs from 'fs';
 
 // Script para limpiar y deduplicar los datos extraídos
 const limpiarDatos = () => {
-    console.log('🧹 Limpiando y deduplicando datos extraídos...');
+    //console.log('🧹 Limpiando y deduplicando datos extraídos...');
     
     try {
         // Leer datos completos
         const datosCompletos = JSON.parse(fs.readFileSync('datos_completos_final.json', 'utf8'));
         
-        console.log('📊 Datos originales:');
-        console.log(`   📈 Rendimiento por carrera: ${datosCompletos.rendimientoPorCarrera.length} registros`);
-        console.log(`   📚 Rendimiento por asignatura: ${datosCompletos.rendimientoPorAsignatura.length} registros`);
+        //console.log('📊 Datos originales:');
+        //console.log(`   📈 Rendimiento por carrera: ${datosCompletos.rendimientoPorCarrera.length} registros`);
+        //console.log(`   📚 Rendimiento por asignatura: ${datosCompletos.rendimientoPorAsignatura.length} registros`);
         
         // Deduplicar datos por carrera
         const carreraUnicos = [];
@@ -36,9 +36,9 @@ const limpiarDatos = () => {
             }
         });
         
-        console.log('\n🧹 Datos después de deduplicación:');
-        console.log(`   📈 Rendimiento por carrera: ${carreraUnicos.length} registros únicos`);
-        console.log(`   📚 Rendimiento por asignatura: ${asignaturasUnicas.length} registros únicos`);
+        //console.log('\n🧹 Datos después de deduplicación:');
+        //console.log(`   📈 Rendimiento por carrera: ${carreraUnicos.length} registros únicos`);
+        //console.log(`   📚 Rendimiento por asignatura: ${asignaturasUnicas.length} registros únicos`);
         
         // Crear datos limpios
         const datosLimpios = {
@@ -78,7 +78,7 @@ const limpiarDatos = () => {
         
         // Guardar datos limpios
         fs.writeFileSync('datos_limpios_final.json', JSON.stringify(datosLimpios, null, 2));
-        console.log('\n💾 Datos limpios guardados en: datos_limpios_final.json');
+        //console.log('\n💾 Datos limpios guardados en: datos_limpios_final.json');
         
         // Crear CSVs limpios
         const csvCarreraLimpio = carreraUnicos
@@ -95,43 +95,43 @@ const limpiarDatos = () => {
         fs.writeFileSync('rendimiento_asignaturas_limpio.csv', 
             'Año,Semestre,Código Sección,Asignatura,Inscritos,Aprobados,% Aprobación\n' + csvAsignaturasLimpio);
         
-        console.log('📄 CSVs limpios generados:');
-        console.log('   - rendimiento_carrera_limpio.csv');
-        console.log('   - rendimiento_asignaturas_limpio.csv');
+        //console.log('📄 CSVs limpios generados:');
+        //console.log('   - rendimiento_carrera_limpio.csv');
+        //console.log('   - rendimiento_asignaturas_limpio.csv');
         
         // Mostrar resumen
-        console.log('\n📊 Resumen final:');
-        console.log(`   📅 Años disponibles: ${añosDisponibles.join(', ')}`);
-        console.log(`   🎯 Total años: ${añosDisponibles.length}`);
-        console.log(`   📚 Total asignaturas: ${asignaturasDisponibles.length}`);
-        console.log(`   📈 Promedio aprobación carrera: ${datosLimpios.resumen.promedioAprobacionCarrera}%`);
-        console.log(`   📖 Promedio aprobación asignaturas: ${datosLimpios.resumen.promedioAprobacionAsignaturas}%`);
+        //console.log('\n📊 Resumen final:');
+        //console.log(`   📅 Años disponibles: ${añosDisponibles.join(', ')}`);
+        //console.log(`   🎯 Total años: ${añosDisponibles.length}`);
+        //console.log(`   📚 Total asignaturas: ${asignaturasDisponibles.length}`);
+        //console.log(`   📈 Promedio aprobación carrera: ${datosLimpios.resumen.promedioAprobacionCarrera}%`);
+        //console.log(`   📖 Promedio aprobación asignaturas: ${datosLimpios.resumen.promedioAprobacionAsignaturas}%`);
         
         // Mostrar algunas asignaturas
-        console.log('\n📚 Asignaturas encontradas:');
+        //console.log('\n📚 Asignaturas encontradas:');
         asignaturasDisponibles.forEach((asignatura, i) => {
-            console.log(`   ${i + 1}. ${asignatura}`);
+            //console.log(`   ${i + 1}. ${asignatura}`);
         });
         
         // Mostrar rendimiento por año
-        console.log('\n📈 Rendimiento por año (sin duplicados):');
+        //console.log('\n📈 Rendimiento por año (sin duplicados):');
         carreraUnicos
             .sort((a, b) => b.año - a.año)
             .forEach(dato => {
-                console.log(`   ${dato.año}: ${dato.porcentajeAprobacion}% (${dato.numeroAprobadas}/${dato.inscritosSinActa})`);
+                //console.log(`   ${dato.año}: ${dato.porcentajeAprobacion}% (${dato.numeroAprobadas}/${dato.inscritosSinActa})`);
             });
         
         // Mostrar algunas asignaturas con sus datos
-        console.log('\n📖 Ejemplos de asignaturas con datos:');
+        //console.log('\n📖 Ejemplos de asignaturas con datos:');
         asignaturasUnicas
             .filter(a => a.año && a.nombreAsignatura)
             .slice(0, 5)
             .forEach((asignatura, i) => {
-                console.log(`   ${i + 1}. ${asignatura.nombreAsignatura} (${asignatura.año}): ${asignatura.porcentajeAprobacion}% (${asignatura.numeroAprobadas}/${asignatura.inscritosSinActa})`);
+                //console.log(`   ${i + 1}. ${asignatura.nombreAsignatura} (${asignatura.año}): ${asignatura.porcentajeAprobacion}% (${asignatura.numeroAprobadas}/${asignatura.inscritosSinActa})`);
             });
         
-        console.log('\n✅ Limpieza completada exitosamente');
-        console.log('🎯 Datos listos para usar en el sistema académico');
+        //console.log('\n✅ Limpieza completada exitosamente');
+        //console.log('🎯 Datos listos para usar en el sistema académico');
         
         return datosLimpios;
         
@@ -145,12 +145,12 @@ const limpiarDatos = () => {
 const resultado = limpiarDatos();
 
 if (resultado) {
-    console.log('\n🎉 ¡LIMPIEZA COMPLETADA EXITOSAMENTE!');
-    console.log('📁 Archivos finales generados:');
-    console.log('   - datos_limpios_final.json (datos estructurados)');
-    console.log('   - rendimiento_carrera_limpio.csv (CSV carrera)');
-    console.log('   - rendimiento_asignaturas_limpio.csv (CSV asignaturas)');
-    console.log('\n🚀 Datos optimizados y listos para integración');
+    //console.log('\n🎉 ¡LIMPIEZA COMPLETADA EXITOSAMENTE!');
+    //console.log('📁 Archivos finales generados:');
+    //console.log('   - datos_limpios_final.json (datos estructurados)');
+    //console.log('   - rendimiento_carrera_limpio.csv (CSV carrera)');
+    //console.log('   - rendimiento_asignaturas_limpio.csv (CSV asignaturas)');
+    //console.log('\n🚀 Datos optimizados y listos para integración');
 } else {
-    console.log('❌ Error en el proceso de limpieza');
+    //console.log('❌ Error en el proceso de limpieza');
 }

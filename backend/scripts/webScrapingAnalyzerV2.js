@@ -9,10 +9,10 @@ const analyzeWebScraping = async () => {
     const powerBiUrl = 'https://app.powerbi.com/view?r=eyJrIjoiNDJmZjMzNDgtZDI3Yi00NTlhLTgyMjctN2M5MzI0YzcxZjg4IiwidCI6IjMyYTQ3ZjJkLTZlYjItNDIyNC04YjExLTI1MTk3NTQ1ODFjNSIsImMiOjR9';
     const originalUrl = 'https://dgai.ubiobio.cl/modelos-de-gestion/indicadores-de-rendimiento-de-pregrado-diurno/';
     
-    console.log('🔍 Analizando posibilidades de web scraping...');
-    console.log('🎯 Probando AMBAS URLs para determinar la mejor estrategia:');
-    console.log(`📍 URL Original: ${originalUrl}`);
-    console.log(`⚡ URL Power BI: ${powerBiUrl}`);
+    //console.log('🔍 Analizando posibilidades de web scraping...');
+    //console.log('🎯 Probando AMBAS URLs para determinar la mejor estrategia:');
+    //console.log(`📍 URL Original: ${originalUrl}`);
+    //console.log(`⚡ URL Power BI: ${powerBiUrl}`);
     
     // Empezamos con Power BI que sabemos que funciona
     const url = powerBiUrl;
@@ -35,7 +35,7 @@ const analyzeWebScraping = async () => {
     
     try {
         // 1. Análisis básico con HTTP request
-        console.log('\n📡 1. Análisis básico con HTTP request...');
+        //console.log('\n📡 1. Análisis básico con HTTP request...');
         
         try {
             const response = await axios.get(url, {
@@ -54,9 +54,9 @@ const analyzeWebScraping = async () => {
                 htmlSize: response.data.length
             };
             
-            console.log(`✅ HTTP Request exitoso: ${response.status}`);
-            console.log(`📄 Content-Type: ${response.headers['content-type']}`);
-            console.log(`📏 Tamaño HTML: ${response.data.length} caracteres`);
+            //console.log(`✅ HTTP Request exitoso: ${response.status}`);
+            //console.log(`📄 Content-Type: ${response.headers['content-type']}`);
+            //console.log(`📏 Tamaño HTML: ${response.data.length} caracteres`);
             
             // Análisis del contenido HTML
             const $ = cheerio.load(response.data);
@@ -73,11 +73,11 @@ const analyzeWebScraping = async () => {
             
             results.analysis.powerBiDetection = powerBiElements;
             
-            console.log(`🔍 Power BI Elements:`);
-            console.log(`   - iframes: ${powerBiElements.iframes}`);
-            console.log(`   - Scripts de Power BI: ${powerBiElements.powerBiScripts}`);
-            console.log(`   - Divs de Power BI: ${powerBiElements.powerBiDivs}`);
-            console.log(`   - URLs de Power BI: ${powerBiElements.powerBiUrls}`);
+            //console.log(`🔍 Power BI Elements:`);
+            //console.log(`   - iframes: ${powerBiElements.iframes}`);
+            //console.log(`   - Scripts de Power BI: ${powerBiElements.powerBiScripts}`);
+            //console.log(`   - Divs de Power BI: ${powerBiElements.powerBiDivs}`);
+            //console.log(`   - URLs de Power BI: ${powerBiElements.powerBiUrls}`);
             
             // Detectar contenido JavaScript
             const jsContent = {
@@ -91,10 +91,10 @@ const analyzeWebScraping = async () => {
             
             results.analysis.javascriptContent = jsContent;
             
-            console.log(`⚡ Contenido JavaScript:`);
-            console.log(`   - Total scripts: ${jsContent.totalScripts}`);
-            console.log(`   - jQuery: ${jsContent.hasJQuery}`);
-            console.log(`   - AJAX: ${jsContent.hasAjax}`);
+            //console.log(`⚡ Contenido JavaScript:`);
+            //console.log(`   - Total scripts: ${jsContent.totalScripts}`);
+            //console.log(`   - jQuery: ${jsContent.hasJQuery}`);
+            //console.log(`   - AJAX: ${jsContent.hasAjax}`);
             
             // Análisis de contenido estructurado
             const contentAnalysis = {
@@ -107,11 +107,11 @@ const analyzeWebScraping = async () => {
                 hasClassAttributes: $('[class]').length
             };
             
-            console.log(`📊 Estructura del contenido:`);
-            console.log(`   - Tablas: ${contentAnalysis.tables}`);
-            console.log(`   - Formularios: ${contentAnalysis.forms}`);
-            console.log(`   - Listas: ${contentAnalysis.lists}`);
-            console.log(`   - Divs: ${contentAnalysis.divs}`);
+            //console.log(`📊 Estructura del contenido:`);
+            //console.log(`   - Tablas: ${contentAnalysis.tables}`);
+            //console.log(`   - Formularios: ${contentAnalysis.forms}`);
+            //console.log(`   - Listas: ${contentAnalysis.lists}`);
+            //console.log(`   - Divs: ${contentAnalysis.divs}`);
             
             results.analysis.contentAnalysis = contentAnalysis;
             
@@ -124,18 +124,18 @@ const analyzeWebScraping = async () => {
                 hasIndicadores: response.data.includes('indicador') || response.data.includes('rendimiento')
             };
             
-            console.log(`🎯 Indicadores específicos:`);
-            console.log(`   - Tiene charts: ${indicators.hasCharts}`);
-            console.log(`   - Tiene DataTables: ${indicators.hasDataTables}`);
-            console.log(`   - Usa Bootstrap: ${indicators.hasBootstrap}`);
-            console.log(`   - Es WordPress: ${indicators.hasWordPress}`);
-            console.log(`   - Menciona indicadores: ${indicators.hasIndicadores}`);
+            //console.log(`🎯 Indicadores específicos:`);
+            //console.log(`   - Tiene charts: ${indicators.hasCharts}`);
+            //console.log(`   - Tiene DataTables: ${indicators.hasDataTables}`);
+            //console.log(`   - Usa Bootstrap: ${indicators.hasBootstrap}`);
+            //console.log(`   - Es WordPress: ${indicators.hasWordPress}`);
+            //console.log(`   - Menciona indicadores: ${indicators.hasIndicadores}`);
             
             results.analysis.indicators = indicators;
             
             // Guardar HTML para análisis posterior
             fs.writeFileSync('webpage_analysis.html', response.data);
-            console.log('📁 HTML guardado en: webpage_analysis.html');
+            //console.log('📁 HTML guardado en: webpage_analysis.html');
             
         } catch (error) {
             results.analysis.basicHttpRequest = {
@@ -143,11 +143,11 @@ const analyzeWebScraping = async () => {
                 error: error.message,
                 code: error.code
             };
-            console.log(`❌ Error en HTTP request: ${error.message}`);
+            //console.log(`❌ Error en HTTP request: ${error.message}`);
         }
         
         // 2. Análisis con Puppeteer (navegador real)
-        console.log('\n🤖 2. Análisis con Puppeteer (navegador real)...');
+        //console.log('\n🤖 2. Análisis con Puppeteer (navegador real)...');
         
         let browser;
         try {
@@ -182,11 +182,11 @@ const analyzeWebScraping = async () => {
             });
             
             // Navegar a la página
-            console.log('🌐 Navegando a la página...');
+            //console.log('🌐 Navegando a la página...');
             await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
             
             // Esperar a que se cargue contenido dinámico
-            console.log('⏳ Esperando contenido dinámico...');
+            //console.log('⏳ Esperando contenido dinámico...');
             await page.waitForTimeout ? await page.waitForTimeout(5000) : await new Promise(resolve => setTimeout(resolve, 5000));
             
             // Buscar elementos específicos
@@ -207,12 +207,12 @@ const analyzeWebScraping = async () => {
                 };
             });
             
-            console.log(`📊 Análisis de la página cargada:`);
-            console.log(`   - Título: ${pageAnalysis.title}`);
-            console.log(`   - URL final: ${pageAnalysis.url}`);
-            console.log(`   - iframes: ${pageAnalysis.iframes}`);
-            console.log(`   - Tablas: ${pageAnalysis.tables}`);
-            console.log(`   - Charts/SVG: ${pageAnalysis.hasCharts}`);
+            //console.log(`📊 Análisis de la página cargada:`);
+            //console.log(`   - Título: ${pageAnalysis.title}`);
+            //console.log(`   - URL final: ${pageAnalysis.url}`);
+            //console.log(`   - iframes: ${pageAnalysis.iframes}`);
+            //console.log(`   - Tablas: ${pageAnalysis.tables}`);
+            //console.log(`   - Charts/SVG: ${pageAnalysis.hasCharts}`);
             
             // Buscar iframes específicos
             const iframes = await page.evaluate(() => {
@@ -225,11 +225,11 @@ const analyzeWebScraping = async () => {
                 }));
             });
             
-            console.log(`🖼️  iframes encontrados: ${iframes.length}`);
+            //console.log(`🖼️  iframes encontrados: ${iframes.length}`);
             
             // Capturar screenshot
             await page.screenshot({ path: 'webpage_screenshot.png', fullPage: true });
-            console.log('📸 Screenshot guardado: webpage_screenshot.png');
+            //console.log('📸 Screenshot guardado: webpage_screenshot.png');
             
             // Filtrar requests relevantes
             const relevantRequests = requests.filter(req => 
@@ -240,7 +240,7 @@ const analyzeWebScraping = async () => {
                 req.resourceType === 'fetch'
             );
             
-            console.log(`📡 Requests relevantes: ${relevantRequests.length}`);
+            //console.log(`📡 Requests relevantes: ${relevantRequests.length}`);
             
             results.analysis.puppeteerAnalysis = {
                 pageAnalysis,
@@ -251,7 +251,7 @@ const analyzeWebScraping = async () => {
             };
             
         } catch (error) {
-            console.log(`❌ Error en Puppeteer: ${error.message}`);
+            //console.log(`❌ Error en Puppeteer: ${error.message}`);
             results.analysis.puppeteerAnalysis = {
                 success: false,
                 error: error.message
@@ -263,7 +263,7 @@ const analyzeWebScraping = async () => {
         }
         
         // 2.5. Análisis específico para Power BI
-        console.log('\n⚡ 2.5. Análisis específico para Power BI...');
+        //console.log('\n⚡ 2.5. Análisis específico para Power BI...');
         
         if (url.includes('app.powerbi.com')) {
             let browser;
@@ -311,10 +311,10 @@ const analyzeWebScraping = async () => {
                     }
                 });
                 
-                console.log('🚀 Navegando a Power BI...');
+                //console.log('🚀 Navegando a Power BI...');
                 await page.goto(url, { waitUntil: 'networkidle2', timeout: 90000 });
                 
-                console.log('⏳ Esperando a que Power BI cargue completamente...');
+                //console.log('⏳ Esperando a que Power BI cargue completamente...');
                 await page.waitForTimeout(15000); // Esperar 15 segundos
                 
                 // Buscar elementos específicos de Power BI
@@ -348,20 +348,20 @@ const analyzeWebScraping = async () => {
                     return analysis;
                 });
                 
-                console.log('📊 Power BI Analysis Results:');
-                console.log(`   - Report Container: ${powerBiAnalysis.hasReportContainer}`);
-                console.log(`   - Tablas: ${powerBiAnalysis.hasDataTables}`);
-                console.log(`   - Elementos Grid: ${powerBiAnalysis.hasGridElements}`);
-                console.log(`   - Elementos Row: ${powerBiAnalysis.hasRowElements}`);
-                console.log(`   - Elementos Cell: ${powerBiAnalysis.hasCellElements}`);
-                console.log(`   - Canvas: ${powerBiAnalysis.hasCanvasElements}`);
-                console.log(`   - SVG: ${powerBiAnalysis.hasSvgElements}`);
-                console.log(`   - Ingeniería Civil en Informática: ${powerBiAnalysis.specificContent.hasIngenieriaInformatica}`);
-                console.log(`   - Años encontrados: ${powerBiAnalysis.specificContent.hasYears.length}`);
-                console.log(`   - Porcentajes encontrados: ${powerBiAnalysis.specificContent.hasPercentages.length}`);
+                //console.log('📊 Power BI Analysis Results:');
+                //console.log(`   - Report Container: ${powerBiAnalysis.hasReportContainer}`);
+                //console.log(`   - Tablas: ${powerBiAnalysis.hasDataTables}`);
+                //console.log(`   - Elementos Grid: ${powerBiAnalysis.hasGridElements}`);
+                //console.log(`   - Elementos Row: ${powerBiAnalysis.hasRowElements}`);
+                //console.log(`   - Elementos Cell: ${powerBiAnalysis.hasCellElements}`);
+                //console.log(`   - Canvas: ${powerBiAnalysis.hasCanvasElements}`);
+                //console.log(`   - SVG: ${powerBiAnalysis.hasSvgElements}`);
+                //console.log(`   - Ingeniería Civil en Informática: ${powerBiAnalysis.specificContent.hasIngenieriaInformatica}`);
+                //console.log(`   - Años encontrados: ${powerBiAnalysis.specificContent.hasYears.length}`);
+                //console.log(`   - Porcentajes encontrados: ${powerBiAnalysis.specificContent.hasPercentages.length}`);
                 
                 // Intentar extraer datos específicos
-                console.log('🔍 Intentando extraer datos específicos...');
+                //console.log('🔍 Intentando extraer datos específicos...');
                 
                 const extractedData = await page.evaluate(() => {
                     const data = [];
@@ -411,18 +411,18 @@ const analyzeWebScraping = async () => {
                     };
                 });
                 
-                console.log(`📈 Datos extraídos:`);
-                console.log(`   - Tablas encontradas: ${extractedData.tables.length}`);
-                console.log(`   - Celdas de grid: ${extractedData.gridCells.length}`);
+                //console.log(`📈 Datos extraídos:`);
+                //console.log(`   - Tablas encontradas: ${extractedData.tables.length}`);
+                //console.log(`   - Celdas de grid: ${extractedData.gridCells.length}`);
                 
                 // Capturar screenshot
                 await page.screenshot({ path: 'powerbi_screenshot.png', fullPage: true });
-                console.log('📸 Screenshot de Power BI guardado: powerbi_screenshot.png');
+                //console.log('📸 Screenshot de Power BI guardado: powerbi_screenshot.png');
                 
                 // Guardar HTML del Power BI
                 const powerBiHtml = await page.content();
                 fs.writeFileSync('powerbi_content.html', powerBiHtml);
-                console.log('📁 HTML de Power BI guardado: powerbi_content.html');
+                //console.log('📁 HTML de Power BI guardado: powerbi_content.html');
                 
                 results.analysis.powerBiSpecificAnalysis = {
                     success: true,
@@ -432,16 +432,16 @@ const analyzeWebScraping = async () => {
                     powerBiResponses: powerBiResponses.slice(0, 10)
                 };
                 
-                console.log(`📡 Requests interceptados: ${powerBiRequests.length}`);
-                console.log(`📨 Responses interceptados: ${powerBiResponses.length}`);
+                //console.log(`📡 Requests interceptados: ${powerBiRequests.length}`);
+                //console.log(`📨 Responses interceptados: ${powerBiResponses.length}`);
                 
                 // Mostrar algunos requests importantes
                 powerBiRequests.slice(0, 5).forEach((req, i) => {
-                    console.log(`   ${i+1}. ${req.method} ${req.url.substring(0, 100)}...`);
+                    //console.log(`   ${i+1}. ${req.method} ${req.url.substring(0, 100)}...`);
                 });
                 
             } catch (error) {
-                console.log(`❌ Error en análisis específico de Power BI: ${error.message}`);
+                //console.log(`❌ Error en análisis específico de Power BI: ${error.message}`);
                 results.analysis.powerBiSpecificAnalysis = {
                     success: false,
                     error: error.message
@@ -454,37 +454,37 @@ const analyzeWebScraping = async () => {
         }
         
         // 3. Determinar estrategia de scraping
-        console.log('\n🎯 3. Determinando estrategia de scraping...');
+        //console.log('\n🎯 3. Determinando estrategia de scraping...');
         
         const strategy = determineScrapingStrategy(results.analysis);
         results.analysis.scrapingStrategy = strategy;
         
-        console.log(`📋 Estrategia recomendada: ${strategy.primary}`);
-        console.log(`🔧 Herramientas necesarias: ${strategy.tools.join(', ')}`);
-        console.log(`⚠️  Dificultad: ${strategy.difficulty}`);
-        console.log(`✅ Factibilidad: ${strategy.feasibility}`);
+        //console.log(`📋 Estrategia recomendada: ${strategy.primary}`);
+        //console.log(`🔧 Herramientas necesarias: ${strategy.tools.join(', ')}`);
+        //console.log(`⚠️  Dificultad: ${strategy.difficulty}`);
+        //console.log(`✅ Factibilidad: ${strategy.feasibility}`);
         
         strategy.steps.forEach((step, index) => {
-            console.log(`   ${index + 1}. ${step}`);
+            //console.log(`   ${index + 1}. ${step}`);
         });
         
         // 4. Recomendaciones
-        console.log('\n💡 4. Recomendaciones:');
+        //console.log('\n💡 4. Recomendaciones:');
         
         const recommendations = generateRecommendations(results.analysis);
         results.analysis.recommendations = recommendations;
         
         recommendations.forEach((rec, index) => {
-            console.log(`   ${index + 1}. ${rec}`);
+            //console.log(`   ${index + 1}. ${rec}`);
         });
         
         // 5. Generar código de ejemplo
-        console.log('\n🔧 5. Generando código de ejemplo...');
+        //console.log('\n🔧 5. Generando código de ejemplo...');
         
         const exampleCode = generateExampleCode(strategy);
         results.analysis.exampleCode = exampleCode;
         
-        console.log('📝 Código de ejemplo generado');
+        //console.log('📝 Código de ejemplo generado');
         
     } catch (error) {
         console.error('❌ Error general:', error);
@@ -493,7 +493,7 @@ const analyzeWebScraping = async () => {
     
     // Guardar resultados
     fs.writeFileSync('webscraping_analysis.json', JSON.stringify(results, null, 2));
-    console.log('\n📁 Análisis completo guardado en: webscraping_analysis.json');
+    //console.log('\n📁 Análisis completo guardado en: webscraping_analysis.json');
     
     return results;
 };
@@ -667,11 +667,11 @@ const scrapePowerBI = async () => {
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
     
     try {
-        console.log('Navegando a Power BI...');
+        //console.log('Navegando a Power BI...');
         await page.goto('https://app.powerbi.com/view?r=eyJrIjoiNDJmZjMzNDgtZDI3Yi00NTlhLTgyMjctN2M5MzI0YzcxZjg4IiwidCI6IjMyYTQ3ZjJkLTZlYjItNDIyNC04YjExLTI1MTk3NTQ1ODFjNSIsImMiOjR9', 
             { waitUntil: 'networkidle2', timeout: 90000 });
         
-        console.log('Esperando carga completa...');
+        //console.log('Esperando carga completa...');
         await page.waitForTimeout(15000);
         
         // Extraer datos específicos de Ingeniería Civil en Informática
@@ -717,7 +717,7 @@ const scrapePowerBI = async () => {
         
         // Guardar datos extraídos
         fs.writeFileSync('powerbi_scraped_data.json', JSON.stringify(data, null, 2));
-        console.log(\`Datos extraídos: \${data.length} elementos\`);
+        //console.log(\`Datos extraídos: \${data.length} elementos\`);
         
         return data;
         
@@ -728,7 +728,7 @@ const scrapePowerBI = async () => {
 
 // Ejecutar scraping
 scrapePowerBI().then(data => {
-    console.log('Scraping completado:', data.length, 'elementos');
+    //console.log('Scraping completado:', data.length, 'elementos');
 }).catch(console.error);
 `;
     } else if (strategy.primary === 'Static HTML') {
@@ -801,5 +801,5 @@ const scrapePage = async () => {
 };
 
 // Ejecutar análisis
-console.log('🚀 Iniciando análisis de web scraping...');
+//console.log('🚀 Iniciando análisis de web scraping...');
 analyzeWebScraping().catch(console.error);
