@@ -30,6 +30,14 @@ export default function SugerenciaHorarios() {
   const [profesorSeleccionado, setProfesorSeleccionado] = useState(null);
   const [disponibilidadProfesor, setDisponibilidadProfesor] = useState({});
 
+  // Nuevos estados para profesores
+  const [asignaturasProfesor, setAsignaturasProfesor] = useState([]);
+  const [asignaturasDisponibles, setAsignaturasDisponibles] = useState([]);
+  const [modalAsignaturas, setModalAsignaturas] = useState(false);
+
+  const [combinacionGlobal, setCombinacionGlobal] = useState(null);
+
+
   // Configurar axios con token de autenticación
   const getAuthConfig = () => {
     const token = localStorage.getItem('token');
@@ -112,6 +120,29 @@ export default function SugerenciaHorarios() {
         setMensaje(error.response?.data?.message || 'Error al cargar la disponibilidad del profesor');
         setDisponibilidadProfesor({});
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generarCombinacionGlobal = async () => {
+    setLoading(true);
+    setMensaje('');
+    setCombinacionGlobal(null);
+    try {
+      const response = await axios.post(
+        'http://localhost:5500/api/combi/horario/generar-global',
+        {},
+        getAuthConfig()
+      );
+      if (response.data && response.data.data) {
+        setCombinacionGlobal(response.data.data);
+        setMensaje('Combinación generada exitosamente');
+      } else {
+        setMensaje('No se pudo generar la combinación');
+      }
+    } catch (error) {
+      setMensaje(error.response?.data?.message || 'Error al generar la combinación');
     } finally {
       setLoading(false);
     }
@@ -225,12 +256,110 @@ export default function SugerenciaHorarios() {
     }
   };
 
+  // Cargar asignaturas disponibles desde la base de datos
+  const cargarAsignaturasDisponibles = async () => {
+    try {
+      setLoading(true);
+      setMensaje('');
+      
+      // Usar el nuevo endpoint específico para asignaturas disponibles
+      const response = await axios.get('http://localhost:5500/api/combi/asignaturas-disponibles', getAuthConfig());
+      
+      if (response.data && response.data.data) {
+        // Formatear las asignaturas para el modal
+        const asignaturasFormateadas = response.data.data.map(asignatura => ({
+          codigo: asignatura.codigo,
+          nombre: asignatura.nombre.toUpperCase(),
+          creditos: asignatura.creditos,
+          semestre: asignatura.semestre,
+          _id: asignatura._id
+        }));
+        
+        setAsignaturasDisponibles(asignaturasFormateadas);
+        console.log('Asignaturas cargadas desde la base de datos:', asignaturasFormateadas);
+      } else {
+        console.error('No se encontraron asignaturas en la respuesta');
+        setMensaje('No se pudieron cargar las asignaturas disponibles');
+        setAsignaturasDisponibles([]);
+      }
+    } catch (error) {
+      console.error('Error al cargar asignaturas:', error);
+      
+      if (error.response?.status === 404) {
+        setMensaje('No hay asignaturas registradas en el sistema');
+        setAsignaturasDisponibles([]);
+      } else if (error.response?.status === 401) {
+        setMensaje('No tienes autorización para ver las asignaturas');
+      } else {
+        setMensaje('Error al cargar las asignaturas desde la base de datos');
+        
+        // Fallback: usar datos simulados solo si es necesario
+        const asignaturasSimuladas = [
+          { codigo: '620431', nombre: 'INTRODUCCIÓN A LA PROGRAMACIÓN' },
+          { codigo: '620433', nombre: 'PROGRAMACIÓN ORIENTADA AL OBJETO' },
+          { codigo: '620435', nombre: 'ESTRUCTURAS DE DATOS' },
+          { codigo: '620437', nombre: 'FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN' },
+          { codigo: '620439', nombre: 'BASE DE DATOS' }
+        ];
+        setAsignaturasDisponibles(asignaturasSimuladas);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cargar asignaturas del profesor
+  const cargarAsignaturasProfesor = async () => {
+    if (user?.role !== 'profesor') return;
+
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/api/combi/profesor/${user.id || user._id}/asignaturas`,
+        getAuthConfig()
+      );
+      
+      if (response.data && response.data.data) {
+        setAsignaturasProfesor(response.data.data.asignaturas || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar asignaturas del profesor:', error);
+    }
+  };
+
+  // Guardar asignaturas del profesor
+  const guardarAsignaturasProfesor = async (asignaturasSeleccionadas) => {
+    if (user?.role !== 'profesor') return;
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `http://localhost:5500/api/combi/profesor/${user.id || user._id}/asignaturas`,
+        { asignaturas: asignaturasSeleccionadas },
+        getAuthConfig()
+      );
+
+      if (response.data) {
+        setAsignaturasProfesor(asignaturasSeleccionadas);
+        setMensaje('Asignaturas guardadas exitosamente');
+        setModalAsignaturas(false);
+        setTimeout(() => setMensaje(''), 3000);
+      }
+    } catch (error) {
+      console.error('Error al guardar asignaturas:', error);
+      setMensaje(error.response?.data?.message || 'Error al guardar las asignaturas');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Cargar datos iniciales
   useEffect(() => {
     if (user?.role === 'admin' || user?.role === 'director') {
       cargarProfesores();
     } else if (user?.role === 'profesor') {
       cargarDisponibilidadProfesor();
+      cargarAsignaturasDisponibles(); // Esta función ahora carga desde la BD
+      cargarAsignaturasProfesor();
     } else if (user?.role !== 'profesor' && user?.role !== 'admin' && user?.role !== 'director') {
       // Código original para otros roles
       const asignaturasGuardadas = localStorage.getItem("asignaturasDisponibles");
@@ -348,6 +477,14 @@ export default function SugerenciaHorarios() {
 
   // Vista para administradores - Lista de profesores y disponibilidad
   if (user.role === 'admin' || user.role === 'director') {
+    // DEBUG: Mostrar el contenido de combinacionGlobal en consola y en pantalla
+    useEffect(() => {
+      if (combinacionGlobal) {
+        // eslint-disable-next-line
+        console.log('combinacionGlobal:', combinacionGlobal);
+      }
+    }, [combinacionGlobal]);
+
     return (
       <PagGeneral>
         <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
@@ -389,6 +526,16 @@ export default function SugerenciaHorarios() {
                 </div>
               </div>
             )}
+
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={generarCombinacionGlobal}
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                disabled={loading}
+              >
+                {loading ? 'Generando...' : 'Generar Combinación Global'}
+              </button>
+            </div>  
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Lista de profesores */}
@@ -542,13 +689,41 @@ export default function SugerenciaHorarios() {
                 </div>
               </div>
             </div>
+
+            {/* DEBUG: Mostrar el JSON de combinacionGlobal */}
+            {combinacionGlobal && (
+              <div className="bg-yellow-50 border border-yellow-300 rounded p-2 my-4 text-xs text-yellow-900 overflow-x-auto">
+                <b>DEBUG combinacionGlobal:</b>
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                  {JSON.stringify(combinacionGlobal, null, 2)}
+                </pre>
+              </div>
+            )}
+
+            {/* Mostrar la tabla SOLO si combinacionGlobal existe y tiene datos */}
+            {combinacionGlobal && Array.isArray(combinacionGlobal) && combinacionGlobal.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-xl font-bold text-blue-900 text-center mb-4">
+                  Combinación Global Generada
+                </h2>
+                {/* Mostrar cada variante de tabla */}
+                {agruparCombinacionesPorBloques(combinacionGlobal).map((tabla, idx) => (
+                  <div key={idx} className="mb-10">
+                    <h3 className="text-lg font-semibold text-blue-800 mb-2 text-center">
+                      Variante {idx + 1}
+                    </h3>
+                    <TablaCombinacionGlobal combinacion={tabla} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </PagGeneral>
     );
   }
 
-  // Vista para profesores - Solo disponibilidad horaria
+  // Vista para profesores - Disponibilidad y asignaturas
   if (user.role === 'profesor') {
     return (
       <PagGeneral>
@@ -655,38 +830,67 @@ export default function SugerenciaHorarios() {
               </div>
             </div>
 
-            {/* Información de ayuda para profesores */}
-            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-3">
-                Instrucciones
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="font-semibold text-blue-900 mb-1">1. Seleccionar Horarios</p>
-                  <p className="text-blue-700">
-                    Haz clic en las casillas para marcar tu disponibilidad
-                  </p>
+            {/* Asignaturas del Profesor */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-3 sm:p-4">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Mis Asignaturas
+                </h2>
+                <p className="text-green-100 text-xs sm:text-sm mt-1">
+                  Configura las asignaturas que impartirás este semestre
+                </p>
+              </div>
+
+              <div className="p-4 sm:p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-blue-900">
+                    Asignaturas Asignadas ({asignaturasProfesor.length})
+                  </h3>
+                  <button
+                    onClick={() => setModalAsignaturas(true)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Gestionar Asignaturas
+                  </button>
                 </div>
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="font-semibold text-blue-900 mb-1">2. Guardar Cambios</p>
-                  <p className="text-blue-700">
-                    Presiona "Guardar Disponibilidad" para confirmar los cambios
-                  </p>
-                </div>
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="font-semibold text-blue-900 mb-1">3. Disponibilidad</p>
-                  <p className="text-blue-700">
-                    Verde = Disponible, Gris = No disponible
-                  </p>
-                </div>
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="font-semibold text-blue-900 mb-1">4. Actualizaciones</p>
-                  <p className="text-blue-700">
-                    Puedes modificar tu disponibilidad en cualquier momento
-                  </p>
-                </div>
+
+                {asignaturasProfesor.length === 0 ? (
+                  <div className="text-center py-8 bg-gray-50 rounded-lg">
+                    <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <p className="text-gray-500 text-lg">No hay asignaturas asignadas</p>
+                    <p className="text-gray-400 text-sm mt-1">Haz clic en "Gestionar Asignaturas" para comenzar</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {asignaturasProfesor.map((asignatura, index) => (
+                      <div key={index} className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <p className="font-semibold text-blue-900">{asignatura.codigo}</p>
+                        <p className="text-blue-700 text-sm">{asignatura.nombre}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Modal para gestionar asignaturas */}
+            {modalAsignaturas && (
+              <ModalAsignaturas
+                asignaturasDisponibles={asignaturasDisponibles}
+                asignaturasSeleccionadas={asignaturasProfesor}
+                onGuardar={guardarAsignaturasProfesor}
+                onCerrar={() => setModalAsignaturas(false)}
+                loading={loading}
+              />
+            )}
           </div>
         </div>
       </PagGeneral>
@@ -899,5 +1103,242 @@ export default function SugerenciaHorarios() {
         </div>
       </div>
     </PagGeneral>
+  );
+}
+
+// Componente Modal para gestionar asignaturas
+const ModalAsignaturas = ({ asignaturasDisponibles, asignaturasSeleccionadas, onGuardar, onCerrar, loading }) => {
+  const [seleccionadas, setSeleccionadas] = useState(asignaturasSeleccionadas);
+
+  const toggleAsignatura = (asignatura) => {
+    setSeleccionadas(prev => {
+      const existe = prev.find(a => a.codigo === asignatura.codigo);
+      if (existe) {
+        return prev.filter(a => a.codigo !== asignatura.codigo);
+      } else {
+        return [...prev, asignatura];
+      }
+    });
+  };
+
+  const handleGuardar = () => {
+    onGuardar(seleccionadas);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+        <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-4">
+          <h3 className="text-lg font-semibold">Gestionar Asignaturas</h3>
+          <p className="text-green-100 text-sm mt-1">
+            Selecciona las asignaturas que impartirás este semestre
+          </p>
+        </div>
+
+        <div className="p-6 overflow-y-auto max-h-96">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {asignaturasDisponibles.map((asignatura) => {
+              const isSelected = seleccionadas.find(a => a.codigo === asignatura.codigo);
+              return (
+                <div
+                  key={asignatura.codigo}
+                  onClick={() => toggleAsignatura(asignatura)}
+                  className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
+                    isSelected
+                      ? 'bg-green-50 border-green-500 shadow-md'
+                      : 'bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-300'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-gray-900">{asignatura.codigo}</p>
+                      <p className="text-sm text-gray-600">{asignatura.nombre}</p>
+                    </div>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      isSelected ? 'bg-green-500 border-green-500' : 'border-gray-300'
+                    }`}>
+                      {isSelected && (
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
+          <button
+            onClick={onCerrar}
+            disabled={loading}
+            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleGuardar}
+            disabled={loading}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Guardando...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Guardar ({seleccionadas.length})
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Utilidad para agrupar combinaciones globales por "matriz de bloques" (día+hora)
+function agruparCombinacionesPorBloques(combinacionGlobal) {
+  // Creamos una clave única para cada combinación de bloques (ignorando la sala)
+  const tablas = [];
+  const claves = [];
+
+  combinacionGlobal.forEach((prof) => {
+    prof.horarios.forEach((h) => {
+      // clave: profesor-dia-horaInicio-horaFin-asignatura
+      h._bloqueKey = `${h.dia}-${h.horaInicio}-${h.horaFin}`;
+    });
+  });
+
+  // Creamos una matriz para cada variante de asignación de salas
+  combinacionGlobal.forEach((prof) => {
+    prof.horarios.forEach((h) => {
+      // Para cada bloque, buscamos si ya existe una tabla con ese patrón de bloques
+      let tablaEncontrada = null;
+      for (let i = 0; i < tablas.length; i++) {
+        const tabla = tablas[i];
+        // Comprobamos si para este bloque, en esta tabla, ya existe una asignación de sala diferente
+        const existe = tabla.some(
+          (p) =>
+            p.profesorId === prof.profesorId &&
+            p.horarios.some(
+              (b) =>
+                b._bloqueKey === h._bloqueKey &&
+                b.sala === h.sala
+            )
+        );
+        if (!existe) {
+          tablaEncontrada = tabla;
+          break;
+        }
+      }
+      if (!tablaEncontrada) {
+        // Creamos una nueva tabla (copia profunda de la estructura de combinacionGlobal)
+        const nuevaTabla = combinacionGlobal.map((p) => ({
+          ...p,
+          horarios: p.horarios.filter(() => false), // vacía, se llenará abajo
+        }));
+        tablas.push(nuevaTabla);
+        tablaEncontrada = nuevaTabla;
+      }
+      // Agregamos el bloque a la tabla encontrada
+      const profTabla = tablaEncontrada.find((p) => p.profesorId === prof.profesorId);
+      if (profTabla) {
+        // Evitar duplicados exactos
+        if (!profTabla.horarios.some((b) => b._bloqueKey === h._bloqueKey && b.sala === h.sala)) {
+          profTabla.horarios.push({ ...h });
+        }
+      }
+    });
+  });
+
+  // Limpiar claves auxiliares
+  tablas.forEach((tabla) =>
+    tabla.forEach((p) =>
+      p.horarios.forEach((h) => {
+        delete h._bloqueKey;
+      })
+    )
+  );
+
+  return tablas;
+}
+
+// Tabla visual para la combinación global
+function TablaCombinacionGlobal({ combinacion }) {
+  // Unimos todos los bloques de todos los profesores para saber qué días y horas mostrar
+  const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+  const horasDisponibles = [
+    "08:10", "09:30", "09:40", "11:00", "11:10", "12:30",
+    "12:40", "14:00", "14:10", "15:30", "15:40", "17:00",
+    "17:10", "18:30", "18:40", "20:00"
+  ];
+
+  // Creamos un mapa: [profesorId][dia][hora] = { asignatura, sala, ... }
+  const bloquesPorProfesor = {};
+  combinacion.forEach((prof) => {
+    bloquesPorProfesor[prof.profesorId] = {};
+    diasSemana.forEach((dia) => {
+      bloquesPorProfesor[prof.profesorId][dia] = {};
+    });
+    prof.horarios.forEach((h) => {
+      bloquesPorProfesor[prof.profesorId][h.dia] = bloquesPorProfesor[prof.profesorId][h.dia] || {};
+      bloquesPorProfesor[prof.profesorId][h.dia][h.horaInicio] = h;
+    });
+  });
+
+  return (
+    <div className="overflow-x-auto mb-8">
+      {combinacion.map((prof) => (
+        <div key={prof.profesorId} className="mb-8">
+          <h4 className="font-semibold text-blue-700 mb-2">{prof.nombreProfesor}</h4>
+          <table className="w-full border-collapse text-xs mb-4">
+            <thead>
+              <tr className="bg-blue-50">
+                <th className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">
+                  Hora
+                </th>
+                {diasSemana.map((dia) => (
+                  <th key={dia} className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">
+                    {dia.substring(0, 3)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {horasDisponibles.map((hora) => (
+                <tr key={hora}>
+                  <td className="border border-blue-200 px-2 py-1 text-blue-900 font-medium text-xs bg-blue-50">
+                    {hora}
+                  </td>
+                  {diasSemana.map((dia) => {
+                    const bloque = bloquesPorProfesor[prof.profesorId][dia][hora];
+                    return (
+                      <td key={dia + hora} className="border border-blue-200 p-1 min-w-[120px]">
+                        {bloque ? (
+                          <div className="bg-green-100 rounded p-1 text-xs text-blue-900">
+                            <div className="font-bold">{bloque.asignatura}</div>
+                            <div className="text-blue-700">{prof.nombreProfesor}</div>
+                            <div className="text-blue-500">{bloque.sala}</div>
+                          </div>
+                        ) : (
+                          <div className="bg-gray-100 rounded h-6" />
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+    </div>
   );
 }

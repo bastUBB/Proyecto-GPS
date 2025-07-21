@@ -3,9 +3,14 @@ import {
     generarHorario, 
     obtenerSalas, 
     validarDisponibilidad, 
-    generarHorarioConValidacion,
+    generarHorarioValidado,
     obtenerEstadisticasHorarios,
-    obtenerTiposBloquesController
+    obtenerTiposBloquesController,
+    obtenerProfesores,
+    guardarAsignaturasProfesor,
+    obtenerAsignaturasProfesor,
+    obtenerAsignaturasDisponibles,
+    generarCombinacionGlobal
 } from '../controllers/combiHorarioProfesor.controller.js';
 import { 
     generarHorarioValidation, 
@@ -50,7 +55,7 @@ router.post('/horario/generar',
 router.post('/horario/generar-validado', 
     // authorizationMiddleware,
     validateBody(generarHorarioValidation),
-    generarHorarioConValidacion
+    generarHorarioValidado
 );
 
 // Ruta para obtener salas disponibles
@@ -78,5 +83,32 @@ router.get('/horario/estadisticas/:profesorId',
     validateParams(profesorIdValidation),
     obtenerEstadisticasHorarios
 );
+
+// Nueva ruta para obtener lista de profesores
+router.get('/profesores', 
+    // authorizationMiddleware,
+    obtenerProfesores
+);
+
+// Nueva ruta para obtener asignaturas disponibles
+router.get('/asignaturas-disponibles', 
+    // authorizationMiddleware,
+    obtenerAsignaturasDisponibles
+);
+
+// Rutas para gestión de asignaturas del profesor
+router.post('/profesor/:profesorId/asignaturas', 
+    // authorizationMiddleware,
+    validateParams(profesorIdValidation),
+    guardarAsignaturasProfesor
+);
+
+router.get('/profesor/:profesorId/asignaturas', 
+    // authorizationMiddleware,
+    validateParams(profesorIdValidation),
+    obtenerAsignaturasProfesor
+);
+
+router.post('/horario/generar-global', generarCombinacionGlobal);
 
 export default router;
