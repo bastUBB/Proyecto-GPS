@@ -690,15 +690,15 @@ export default function SugerenciaHorarios() {
               </div>
             </div>
 
-            {/* DEBUG: Mostrar el JSON de combinacionGlobal */}
-            {combinacionGlobal && (
+            {/* Quitar el bloque amarillo de debug */}
+            {/* {combinacionGlobal && (
               <div className="bg-yellow-50 border border-yellow-300 rounded p-2 my-4 text-xs text-yellow-900 overflow-x-auto">
                 <b>DEBUG combinacionGlobal:</b>
                 <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
                   {JSON.stringify(combinacionGlobal, null, 2)}
                 </pre>
               </div>
-            )}
+            )} */}
 
             {/* Mostrar la tabla SOLO si combinacionGlobal existe y tiene datos */}
             {combinacionGlobal && Array.isArray(combinacionGlobal) && combinacionGlobal.length > 0 && (
