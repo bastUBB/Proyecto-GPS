@@ -33,30 +33,93 @@ export async function asignarAsignaturas(asignaturasCursadas) {
 
         // Función para verificar prerrequisitos de prácticas
         const verificarPrerrequisitosEspeciales = (asig) => {
-            if (esPractica(asig.nombre)) {
-                // Para prácticas: verificar que todas las materias del semestre inmediatamente anterior estén aprobadas
-                const semestreAnterior = asig.semestre - 1;
-                const materiasDelSemestreAnterior = malla.filter(materia => 
-                    materia.semestre === semestreAnterior && 
-                    !esPractica(materia.nombre) // No considerar otras prácticas como prerrequisito
-                );
+            // Verificar prerrequisitos para Formaciones Integrales IV y V
+            if (asig.nombre.toLowerCase().includes('formación integral iv') || 
+                asig.nombre.toLowerCase().includes('formación integral 4')) {
+                // Para Formación Integral IV, verificar que estén aprobadas las primeras 3
+                const formacionesRequeridas = ['formación integral i', 'formación integral ii', 'formación integral iii'];
+                const todasFormacionesAprobadas = formacionesRequeridas.every(formacion => {
+                    return Array.from(cursadasSet).some(cursada => 
+                        cursada.includes(formacion.replace(/\s+/g, ' ')) || 
+                        cursada.includes(formacion.replace(' i', ' 1').replace(' ii', ' 2').replace(' iii', ' 3'))
+                    );
+                });
                 
-                // Si no hay materias en el semestre anterior, permitir la práctica
-                if (materiasDelSemestreAnterior.length === 0) {
-                    return true;
+                //console.log(`${asig.nombre}: Formaciones I, II, III aprobadas: ${todasFormacionesAprobadas}`);
+                return todasFormacionesAprobadas;
+            }
+            
+            if (asig.nombre.toLowerCase().includes('formación integral v') || 
+                asig.nombre.toLowerCase().includes('formación integral 5')) {
+                // Para Formación Integral V, verificar que estén aprobadas las primeras 3
+                const formacionesRequeridas = ['formación integral i', 'formación integral ii', 'formación integral iii'];
+                const todasFormacionesAprobadas = formacionesRequeridas.every(formacion => {
+                    return Array.from(cursadasSet).some(cursada => 
+                        cursada.includes(formacion.replace(/\s+/g, ' ')) || 
+                        cursada.includes(formacion.replace(' i', ' 1').replace(' ii', ' 2').replace(' iii', ' 3'))
+                    );
+                });
+                
+                //console.log(`${asig.nombre}: Formaciones I, II, III aprobadas: ${todasFormacionesAprobadas}`);
+                return todasFormacionesAprobadas;
+            }
+
+            // Verificar prerrequisitos para prácticas profesionales
+            if (esPractica(asig.nombre)) {
+                let semestreLimite;
+                
+                // Determinar el semestre límite según el tipo de práctica
+                if (asig.nombre.toLowerCase().includes('práctica profesional 1')) {
+                    semestreLimite = 5;
+                } else if (asig.nombre.toLowerCase().includes('práctica profesional 2')) {
+                    semestreLimite = 7;
+                } else {
+                    // Para otras prácticas, usar lógica original
+                    const semestreAnterior = asig.semestre - 1;
+                    const materiasDelSemestreAnterior = malla.filter(materia => 
+                        materia.semestre === semestreAnterior && 
+                        !esPractica(materia.nombre)
+                    );
+                    
+                    if (materiasDelSemestreAnterior.length === 0) {
+                        return true;
+                    }
+                    
+                    return materiasDelSemestreAnterior.every(materia => 
+                        cursadasSet.has(materia.nombre?.toLowerCase())
+                    );
                 }
                 
-                // Verificar que todas las materias del semestre anterior estén cursadas
-                const todasAprobadas = materiasDelSemestreAnterior.every(materia => 
-                    cursadasSet.has(materia.nombre?.toLowerCase())
+                // Obtener asignaturas de Ingeniería Aplicada desde el horario hasta el semestre límite
+                const asignaturasIngenieriaAplicada = horario
+                    .filter(h => 
+                        h.ambito === 'Ámbito Ingeniería Aplicada' && 
+                        h.semestre <= semestreLimite
+                    )
+                    .map(h => h.nombre?.toLowerCase())
+                    .filter(nombre => nombre); // Filtrar nombres válidos
+                
+                // Buscar estas asignaturas en la malla para validar que existen
+                const asignaturasValidasIA = malla
+                    .filter(asigMalla => 
+                        asignaturasIngenieriaAplicada.includes(asigMalla.nombre?.toLowerCase()) &&
+                        asigMalla.semestre <= semestreLimite
+                    )
+                    .map(asigMalla => asigMalla.nombre?.toLowerCase());
+                
+                // Verificar que todas las asignaturas de Ingeniería Aplicada estén cursadas
+                const todasAprobadas = asignaturasValidasIA.every(nombreAsig => 
+                    cursadasSet.has(nombreAsig)
                 );
                 
-                //console.log(`Práctica ${asig.nombre} (semestre ${asig.semestre}):`);
-                //console.log(`- Materias del semestre ${semestreAnterior}:`, materiasDelSemestreAnterior.map(m => m.nombre));
+                //console.log(`${asig.nombre} (semestre ${asig.semestre}):`);
+                //console.log(`- Semestre límite: ${semestreLimite}`);
+                //console.log(`- Asignaturas de Ingeniería Aplicada requeridas:`, asignaturasValidasIA);
                 //console.log(`- Todas aprobadas: ${todasAprobadas}`);
                 
                 return todasAprobadas;
             }
+            
             return true; // Para asignaturas normales, no hay restricciones especiales
         };
 
