@@ -21,7 +21,12 @@ const bloqueSchema = new mongoose.Schema({
         type: String,
         required: true,
         cast: false,
-    }
+    },
+    asignatura: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Asignatura',
+        required: false
+    },
 }, {
     timestamps: true,
     versionKey: false
