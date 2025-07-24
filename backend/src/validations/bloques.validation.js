@@ -58,21 +58,11 @@ export const bloqueQueryValidation = joi.object({
             'any.required': 'El día es obligatorio',
             'string.empty': 'El día no puede estar vacío',
         }),
-    tipo: joi.string()
-        .valid('TEO', 'PRA', 'LAB')
-        .required()
-        .strict()
-        .messages({
-            'string.empty': 'El tipo no puede estar vacío',
-            'string.base': 'El tipo debe ser una cadena de texto',
-            'any.required': 'El tipo es obligatorio',
-            'any.only': 'El tipo debe ser uno de los siguientes: TEO, PRA o LAB',
-        }),
 })
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales en la consulta',
-        'object.missing': 'Debe proporcionar al menos uno de los campos: horaInicio, horaFin, dia y tipo',
+        'object.missing': 'Debe proporcionar al menos uno de los campos: horaInicio, horaFin y día',
     });
 
 export const bloqueBodyValidation = joi.object({
@@ -107,26 +97,16 @@ export const bloqueBodyValidation = joi.object({
             'any.only': 'El día debe ser uno de los siguientes: Lunes, Martes, Miércoles, Jueves, Viernes o Sábado',
             'any.required': 'El día es obligatorio',
         }),
-    tipo: joi.string()
-        .valid('TEO', 'PRA', 'LAB')
-        .strict()
-        .messages({
-            'string.empty': 'El tipo no puede estar vacío',
-            'string.base': 'El tipo debe ser una cadena de texto',
-            'any.only': 'El tipo debe ser uno de los siguientes: TEO, PRA o LAB',
-            'any.required': 'El tipo es obligatorio',
-        }),
 })
     .or(
         'horaInicio',
         'horaFin',
         'dia',
-        'tipo'
     )
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales en el cuerpo de la solicitud',
-        'object.missing': 'Debe proporcionar al menos uno de los campos: horaInicio, horaFin, dia o tipo',
+        'object.missing': 'Debe proporcionar al menos uno de los campos: horaInicio, horaFin y dia',
     });
 
 export const bloqueIdValidation = joi.object({

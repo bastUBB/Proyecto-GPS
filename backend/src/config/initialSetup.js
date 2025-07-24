@@ -4,6 +4,8 @@ import path from 'path';
 import { hashPassword } from '../helpers/bcrypt.helper.js';
 import User from '../models/user.model.js';
 import Asignatura from '../models/asignaturas.model.js';
+import rendimientoAsignatura from '../models/rendimientoAsignatura.model.js';
+import { crearTodosLosRendimientosExistentes } from '../services/rendimientoAsignatura.service.js';
 
 const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
@@ -12,6 +14,16 @@ const Asignaturas = JSON.parse(asignaturasRaw);
 const profesoresPath = path.resolve('output/profesores_sin_rut.json');
 const profesoresRaw = fs.readFileSync(profesoresPath);
 const Profesores = JSON.parse(profesoresRaw).profesores;
+
+// Cargar datos de rendimiento
+const datosRendimientoPath = path.resolve('output/datos_rendimiento.json');
+const datosRendimientoRaw = fs.readFileSync(datosRendimientoPath);
+const datosRendimiento = JSON.parse(datosRendimientoRaw).datos;
+
+// Cargar horario manual (el que contiene docentes y secciones, no el de asignaturas)
+const horarioManualPath = path.resolve('output/horario_extraido.json');
+const horarioManualRaw = fs.readFileSync(horarioManualPath);
+const horarioManual = JSON.parse(horarioManualRaw);
 
 async function createInitialUsers() {
     try {
@@ -126,7 +138,7 @@ async function createProfesores() {
             return;
         }
 
-        const profesoresACrear = Profesores.slice(0, 20);
+        const profesoresACrear = Profesores.slice(0, 85);
         
         const profesoresExistentes = await User.find({ 
             rut: { $in: profesoresACrear.map(p => p.rut) },
@@ -161,10 +173,19 @@ async function createProfesores() {
     }
 }
 
+async function createRendimientos() {
+    try {
+        await crearTodosLosRendimientosExistentes();
+    } catch (error) {
+        console.error('Error al crear rendimientos iniciales:', error.message);
+    }
+}
+
 async function initialSetup() {
     await createInitialUsers();
     await createAsignaturas();
     await createProfesores();
+    await createRendimientos();
 }
 
 export { initialSetup };

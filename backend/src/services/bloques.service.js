@@ -4,11 +4,11 @@ import Bloque from '../models/bloques.model.js';
 
 export async function createBloqueService(dataBloque) {
     try {
-        const { horaInicio, horaFin, dia, tipo } = dataBloque;
+        const { horaInicio, horaFin, dia } = dataBloque;
         
         if (horaInicio >= horaFin) return [null, 'La hora de inicio debe ser menor a la hora de fin'];
 
-        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
+        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia });
 
         if (existingBloque) return [null, 'El bloque que desea crear ya existe'];
 
@@ -27,11 +27,11 @@ export async function createBloqueService(dataBloque) {
 
 export async function getBloqueService(query) {
     try {
-        const { horaInicio, horaFin, dia, tipo } = query;
+        const { horaInicio, horaFin, dia } = query;
 
         if (horaInicio >= horaFin) return [null, 'La hora de inicio debe ser menor a la hora de fin'];
 
-        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
+        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia });
 
         if (!existingBloque) return [null, 'Bloque no encontrado'];
 
@@ -57,24 +57,24 @@ export async function getAllBloquesService(){
 
 export async function updateBloqueService(query, body) {
     try {
-        const { horaInicio, horaFin, dia, tipo } = query;
+        const { horaInicio, horaFin, dia } = query;
 
         if (horaInicio >= horaFin) return [null, 'La hora de inicio debe ser menor a la hora de fin'];
 
-        const { horaInicio: nuevaHoraInicio, horaFin: nuevaHoraFin, dia: nuevoDia, tipo: nuevoTipo } = body;
+        const { horaInicio: nuevaHoraInicio, horaFin: nuevaHoraFin, dia: nuevoDia } = body;
 
         if (nuevaHoraInicio >= nuevaHoraFin) return [null, 'La nueva hora de inicio debe ser menor a la nueva hora de fin'];
 
-        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
+        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia });
 
         if (!existingBloque) return [null, 'El bloque de la consulta no existe'];
-        
-        const bloqueConflicto = await Bloque.findOne({ nuevaHoraInicio, nuevaHoraFin, nuevoDia, nuevoTipo });
+
+        const bloqueConflicto = await Bloque.findOne({ nuevaHoraInicio, nuevaHoraFin, nuevoDia });
 
         if (bloqueConflicto) return [null, 'El bloque que desea actualizar ya existe con esos datos'];
 
         const updatedBloque = await Bloque.findOneAndUpdate(
-            { horaInicio, horaFin, dia, tipo },
+            { horaInicio, horaFin, dia },
             body,
             { new: true }
         );
@@ -90,17 +90,17 @@ export async function updateBloqueService(query, body) {
 
 export async function deleteBloqueService(query) {
     try {
-        const { horaInicio, horaFin, dia, tipo } = query;
+        const { horaInicio, horaFin, dia} = query;
 
         if (horaInicio >= horaFin) return [null, 'La hora de inicio debe ser menor a la hora de fin'];
 
-        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
+        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia });
 
         if (!existingBloque) return [null, 'Bloque que desea eliminar no existe'];
-        
-        await Bloque.deleteOne({ horaInicio, horaFin, dia, tipo });
 
-        const bloqueEliminado = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
+        await Bloque.deleteOne({ horaInicio, horaFin, dia });
+
+        const bloqueEliminado = await Bloque.findOne({ horaInicio, horaFin, dia });
 
         if (bloqueEliminado) return [null, 'Error al eliminar el bloque'];
 
@@ -113,11 +113,11 @@ export async function deleteBloqueService(query) {
 
 export async function getBloqueIdService(query) {
     try {
-        const { horaInicio, horaFin, dia, tipo } = query;
+        const { horaInicio, horaFin, dia } = query;
 
         if (horaInicio >= horaFin) return [null, 'La hora de inicio debe ser menor a la hora de fin'];
 
-        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia, tipo });
+        const existingBloque = await Bloque.findOne({ horaInicio, horaFin, dia });
 
         if (!existingBloque) return [null, 'Bloque no encontrado'];
 
