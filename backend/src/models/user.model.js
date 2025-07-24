@@ -23,6 +23,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    asignaturasImpartidas: {
+        type: Array,
+        default: []
+    }
 }, {
     timestamps: true
 });
