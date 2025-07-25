@@ -15,10 +15,12 @@ export function extractSubjects(data) {
 
     for (let i = 1; i < data.length; i++) {
         const row = data[i];
-        if (!row || row.length < 6) continue;
+        if (!row || row.length < 6) continue; // Aumentamos la validación para incluir las nuevas columnas
 
         const codigo = row[0]?.toString().trim() || '';
         const seccion = parseInt(row[1]) || null;
+        const cupos = parseInt(row[2]) || 0;
+        const inscritos = parseInt(row[3]) || 0;
         const nombreAsignaturaDocente = row[4]?.toString().trim() || '';
         const [nombreAsignatura, docente] = nombreAsignaturaDocente.split('-').map(s => s.trim());
         
@@ -46,6 +48,9 @@ export function extractSubjects(data) {
         subjects.push({
             asignaturaCodigo: codigo,
             seccion,
+            cupos,
+            inscritos,
+            disponibles: cupos - inscritos, // Calculamos los cupos disponibles
             asignatura: nombreAsignatura || '',
             docente: docente || '',
             bloques

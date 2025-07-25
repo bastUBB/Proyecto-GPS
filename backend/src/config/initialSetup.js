@@ -6,6 +6,8 @@ import User from '../models/user.model.js';
 import Asignatura from '../models/asignaturas.model.js';
 import rendimientoAsignatura from '../models/rendimientoAsignatura.model.js';
 import { crearTodosLosRendimientosExistentes } from '../services/rendimientoAsignatura.service.js';
+import { generarProfesoresSimple } from '../../scripts/extraccionRutsSimple.js';
+import { crearEvaluacionesDocentes } from '../../scripts/creadorEvaluaciones.js';
 
 const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
@@ -68,8 +70,22 @@ async function createInitialUsers() {
                 nombreCompleto: 'Ana Isabel Morales',
                 email: 'ana.morales@ubiobio.cl',
                 rut: '14567890-1',
-                password: 'admin456',
-                role: 'admin'
+                password: 'estudiante123',
+                role: 'alumno'
+            },
+            {
+                nombreCompleto: 'Nicolás Gómez Morgado',
+                email: 'nicolas.gomez2101@ubiobio.cl',
+                rut: '21279536-4',
+                password: 'estudiante123',
+                role: 'alumno'
+            },
+            {
+                nombreCompleto: 'Bastian Rodriguez Campusano',
+                email: 'bastian.rodriguez2101@ubiobio.cl',
+                rut: '21548761-2',
+                password: 'estudiante123',
+                role: 'alumno'
             }
         ];
 
@@ -181,11 +197,22 @@ async function createRendimientos() {
     }
 }
 
+async function createEvaluaciones() {
+    try {
+        await crearEvaluacionesDocentes();
+        console.log('✅ Evaluaciones docentes creadas exitosamente');
+    } catch (error) {
+        console.error('❌ Error al crear evaluaciones docentes:', error.message);
+    }
+}
+
 async function initialSetup() {
+    await generarProfesoresSimple();
     await createInitialUsers();
     await createAsignaturas();
     await createProfesores();
     await createRendimientos();
+    await createEvaluaciones();
 }
 
 export { initialSetup };
