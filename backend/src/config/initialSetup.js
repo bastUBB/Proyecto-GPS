@@ -6,6 +6,7 @@ import User from '../models/user.model.js';
 import Asignatura from '../models/asignaturas.model.js';
 import rendimientoAsignatura from '../models/rendimientoAsignatura.model.js';
 import { crearTodosLosRendimientosExistentes } from '../services/rendimientoAsignatura.service.js';
+import { crearAsignaturasDocentes } from '../services/asignaturasDocente.service.js';
 import { generarProfesoresSimple } from '../../scripts/extraccionRutsSimple.js';
 import { crearEvaluacionesDocentes } from '../../scripts/creadorEvaluaciones.js';
 
@@ -197,6 +198,13 @@ async function createRendimientos() {
     }
 }
 
+async function createAsignaturasDocentes() {
+    try {
+        await crearAsignaturasDocentes();    } catch (error) {
+        console.error('Error al crear asignaturas docentes:', error.message);
+    }
+}
+
 async function createEvaluaciones() {
     try {
         await crearEvaluacionesDocentes();
@@ -212,6 +220,7 @@ async function initialSetup() {
     await createAsignaturas();
     await createProfesores();
     await createRendimientos();
+    await createAsignaturasDocentes();
     await createEvaluaciones();
 }
 

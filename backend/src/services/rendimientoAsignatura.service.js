@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import rendimientoAsignatura from '../models/rendimientoAsignatura.model.js';
+import rendimientoAsignatura from '../models/rendimientoAsignatura.model.js';   
 import Asignatura from '../models/asignaturas.model.js';
 import User from '../models/user.model.js';
 
@@ -14,7 +14,6 @@ const horario = JSON.parse(horarioRaw);
 
 export async function buscarRendimiento(docente, asignatura, seccion, semestre, año) {
     try {
-
         asignatura = asignatura.toUpperCase();
 
         const partesNombre = docente.trim().split(/\s+/);

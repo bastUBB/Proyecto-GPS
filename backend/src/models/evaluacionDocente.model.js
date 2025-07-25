@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-//TODO: arreglar modelo -> CRUD completo
-
 const evaluacionDocenteSchema = new mongoose.Schema({
     docente: {
         type: String,
