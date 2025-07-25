@@ -2,6 +2,9 @@
   {
     "asignaturaCodigo": "210020",
     "seccion": 1,
+    "cupos": 50,
+    "inscritos": 47,
+    "disponibles": 3,
     "asignatura": "QUÍMICA GENERAL",
     "docente": "RUF ACEVEDO ,BEATRIZ ORIANA",
     "bloques": [
@@ -24,6 +27,9 @@
   {
     "asignaturaCodigo": "210020",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 35,
+    "disponibles": 5,
     "asignatura": "QUÍMICA GENERAL",
     "docente": "ALVARADO CARRIPAN ,OMAR BLAS",
     "bloques": [
@@ -46,6 +52,9 @@
   {
     "asignaturaCodigo": "210020",
     "seccion": 3,
+    "cupos": 40,
+    "inscritos": 35,
+    "disponibles": 5,
     "asignatura": "QUÍMICA GENERAL",
     "docente": "MÉNDEZ HERRERA ,PAOLA ANDREA",
     "bloques": [
@@ -75,7 +84,10 @@
   {
     "asignaturaCodigo": "220143",
     "seccion": 1,
-    "asignatura": "ÁLGEBRA Y TRIGONOMETRÍA",
+    "cupos": 37,
+    "inscritos": 29,
+    "disponibles": 8,
+    "asignatura": "ALGEBRA Y TRIGONOMETRÍA",
     "docente": "NOVA HERNÁNDEZ ,EFRAÍN GABRIEL",
     "bloques": [
       {
@@ -111,7 +123,10 @@
   {
     "asignaturaCodigo": "220143",
     "seccion": 2,
-    "asignatura": "ÁLGEBRA Y TRIGONOMETRÍA",
+    "cupos": 37,
+    "inscritos": 35,
+    "disponibles": 2,
+    "asignatura": "ALGEBRA Y TRIGONOMETRÍA",
     "docente": "TORRES ESPINO ,GLADIS MARISOL",
     "bloques": [
       {
@@ -147,7 +162,10 @@
   {
     "asignaturaCodigo": "220143",
     "seccion": 3,
-    "asignatura": "ÁLGEBRA Y TRIGONOMETRÍA",
+    "cupos": 37,
+    "inscritos": 34,
+    "disponibles": 3,
+    "asignatura": "ALGEBRA Y TRIGONOMETRÍA",
     "docente": "D AMICO DAVAGNINO ,PATRICIA XIMENA",
     "bloques": [
       {
@@ -183,6 +201,9 @@
   {
     "asignaturaCodigo": "220144",
     "seccion": 1,
+    "cupos": 25,
+    "inscritos": 0,
+    "disponibles": 25,
     "asignatura": "CÁLCULO DIFERENCIAL",
     "docente": "",
     "bloques": []
@@ -190,6 +211,9 @@
   {
     "asignaturaCodigo": "220145",
     "seccion": 1,
+    "cupos": 45,
+    "inscritos": 44,
+    "disponibles": 1,
     "asignatura": "ÁLGEBRA LINEAL",
     "docente": "PAVEZ FUENTES ,RICARDO ALFONSO",
     "bloques": [
@@ -219,6 +243,9 @@
   {
     "asignaturaCodigo": "220145",
     "seccion": 2,
+    "cupos": 45,
+    "inscritos": 45,
+    "disponibles": 0,
     "asignatura": "ÁLGEBRA LINEAL",
     "docente": "JARA ZUBIETA ,FELIPE ANDRÉS",
     "bloques": [
@@ -248,6 +275,9 @@
   {
     "asignaturaCodigo": "220146",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 35,
+    "disponibles": 5,
     "asignatura": "CÁLCULO INTEGRAL",
     "docente": "LEPE ARAYA ,FELIPE ANDRÉS",
     "bloques": [
@@ -277,6 +307,9 @@
   {
     "asignaturaCodigo": "220146",
     "seccion": 2,
+    "cupos": 42,
+    "inscritos": 40,
+    "disponibles": 2,
     "asignatura": "CÁLCULO INTEGRAL",
     "docente": "PÉREZ CONTRERAS ,ARIEL ALONZO",
     "bloques": [
@@ -306,6 +339,9 @@
   {
     "asignaturaCodigo": "220146",
     "seccion": 3,
+    "cupos": 40,
+    "inscritos": 38,
+    "disponibles": 2,
     "asignatura": "CÁLCULO INTEGRAL",
     "docente": "SUAREZ MUÑOZ ,DAYAN RICARDO",
     "bloques": [
@@ -335,6 +371,9 @@
   {
     "asignaturaCodigo": "220146",
     "seccion": 4,
+    "cupos": 20,
+    "inscritos": 18,
+    "disponibles": 2,
     "asignatura": "CÁLCULO INTEGRAL",
     "docente": "OYARCE BOGGIONI ,JOSÉ ANDRÉS",
     "bloques": [
@@ -364,6 +403,9 @@
   {
     "asignaturaCodigo": "220147",
     "seccion": 1,
+    "cupos": 65,
+    "inscritos": 62,
+    "disponibles": 3,
     "asignatura": "ECUACIONES DIFERENCIALES",
     "docente": "CRESPO CUTILLAS ,FRANCISCO",
     "bloques": [
@@ -393,6 +435,9 @@
   {
     "asignaturaCodigo": "220148",
     "seccion": 1,
+    "cupos": 50,
+    "inscritos": 33,
+    "disponibles": 17,
     "asignatura": "CÁLCULO EN VARIAS VARIABLES",
     "docente": "CEBALLOS VILLARROEL ,JUAN CARLOS",
     "bloques": [
@@ -422,6 +467,9 @@
   {
     "asignaturaCodigo": "230033",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 36,
+    "disponibles": 4,
     "asignatura": "FÍSICA NEWTONIANA",
     "docente": "FLORES PAREDES ,PEDRO ARTURO",
     "bloques": [
@@ -451,6 +499,9 @@
   {
     "asignaturaCodigo": "230033",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 40,
+    "disponibles": 0,
     "asignatura": "FÍSICA NEWTONIANA",
     "docente": "NAVARRETE MEDINA ,CRISTIAN ALEJANDRO",
     "bloques": [
@@ -480,6 +531,9 @@
   {
     "asignaturaCodigo": "230033",
     "seccion": 3,
+    "cupos": 10,
+    "inscritos": 8,
+    "disponibles": 2,
     "asignatura": "FÍSICA NEWTONIANA",
     "docente": "DÍAZ RODRÍGUEZ ,GABRIEL MAXIMILIANO",
     "bloques": [
@@ -507,37 +561,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "230034",
-    "seccion": 1,
-    "asignatura": "ELECTROMAGNETISMO",
-    "docente": "GATICA ILUFI ,CRISTÓBAL SEBASTIÁN",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A305AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S202EC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A105AC"
-      }
-    ]
-  },
-  {
     "asignaturaCodigo": "230035",
     "seccion": 1,
+    "cupos": 60,
+    "inscritos": 48,
+    "disponibles": 12,
     "asignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
     "docente": "TREJO CRUZ ,CUAUHTÉMOC",
     "bloques": [
@@ -565,214 +593,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "340028",
-    "seccion": 1,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "AMAYA GONZÁLEZ ,JUAN PABLO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "A305AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "16:20",
-        "horaFin": "17:00",
-        "sala": "A202AB"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340028",
-    "seccion": 2,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "AMAYA GONZÁLEZ ,JUAN PABLO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "16:20",
-        "sala": "S303AD"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "S203AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340028",
-    "seccion": 3,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "MEDINA ALVEAR ,MARÍA JOANNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "08:50",
-        "horaFin": "09:30",
-        "sala": "S206EG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S206EG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340028",
-    "seccion": 4,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "MEDINA ALVEAR ,MARÍA JOANNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "08:50",
-        "horaFin": "09:30",
-        "sala": "S204EG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A101AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340028",
-    "seccion": 5,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "POZA MOLINA ,CARLOS SALVADOR",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "S205EG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "16:20",
-        "sala": "S213EG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340135",
-    "seccion": 1,
-    "asignatura": "TALLER DE DESARROLLO PERSONAL Y PROFESIONAL",
-    "docente": "ACEVEDO ALEGRÍA ,JORGE ANTONIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S101FG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "14:10",
-        "horaFin": "14:50",
-        "sala": "S302AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340135",
-    "seccion": 2,
-    "asignatura": "TALLER DE DESARROLLO PERSONAL Y PROFESIONAL",
-    "docente": "ACEVEDO ALEGRÍA ,JORGE ANTONIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "S103ExIM"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "14:50",
-        "horaFin": "15:30",
-        "sala": "S302AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340226",
-    "seccion": 1,
-    "asignatura": "GUERRA EN EL SIGLO XXI: LOS CONFLICTOS CONTEMPORÁNEOS",
-    "docente": "CASTILLO ALARCÓN ,GERARDO ANTONIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "S101FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340228",
-    "seccion": 1,
-    "asignatura": "ESTÉTICAS URBANAS: CIUDAD E IMAGINACIÓN LITERARIA",
-    "docente": "OSTRIA REINOSO ,OLGA ESTELA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S102FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340261",
-    "seccion": 1,
-    "asignatura": "ELEMENTOS DE FORMACIÓN CÍVICA Y DEMOCRÁTICA",
-    "docente": "BURGOS HENRÍQUEZ ,JUAN PABLO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "A301AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "A301AC"
-      }
-    ]
-  },
-  {
     "asignaturaCodigo": "340266",
     "seccion": 1,
+    "cupos": 30,
+    "inscritos": 25,
+    "disponibles": 5,
     "asignatura": "COMUNICACIÓN ORAL Y ESCRITA",
     "docente": "FIGUEROA SALGADO ,ELIZABETH ANDREA",
     "bloques": [
@@ -795,6 +620,9 @@
   {
     "asignaturaCodigo": "340266",
     "seccion": 2,
+    "cupos": 30,
+    "inscritos": 29,
+    "disponibles": 1,
     "asignatura": "COMUNICACIÓN ORAL Y ESCRITA",
     "docente": "OSTRIA REINOSO ,OLGA ESTELA",
     "bloques": [
@@ -817,6 +645,9 @@
   {
     "asignaturaCodigo": "340266",
     "seccion": 3,
+    "cupos": 36,
+    "inscritos": 35,
+    "disponibles": 1,
     "asignatura": "COMUNICACIÓN ORAL Y ESCRITA",
     "docente": "FIGUEROA SALGADO ,ELIZABETH ANDREA",
     "bloques": [
@@ -839,6 +670,9 @@
   {
     "asignaturaCodigo": "340276",
     "seccion": 1,
+    "cupos": 35,
+    "inscritos": 33,
+    "disponibles": 2,
     "asignatura": "INGLÉS I",
     "docente": "MAZA ORTEGA ,EDGARDO LEOPOLDO",
     "bloques": [
@@ -861,6 +695,9 @@
   {
     "asignaturaCodigo": "340276",
     "seccion": 2,
+    "cupos": 35,
+    "inscritos": 18,
+    "disponibles": 17,
     "asignatura": "INGLÉS I",
     "docente": "BASTÍAS DELGADO ,JANIA VALERIA",
     "bloques": [
@@ -883,6 +720,9 @@
   {
     "asignaturaCodigo": "340278",
     "seccion": 1,
+    "cupos": 35,
+    "inscritos": 31,
+    "disponibles": 4,
     "asignatura": "INGLÉS III",
     "docente": "BASTÍAS DELGADO ,JANIA VALERIA",
     "bloques": [
@@ -905,6 +745,9 @@
   {
     "asignaturaCodigo": "340278",
     "seccion": 2,
+    "cupos": 35,
+    "inscritos": 18,
+    "disponibles": 17,
     "asignatura": "INGLÉS III",
     "docente": "CONCHA SARAVIA ,LUCY JACQUELINE",
     "bloques": [
@@ -927,6 +770,9 @@
   {
     "asignaturaCodigo": "340279",
     "seccion": 1,
+    "cupos": 2,
+    "inscritos": 2,
+    "disponibles": 0,
     "asignatura": "INGLÉS IV",
     "docente": "ALEUY MELO ,JACQUELINE DEL PILAR",
     "bloques": [
@@ -947,1066 +793,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "340287",
-    "seccion": 1,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "OSTRIA REINOSO ,OLGA ESTELA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A201AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "13:20",
-        "horaFin": "14:00",
-        "sala": "A202AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340287",
-    "seccion": 2,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "MEDINA ALVEAR ,MARÍA JOANNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A202AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "13:20",
-        "horaFin": "14:00",
-        "sala": "A203AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340287",
-    "seccion": 3,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "POZA MOLINA ,CARLOS SALVADOR",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "11:10",
-        "horaFin": "11:50",
-        "sala": "A301AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "S301AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340287",
-    "seccion": 4,
-    "asignatura": "EXPRESIÓN ORAL Y ESCRITA",
-    "docente": "POZA MOLINA ,CARLOS SALVADOR",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S201AD"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "10:20",
-        "horaFin": "11:00",
-        "sala": "A101AB"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340299",
-    "seccion": 1,
-    "asignatura": "SEXUALIDAD HUMANA Y VIDA AFECTIVA",
-    "docente": "ALEUY MELO ,LORETO DEL CARMEN",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "11:10",
-        "horaFin": "13:20",
-        "sala": "S201AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340310",
-    "seccion": 1,
-    "asignatura": "INGLÉS COMUNICACIONAL I",
-    "docente": "MAZA ORTEGA ,EDGARDO LEOPOLDO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S102FG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S101FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340341",
-    "seccion": 1,
-    "asignatura": "TELEVISIÓN, CULTURA Y NUEVAS COSTUMBRES",
-    "docente": "MAZA ORTEGA ,EDGARDO LEOPOLDO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S102FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340373",
-    "seccion": 1,
-    "asignatura": "LIDERAZGO CON ENFOQUE HUMANISTA",
-    "docente": "ARANCIBIA BELTRÁN ,ROBERTO ALFREDO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A102AA"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340379",
-    "seccion": 1,
-    "asignatura": "SOUNDS AND IMAGES OF THE LAST CENTURY",
-    "docente": "MAZA ORTEGA ,EDGARDO LEOPOLDO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S101FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340387",
-    "seccion": 1,
-    "asignatura": "FRANCÉS COMUNICACIONAL I",
-    "docente": "RUIZ BURDILES ,JORGE ANTONIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S101FG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S101ExIM"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340413",
-    "seccion": 1,
-    "asignatura": "DERECHOS HUMANOS",
-    "docente": "KUHLMANN MATUS ,ESTEBAN IGNACIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "S101FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340413",
-    "seccion": 2,
-    "asignatura": "DERECHOS HUMANOS",
-    "docente": "KRAUSSE MARTÍNEZ ,KARINA AIRES",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A106AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340426",
-    "seccion": 1,
-    "asignatura": "ÉTICA PROFESIONAL",
-    "docente": "SCHWANER SALDÍAS ,PATRICIO ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "11:10",
-        "horaFin": "13:20",
-        "sala": "S203AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340451",
-    "seccion": 1,
-    "asignatura": "LENGUA DE SEÑAS CHILENA Y CULTURA",
-    "docente": "CAORSI VILLANUEVA ,KATHERINNE ELIANA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "A101AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340460",
-    "seccion": 1,
-    "asignatura": "INGLÉS DE NIVEL SUPERIOR",
-    "docente": "VELÁSQUEZ ZAPATA ,LILIAN VIVIANA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "S101FG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S103ExIM"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340465",
-    "seccion": 1,
-    "asignatura": "TALLER DE PRIMEROS AUXILIOS",
-    "docente": "ALEUY MELO ,LORETO DEL CARMEN",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "A206AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340465",
-    "seccion": 2,
-    "asignatura": "TALLER DE PRIMEROS AUXILIOS",
-    "docente": "ALEUY MELO ,LORETO DEL CARMEN",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A206AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340465",
-    "seccion": 3,
-    "asignatura": "TALLER DE PRIMEROS AUXILIOS",
-    "docente": "ALEUY MELO ,LORETO DEL CARMEN",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A303AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340465",
-    "seccion": 4,
-    "asignatura": "TALLER DE PRIMEROS AUXILIOS",
-    "docente": "ALEUY MELO ,LORETO DEL CARMEN",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S202AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340466",
-    "seccion": 1,
-    "asignatura": "ÓPTICAS QUEER EN LA LITERATURA",
-    "docente": "AMAYA GONZÁLEZ ,JUAN PABLO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "S101FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340472",
-    "seccion": 1,
-    "asignatura": "EDUCACIÓN PARA LA CIUDADANÍA",
-    "docente": "BURGOS HENRÍQUEZ ,JUAN PABLO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A106AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340473",
-    "seccion": 1,
-    "asignatura": "DEBATE FILOSÓFICO EN LA ÉPOCA CONTEMPORÁNEA",
-    "docente": "SCHWANER SALDÍAS ,PATRICIO ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "17:50",
-        "sala": "A306AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340474",
-    "seccion": 1,
-    "asignatura": "INTRODUCCIÓN A LA SUSTENTABILIDAD",
-    "docente": "GARRIDO PÉREZ ,MARCELA IGNACIA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A204AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340474",
-    "seccion": 2,
-    "asignatura": "INTRODUCCIÓN A LA SUSTENTABILIDAD",
-    "docente": "KRAUSSE MARTÍNEZ ,KARINA AIRES",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A104AA"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340475",
-    "seccion": 1,
-    "asignatura": "CIBORGS Y OTROS “MONSTRUOS” EN LA NARRATIVA DE CIENCIA FICCIÓN LATINOAMERICANA",
-    "docente": "OSTRIA REINOSO ,OLGA ESTELA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S102FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340477",
-    "seccion": 1,
-    "asignatura": "ALEMÁN COMUNICACIONAL I",
-    "docente": "SLAIBE FERNÁNDEZ ,ERNEST ALEJANDRO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "S101FG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "S102FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340478",
-    "seccion": 1,
-    "asignatura": "INTRODUCCIÓN AL PENSAMIENTO CRÍTICO EN HUMANIDADES DEL SIGLO XXI",
-    "docente": "BURGOS HENRÍQUEZ ,JUAN PABLO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S102FG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S102FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 1,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "BAEZA GONZÁLEZ ,ESTEBAN DAGOBERTO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "A206AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 2,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "BAEZA GONZÁLEZ ,ESTEBAN DAGOBERTO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "S201AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 3,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "BAEZA GONZÁLEZ ,ESTEBAN DAGOBERTO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S203AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 4,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "BAEZA GONZÁLEZ ,ESTEBAN DAGOBERTO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A107AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 5,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "BAEZA GONZÁLEZ ,ESTEBAN DAGOBERTO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S203EC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 6,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "SÁEZ ALARCÓN ,JORGE ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A304AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 7,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "SÁEZ ALARCÓN ,JORGE ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "A102AB"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 8,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "SÁEZ ALARCÓN ,JORGE ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "A107AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 9,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "AGUILERA DEL CANTO ,IVÁN IGNACIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "A101EG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 10,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "AGUILERA DEL CANTO ,IVÁN IGNACIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "A308AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 14,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S201AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 15,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A105AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 16,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A306AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 17,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A108AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 18,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S202AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 19,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "A308AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 20,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "A108AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 21,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "A204AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 22,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "ESPINOZA MORA ,CINTHIA SOLEDAD",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A205AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 23,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "TPROTOTIPO"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 24,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "TPROTOTIPO"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 25,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "A108AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 26,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "S303AD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 27,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A107AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 28,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A108AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 29,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A107AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340481",
-    "seccion": 30,
-    "asignatura": "PROGRAMA TUTORES: PROCESO DE ADAPTACIÓN A LA VIDA UNIVERSITARIA",
-    "docente": "TAMPE ARAYA ,VERENNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "A107AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "340568",
-    "seccion": 1,
-    "asignatura": "PERSPECTIVA DE GÉNERO, VIOLENCIA Y DIVERSIDAD SEXUAL",
-    "docente": "SALAMANCA RÍOS ,SANDRA ELIZABETH",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "S102FG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350125",
-    "seccion": 1,
-    "asignatura": "EMPRENDIMIENTO E INNOVACIÓN",
-    "docente": "MUÑOZ SUÁREZ ,NELSON ARTURO",
-    "bloques": []
-  },
-  {
-    "asignaturaCodigo": "350140",
-    "seccion": 1,
-    "asignatura": "EMPRENDIENDO CON MI PRIMER NEGOCIO",
-    "docente": "MUÑOZ SUÁREZ ,NELSON ARTURO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "A102AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350169",
-    "seccion": 1,
-    "asignatura": "EMPRENDIMIENTO E INNOVACIÓN",
-    "docente": "ROSALES HUERTA ,FELIPE ANDRÉS",
-    "bloques": []
-  },
-  {
-    "asignaturaCodigo": "350210",
-    "seccion": 1,
-    "asignatura": "COMUNICACIÓN EFECTIVA, LENGUAJE Y PERSUASIÓN",
-    "docente": "MEDINA ALVEAR ,MARÍA JOANNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:50",
-        "horaFin": "15:30",
-        "sala": "A206AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S202MD"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350210",
-    "seccion": 2,
-    "asignatura": "COMUNICACIÓN EFECTIVA, LENGUAJE Y PERSUASIÓN",
-    "docente": "MEDINA ALVEAR ,MARÍA JOANNA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "14:10",
-        "horaFin": "14:50",
-        "sala": "A206AC"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S208EG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350222",
-    "seccion": 1,
-    "asignatura": "TALLER DE FOTOGRAFÍA DIGITAL PARA COMUNICAR MENSAJES",
-    "docente": "FUENTEALBA ELGUETA ,DANIEL ROMILIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "Sala MultiArtes"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350222",
-    "seccion": 2,
-    "asignatura": "TALLER DE FOTOGRAFÍA DIGITAL PARA COMUNICAR MENSAJES",
-    "docente": "FUENTEALBA ELGUETA ,DANIEL ROMILIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "Sala MultiArtes"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350260",
-    "seccion": 1,
-    "asignatura": "ALIMENTACIÓN SALUDABLE",
-    "docente": "BUSTOS FICA ,GLORIA BEATRIZ",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "S204EG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350260",
-    "seccion": 2,
-    "asignatura": "ALIMENTACIÓN SALUDABLE",
-    "docente": "BUSTOS FICA ,GLORIA BEATRIZ",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "17:10",
-        "horaFin": "18:30",
-        "sala": "S208EG"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350316",
-    "seccion": 1,
-    "asignatura": "PROGRAMA TUTORES: ESTRATEGIA PARA EL APRENDIZAJE",
-    "docente": "SÁEZ ALARCÓN ,JORGE ANDRÉS",
-    "bloques": []
-  },
-  {
-    "asignaturaCodigo": "350316",
-    "seccion": 2,
-    "asignatura": "PROGRAMA TUTORES: ESTRATEGIA PARA EL APRENDIZAJE",
-    "docente": "SÁEZ ALARCÓN ,JORGE ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "S101ExIM"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "350325",
-    "seccion": 1,
-    "asignatura": "TALLER DE PILATES PARA LA SALUD",
-    "docente": "BURGOS MONROY ,ROMINA PATRICIA",
-    "bloques": [
-      {
-        "tipo": "PRA",
-        "dia": "MI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "Gimnasio 1"
-      }
-    ]
-  },
-  {
     "asignaturaCodigo": "410268",
     "seccion": 1,
+    "cupos": 30,
+    "inscritos": 28,
+    "disponibles": 2,
     "asignatura": "SISTEMAS DIGITALES",
     "docente": "LAGOS AGUAYO ,GABRIEL RODOLFO",
     "bloques": [
@@ -2043,6 +834,9 @@
   {
     "asignaturaCodigo": "410268",
     "seccion": 2,
+    "cupos": 30,
+    "inscritos": 28,
+    "disponibles": 2,
     "asignatura": "SISTEMAS DIGITALES",
     "docente": "LAGOS AGUAYO ,GABRIEL RODOLFO",
     "bloques": [
@@ -2079,6 +873,9 @@
   {
     "asignaturaCodigo": "430183",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 39,
+    "disponibles": 1,
     "asignatura": "INVESTIGACIÓN DE OPERACIONES",
     "docente": "ESCALONA SEPÚLVEDA ,JUAN FRANCISCO",
     "bloques": [
@@ -2101,6 +898,9 @@
   {
     "asignaturaCodigo": "430183",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 23,
+    "disponibles": 17,
     "asignatura": "INVESTIGACIÓN DE OPERACIONES",
     "docente": "ESCALONA SEPÚLVEDA ,JUAN FRANCISCO",
     "bloques": [
@@ -2121,59 +921,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "430394",
-    "seccion": 1,
-    "asignatura": "INNOVACIÓN DE BASE TECNOLÓGICA",
-    "docente": "IBT",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "S104II"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "S104II"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "430396",
-    "seccion": 1,
-    "asignatura": "DIRECCIÓN DE PROYECTOS",
-    "docente": "SÁNCHEZ OÑATE ,YERKO ORLANDO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "Lab1_DII"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "Lab1_DII"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "430396",
-    "seccion": 2,
-    "asignatura": "DIRECCIÓN DE PROYECTOS",
-    "docente": "SANTELICES MALFANTI ,IVÁN RAFAEL",
-    "bloques": []
-  },
-  {
     "asignaturaCodigo": "610227",
     "seccion": 1,
+    "cupos": 51,
+    "inscritos": 51,
+    "disponibles": 0,
     "asignatura": "ADMINISTRACIÓN GENERAL",
     "docente": "SÁEZ ORTIZ ,MARIELA VERÓNICA",
     "bloques": [
@@ -2196,6 +948,9 @@
   {
     "asignaturaCodigo": "610227",
     "seccion": 2,
+    "cupos": 48,
+    "inscritos": 43,
+    "disponibles": 5,
     "asignatura": "ADMINISTRACIÓN GENERAL",
     "docente": "TOLEDO AVENDAÑO ,GUSTAVO URBANO",
     "bloques": [
@@ -2211,6 +966,9 @@
   {
     "asignaturaCodigo": "610228",
     "seccion": 1,
+    "cupos": 41,
+    "inscritos": 37,
+    "disponibles": 4,
     "asignatura": "GESTIÓN CONTABLE",
     "docente": "CALISTO TENORIO ,YAZNA LORENA",
     "bloques": [
@@ -2226,6 +984,9 @@
   {
     "asignaturaCodigo": "610228",
     "seccion": 2,
+    "cupos": 43,
+    "inscritos": 42,
+    "disponibles": 1,
     "asignatura": "GESTIÓN CONTABLE",
     "docente": "CALISTO TENORIO ,YAZNA LORENA",
     "bloques": [
@@ -2241,6 +1002,9 @@
   {
     "asignaturaCodigo": "610229",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 40,
+    "disponibles": 0,
     "asignatura": "GESTIÓN PRESUPUESTARIA Y FINANCIERA",
     "docente": "GATICA NEIRA ,FRANCISCO EDUARDO",
     "bloques": [
@@ -2263,6 +1027,9 @@
   {
     "asignaturaCodigo": "610229",
     "seccion": 2,
+    "cupos": 35,
+    "inscritos": 27,
+    "disponibles": 8,
     "asignatura": "GESTIÓN PRESUPUESTARIA Y FINANCIERA",
     "docente": "PINTO ROJAS ,CRISTIAN FELIPE",
     "bloques": [
@@ -2285,6 +1052,9 @@
   {
     "asignaturaCodigo": "610231",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 39,
+    "disponibles": 1,
     "asignatura": "GESTIÓN DE RECURSOS HUMANOS",
     "docente": "CORREA NAVARRO ,YOSELIN ROMANET",
     "bloques": [
@@ -2300,6 +1070,9 @@
   {
     "asignaturaCodigo": "610231",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 32,
+    "disponibles": 8,
     "asignatura": "GESTIÓN DE RECURSOS HUMANOS",
     "docente": "CORREA NAVARRO ,YOSELIN ROMANET",
     "bloques": [
@@ -2315,6 +1088,9 @@
   {
     "asignaturaCodigo": "612239",
     "seccion": 1,
+    "cupos": 37,
+    "inscritos": 31,
+    "disponibles": 6,
     "asignatura": "GESTIÓN ESTRATÉGICA",
     "docente": "SÁEZ ORTIZ ,MARIELA VERÓNICA",
     "bloques": [
@@ -2337,6 +1113,9 @@
   {
     "asignaturaCodigo": "612239",
     "seccion": 2,
+    "cupos": 36,
+    "inscritos": 35,
+    "disponibles": 1,
     "asignatura": "GESTIÓN ESTRATÉGICA",
     "docente": "TOLEDO AVENDAÑO ,GUSTAVO URBANO",
     "bloques": [
@@ -2359,6 +1138,9 @@
   {
     "asignaturaCodigo": "620431",
     "seccion": 1,
+    "cupos": 35,
+    "inscritos": 26,
+    "disponibles": 9,
     "asignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
     "docente": "VIDAL CASTRO ,CHRISTIAN LAUTARO",
     "bloques": [
@@ -2402,6 +1184,9 @@
   {
     "asignaturaCodigo": "620431",
     "seccion": 2,
+    "cupos": 31,
+    "inscritos": 30,
+    "disponibles": 1,
     "asignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
     "docente": "VIDAL CASTRO ,CHRISTIAN LAUTARO",
     "bloques": [
@@ -2452,6 +1237,9 @@
   {
     "asignaturaCodigo": "620431",
     "seccion": 3,
+    "cupos": 35,
+    "inscritos": 34,
+    "disponibles": 1,
     "asignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
     "docente": "VIDAL CASTRO ,CHRISTIAN LAUTARO",
     "bloques": [
@@ -2488,6 +1276,9 @@
   {
     "asignaturaCodigo": "620432",
     "seccion": 1,
+    "cupos": 35,
+    "inscritos": 26,
+    "disponibles": 9,
     "asignatura": "INTRODUCCIÓN A LA INGENIERÍA",
     "docente": "PARRA SILVA ,STING ADAMS NATANAEL",
     "bloques": [
@@ -2510,6 +1301,9 @@
   {
     "asignaturaCodigo": "620432",
     "seccion": 2,
+    "cupos": 31,
+    "inscritos": 29,
+    "disponibles": 2,
     "asignatura": "INTRODUCCIÓN A LA INGENIERÍA",
     "docente": "PARRA SILVA ,STING ADAMS NATANAEL",
     "bloques": [
@@ -2532,6 +1326,9 @@
   {
     "asignaturaCodigo": "620432",
     "seccion": 3,
+    "cupos": 35,
+    "inscritos": 33,
+    "disponibles": 2,
     "asignatura": "INTRODUCCIÓN A LA INGENIERÍA",
     "docente": "PARRA SILVA ,STING ADAMS NATANAEL",
     "bloques": [
@@ -2552,203 +1349,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "620433",
-    "seccion": 1,
-    "asignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-    "docente": "RUBIO MANZANO ,CLEMENTE",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "MA",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "Lab1FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "JU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "Lab2FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "JU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "Lab2FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "VI",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "Lab3EspFACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620433",
-    "seccion": 2,
-    "asignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-    "docente": "RUBIO MANZANO ,CLEMENTE",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "MA",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "Lab1FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "JU",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "Lab1FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "JU",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "Lab3EspFACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "VI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "Lab1FACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620435",
-    "seccion": 1,
-    "asignatura": "ESTRUCTURAS DE DATOS",
-    "docente": "MEZA HIDALGO ,JAZNA PATRICIA",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "Lab3EspFACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "VI",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "Lab1EspFACE"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "14:10",
-        "horaFin": "16:20",
-        "sala": "A101AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620435",
-    "seccion": 2,
-    "asignatura": "ESTRUCTURAS DE DATOS",
-    "docente": "MEZA HIDALGO ,JAZNA PATRICIA",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "LU",
-        "horaInicio": "14:10",
-        "horaFin": "15:30",
-        "sala": "Lab3EspFACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "VI",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "Lab1EspFACE"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "16:20",
-        "horaFin": "18:30",
-        "sala": "A101AA"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620437",
-    "seccion": 1,
-    "asignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-    "docente": "TORRES AVILÉS ,RODRIGO ARIEL",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "A103AA"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S201AD"
-      },
-      {
-        "tipo": "PRA",
-        "dia": "JU",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "S202AD"
-      },
-      {
-        "tipo": "PRA",
-        "dia": "JU",
-        "horaInicio": "18:40",
-        "horaFin": "20:00",
-        "sala": "A203AC"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620437",
-    "seccion": 2,
-    "asignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-    "docente": "TORRES AVILÉS ,RODRIGO ARIEL",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "11:10",
-        "horaFin": "12:30",
-        "sala": "S213EG"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A102AA"
-      },
-      {
-        "tipo": "PRA",
-        "dia": "VI",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "A102AA"
-      }
-    ]
-  },
-  {
     "asignaturaCodigo": "620438",
     "seccion": 1,
+    "cupos": 51,
+    "inscritos": 50,
+    "disponibles": 1,
     "asignatura": "TEORÍA DE SISTEMAS",
     "docente": "PARRA MÁRQUEZ ,JUAN CARLOS",
     "bloques": [
@@ -2764,6 +1369,9 @@
   {
     "asignaturaCodigo": "620438",
     "seccion": 2,
+    "cupos": 46,
+    "inscritos": 44,
+    "disponibles": 2,
     "asignatura": "TEORÍA DE SISTEMAS",
     "docente": "PARRA MÁRQUEZ ,JUAN CARLOS",
     "bloques": [
@@ -2779,6 +1387,9 @@
   {
     "asignaturaCodigo": "620439",
     "seccion": 1,
+    "cupos": 2,
+    "inscritos": 2,
+    "disponibles": 0,
     "asignatura": "BASE DE DATOS",
     "docente": "CANIUPÁN MARILEO ,MÓNICA ALEJANDRA",
     "bloques": [
@@ -2806,15 +1417,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "620449",
-    "seccion": 1,
-    "asignatura": "PRÁCTICA PROFESIONAL I",
-    "docente": "ANDIA ROA ,ARIEL ALFREDO",
-    "bloques": []
-  },
-  {
     "asignaturaCodigo": "620450",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 23,
+    "disponibles": 17,
     "asignatura": "ARQUITECTURA DE COMPUTADORES",
     "docente": "PARRA MÁRQUEZ ,JUAN CARLOS",
     "bloques": [
@@ -2837,6 +1444,9 @@
   {
     "asignaturaCodigo": "620451",
     "seccion": 1,
+    "cupos": 32,
+    "inscritos": 27,
+    "disponibles": 5,
     "asignatura": "ADMINISTRACIÓN Y PROGRAMACIÓN DE BASE DE DATOS",
     "docente": "GUTIÉRREZ BUNSTER ,TATIANA ANDREA",
     "bloques": [
@@ -2866,6 +1476,9 @@
   {
     "asignaturaCodigo": "620451",
     "seccion": 2,
+    "cupos": 35,
+    "inscritos": 35,
+    "disponibles": 0,
     "asignatura": "ADMINISTRACIÓN Y PROGRAMACIÓN DE BASE DE DATOS",
     "docente": "GUTIÉRREZ BUNSTER ,TATIANA ANDREA",
     "bloques": [
@@ -2895,6 +1508,9 @@
   {
     "asignaturaCodigo": "620452",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 31,
+    "disponibles": 9,
     "asignatura": "SISTEMAS DE INFORMACIÓN",
     "docente": "ARAYA GUZMÁN ,SERGIO ANÍBAL",
     "bloques": [
@@ -2917,6 +1533,9 @@
   {
     "asignaturaCodigo": "620452",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 28,
+    "disponibles": 12,
     "asignatura": "SISTEMAS DE INFORMACIÓN",
     "docente": "ARAYA GUZMÁN ,SERGIO ANÍBAL",
     "bloques": [
@@ -2946,6 +1565,9 @@
   {
     "asignaturaCodigo": "620453",
     "seccion": 1,
+    "cupos": 13,
+    "inscritos": 12,
+    "disponibles": 1,
     "asignatura": "SISTEMAS OPERATIVOS",
     "docente": "PEREIRA RODRÍGUEZ ,ENNIO BEEGER",
     "bloques": [
@@ -2968,6 +1590,9 @@
   {
     "asignaturaCodigo": "620454",
     "seccion": 1,
+    "cupos": 31,
+    "inscritos": 30,
+    "disponibles": 1,
     "asignatura": "INTELIGENCIA ARTIFICIAL",
     "docente": "MEZA HIDALGO ,JAZNA PATRICIA",
     "bloques": [
@@ -2990,6 +1615,9 @@
   {
     "asignaturaCodigo": "620455",
     "seccion": 1,
+    "cupos": 60,
+    "inscritos": 24,
+    "disponibles": 36,
     "asignatura": "INGENIERÍA DE SOFTWARE",
     "docente": "SEGURA NAVARRETE ,ALEJANDRA ANDREA",
     "bloques": [
@@ -3017,15 +1645,11 @@
     ]
   },
   {
-    "asignaturaCodigo": "620456",
-    "seccion": 1,
-    "asignatura": "PRÁCTICA PROFESIONAL II",
-    "docente": "ANDIA ROA ,ARIEL ALFREDO",
-    "bloques": []
-  },
-  {
     "asignaturaCodigo": "620457",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 38,
+    "disponibles": 2,
     "asignatura": "COMUNICACIÓN DE DATOS Y REDES",
     "docente": "VALDÉS JIMÉNEZ ,ALEJANDRO MAURICIO",
     "bloques": [
@@ -3062,6 +1686,9 @@
   {
     "asignaturaCodigo": "620457",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 24,
+    "disponibles": 16,
     "asignatura": "COMUNICACIÓN DE DATOS Y REDES",
     "docente": "VALDÉS JIMÉNEZ ,ALEJANDRO MAURICIO",
     "bloques": [
@@ -3084,6 +1711,9 @@
   {
     "asignaturaCodigo": "620458",
     "seccion": 1,
+    "cupos": 32,
+    "inscritos": 32,
+    "disponibles": 0,
     "asignatura": "GESTIÓN DE PROYECTOS DE SOFTWARE",
     "docente": "ESPINOZA SILVA ,SEBASTIÁN IGNACIO",
     "bloques": [
@@ -3113,6 +1743,9 @@
   {
     "asignaturaCodigo": "620458",
     "seccion": 2,
+    "cupos": 33,
+    "inscritos": 32,
+    "disponibles": 1,
     "asignatura": "GESTIÓN DE PROYECTOS DE SOFTWARE",
     "docente": "ESPINOZA SILVA ,SEBASTIÁN IGNACIO",
     "bloques": [
@@ -3142,6 +1775,9 @@
   {
     "asignaturaCodigo": "620472",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 14,
+    "disponibles": 26,
     "asignatura": "ANTEPROYECTO DE TITULO",
     "docente": "GUTIÉRREZ BUNSTER ,TATIANA ANDREA",
     "bloques": [
@@ -3164,6 +1800,9 @@
   {
     "asignaturaCodigo": "620472",
     "seccion": 2,
+    "cupos": 40,
+    "inscritos": 33,
+    "disponibles": 7,
     "asignatura": "ANTEPROYECTO DE TITULO",
     "docente": "GUTIÉRREZ BUNSTER ,TATIANA ANDREA",
     "bloques": [
@@ -3186,6 +1825,9 @@
   {
     "asignaturaCodigo": "620477",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 30,
+    "disponibles": 10,
     "asignatura": "PROYECTO DE TITULO",
     "docente": "PARRA MÁRQUEZ ,JUAN CARLOS",
     "bloques": []
@@ -3193,6 +1835,9 @@
   {
     "asignaturaCodigo": "620514",
     "seccion": 1,
+    "cupos": 30,
+    "inscritos": 11,
+    "disponibles": 19,
     "asignatura": "SISTEMAS OPERATIVOS",
     "docente": "PEREIRA RODRÍGUEZ ,ENNIO BEEGER",
     "bloques": [
@@ -3215,6 +1860,9 @@
   {
     "asignaturaCodigo": "620515",
     "seccion": 1,
+    "cupos": 40,
+    "inscritos": 20,
+    "disponibles": 20,
     "asignatura": "INGENIERÍA DE SOFTWARE",
     "docente": "SEGURA NAVARRETE ,ALEJANDRA ANDREA",
     "bloques": [
@@ -3238,211 +1886,6 @@
         "horaInicio": "11:10",
         "horaFin": "12:30",
         "sala": "A301AB"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620519",
-    "seccion": 1,
-    "asignatura": "TALLER DE DESARROLLO",
-    "docente": "ESPINOZA SILVA ,SEBASTIÁN IGNACIO",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "09:40",
-        "horaFin": "11:00",
-        "sala": "S211EG"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "MI",
-        "horaInicio": "11:50",
-        "horaFin": "14:00",
-        "sala": "Lab1EspFACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "MI",
-        "horaInicio": "11:50",
-        "horaFin": "14:00",
-        "sala": "Lab2EspFACE"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "MI",
-        "horaInicio": "12:40",
-        "horaFin": "14:00",
-        "sala": "A301AB"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620530",
-    "seccion": 1,
-    "asignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-    "docente": "ROJAS CONTRERAS ,KARINA PILAR",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "LU",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "A102AA"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "MA",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "Lab1FACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620611",
-    "seccion": 1,
-    "asignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-    "docente": "DEL DESPOSITO CLUNES ,PATRICIO ALEJANDRO",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "LU",
-        "horaInicio": "15:40",
-        "horaFin": "20:00",
-        "sala": "Lab1EspFACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620618",
-    "seccion": 1,
-    "asignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-    "docente": "MELLA D'APPOLLONIO ,PEDRO ENRIQUE",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "MA",
-        "horaInicio": "17:10",
-        "horaFin": "19:20",
-        "sala": "S201AD"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "17:10",
-        "horaFin": "19:20",
-        "sala": "A104AA"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620627",
-    "seccion": 1,
-    "asignatura": "HERRAMIENTAS DE LA CALIDAD Y MEJORA CONTINUA",
-    "docente": "BARRAZA ALARCÓN ,IGOR ERASMO",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "LU",
-        "horaInicio": "08:10",
-        "horaFin": "10:20",
-        "sala": "Lab2FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "MA",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "Lab2FACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620637",
-    "seccion": 1,
-    "asignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-    "docente": "SALAZAR ROBINSON ,HÉCTOR PATRICIO",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "MA",
-        "horaInicio": "17:10",
-        "horaFin": "19:20",
-        "sala": "Lab2FACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "JU",
-        "horaInicio": "17:10",
-        "horaFin": "19:20",
-        "sala": "Lab2FACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620639",
-    "seccion": 1,
-    "asignatura": "INTRODUCCION A LA REALIDAD VIRTUAL",
-    "docente": "FUENZALIDA CRUZ ,MAURICIO ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "LU",
-        "horaInicio": "08:10",
-        "horaFin": "10:20",
-        "sala": "Lab2EspFACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "MI",
-        "horaInicio": "08:10",
-        "horaFin": "09:30",
-        "sala": "Lab2EspFACE"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620648",
-    "seccion": 1,
-    "asignatura": "GESTIÓN DEL EMPRENDIMIENTO",
-    "docente": "SOTO HERNÁNDEZ ,NADIA ELENA",
-    "bloques": [
-      {
-        "tipo": "TEO",
-        "dia": "JU",
-        "horaInicio": "17:10",
-        "horaFin": "19:20",
-        "sala": "A301AB"
-      },
-      {
-        "tipo": "TEO",
-        "dia": "VI",
-        "horaInicio": "15:40",
-        "horaFin": "17:00",
-        "sala": "A102AA"
-      }
-    ]
-  },
-  {
-    "asignaturaCodigo": "620649",
-    "seccion": 1,
-    "asignatura": "INTRODUCCIÓN AL DESARROLLO DE APLICACIONES ANDROID EN KOTLIN",
-    "docente": "GUTIÉRREZ BENÍTEZ ,RODRIGO ANDRÉS",
-    "bloques": [
-      {
-        "tipo": "LAB",
-        "dia": "LU",
-        "horaInicio": "16:20",
-        "horaFin": "19:20",
-        "sala": "Lab2EspFACE"
-      },
-      {
-        "tipo": "LAB",
-        "dia": "MI",
-        "horaInicio": "18:40",
-        "horaFin": "20:00",
-        "sala": "Lab2EspFACE"
       }
     ]
   }
