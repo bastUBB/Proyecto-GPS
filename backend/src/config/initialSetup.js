@@ -6,6 +6,7 @@ import User from '../models/user.model.js';
 import Asignatura from '../models/asignaturas.model.js';
 import rendimientoAsignatura from '../models/rendimientoAsignatura.model.js';
 import { crearTodosLosRendimientosExistentes } from '../services/rendimientoAsignatura.service.js';
+import { crearAsignaturasDocentes } from '../services/asignaturasDocente.service.js';
 
 const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
@@ -181,11 +182,19 @@ async function createRendimientos() {
     }
 }
 
+async function createAsignaturasDocentes() {
+    try {
+        await crearAsignaturasDocentes();    } catch (error) {
+        console.error('Error al crear asignaturas docentes:', error.message);
+    }
+}
+
 async function initialSetup() {
     await createInitialUsers();
     await createAsignaturas();
     await createProfesores();
     await createRendimientos();
+    await createAsignaturasDocentes();
 }
 
 export { initialSetup };

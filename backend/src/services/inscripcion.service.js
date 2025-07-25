@@ -2,10 +2,11 @@ import Inscripcion from "../models/inscripcion.model.js";
 import User from "../models/user.model.js";
 import Asignatura from "../models/asignaturas.model.js";
 import evluacionDocente from "../models/evaluacionDocente.model.js";
-import rendimientoAsignatura from "../models/rendimientoAsignatura.model.js";
+import mallaUser from "../models/mallaUser.model.js";
+import asignaturasDocente from "../models/asignaturasDocente.model.js";
 
 export async function crearRecomendacionInscripcion(){
-    
+    //crear algoritmo de recomendacion de inscripcion
 }
 
 export async function crearInscripcion(inscripcionData) {
