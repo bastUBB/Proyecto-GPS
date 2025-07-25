@@ -26,6 +26,26 @@ function normalizarNombre(nombre) {
         .trim();
 }
 
+// Expresión regular para validar RUTs chilenos
+const RUT_REGEX = /^(?:(?:[1-9]\d{0}|[1-2]\d{1})(\.\d{3}){2}|[1-9]\d{6}|[1-2]\d{7}|29\.999\.999|29999999)-[\dkK]$/;
+
+// Función para validar formato de RUT
+function validarRut(rut) {
+    return RUT_REGEX.test(rut);
+}
+
+// Función para normalizar RUT (eliminar puntos y guiones para cálculos)
+function normalizarRut(rut) {
+    return rut.replace(/\./g, '').replace(/-/g, '');
+}
+
+// Función para formatear RUT con puntos y guión
+function formatearRut(rutSinFormato) {
+    const rut = rutSinFormato.slice(0, -1);
+    const dv = rutSinFormato.slice(-1);
+    return rut.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + dv;
+}
+
 // Función para formatear nombre correctamente
 function formatearNombre(nombre) {
     return nombre
@@ -55,24 +75,36 @@ function generarEmail(nombreCompleto) {
 // Función para generar RUT ficticio pero realista
 function generarRutFicticio(index) {
     if (index < RUTS_FICTICIOS.length) {
-        return RUTS_FICTICIOS[index];
+        // Validar RUT ficticio antes de devolverlo
+        const rut = RUTS_FICTICIOS[index];
+        if (validarRut(rut)) {
+            return rut;
+        }
     }
 
-    // Generar RUT aleatorio
-    const numero = Math.floor(Math.random() * 90000000) + 10000000;
-    const digitos = numero.toString().split('').reverse();
-    let suma = 0;
-    let multiplicador = 2;
+    // Generar RUT aleatorio válido
+    let rutValido = false;
+    let rutGenerado = '';
+    
+    while (!rutValido) {
+        const numero = Math.floor(Math.random() * 90000000) + 10000000;
+        const digitos = numero.toString().split('').reverse();
+        let suma = 0;
+        let multiplicador = 2;
 
-    for (let digito of digitos) {
-        suma += parseInt(digito) * multiplicador;
-        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+        for (let digito of digitos) {
+            suma += parseInt(digito) * multiplicador;
+            multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+        }
+
+        const resto = suma % 11;
+        const dv = resto === 0 ? '0' : resto === 1 ? 'k' : (11 - resto).toString();
+        
+        rutGenerado = formatearRut(`${numero}${dv}`);
+        rutValido = validarRut(rutGenerado);
     }
 
-    const resto = suma % 11;
-    const dv = resto === 0 ? '0' : resto === 1 ? 'k' : (11 - resto).toString();
-
-    return `${numero}-${dv}`;
+    return rutGenerado;
 }
 
 // Función para extraer nombres únicos del archivo horario
@@ -98,7 +130,7 @@ function extraerNombresUnicos() {
 
     } catch (error) {
         console.error('❌ Error al leer el archivo de horario:', error.message);
-        process.exit(1);
+        throw error; // Lanzar error en lugar de process.exit cuando se importa
     }
 }
 
@@ -142,54 +174,44 @@ async function generarProfesoresSimple() {
 
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(resultado, null, 2), 'utf8');
 
-        //console.log(`\n✅ ¡Proceso completado!`);
-        //console.log(`📁 Archivo generado: ${OUTPUT_FILE}`);
-        //console.log(`👥 Total de profesores: ${profesores.length}`);
+        // Solo mostrar mensaje cuando se ejecuta directamente
+        if (import.meta.url === `file://${process.argv[1]}`) {
+            console.log(`\n✅ ¡Proceso completado!`);
+            console.log(`📁 Archivo generado: ${OUTPUT_FILE}`);
+            console.log(`👥 Total de profesores: ${profesores.length}`);
 
-        // Mostrar algunos ejemplos
-        //console.log('\n📋 Primeros 5 profesores generados:');
-        profesores.slice(0, 5).forEach((prof, index) => {
-            //console.log(`${index + 1}. ${prof.nombreCompleto}`);
-            //console.log(`   RUT: ${prof.rut}`);
-            //console.log(`   Email: ${prof.email}\n`);
-        });
-
-        // Generar código para initialSetup.js
-        //console.log('\n📋 Código para agregar a initialSetup.js:\n');
-        //console.log('// Agregar estos profesores al array usersData:');
-        profesores.slice(0, 3).forEach((prof) => {
-            console.log(`{
-                nombreCompleto: '${prof.nombreCompleto}',
-                email: '${prof.email}',
-                rut: '${prof.rut}',
-                password: 'profesor123',
-                role: 'profesor'
-            },`);
-        });
-
-        if (profesores.length > 3) {
-            //console.log(`// ... y ${profesores.length - 3} profesores más en el archivo JSON`);
+            // Mostrar algunos ejemplos
+            console.log('\n📋 Primeros 5 profesores generados:');
+            profesores.slice(0, 5).forEach((prof, index) => {
+                console.log(`${index + 1}. ${prof.nombreCompleto}`);
+                console.log(`   RUT: ${prof.rut}`);
+                console.log(`   Email: ${prof.email}\n`);
+            });
         }
+
+        return resultado; // Devolver el resultado para uso programático
 
     } catch (error) {
         console.error('\n❌ Error en el proceso:', error.message);
-        process.exit(1);
+        throw error; // Lanzar error en lugar de process.exit cuando se importa
     }
 }
 
-// Ejecutar script directamente
-//console.log('🔄 Iniciando script...');
+// Ejecutar script directamente solo si se ejecuta como script principal
+if (import.meta.url === `file://${process.argv[1]}`) {
+    //console.log('🔄 Iniciando script...');
 
-generarProfesoresSimple()
-    .then(() => {
-        //console.log('\n🎉 Script ejecutado exitosamente');
-        process.exit(0);
-    })
-    .catch((error) => {
-        console.error('\n💥 Error fatal:', error.message);
-        console.error('Stack:', error.stack);
-        process.exit(1);
-    });
+    generarProfesoresSimple()
+        .then(() => {
+            //console.log('\n🎉 Script ejecutado exitosamente');
+            process.exit(0);
+        })
+        .catch((error) => {
+            console.error('\n💥 Error fatal:', error.message);
+            console.error('Stack:', error.stack);
+            process.exit(1);
+        });
+}
 
 export {
     generarProfesoresSimple,
@@ -197,5 +219,8 @@ export {
     normalizarNombre,
     formatearNombre,
     generarEmail,
-    generarRutFicticio
+    generarRutFicticio,
+    validarRut,
+    normalizarRut,
+    formatearRut
 };
