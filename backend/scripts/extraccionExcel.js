@@ -21,23 +21,25 @@ export function extractSubjects(data) {
         const seccion = parseInt(row[1]) || null;
         const nombreAsignaturaDocente = row[4]?.toString().trim() || '';
         const [nombreAsignatura, docente] = nombreAsignaturaDocente.split('-').map(s => s.trim());
-
-        // // Solo primera letra en mayúscula, resto en minúscula, respetando tildes
-        // if (nombreAsignatura) {
-        //     nombreAsignatura = nombreAsignatura.charAt(0).toUpperCase() + nombreAsignatura.slice(1).toLowerCase();
-        // }
-
+        
         const bloques = [];
         for (let j = 5; j < row.length; j++) {
             const cell = row[j]?.toString().trim();
             if (!cell) continue;
 
-            const regex = /^(TEO|PRA|LAB): ([A-Z]{2,3}) (\d{2}:\d{2}) (\d{2}:\d{2})/;
+            // Regex mejorada para extraer también la sala
+            const regex = /^(TEO|PRA|LAB): ([A-Z]{2,3}) (\d{2}:\d{2}) (\d{2}:\d{2})\s+(.+)$/;
             const match = cell.match(regex);
 
             if (match) {
-                const [, tipo, dia, horaInicio, horaFin] = match;
-                bloques.push({ tipo, dia, horaInicio, horaFin });
+                const [, tipo, dia, horaInicio, horaFin, sala] = match;
+                bloques.push({ 
+                    tipo, 
+                    dia, 
+                    horaInicio, 
+                    horaFin, 
+                    sala: sala.trim() 
+                });
             }
         }
 

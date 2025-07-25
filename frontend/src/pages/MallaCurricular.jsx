@@ -13,7 +13,7 @@ const mallaOriginal = [
   { id: 1, nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
   { id: 2, nombre: "Introducción a la Ingeniería", creditos: 6, semestre: 1 },
   { id: 3, nombre: "Comunicación Oral y Escrita", creditos: 4, semestre: 1 },
-  { id: 4, nombre: "Introducción a la Programación", creditos: 6, semestre: 1 },
+  { id: 4, nombre: "Introducción a la Programación", creditos: 9, semestre: 1 },
   { id: 5, nombre: "Formación Integral I", creditos: 2, semestre: 1 },
   { id: 6, nombre: "Cálculo Diferencial", creditos: 6, semestre: 2 },
   { id: 7, nombre: "Química General", creditos: 8, semestre: 2 },
@@ -109,6 +109,7 @@ const MallaCurricular = () => {
   const [cambiosPendientes, setCambiosPendientes] = useState(false);
   const [asignaturasCompletadasLocal, setAsignaturasCompletadasLocal] = useState([]);
   const [loadingPDF, setLoadingPDF] = useState(false);
+  const [error, setError] = useState('');
 
   // Funciones helper para alertas
   const showAlert = (type, title, message) => {
@@ -497,7 +498,7 @@ const MallaCurricular = () => {
           //console.log('No existía malla para eliminar, creando malla inicial');
           crearMallaInicial();
         } else {
-          console.error('Error al eliminar la malla:', error);
+          // console.error('Error al eliminar la malla:', error);
           setError('Error al restablecer la malla del usuario');
           // Aún así, crear malla inicial como fallback
           crearMallaInicial();
@@ -618,8 +619,6 @@ const MallaCurricular = () => {
                   </HelpTooltip>
                 </h2>
               </div>
-
-
 
               {/* Leyenda de colores para alumnos */}
               {user && user.role === 'alumno' && (

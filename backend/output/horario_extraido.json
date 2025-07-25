@@ -9,13 +9,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A201AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "08:10",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A301AC"
       }
     ]
   },
@@ -29,13 +31,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A202AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "08:10",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A302AC"
       }
     ]
   },
@@ -49,19 +53,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A203AC"
       },
       {
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A203AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A303AC"
       }
     ]
   },
@@ -75,25 +82,29 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A101AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A101AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A101AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A204AC"
       }
     ]
   },
@@ -107,25 +118,29 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A102AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A102AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A102AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A106AC"
       }
     ]
   },
@@ -139,25 +154,29 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A103AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A103AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A103AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A102AA"
       }
     ]
   },
@@ -178,19 +197,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A101EG"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A101AB"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A101EG"
       }
     ]
   },
@@ -204,19 +226,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A308AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A308AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A108AC"
       }
     ]
   },
@@ -230,19 +255,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A208AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S203AD"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A208AC"
       }
     ]
   },
@@ -256,19 +284,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A307AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A206AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S201AD"
       }
     ]
   },
@@ -282,19 +313,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A308AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A205AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S202AD"
       }
     ]
   },
@@ -308,19 +342,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A101AB"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A303AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S212EG"
       }
     ]
   },
@@ -334,19 +371,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A303AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A205AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A305AC"
       }
     ]
   },
@@ -360,19 +400,22 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S201AD"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S201AD"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A206AC"
       }
     ]
   },
@@ -386,19 +429,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S201AD"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A105AC"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A301AC"
       }
     ]
   },
@@ -412,19 +458,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A101EG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A104AC"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A104AC"
       }
     ]
   },
@@ -438,19 +487,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A203AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A305AC"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S303AD"
       }
     ]
   },
@@ -464,19 +516,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A305AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S202EC"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A105AC"
       }
     ]
   },
@@ -490,19 +545,22 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A301AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A104AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S209EG"
       }
     ]
   },
@@ -516,13 +574,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A305AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "16:20",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A202AB"
       }
     ]
   },
@@ -536,13 +596,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "16:20"
+        "horaFin": "16:20",
+        "sala": "S303AD"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S203AD"
       }
     ]
   },
@@ -556,13 +618,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:50",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S206EG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S206EG"
       }
     ]
   },
@@ -576,13 +640,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:50",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S204EG"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A101AC"
       }
     ]
   },
@@ -596,13 +662,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S205EG"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "16:20"
+        "horaFin": "16:20",
+        "sala": "S213EG"
       }
     ]
   },
@@ -616,13 +684,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S101FG"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "14:50"
+        "horaFin": "14:50",
+        "sala": "S302AD"
       }
     ]
   },
@@ -636,13 +706,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S103ExIM"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:50",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S302AD"
       }
     ]
   },
@@ -656,7 +728,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "S101FG"
       }
     ]
   },
@@ -670,7 +743,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S102FG"
       }
     ]
   },
@@ -684,13 +758,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A301AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A301AC"
       }
     ]
   },
@@ -704,13 +780,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A203AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A102AC"
       }
     ]
   },
@@ -724,13 +802,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S102FG"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A106AC"
       }
     ]
   },
@@ -744,13 +824,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S210EG"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A101AC"
       }
     ]
   },
@@ -764,13 +846,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S102FG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S102FG"
       }
     ]
   },
@@ -784,13 +868,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S101FG"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S102FG"
       }
     ]
   },
@@ -804,13 +890,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S102FG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S101FG"
       }
     ]
   },
@@ -824,13 +912,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A304AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A301AB"
       }
     ]
   },
@@ -844,13 +934,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A305AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S203AD"
       }
     ]
   },
@@ -864,13 +956,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A201AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "13:20",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A202AC"
       }
     ]
   },
@@ -884,13 +978,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A202AC"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "13:20",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A203AC"
       }
     ]
   },
@@ -904,13 +1000,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "11:50"
+        "horaFin": "11:50",
+        "sala": "A301AC"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S301AD"
       }
     ]
   },
@@ -924,13 +1022,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S201AD"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "10:20",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A101AB"
       }
     ]
   },
@@ -944,7 +1044,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "S201AD"
       }
     ]
   },
@@ -958,13 +1059,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S102FG"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S101FG"
       }
     ]
   },
@@ -978,7 +1081,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S102FG"
       }
     ]
   },
@@ -992,7 +1096,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A102AA"
       }
     ]
   },
@@ -1006,7 +1111,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S101FG"
       }
     ]
   },
@@ -1020,13 +1126,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S101FG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S101ExIM"
       }
     ]
   },
@@ -1040,7 +1148,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "S101FG"
       }
     ]
   },
@@ -1054,7 +1163,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A106AC"
       }
     ]
   },
@@ -1068,7 +1178,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "S203AD"
       }
     ]
   },
@@ -1082,7 +1193,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "A101AC"
       }
     ]
   },
@@ -1096,13 +1208,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S101FG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S103ExIM"
       }
     ]
   },
@@ -1116,7 +1230,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A206AC"
       }
     ]
   },
@@ -1130,7 +1245,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A206AC"
       }
     ]
   },
@@ -1144,7 +1260,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A303AC"
       }
     ]
   },
@@ -1158,7 +1275,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S202AD"
       }
     ]
   },
@@ -1172,7 +1290,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S101FG"
       }
     ]
   },
@@ -1186,7 +1305,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A106AC"
       }
     ]
   },
@@ -1200,7 +1320,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "A306AC"
       }
     ]
   },
@@ -1214,7 +1335,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A204AC"
       }
     ]
   },
@@ -1228,7 +1350,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A104AA"
       }
     ]
   },
@@ -1242,7 +1365,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S102FG"
       }
     ]
   },
@@ -1256,13 +1380,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "S101FG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "S102FG"
       }
     ]
   },
@@ -1276,13 +1402,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S102FG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S102FG"
       }
     ]
   },
@@ -1296,7 +1424,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A206AC"
       }
     ]
   },
@@ -1310,7 +1439,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S201AD"
       }
     ]
   },
@@ -1324,7 +1454,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S203AD"
       }
     ]
   },
@@ -1338,7 +1469,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A107AC"
       }
     ]
   },
@@ -1352,7 +1484,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S203EC"
       }
     ]
   },
@@ -1366,7 +1499,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A304AC"
       }
     ]
   },
@@ -1380,7 +1514,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A102AB"
       }
     ]
   },
@@ -1394,7 +1529,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A107AC"
       }
     ]
   },
@@ -1408,7 +1544,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A101EG"
       }
     ]
   },
@@ -1422,7 +1559,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A308AC"
       }
     ]
   },
@@ -1436,7 +1574,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S201AD"
       }
     ]
   },
@@ -1450,7 +1589,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A105AC"
       }
     ]
   },
@@ -1464,7 +1604,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A306AC"
       }
     ]
   },
@@ -1478,7 +1619,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A108AC"
       }
     ]
   },
@@ -1492,7 +1634,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S202AD"
       }
     ]
   },
@@ -1506,7 +1649,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A308AC"
       }
     ]
   },
@@ -1520,7 +1664,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A108AC"
       }
     ]
   },
@@ -1534,7 +1679,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A204AC"
       }
     ]
   },
@@ -1548,7 +1694,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A205AC"
       }
     ]
   },
@@ -1562,7 +1709,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "TPROTOTIPO"
       }
     ]
   },
@@ -1576,7 +1724,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "TPROTOTIPO"
       }
     ]
   },
@@ -1590,7 +1739,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A108AC"
       }
     ]
   },
@@ -1604,7 +1754,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S303AD"
       }
     ]
   },
@@ -1618,7 +1769,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A107AC"
       }
     ]
   },
@@ -1632,7 +1784,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A108AC"
       }
     ]
   },
@@ -1646,7 +1799,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A107AC"
       }
     ]
   },
@@ -1660,7 +1814,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A107AC"
       }
     ]
   },
@@ -1674,7 +1829,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S102FG"
       }
     ]
   },
@@ -1695,7 +1851,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "A102AC"
       }
     ]
   },
@@ -1716,13 +1873,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:50",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A206AC"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S202MD"
       }
     ]
   },
@@ -1736,13 +1895,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "14:50"
+        "horaFin": "14:50",
+        "sala": "A206AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S208EG"
       }
     ]
   },
@@ -1756,7 +1917,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "Sala MultiArtes"
       }
     ]
   },
@@ -1770,7 +1932,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "Sala MultiArtes"
       }
     ]
   },
@@ -1784,7 +1947,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "S204EG"
       }
     ]
   },
@@ -1798,7 +1962,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "S208EG"
       }
     ]
   },
@@ -1819,7 +1984,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S101ExIM"
       }
     ]
   },
@@ -1833,7 +1999,8 @@
         "tipo": "PRA",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Gimnasio 1"
       }
     ]
   },
@@ -1847,25 +2014,29 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "L08EG"
       },
       {
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "S209EG"
       },
       {
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "L01EG"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "L01EG"
       }
     ]
   },
@@ -1879,25 +2050,29 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:50",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "S303EG"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "17:10",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "L01EG"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "L08EG"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "L08EG"
       }
     ]
   },
@@ -1911,13 +2086,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A202AB"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S201AD"
       }
     ]
   },
@@ -1931,13 +2108,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S303AD"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A205AC"
       }
     ]
   },
@@ -1951,13 +2130,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S104II"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S104II"
       }
     ]
   },
@@ -1971,13 +2152,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "Lab1_DII"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1_DII"
       }
     ]
   },
@@ -1998,13 +2181,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A101AA"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2018,7 +2203,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2032,7 +2218,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "12:40",
-        "horaFin": "14:50"
+        "horaFin": "14:50",
+        "sala": "A103AC"
       }
     ]
   },
@@ -2046,7 +2233,8 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:50"
+        "horaFin": "14:50",
+        "sala": "S103ExIM"
       }
     ]
   },
@@ -2060,13 +2248,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "A102AA"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "A103AA"
       }
     ]
   },
@@ -2080,13 +2270,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "A101AA"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:50"
+        "horaFin": "14:50",
+        "sala": "A103AA"
       }
     ]
   },
@@ -2100,7 +2292,8 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "A102AA"
       }
     ]
   },
@@ -2114,7 +2307,8 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "A103AA"
       }
     ]
   },
@@ -2128,13 +2322,15 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A102AA"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A102AA"
       }
     ]
   },
@@ -2148,13 +2344,15 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A304AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S303AD"
       }
     ]
   },
@@ -2168,31 +2366,36 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "08:10",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A104AC"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab1EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab2EspFACE"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "S201EC"
       }
     ]
   },
@@ -2206,37 +2409,43 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "14:10",
-        "horaFin": "16:20"
+        "horaFin": "16:20",
+        "sala": "S202AD"
       },
       {
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab2EspFACE"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S202AD"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab2EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1EspFACE"
       }
     ]
   },
@@ -2250,25 +2459,29 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:50"
+        "horaFin": "14:50",
+        "sala": "A301AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A105AC"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "Lab1FACE"
       }
     ]
   },
@@ -2282,13 +2495,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "16:20"
+        "horaFin": "16:20",
+        "sala": "S301AD"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A103AC"
       }
     ]
   },
@@ -2302,13 +2517,15 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "S202AD"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A202AC"
       }
     ]
   },
@@ -2322,13 +2539,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A308AC"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A102AC"
       }
     ]
   },
@@ -2342,25 +2561,29 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "Lab2FACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab2FACE"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "Lab3EspFACE"
       }
     ]
   },
@@ -2374,25 +2597,29 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "Lab3EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1FACE"
       }
     ]
   },
@@ -2406,19 +2633,22 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "Lab3EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "Lab1EspFACE"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "14:10",
-        "horaFin": "16:20"
+        "horaFin": "16:20",
+        "sala": "A101AC"
       }
     ]
   },
@@ -2432,19 +2662,22 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "Lab3EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "Lab1EspFACE"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "16:20",
-        "horaFin": "18:30"
+        "horaFin": "18:30",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2458,25 +2691,29 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A103AA"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S201AD"
       },
       {
         "tipo": "PRA",
         "dia": "JU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S202AD"
       },
       {
         "tipo": "PRA",
         "dia": "JU",
         "horaInicio": "18:40",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "A203AC"
       }
     ]
   },
@@ -2490,19 +2727,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S213EG"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A102AA"
       },
       {
         "tipo": "PRA",
         "dia": "VI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A102AA"
       }
     ]
   },
@@ -2516,7 +2756,8 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:50"
+        "horaFin": "11:50",
+        "sala": "A102AA"
       }
     ]
   },
@@ -2530,7 +2771,8 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "09:40",
-        "horaFin": "11:50"
+        "horaFin": "11:50",
+        "sala": "S211EG"
       }
     ]
   },
@@ -2544,19 +2786,22 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S302AD"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "08:10",
-        "horaFin": "10:20"
+        "horaFin": "10:20",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A302AC"
       }
     ]
   },
@@ -2577,13 +2822,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "A101AA"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "Lab2EspFACE"
       }
     ]
   },
@@ -2597,19 +2844,22 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S202AD"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2623,19 +2873,22 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A101AA"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2649,13 +2902,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "A103AA"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "A103AA"
       }
     ]
   },
@@ -2669,19 +2924,22 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A102AA"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "A102AA"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A103AA"
       }
     ]
   },
@@ -2695,13 +2953,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:50",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "A103AA"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "18:40",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2715,13 +2975,15 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "A208AC"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "11:10",
-        "horaFin": "13:20"
+        "horaFin": "13:20",
+        "sala": "Lab1EspFACE"
       }
     ]
   },
@@ -2735,19 +2997,22 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "Lab1FACE"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S103CE"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "S103CE"
       }
     ]
   },
@@ -2768,25 +3033,29 @@
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "09:40",
-        "horaFin": "11:50"
+        "horaFin": "11:50",
+        "sala": "A102AA"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab3EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "Lab3EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "Lab3EspFACE"
       }
     ]
   },
@@ -2800,13 +3069,15 @@
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "09:40",
-        "horaFin": "11:50"
+        "horaFin": "11:50",
+        "sala": "S208EG"
       },
       {
         "tipo": "LAB",
         "dia": "VI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab3EspFACE"
       }
     ]
   },
@@ -2820,19 +3091,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "A301AB"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A104AA"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A102AA"
       }
     ]
   },
@@ -2846,19 +3120,22 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:50"
+        "horaFin": "17:50",
+        "sala": "A301AB"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A104AA"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "14:10",
-        "horaFin": "15:30"
+        "horaFin": "15:30",
+        "sala": "A102AA"
       }
     ]
   },
@@ -2872,13 +3149,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S102ExIM"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S102ExIM"
       }
     ]
   },
@@ -2892,13 +3171,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "S102ExIM"
       },
       {
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S102ExIM"
       }
     ]
   },
@@ -2919,13 +3200,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:50",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "A103AA"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "18:40",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "A101AA"
       }
     ]
   },
@@ -2939,19 +3222,22 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A202AB"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "Lab3EspFACE"
       },
       {
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "11:10",
-        "horaFin": "12:30"
+        "horaFin": "12:30",
+        "sala": "A301AB"
       }
     ]
   },
@@ -2965,25 +3251,29 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "09:40",
-        "horaFin": "11:00"
+        "horaFin": "11:00",
+        "sala": "S211EG"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "11:50",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab1EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "11:50",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "Lab2EspFACE"
       },
       {
         "tipo": "TEO",
         "dia": "MI",
         "horaInicio": "12:40",
-        "horaFin": "14:00"
+        "horaFin": "14:00",
+        "sala": "A301AB"
       }
     ]
   },
@@ -2997,13 +3287,15 @@
         "tipo": "TEO",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A102AA"
       },
       {
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "Lab1FACE"
       }
     ]
   },
@@ -3017,7 +3309,8 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "15:40",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "Lab1EspFACE"
       }
     ]
   },
@@ -3031,13 +3324,15 @@
         "tipo": "TEO",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "S201AD"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "A104AA"
       }
     ]
   },
@@ -3051,13 +3346,15 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "10:20"
+        "horaFin": "10:20",
+        "sala": "Lab2FACE"
       },
       {
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "Lab2FACE"
       }
     ]
   },
@@ -3071,13 +3368,15 @@
         "tipo": "LAB",
         "dia": "MA",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "Lab2FACE"
       },
       {
         "tipo": "LAB",
         "dia": "JU",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "Lab2FACE"
       }
     ]
   },
@@ -3091,13 +3390,15 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "08:10",
-        "horaFin": "10:20"
+        "horaFin": "10:20",
+        "sala": "Lab2EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "08:10",
-        "horaFin": "09:30"
+        "horaFin": "09:30",
+        "sala": "Lab2EspFACE"
       }
     ]
   },
@@ -3111,13 +3412,15 @@
         "tipo": "TEO",
         "dia": "JU",
         "horaInicio": "17:10",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "A301AB"
       },
       {
         "tipo": "TEO",
         "dia": "VI",
         "horaInicio": "15:40",
-        "horaFin": "17:00"
+        "horaFin": "17:00",
+        "sala": "A102AA"
       }
     ]
   },
@@ -3131,13 +3434,15 @@
         "tipo": "LAB",
         "dia": "LU",
         "horaInicio": "16:20",
-        "horaFin": "19:20"
+        "horaFin": "19:20",
+        "sala": "Lab2EspFACE"
       },
       {
         "tipo": "LAB",
         "dia": "MI",
         "horaInicio": "18:40",
-        "horaFin": "20:00"
+        "horaFin": "20:00",
+        "sala": "Lab2EspFACE"
       }
     ]
   }
