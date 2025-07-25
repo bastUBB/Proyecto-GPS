@@ -10,7 +10,8 @@ import {
   History,
   Settings,
   Clock,
-  PlusCircle
+  PlusCircle,
+  BookOpenCheck
 } from "lucide-react";
 
 export default function Home() {
@@ -45,6 +46,7 @@ export default function Home() {
           { id: "excel", route: "/subida-excel", icon: FileSpreadsheet, label: "Excel" },
           { id: "gestion-malla", route: "/gestion-malla", icon: Settings, label: "Gestión Malla" },
           { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
+          { id: "notas", route: "/notas", icon: BookOpenCheck, label: "Notas" },
         ],
         profesor: [
           ...basePages,
@@ -52,6 +54,7 @@ export default function Home() {
         ],
         alumno: [
           ...basePages,
+          { id: "notas", route: "/notas", icon: BookOpenCheck, label: "Notas" }
           // { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
         estudiante: [
