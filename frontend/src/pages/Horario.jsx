@@ -1,5 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import PagGeneral from "../components/PagGeneral";
+import { UserContext } from "../../context/userContext";
+import axios from 'axios';
 import HelpTooltip from "../components/PuntoAyuda";
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -14,54 +16,21 @@ const hours = [
   "20:10", "20:55", "21:30"
 ];
 
-// Horarios predefinidos para prueba
-const horariosOfrecidos = [
-  {
-    id: 1,
-    nombre: "Horario Matutino - Semestre 1",
-    descripcion: "Clases concentradas en la mañana",
-    horarios: [
-      { dia: "Lunes", horaInicio: "08:10", horaFin: "09:30", asignatura: "Álgebra y Trigonometría", sala: "A-101" },
-      { dia: "Lunes", horaInicio: "09:40", horaFin: "11:00", asignatura: "Introducción a la Programación", sala: "Lab-1" },
-      { dia: "Martes", horaInicio: "08:10", horaFin: "09:30", asignatura: "Comunicación Oral y Escrita", sala: "B-201" },
-      { dia: "Martes", horaInicio: "09:40", horaFin: "11:00", asignatura: "Introducción a la Ingeniería", sala: "C-301" },
-      { dia: "Miércoles", horaInicio: "08:10", horaFin: "09:30", asignatura: "Álgebra y Trigonometría", sala: "A-101" },
-      { dia: "Jueves", horaInicio: "08:10", horaFin: "09:30", asignatura: "Introducción a la Programación", sala: "Lab-1" },
-      { dia: "Viernes", horaInicio: "08:10", horaFin: "09:30", asignatura: "Formación Integral I", sala: "D-401" },
-    ]
-  },
-  {
-    id: 2,
-    nombre: "Horario Vespertino - Semestre 1",
-    descripcion: "Clases en la tarde",
-    horarios: [
-      { dia: "Lunes", horaInicio: "14:10", horaFin: "15:30", asignatura: "Álgebra y Trigonometría", sala: "A-102" },
-      { dia: "Lunes", horaInicio: "15:40", horaFin: "17:00", asignatura: "Introducción a la Programación", sala: "Lab-2" },
-      { dia: "Martes", horaInicio: "14:10", horaFin: "15:30", asignatura: "Comunicación Oral y Escrita", sala: "B-202" },
-      { dia: "Martes", horaInicio: "15:40", horaFin: "17:00", asignatura: "Introducción a la Ingeniería", sala: "C-302" },
-      { dia: "Miércoles", horaInicio: "14:10", horaFin: "15:30", asignatura: "Álgebra y Trigonometría", sala: "A-102" },
-      { dia: "Jueves", horaInicio: "14:10", horaFin: "15:30", asignatura: "Introducción a la Programación", sala: "Lab-2" },
-      { dia: "Viernes", horaInicio: "14:10", horaFin: "15:30", asignatura: "Formación Integral I", sala: "D-402" },
-    ]
-  },
-  {
-    id: 3,
-    nombre: "Horario Mixto - Semestre 2",
-    descripcion: "Combinación de mañana y tarde",
-    horarios: [
-      { dia: "Lunes", horaInicio: "08:10", horaFin: "09:30", asignatura: "Cálculo Diferencial", sala: "A-103" },
-      { dia: "Lunes", horaInicio: "14:10", horaFin: "15:30", asignatura: "Programación Orientada a Objetos", sala: "Lab-3" },
-      { dia: "Martes", horaInicio: "09:40", horaFin: "11:00", asignatura: "Química General", sala: "Lab-Quim" },
-      { dia: "Martes", horaInicio: "15:40", horaFin: "17:00", asignatura: "Estructuras Discretas", sala: "B-203" },
-      { dia: "Miércoles", horaInicio: "08:10", horaFin: "09:30", asignatura: "Cálculo Diferencial", sala: "A-103" },
-      { dia: "Jueves", horaInicio: "14:10", horaFin: "14:55", asignatura: "Programación Orientada a Objetos", sala: "Lab-3" },
-      { dia: "Viernes", horaInicio: "11:10", horaFin: "12:30", asignatura: "Formación Integral II", sala: "D-403" },
-    ]
-  }
-];
+// Mapeo de días abreviados a días completos
+const diaMapping = {
+  'LU': 'Lunes',
+  'MA': 'Martes',
+  'MI': 'Miércoles',
+  'JU': 'Jueves',
+  'VI': 'Viernes'
+};
 
 export default function Horario() {
+  const { user } = useContext(UserContext);
   const [horarios, setHorarios] = useState([]);
+  const [recomendaciones, setRecomendaciones] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState('');
   const [horarioSeleccionado, setHorarioSeleccionado] = useState(null);
   const [mostrarPopup, setMostrarPopup] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -74,6 +43,220 @@ export default function Horario() {
     asignatura: "",
     sala: "",
   });
+
+  // Configurar axios con token de autenticación
+  const getAuthConfig = () => {
+    const token = localStorage.getItem('token');
+    return {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+  };
+
+  // Cargar recomendaciones del backend
+  const cargarRecomendaciones = async () => {
+    if (!user || user.role !== 'alumno') return;
+
+    try {
+      setLoading(true);
+      setMensaje('');
+
+      const response = await axios.post('/api/inscripcion/detail',
+        { rutEstudiante: user.rut },
+        getAuthConfig()
+      );
+
+      if (response.data && response.data.data) {
+        setRecomendaciones(response.data.data);
+        console.log('Recomendaciones cargadas:', response.data.data);
+        setMensaje('Recomendaciones cargadas exitosamente');
+        setTimeout(() => setMensaje(''), 3000);
+      } else {
+        setMensaje('No se pudieron cargar las recomendaciones');
+      }
+    } catch (error) {
+      console.error('Error al cargar recomendaciones:', error);
+      if (error.response?.status === 400) {
+        setMensaje('No se encontraron datos para tu RUT o no tienes asignaturas inscribibles');
+      } else {
+        setMensaje('Error al cargar las recomendaciones');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Guardar inscripción en el backend
+  const guardarInscripcion = async () => {
+    if (!user || horarios.length === 0) return;
+
+    try {
+      setLoading(true);
+      setMensaje('');
+
+      // Agrupar horarios por asignatura, profesor y sección
+      const inscripcionesPorAsignatura = {};
+
+      horarios.forEach(horario => {
+        const key = `${horario.asignatura}-${horario.profesor}-${horario.seccion}`;
+
+        if (!inscripcionesPorAsignatura[key]) {
+          // Validar que el profesor tenga al menos 15 caracteres como requiere la validación
+          let profesorCompleto = horario.profesor || 'Profesor Sin Asignar';
+          if (profesorCompleto.length < 15) {
+            profesorCompleto = profesorCompleto.padEnd(15, ' '); // Rellenar con espacios si es necesario
+          }
+
+          inscripcionesPorAsignatura[key] = {
+            profesor: profesorCompleto,
+            // rutAlumnos: [user.rut], // Array con el RUT del alumno como requiere el modelo
+            rutParaEnviar: user.rut,
+            asignatura: horario.asignatura,
+            seccion: parseInt(horario.seccion) || 1, // Asegurar que sea número
+            semestre: 1, // Valor por defecto
+            año: new Date().getFullYear().toString(),
+            bloques: [],
+            cupos: 30 // Valor por defecto
+          };
+        }
+
+        // Agregar bloque a la inscripción
+        inscripcionesPorAsignatura[key].bloques.push({
+          horaInicio: horario.horaOriginalInicio || horario.horaInicio,
+          horaFin: horario.horaOriginalFin || horario.horaFin,
+          dia: horario.dia, // Mantener día completo como lo requiere la validación
+          tipo: horario.tipo === 'Laboratorio' ? 'LAB' : 'TEO', // Convertir a formato esperado
+          sala: horario.sala || 'Sin asignar'
+        });
+      });
+
+      // Enviar cada inscripción al backend
+      const resultados = [];
+      const errores = [];
+
+      for (const [key, inscripcionData] of Object.entries(inscripcionesPorAsignatura)) {
+        try {
+          // Validar datos antes de enviar
+          if (!inscripcionData.profesor || inscripcionData.profesor.length < 15) {
+            throw new Error('El nombre del profesor debe tener al menos 15 caracteres');
+          }
+
+          if (!inscripcionData.asignatura || inscripcionData.asignatura.length < 3) {
+            throw new Error('El nombre de la asignatura debe tener al menos 3 caracteres');
+          }
+
+          if (!inscripcionData.bloques || inscripcionData.bloques.length === 0) {
+            throw new Error('Debe haber al menos un bloque de horario');
+          }
+
+          // Validar que el RUT tenga formato correcto
+          const rutPattern = /^(?:(?:[1-9]\d{0}|[1-2]\d{1})(\.\d{3}){2}|[1-9]\d{6}|[1-2]\d{7}|29\.999\.999|29999999)-[\dkK]$/;
+          if (!rutPattern.test(inscripcionData.rutParaEnviar)) {
+            throw new Error('El RUT no tiene un formato válido');
+          }
+
+          console.log(`Enviando inscripción para ${key}:`, inscripcionData);
+          const response = await axios.post('/api/inscripcion', inscripcionData, getAuthConfig());
+          resultados.push(response.data);
+          console.log(`✅ Inscripción exitosa para ${key}:`, response.data);
+        } catch (error) {
+          console.error(`❌ Error al guardar inscripción ${key}:`, error);
+          console.error('Datos que se intentaron enviar:', inscripcionData);
+          console.error('Respuesta del servidor:', error.response?.data);
+
+          let mensajeError = error.response?.data?.message ||
+            error.response?.data?.details ||
+            error.message;
+          errores.push(`${inscripcionData.asignatura}: ${mensajeError}`);
+        }
+      }
+
+      if (errores.length === 0) {
+        setMensaje(`✅ Inscripciones guardadas exitosamente (${resultados.length} asignaturas)`);
+      } else if (resultados.length > 0) {
+        setMensaje(`⚠️ Parcialmente guardado: ${resultados.length} exitosas, ${errores.length} con errores`);
+      } else {
+        setMensaje(`❌ Error al guardar inscripciones: ${errores.join(', ')}`);
+      }
+
+      setTimeout(() => setMensaje(''), 5000);
+
+    } catch (error) {
+      console.error('Error general al guardar inscripciones:', error);
+      setMensaje('❌ Error interno al guardar las inscripciones');
+      setTimeout(() => setMensaje(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para ajustar hora a bloque más cercano
+  const ajustarHoraABloque = (hora) => {
+    // Si la hora ya está en el array de horas, devolverla tal como está
+    if (hours.includes(hora)) {
+      return hora;
+    }
+
+    // Convertir hora a minutos para comparación
+    const convertirAMinutos = (h) => {
+      const [horas, minutos] = h.split(':').map(Number);
+      return horas * 60 + minutos;
+    };
+
+    const minutosHora = convertirAMinutos(hora);
+    const horasDisponibles = hours.filter(h => h !== "DESCANSO");
+
+    // Encontrar la hora más cercana
+    let horaMasCercana = horasDisponibles[0];
+    let menorDiferencia = Math.abs(convertirAMinutos(horasDisponibles[0]) - minutosHora);
+
+    horasDisponibles.forEach(h => {
+      const diferencia = Math.abs(convertirAMinutos(h) - minutosHora);
+      if (diferencia < menorDiferencia) {
+        menorDiferencia = diferencia;
+        horaMasCercana = h;
+      }
+    });
+
+    return horaMasCercana;
+  };
+
+  // Convertir recomendaciones a formato de horario
+  const convertirRecomendacionAHorario = (recomendacionSet, tipoSet) => {
+    const horarioConvertido = [];
+
+    recomendacionSet.forEach(recomendacion => {
+      recomendacion.bloques.forEach(bloque => {
+        horarioConvertido.push({
+          dia: diaMapping[bloque.dia] || bloque.dia,
+          horaInicio: ajustarHoraABloque(bloque.horaInicio),
+          horaFin: ajustarHoraABloque(bloque.horaFin),
+          asignatura: recomendacion.asignatura,
+          sala: bloque.sala,
+          profesor: recomendacion.profesor,
+          seccion: recomendacion.seccion,
+          tipo: bloque.tipo,
+          razon: recomendacion.razon,
+          puntaje: recomendacion.puntaje,
+          detalles: recomendacion.detalles,
+          tipoRecomendacion: tipoSet,
+          horaOriginalInicio: bloque.horaInicio, // Guardar hora original para referencia
+          horaOriginalFin: bloque.horaFin
+        });
+      });
+    });
+
+    return horarioConvertido;
+  };
+
+  // Cargar datos iniciales
+  useEffect(() => {
+    if (user?.role === 'alumno') {
+      cargarRecomendaciones();
+    }
+  }, [user]);
 
   // Paleta de colores para asignaturas
   const coloresAsignaturas = [
@@ -99,7 +282,7 @@ export default function Horario() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-    
+
     // Limpiar error del campo cuando el usuario empiece a escribir
     if (errors[name]) {
       setErrors(prev => ({
@@ -149,24 +332,24 @@ export default function Horario() {
 
   const agregarHorario = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setSubmitting(true);
-    
+
     try {
       // Simular una pequeña demora para mostrar el loading
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       setHorarios([...horarios, { ...form }]);
-      setForm({ 
+      setForm({
         dia: "Lunes",
         horaInicio: "08:10",
         horaFin: "09:30",
-        asignatura: "", 
-        sala: "" 
+        asignatura: "",
+        sala: ""
       });
       setErrors({});
       setMostrarPopup(false);
@@ -192,9 +375,39 @@ export default function Horario() {
     setHorarios(nuevosHorarios);
   };
 
-  const seleccionarHorario = (horarioOfrecido) => {
-    setHorarios(horarioOfrecido.horarios);
-    setHorarioSeleccionado(horarioOfrecido);
+  const seleccionarHorario = (tipoRecomendacion) => {
+    if (!recomendaciones || !recomendaciones.setsRecomendaciones[tipoRecomendacion]) return;
+
+    const horarioConvertido = convertirRecomendacionAHorario(
+      recomendaciones.setsRecomendaciones[tipoRecomendacion],
+      tipoRecomendacion
+    );
+
+    setHorarios(horarioConvertido);
+    setHorarioSeleccionado({
+      id: tipoRecomendacion,
+      nombre: obtenerNombreTipo(tipoRecomendacion),
+      descripcion: obtenerDescripcionTipo(tipoRecomendacion),
+      tipo: tipoRecomendacion
+    });
+  };
+
+  const obtenerNombreTipo = (tipo) => {
+    switch (tipo) {
+      case 'excelenciaAcademica': return 'Excelencia Académica';
+      case 'equilibrado': return 'Equilibrado';
+      case 'evaluacionDocente': return 'Mejor Evaluado';
+      default: return tipo;
+    }
+  };
+
+  const obtenerDescripcionTipo = (tipo) => {
+    switch (tipo) {
+      case 'excelenciaAcademica': return 'Prioriza el porcentaje de aprobación de los profesores';
+      case 'equilibrado': return 'Balance entre rendimiento académico y evaluación docente';
+      case 'evaluacionDocente': return 'Prioriza las mejores evaluaciones de los estudiantes';
+      default: return '';
+    }
   };
 
   const limpiarHorario = () => {
@@ -352,7 +565,20 @@ export default function Horario() {
           <div className="space-y-1 h-full flex flex-col justify-center min-h-[80px]">
             <p className={`font-semibold ${colores.text} break-words leading-tight text-center`}>{claseInicia.asignatura}</p>
             <p className={`${colores.sala} text-xs font-medium text-center`}>{claseInicia.sala}</p>
-            <p className={`${colores.hora} text-xs text-center`}>{claseInicia.horaInicio} - {claseInicia.horaFin}</p>
+            <p className={`${colores.hora} text-xs text-center`}>
+              {claseInicia.horaInicio} - {claseInicia.horaFin}
+            </p>
+            {/* Mostrar hora original si fue ajustada */}
+            {(claseInicia.horaOriginalInicio && claseInicia.horaOriginalInicio !== claseInicia.horaInicio) && (
+              <p className={`${colores.hora} text-xs text-center opacity-75 italic`}>
+                Original: {claseInicia.horaOriginalInicio} - {claseInicia.horaOriginalFin}
+              </p>
+            )}
+            {claseInicia.profesor && (
+              <p className={`${colores.hora} text-xs text-center font-medium`}>
+                👨‍🏫 {claseInicia.profesor}
+              </p>
+            )}
           </div>
           <button
             onClick={() => eliminarHorario(horarios.indexOf(claseInicia))}
@@ -384,67 +610,219 @@ export default function Horario() {
             <p className="text-sm sm:text-base text-blue-700">Gestiona y visualiza tus horarios de clases</p>
           </div>
 
-          {/* Sección de Horarios Ofrecidos */}
+          {/* Mensajes */}
+          {mensaje && (
+            <div className={`p-4 rounded-lg text-center ${mensaje.includes('exitosamente') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              }`}>
+              {mensaje}
+            </div>
+          )}
+
+          {/* Verificar si el usuario es alumno */}
+          {!user || user.role !== 'alumno' ? (
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-6 text-center">
+              <h2 className="text-lg font-semibold text-blue-900 mb-2">
+                Acceso Restringido
+              </h2>
+              <p className="text-blue-700">
+                Esta funcionalidad está disponible solo para estudiantes.
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Botón para cargar recomendaciones */}
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+                  <h2 className="text-base sm:text-lg font-semibold">
+                    Recomendaciones de Horarios Inteligentes
+                  </h2>
+                  <p className="text-blue-100 text-sm mt-1">
+                    Obtén recomendaciones personalizadas basadas en el rendimiento y evaluación de profesores
+                  </p>
+                </div>
+
+                <div className="text-center mb-4">
+                  <button
+                    onClick={cargarRecomendaciones}
+                    disabled={loading}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${loading
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl'
+                      }`}
+                  >
+                    {loading ? 'Cargando...' : 'Generar Recomendaciones'}
+                  </button>
+                </div>
+
+                {/* Mostrar información del estudiante si hay recomendaciones */}
+                {recomendaciones && (
+                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                    <h3 className="font-semibold text-blue-900 mb-2">Información del Estudiante</h3>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div>
+                        <span className="text-gray-600">Estudiante:</span>
+                        <p className="font-medium">{recomendaciones.estudiante}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">RUT:</span>
+                        <p className="font-medium">{recomendaciones.rut}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Asignaturas disponibles:</span>
+                        <p className="font-medium">{recomendaciones.totalasignaturasInscribibles}</p>
+                      </div>
+                      <div>
+                        <span className="text-gray-600">Opciones analizadas:</span>
+                        <p className="font-medium">{recomendaciones.totalOpcionesAnalizadas}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Sección de Recomendaciones */}
+              {recomendaciones && (
+                <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
+                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+                    <h2 className="text-base sm:text-lg font-semibold">
+                      Tipos de Recomendaciones
+                    </h2>
+                    <p className="text-purple-100 text-sm mt-1">
+                      Selecciona el tipo de recomendación que prefieras
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {Object.entries(recomendaciones.setsRecomendaciones).map(([tipo, asignaturas]) => (
+                      <div
+                        key={tipo}
+                        className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.tipo === tipo
+                          ? 'border-green-500 bg-green-50 shadow-md'
+                          : 'border-gray-200 bg-gray-50 hover:border-green-300'
+                          }`}
+                        onClick={() => seleccionarHorario(tipo)}
+                      >
+                        <div className="space-y-2">
+                          <h3 className="font-bold text-green-900 text-sm">{obtenerNombreTipo(tipo)}</h3>
+                          <p className="text-gray-600 text-xs">{obtenerDescripcionTipo(tipo)}</p>
+                          <div className="text-xs text-gray-500">
+                            <p>📚 {asignaturas.length} asignaturas</p>
+                            <p>�‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesores</p>
+                            <p>⭐ Promedio: {asignaturas.length > 0 ? (asignaturas.reduce((sum, a) => sum + parseFloat(a.puntaje), 0) / asignaturas.length).toFixed(1) : '0'}</p>
+                          </div>
+                          {horarioSeleccionado?.tipo === tipo && (
+                            <div className="flex items-center text-green-600 text-xs font-medium">
+                              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                              Seleccionado
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {horarioSeleccionado && (
+                    <div className="mt-4 flex flex-wrap gap-2 justify-center">
+                      <button
+                        onClick={limpiarHorario}
+                        className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm"
+                      >
+                        Limpiar Horario
+                      </button>
+                      {horarios.length > 0 && (
+                        <>
+                          <button
+                            onClick={guardarInscripcion}
+                            disabled={loading}
+                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${loading
+                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
+                              }`}
+                          >
+                            {loading ? (
+                              <>
+                                <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Guardando...
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                </svg>
+                                Guardar Inscripción
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={descargarHorario}
+                            className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Descargar PDF
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Tabla de horarios */}
           <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
             <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
               <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                Gestión de Horarios
+                Horario Actual
                 <HelpTooltip className="text-white hover:text-yellow-300">
-                  <h3 className="text-green-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes ver aquí?</h3>
                   <p className="text-gray-600 text-xs">
-                    Selecciona uno de los horarios predefinidos para cargarlo automáticamente en tu horario.
+                    Aquí puedes ver tu horario actual con las clases que has agregado.
                   </p>
                 </HelpTooltip>
               </h2>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-              {horariosOfrecidos.map((horarioOfrecido) => (
-                <div
-                  key={horarioOfrecido.id}
-                  className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.id === horarioOfrecido.id
-                    ? 'border-green-500 bg-green-50 shadow-md'
-                    : 'border-gray-200 bg-gray-50 hover:border-green-300'
-                    }`}
-                  onClick={() => seleccionarHorario(horarioOfrecido)}
-                >
-                  <div className="space-y-2">
-                    <h3 className="font-bold text-green-900 text-sm">{horarioOfrecido.nombre}</h3>
-                    <p className="text-gray-600 text-xs">{horarioOfrecido.descripcion}</p>
-                    <div className="text-xs text-gray-500">
-                      <p>📚 {horarioOfrecido.horarios.length} clases</p>
-                      <p>🕐 {Math.min(...horarioOfrecido.horarios.map(h => h.horaInicio))} - {Math.max(...horarioOfrecido.horarios.map(h => h.horaFin))}</p>
-                    </div>
-                    {horarioSeleccionado?.id === horarioOfrecido.id && (
-                      <div className="flex items-center text-green-600 text-xs font-medium">
-                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                        Seleccionado
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {horarioSeleccionado && (
-              <div className="mt-4 flex flex-wrap gap-2 justify-center">
+            {/* Botones de acción */}
+            {horarios.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2 justify-center">
                 <button
-                  onClick={limpiarHorario}
-                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm"
+                  onClick={descargarHorario}
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
                 >
-                  Limpiar Horario
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Descargar PDF
                 </button>
-                {horarios.length > 0 && (
-                  <button
-                    onClick={descargarHorario}
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Descargar PDF
-                  </button>
-                )}
+                <button
+                  onClick={guardarInscripcion}
+                  disabled={loading}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${loading
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
+                    }`}
+                >
+                  {loading ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Guardando...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                      </svg>
+                      Guardar Inscripción
+                    </>
+                  )}
+                </button>
                 <button
                   onClick={() => setMostrarPopup(true)}
                   className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
@@ -456,21 +834,7 @@ export default function Horario() {
                 </button>
               </div>
             )}
-          </div>
 
-          {/* Tabla de horarios */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 ">
-            < div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                Horario Actual
-                <HelpTooltip className="text-white hover:text-yellow-300">
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
-                  <p className="text-gray-600 text-xs">
-                    Aquí puedes ver tu horario actual con las clases que has agregado.
-                  </p>
-                </HelpTooltip>
-              </h2>
-            </div>
             <div className="p-4 sm:p-6 overflow-x-auto" ref={horarioRef}>
               <table className="w-full min-w-[600px] border-collapse border border-gray-300 table-fixed">
                 <thead>
@@ -538,7 +902,29 @@ export default function Horario() {
                     <div key={index} className={`bg-gradient-to-br ${colores.bg} p-4 rounded-lg border ${colores.border} hover:shadow-md transition-shadow duration-200`}>
                       <p className={`font-semibold ${colores.text} break-words leading-tight`}>{horario.asignatura}</p>
                       <p className={`${colores.sala} text-sm font-medium mt-1`}>{horario.dia} - {horario.sala}</p>
-                      <p className={`${colores.hora} text-xs mt-1`}>{horario.horaInicio} - {horario.horaFin}</p>
+                      <p className={`${colores.hora} text-xs mt-1`}>
+                        {horario.horaInicio} - {horario.horaFin}
+                        {(horario.horaOriginalInicio && horario.horaOriginalInicio !== horario.horaInicio) && (
+                          <span className="block italic opacity-75">
+                            (Original: {horario.horaOriginalInicio} - {horario.horaOriginalFin})
+                          </span>
+                        )}
+                      </p>
+                      {horario.profesor && (
+                        <p className={`${colores.hora} text-xs mt-1 font-medium`}>
+                          👨‍🏫 {horario.profesor}
+                        </p>
+                      )}
+                      {horario.puntaje && (
+                        <p className={`${colores.hora} text-xs mt-1`}>
+                          ⭐ Puntaje: {parseFloat(horario.puntaje).toFixed(1)}
+                        </p>
+                      )}
+                      {horario.tipoRecomendacion && (
+                        <p className={`${colores.hora} text-xs mt-1 font-medium`}>
+                          📊 {obtenerNombreTipo(horario.tipoRecomendacion)}
+                        </p>
+                      )}
                     </div>
                   );
                 })}
@@ -555,7 +941,7 @@ export default function Horario() {
                 <h2 className="text-xl font-bold mb-4 text-gray-900">
                   Agregar Nueva Clase
                 </h2>
-                
+
                 <form onSubmit={agregarHorario} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
