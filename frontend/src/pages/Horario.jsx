@@ -115,8 +115,8 @@ export default function Horario() {
             rutParaEnviar: user.rut,
             asignatura: horario.asignatura,
             seccion: parseInt(horario.seccion) || 1, // Asegurar que sea número
-            semestre: 1, // Valor por defecto
-            año: new Date().getFullYear().toString(),
+            // semestre: 1, // Valor por defecto
+            year: new Date().getFullYear().toString(),
             bloques: [],
             cupos: 30 // Valor por defecto
           };
