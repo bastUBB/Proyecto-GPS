@@ -107,3 +107,13 @@ export async function crearAsignaturasDocentes() {
         return [null, 'Error interno del servidor'];
     }
 }
+
+export async function getAllAsignaturasDocenteService() {
+    try {
+        const registros = await asignaturasDocente.find({});
+        return [registros, null];
+    } catch (error) {
+        console.error('Error al obtener asignaturas del docente:', error);
+        return [null, 'Error al obtener asignaturas del docente'];
+    }
+}

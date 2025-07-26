@@ -25,9 +25,10 @@ function generarNombreEstudiante() {
 function generarCalificacion() {
     // Generar calificaciones más realistas con distribución normal hacia el centro
     const base = Math.random();
-    if (base < 0.1) return random(1, 3); // 10% notas bajas
-    if (base < 0.8) return random(4, 6); // 70% notas medias  
-    return 7; // 20% nota máxima
+    const valor = random(1, 7);
+    // if (base < 0.1) return random(1, 3); // 10% notas bajas
+    // if (base < 0.8) return random(4, 6); // 70% notas medias
+    return valor; 
 }
 
 // Función para generar un comentario aleatorio
