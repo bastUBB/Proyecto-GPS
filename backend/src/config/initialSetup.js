@@ -9,6 +9,8 @@ import { crearTodosLosRendimientosExistentes } from '../services/rendimientoAsig
 import { crearAsignaturasDocentes } from '../services/asignaturasDocente.service.js';
 import { generarProfesoresSimple } from '../../scripts/extraccionRutsSimple.js';
 import { crearEvaluacionesDocentes } from '../../scripts/creadorEvaluaciones.js';
+//TODO: LUEGO BORRAR
+import { crearRecomendacionInscripcionService } from '../services/inscripcion.service.js';
 
 const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
@@ -214,14 +216,24 @@ async function createEvaluaciones() {
     }
 }
 
+async function createRecomendacion() {
+    try {
+        await crearRecomendacionInscripcionService("19876543-5");
+        console.log('✅ Recomendaciones de inscripción creadas exitosamente');
+    } catch (error) {
+        console.error('❌ Error al crear recomendaciones de inscripción:', error.message);
+    }
+}
+
 async function initialSetup() {
-    await generarProfesoresSimple();
-    await createInitialUsers();
-    await createAsignaturas();
-    await createProfesores();
-    await createRendimientos();
-    await createAsignaturasDocentes();
-    await createEvaluaciones();
+    // await generarProfesoresSimple();
+    // await createInitialUsers();
+    // await createAsignaturas();
+    // await createProfesores();
+    // await createRendimientos();
+    // await createAsignaturasDocentes();
+    // await createEvaluaciones();
+    await createRecomendacion();
 }
 
 export { initialSetup };
