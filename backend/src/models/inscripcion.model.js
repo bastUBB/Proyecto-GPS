@@ -14,7 +14,6 @@ const inscripcionSchema = new mongoose.Schema({
     }],
     rutParaEnviar: {
         type: String,
-        required: true,
         cast: false,
     },
     asignatura: {
