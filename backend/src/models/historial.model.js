@@ -20,6 +20,39 @@ const historialSchema = new mongoose.Schema({
             required: true,
             cast: false,
         },
+        semestre: {
+            type: Number,
+            required: true,
+            enum: [1, 2],
+            cast: false,
+        },
+        estado: {
+            type: String,
+            enum: ['cursada', 'inscribible'],
+            default: 'cursada',
+            cast: false,
+        },
+        notasParciales: [{
+            evaluacion: {
+                type: String,
+                required: true,
+                cast: false,
+            },
+            nota: {
+                type: Number,
+                required: true,
+                min: 1.0,
+                max: 7.0,
+                cast: false,
+            },
+            ponderacion: {
+                type: Number,
+                required: true,
+                min: 0,
+                max: 100,
+                cast: false,
+            }
+        }]
     }]
 }, {
     timestamps: true,

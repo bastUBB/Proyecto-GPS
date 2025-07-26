@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "fechaGeneracion": "2025-07-26T18:30:36.724Z",
+    "fechaGeneracion": "2025-07-26T21:37:48.196Z",
     "totalProfesores": 43,
     "descripcion": "Profesores extraídos del horario con RUTs ficticios generados",
     "nota": "Los RUTs son ficticios y deben ser reemplazados por los reales"
@@ -23,56 +23,56 @@
     {
       "nombreCompleto": "Araya Guzmán Sergio Aníbal",
       "email": "araya.anbal@ubiobio.cl",
-      "rut": "16.094.325-4",
+      "rut": "16.075.057-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Bastías Delgado Jania Valeria",
       "email": "bastas.valeria@ubiobio.cl",
-      "rut": "10.650.327-3",
+      "rut": "14.717.308-3",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Calisto Tenorio Yazna Lorena",
       "email": "calisto.lorena@ubiobio.cl",
-      "rut": "13.242.852-2",
+      "rut": "25.160.935-7",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Caniupán Marileo Mónica Alejandra",
       "email": "caniupn.alejandra@ubiobio.cl",
-      "rut": "20.872.504-1",
+      "rut": "17.111.112-9",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Ceballos Villarroel Juan Carlos",
       "email": "ceballos.carlos@ubiobio.cl",
-      "rut": "28.473.893-4",
+      "rut": "19.509.047-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Concha Saravia Lucy Jacqueline",
       "email": "concha.jacqueline@ubiobio.cl",
-      "rut": "14.221.212-9",
+      "rut": "20.526.273-3",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Correa Navarro Yoselin Romanet",
       "email": "correa.romanet@ubiobio.cl",
-      "rut": "23.027.267-0",
+      "rut": "27.037.114-0",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Crespo Cutillas Francisco",
       "email": "crespo.francisco@ubiobio.cl",
-      "rut": "20.787.936-3",
+      "rut": "22.062.159-6",
       "password": "profesor123",
       "role": "profesor"
     },
@@ -93,49 +93,49 @@
     {
       "nombreCompleto": "Escalona Sepúlveda Juan Francisco",
       "email": "escalona.francisco@ubiobio.cl",
-      "rut": "25.039.537-k",
+      "rut": "26.561.346-2",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Espinoza Silva Sebastián Ignacio",
       "email": "espinoza.ignacio@ubiobio.cl",
-      "rut": "23.842.826-2",
+      "rut": "22.022.982-3",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Figueroa Salgado Elizabeth Andrea",
       "email": "figueroa.andrea@ubiobio.cl",
-      "rut": "24.202.291-2",
+      "rut": "13.353.702-3",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Flores Paredes Pedro Arturo",
       "email": "flores.arturo@ubiobio.cl",
-      "rut": "20.579.193-0",
+      "rut": "26.849.953-9",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Gatica Neira Francisco Eduardo",
       "email": "gatica.eduardo@ubiobio.cl",
-      "rut": "18.126.960-k",
+      "rut": "15.020.660-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Gutiérrez Bunster Tatiana Andrea",
       "email": "gutirrez.andrea@ubiobio.cl",
-      "rut": "13.582.101-2",
+      "rut": "12.629.396-8",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Jara Zubieta Felipe Andrés",
       "email": "jara.andrs@ubiobio.cl",
-      "rut": "12.387.075-1",
+      "rut": "26.449.533-4",
       "password": "profesor123",
       "role": "profesor"
     },
@@ -149,161 +149,161 @@
     {
       "nombreCompleto": "Lepe Araya Felipe Andrés",
       "email": "lepe.andrs@ubiobio.cl",
-      "rut": "29.311.113-8",
+      "rut": "14.731.579-1",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Maza Ortega Edgardo Leopoldo",
       "email": "maza.leopoldo@ubiobio.cl",
-      "rut": "26.647.633-7",
+      "rut": "21.700.310-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Meza Hidalgo Jazna Patricia",
       "email": "meza.patricia@ubiobio.cl",
-      "rut": "26.529.058-2",
+      "rut": "22.204.759-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Méndez Herrera Paola Andrea",
       "email": "mndez.andrea@ubiobio.cl",
-      "rut": "25.799.414-7",
+      "rut": "11.127.725-7",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Navarrete Medina Cristian Alejandro",
       "email": "navarrete.alejandro@ubiobio.cl",
-      "rut": "27.146.287-5",
+      "rut": "18.991.970-0",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Nova Hernández Efraín Gabriel",
       "email": "nova.gabriel@ubiobio.cl",
-      "rut": "16.101.054-5",
+      "rut": "28.250.609-2",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Ostria Reinoso Olga Estela",
       "email": "ostria.estela@ubiobio.cl",
-      "rut": "24.582.695-8",
+      "rut": "26.378.938-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Oyarce Boggioni José Andrés",
       "email": "oyarce.andrs@ubiobio.cl",
-      "rut": "26.862.219-5",
+      "rut": "18.316.687-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Parra Márquez Juan Carlos",
       "email": "parra.carlos@ubiobio.cl",
-      "rut": "22.973.276-5",
+      "rut": "24.437.609-6",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Parra Silva Sting Adams Natanael",
       "email": "parra.natanael@ubiobio.cl",
-      "rut": "28.542.093-8",
+      "rut": "27.337.208-3",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Pavez Fuentes Ricardo Alfonso",
       "email": "pavez.alfonso@ubiobio.cl",
-      "rut": "12.605.496-3",
+      "rut": "13.205.066-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Pereira Rodríguez Ennio Beeger",
       "email": "pereira.beeger@ubiobio.cl",
-      "rut": "10.245.541-k",
+      "rut": "21.494.135-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Pinto Rojas Cristian Felipe",
       "email": "pinto.felipe@ubiobio.cl",
-      "rut": "14.195.642-6",
+      "rut": "17.008.043-2",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Pérez Contreras Ariel Alonzo",
       "email": "prez.alonzo@ubiobio.cl",
-      "rut": "24.402.238-3",
+      "rut": "26.921.759-6",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Ruf Acevedo Beatriz Oriana",
       "email": "ruf.oriana@ubiobio.cl",
-      "rut": "22.329.020-5",
+      "rut": "24.346.434-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Segura Navarrete Alejandra Andrea",
       "email": "segura.andrea@ubiobio.cl",
-      "rut": "16.434.544-0",
+      "rut": "29.208.896-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Suarez Muñoz Dayan Ricardo",
       "email": "suarez.ricardo@ubiobio.cl",
-      "rut": "16.246.557-0",
+      "rut": "11.870.050-3",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Sáez Ortiz Mariela Verónica",
       "email": "sez.vernica@ubiobio.cl",
-      "rut": "28.341.971-1",
+      "rut": "27.380.245-2",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Toledo Avendaño Gustavo Urbano",
       "email": "toledo.urbano@ubiobio.cl",
-      "rut": "26.982.577-4",
+      "rut": "15.474.794-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Torres Espino Gladis Marisol",
       "email": "torres.marisol@ubiobio.cl",
-      "rut": "27.973.767-9",
+      "rut": "28.029.738-0",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Trejo Cruz Cuauhtémoc",
       "email": "trejo.cuauhtmoc@ubiobio.cl",
-      "rut": "21.913.740-0",
+      "rut": "20.190.753-5",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Valdés Jiménez Alejandro Mauricio",
       "email": "valds.mauricio@ubiobio.cl",
-      "rut": "18.780.845-6",
+      "rut": "19.629.662-k",
       "password": "profesor123",
       "role": "profesor"
     },
     {
       "nombreCompleto": "Vidal Castro Christian Lautaro",
       "email": "vidal.lautaro@ubiobio.cl",
-      "rut": "22.986.543-9",
+      "rut": "25.172.037-1",
       "password": "profesor123",
       "role": "profesor"
     }
