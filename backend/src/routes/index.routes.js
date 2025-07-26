@@ -13,6 +13,8 @@ import disponibilidadRoutes from "./disponibilidad.routes.js";
 import combiHorarioProfesorRoutes from "./combiHorarioProfesor.routes.js";
 import combinacionHorariosRoutes from "./combinacionHorarios.routes.js";
 import mallaUserRoutes from "./mallaUser.routes.js";
+import asignaturasDocente from "./asignaturasDocente.routes.js";
+import inscripcionAsignaturas from "./inscripcion.routes.js";
 
 const router = Router();
 
@@ -29,6 +31,8 @@ router
     .use("/disponibilidad", disponibilidadRoutes)
     .use("/combi", combiHorarioProfesorRoutes)
     .use("/combinaciones", combinacionHorariosRoutes)
-    .use("/mallaUser", mallaUserRoutes);
-    
+    .use("/mallaUser", mallaUserRoutes)
+    .use("/asignaturasDocente", asignaturasDocente)
+    .use("/inscripcion", inscripcionAsignaturas);
+
 export default router;

@@ -12,6 +12,11 @@ const inscripcionSchema = new mongoose.Schema({
         unique: true,
         cast: false
     }],
+    rutParaEnviar: {
+        type: String,
+        required: true,
+        cast: false,
+    },
     asignatura: {
         type: String,
         required: true,
@@ -52,9 +57,14 @@ const inscripcionSchema = new mongoose.Schema({
             type: String,
             required: true,
             cast: false,
+        },
+        sala: {
+            type: String,
+            required: true,
+            cast: false,
         }
     }],
-    cupo: {
+    cupos: {
         type: Number,
         required: true,
     },
