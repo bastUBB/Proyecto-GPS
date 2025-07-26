@@ -29,7 +29,7 @@ const mallaOriginal = [
   { id: 17, nombre: "Administración General", creditos: 3, semestre: 3 },
   { id: 18, nombre: "Cálculo en Varias Variables", creditos: 6, semestre: 4 },
   { id: 19, nombre: "Ecuaciones Diferenciales", creditos: 5, semestre: 4 },
-  { id: 20, nombre: "Electro-magnetismo", creditos: 6, semestre: 4 },
+  { id: 20, nombre: "Electromagnetismo", creditos: 6, semestre: 4 },
   { id: 21, nombre: "Modelamiento de Procesos e Información", creditos: 7, semestre: 4 },
   { id: 22, nombre: "Inglés II", creditos: 4, semestre: 4 },
   { id: 23, nombre: "Formación Integral IV", creditos: 2, semestre: 4 },
@@ -205,8 +205,8 @@ const MallaCurricular = () => {
   const aplicarEstadosAsignaturas = (mallaData) => {
     // console.log('Aplicando estados con datos del backend:', mallaData);
     // console.log('Asignaturas cursadas del backend:', mallaData.asignaturasCursadas);
-    // console.log('Asignaturas inscribibles del backend:', mallaData.asignaturasInscribibles);
-    // console.log('Asignaturas no inscribibles del backend:', mallaData.asignaturasNoInscribibles);
+    console.log('Asignaturas inscribibles del backend:', mallaData.asignaturasInscribibles);
+    console.log('Asignaturas no inscribibles del backend:', mallaData.asignaturasNoInscribibles);
 
     // Debug: mostrar nombres del frontend
     // console.log('Nombres de asignaturas en el frontend:');
