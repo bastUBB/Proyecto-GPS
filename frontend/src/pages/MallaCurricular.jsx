@@ -4,13 +4,16 @@ import PagGeneral from "../components/PagGeneral";
 import Colores from "../components/Colores";
 import { UserContext } from "../../context/userContext";
 import axios from "axios";
+import { HelpCircle } from "lucide-react";
+import HelpTooltip from "../components/PuntoAyuda";
+import Alert from "../components/Alert";
 
 
 const mallaOriginal = [
   { id: 1, nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
   { id: 2, nombre: "Introducción a la Ingeniería", creditos: 6, semestre: 1 },
   { id: 3, nombre: "Comunicación Oral y Escrita", creditos: 4, semestre: 1 },
-  { id: 4, nombre: "Introducción a la Programación", creditos: 6, semestre: 1 },
+  { id: 4, nombre: "Introducción a la Programación", creditos: 9, semestre: 1 },
   { id: 5, nombre: "Formación Integral I", creditos: 2, semestre: 1 },
   { id: 6, nombre: "Cálculo Diferencial", creditos: 6, semestre: 2 },
   { id: 7, nombre: "Química General", creditos: 8, semestre: 2 },
@@ -26,7 +29,7 @@ const mallaOriginal = [
   { id: 17, nombre: "Administración General", creditos: 3, semestre: 3 },
   { id: 18, nombre: "Cálculo en Varias Variables", creditos: 6, semestre: 4 },
   { id: 19, nombre: "Ecuaciones Diferenciales", creditos: 5, semestre: 4 },
-  { id: 20, nombre: "Electro-magnetismo", creditos: 6, semestre: 4 },
+  { id: 20, nombre: "Electromagnetismo", creditos: 6, semestre: 4 },
   { id: 21, nombre: "Modelamiento de Procesos e Información", creditos: 7, semestre: 4 },
   { id: 22, nombre: "Inglés II", creditos: 4, semestre: 4 },
   { id: 23, nombre: "Formación Integral IV", creditos: 2, semestre: 4 },
@@ -102,10 +105,20 @@ const MallaCurricular = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [asignaturaSeleccionada, setAsignaturaSeleccionada] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [alert, setAlert] = useState({ show: false, type: '', title: '', message: '' });
   const [cambiosPendientes, setCambiosPendientes] = useState(false);
   const [asignaturasCompletadasLocal, setAsignaturasCompletadasLocal] = useState([]);
   const [loadingPDF, setLoadingPDF] = useState(false);
+  const [error, setError] = useState('');
+
+  // Funciones helper para alertas
+  const showAlert = (type, title, message) => {
+    setAlert({ show: true, type, title, message });
+  };
+
+  const hideAlert = () => {
+    setAlert({ show: false, type: '', title: '', message: '' });
+  };
 
   // Función para obtener el token de autenticación
   const getAuthToken = () => {
@@ -153,14 +166,13 @@ const MallaCurricular = () => {
 
     try {
       setLoading(true);
-      setError('');
 
       const response = await axios.get('/api/mallaUser/detail', {
         headers: getAuthHeaders(),
         params: { rutUser: user.rut }
       });
 
-      console.log('Respuesta del backend (Carga):', response.data);
+      //console.log('Respuesta del backend (Carga):', response.data);
       // console.log('Response completo:', response);
       // console.log('Tipo de response.data:', typeof response.data);
       // console.log('response.data.status:', response.data?.status);
@@ -180,7 +192,7 @@ const MallaCurricular = () => {
         // Malla no encontrada, crear malla inicial con primeras asignaturas inscribibles
         crearMallaInicial();
       } else {
-        setError('Error al cargar los datos de la malla');
+        showAlert('error', 'Error de Carga', 'Error al cargar los datos de la malla');
         // console.error('Error al cargar malla del usuario:', error);
         crearMallaInicial(); // Fallback a malla inicial
       }
@@ -193,12 +205,12 @@ const MallaCurricular = () => {
   const aplicarEstadosAsignaturas = (mallaData) => {
     // console.log('Aplicando estados con datos del backend:', mallaData);
     // console.log('Asignaturas cursadas del backend:', mallaData.asignaturasCursadas);
-    // console.log('Asignaturas inscribibles del backend:', mallaData.asignaturasInscribibles);
-    // console.log('Asignaturas no inscribibles del backend:', mallaData.asignaturasNoInscribibles);
+    console.log('Asignaturas inscribibles del backend:', mallaData.asignaturasInscribibles);
+    console.log('Asignaturas no inscribibles del backend:', mallaData.asignaturasNoInscribibles);
 
     // Debug: mostrar nombres del frontend
     // console.log('Nombres de asignaturas en el frontend:');
-    // mallaOriginal.forEach(asig => console.log(`- "${asig.nombre}"`));
+    // mallaOriginal.forEach(asig => //console.log(`- "${asig.nombre}"`));
 
     const mallaConEstados = mallaOriginal.map(asignatura => {
       let estado = 'default';
@@ -243,7 +255,7 @@ const MallaCurricular = () => {
       return { ...asignatura, estado };
     });
 
-    console.log('Malla con estados aplicados:', mallaConEstados);
+    //console.log('Malla con estados aplicados:', mallaConEstados);
     setAsignaturas(mallaConEstados);
     // Actualizar la lista local de asignaturas completadas
     setAsignaturasCompletadasLocal(mallaData.asignaturasCursadas || []);
@@ -275,13 +287,13 @@ const MallaCurricular = () => {
       if (response.data && (response.data.success || response.data.status === 'Success')) {
         // console.log('Malla actualizada exitosamente');
         setCambiosPendientes(false);
-        setError('');
+        showAlert('success', 'Éxito', 'Malla actualizada correctamente');
         // Recargar la malla para obtener los nuevos estados
         setTimeout(() => cargarMallaUsuario(), 500);
       }
     } catch (error) {
       console.error('Error al actualizar la malla:', error);
-      setError('Error al actualizar la malla del usuario');
+      showAlert('error', 'Error de Actualización', 'Error al actualizar la malla del usuario');
     } finally {
       setLoading(false);
     }
@@ -384,7 +396,7 @@ const MallaCurricular = () => {
   const handleDownloadPDF = async () => {
     try {
       setLoadingPDF(true);
-      setError(''); // Limpiar errores previos
+      // setError(''); // Limpiar errores previos
 
       let element = mallaRef.current;
 
@@ -402,7 +414,7 @@ const MallaCurricular = () => {
         return;
       }
 
-      console.log('Elemento encontrado para PDF:', element);
+      //console.log('Elemento encontrado para PDF:', element);
 
       // Ocultar elementos que no queremos en el PDF
       const elementsToHide = document.querySelectorAll('.hide-in-pdf');
@@ -436,10 +448,10 @@ const MallaCurricular = () => {
         },
       };
 
-      console.log('Iniciando generación de PDF...');
+      //console.log('Iniciando generación de PDF...');
 
       await html2pdf().set(opt).from(element).save();
-      console.log('PDF generado exitosamente');
+      //console.log('PDF generado exitosamente');
 
       // Restaurar elementos ocultos
       elementsToHide.forEach(el => {
@@ -474,7 +486,7 @@ const MallaCurricular = () => {
           params: { rutUser: user.rut }
         });
 
-        console.log('Malla del usuario eliminada del backend');
+        //console.log('Malla del usuario eliminada del backend');
 
         // Crear malla inicial (solo semestre 1 inscribible)
         crearMallaInicial();
@@ -483,10 +495,10 @@ const MallaCurricular = () => {
       } catch (error) {
         if (error.response?.status === 404) {
           // Si no existe la malla, simplemente crear malla inicial
-          console.log('No existía malla para eliminar, creando malla inicial');
+          //console.log('No existía malla para eliminar, creando malla inicial');
           crearMallaInicial();
         } else {
-          console.error('Error al eliminar la malla:', error);
+          // console.error('Error al eliminar la malla:', error);
           setError('Error al restablecer la malla del usuario');
           // Aún así, crear malla inicial como fallback
           crearMallaInicial();
@@ -501,8 +513,8 @@ const MallaCurricular = () => {
   };
 
   const renderSemestre = (sem) => (
-    <div key={sem} className="flex flex-col items-center gap-2">
-      <h2 className="text-sm font-medium text-blue-900 text-center">Semestre {sem}</h2>
+    <div key={sem} className="flex flex-col items-center gap-1">
+      <h2 className="text-xs font-medium text-blue-900 text-center mb-1">Semestre {sem}</h2>
       {asignaturas
         .filter((asig) => asig.semestre === sem)
         .map((asig) => {
@@ -511,11 +523,22 @@ const MallaCurricular = () => {
             ? ['inscribible', 'completada'].includes(asig.estado)
             : !isSystemState;
 
+          // Obtener símbolo según el estado
+          const getSymbol = () => {
+            if (!isSystemState || !user || user.role !== 'alumno') return '';
+            switch (asig.estado) {
+              case 'completada': return '✓';
+              case 'inscribible': return '◯';
+              case 'no-inscribible': return '✕';
+              default: return '';
+            }
+          };
+
           return (
             <button
-              key={asig.id || asig.nombre} // Usar ID único como key
+              key={asig.id || asig.nombre}
               type="button"
-              className={`w-28 min-h-[4rem] border text-[11px] rounded shadow-sm overflow-visible p-1 text-center mb-1 transition-all duration-200 ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
+              className={`relative w-24 h-16 border text-[9px] rounded shadow-sm overflow-hidden p-1 text-center mb-1 transition-all duration-200 ${getColor(asig.estado)} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'cursor-default'
                 }`}
               onClick={() => isClickable && handleAsignaturaClick(asig.nombre)}
               title={
@@ -530,15 +553,25 @@ const MallaCurricular = () => {
                     : "Haz clic para cambiar color"
               }
             >
-              <p className="font-medium break-words leading-tight">{asig.nombre}</p>
-              <p className="opacity-80">Créditos: {asig.creditos}</p>
-              {isSystemState && user && user.role === 'alumno' && (
-                <div className="mt-1">
-                  {asig.estado === 'completada' && <span className="text-xs">✓</span>}
-                  {asig.estado === 'inscribible' && <span className="text-xs">◯</span>}
-                  {asig.estado === 'no-inscribible' && <span className="text-xs">✕</span>}
-                </div>
+              {/* Símbolo de fondo */}
+              {getSymbol() && (
+                <span
+                  className="absolute inset-0 flex items-center justify-center text-xl pointer-events-none"
+                  style={{
+                    opacity: 0.18, // más transparente
+                    zIndex: 0, // fondo
+                    color: '#2563eb', // azul-600
+                  }}
+                >
+                  {getSymbol()}
+                </span>
               )}
+
+              {/* Contenido principal */}
+              <div className="relative z-10 h-full flex flex-col justify-between">
+                <p className="font-medium break-words text-[10px] leading-tight text-blue-900 text-center mb-auto">{asig.nombre}</p>
+                <p className="text-blue-700 text-[8px] mt-auto text-center">Créditos: {asig.creditos}</p>
+              </div>
             </button>
           );
         })}
@@ -547,242 +580,271 @@ const MallaCurricular = () => {
 
   return (
     <PagGeneral>
-      <div className="p-4 sm:p-6 lg:p-8 hide-in-pdf">
-        <div ref={mallaRef} data-pdf-content className="malla-container max-w-full mx-auto space-y-4 sm:space-y-6">
-          {/* Encabezado */}
-          <div className="text-center space-y-1 sm:space-y-2">
-            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
-              Malla Curricular
-            </h1>
-            <p className="text-sm sm:text-base text-blue-700">
-              Ingeniería Civil en Informática - Universidad del Bío-Bío
-            </p>
-            {user && user.role === 'alumno' && (
-              <p className="text-xs sm:text-sm text-blue-600">
-                Estudiante: {user.nombreCompleto} - RUT: {user.rut}
+      <div className="p-4 sm:p-6 lg:p-8 ">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+          <div ref={mallaRef} data-pdf-content className="malla-container w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 ">
+            {/* Encabezado */}
+            <div className="text-center space-y-1 sm:space-y-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-blue-900">
+                Malla Curricular
+              </h1>
+              <p className="text-sm sm:text-base text-blue-700">
+                Ingeniería Civil en Informática - Universidad del Bío-Bío
               </p>
-            )}
-            <p className="text-xs text-gray-500">
-              Generado el: {new Date().toLocaleDateString('es-CL', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </p>
-          </div>
-
-          {/* Controles y Leyenda combinados */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
-                Herramientas y Estados de Malla
-              </h2>
+              {user && user.role === 'alumno' && (
+                <p className="text-xs sm:text-sm text-blue-600">
+                  Estudiante: {user.nombreCompleto} - RUT: {user.rut}
+                </p>
+              )}
+              <p className="text-xs text-gray-500">
+                Generado el: {new Date().toLocaleDateString('es-CL', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
             </div>
 
-            {/* Leyenda de colores para alumnos */}
-            {user && user.role === 'alumno' && (
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Estado de Asignaturas</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-200">
-                    <div className="w-4 h-4 bg-green-200 border border-green-400 rounded"></div>
-                    <div>
-                      <p className="font-medium text-green-800">Aprobadas</p>
-                      <p className="text-xs text-green-600">Asignaturas completadas</p>
+            {/* Controles y Leyenda combinados */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                  Herramientas y Estados de Malla
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí puedes ver las opciones disponibles para interactuar con tu malla curricular.
+                    </p>
+                  </HelpTooltip>
+                </h2>
+              </div>
+
+              {/* Leyenda de colores para alumnos */}
+              {user && user.role === 'alumno' && (
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Estado de Asignaturas</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50 border border-green-200">
+                      <div className="w-4 h-4 bg-green-200 border border-green-400 rounded"></div>
+                      <div>
+                        <p className="font-medium text-green-800">Aprobadas</p>
+                        <p className="text-xs text-green-600">Asignaturas completadas</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 border border-blue-200">
-                    <div className="w-4 h-4 bg-blue-200 border border-blue-400 rounded"></div>
-                    <div>
-                      <p className="font-medium text-blue-800">Inscribibles</p>
-                      <p className="text-xs text-blue-600">Disponibles para inscribir</p>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 border border-blue-200">
+                      <div className="w-4 h-4 bg-blue-200 border border-blue-400 rounded"></div>
+                      <div>
+                        <p className="font-medium text-blue-800">Inscribibles</p>
+                        <p className="text-xs text-blue-600">Disponibles para inscribir</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 rounded-lg bg-red-50 border border-red-200">
-                    <div className="w-4 h-4 bg-red-200 border border-red-400 rounded"></div>
-                    <div>
-                      <p className="font-medium text-red-800">No Inscribibles</p>
-                      <p className="text-xs text-red-600">Requieren prerrequisitos</p>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-red-50 border border-red-200">
+                      <div className="w-4 h-4 bg-red-200 border border-red-400 rounded"></div>
+                      <div>
+                        <p className="font-medium text-red-800">No Inscribibles</p>
+                        <p className="text-xs text-red-600">Requieren prerrequisitos</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Botones de control */}
-            <div className="flex flex-wrap gap-3 justify-center mb-6">
-              <button
-                onClick={handleDownloadPDF}
-                disabled={loadingPDF}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loadingPDF ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <img src="/IconPdf.png" alt="Icono PDF" className="w-5 h-5" />
-                )}
-                {loadingPDF ? 'Generando PDF...' : 'Descargar PDF'}
-              </button>
-
-              {user && user.role === 'alumno' && (
-                <>
-                  <button
-                    onClick={cargarMallaUsuario}
-                    disabled={loading}
-                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <img src="/IconRegreso.png" alt="Icono Actualizar" className="w-5 h-5" />
-                    {loading ? 'Cargando...' : 'Actualizar Datos'}
-                  </button>
-
-                  {cambiosPendientes && (
-                    <>
-                      <button
-                        onClick={guardarCambiosEnBackend}
-                        disabled={loading}
-                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <img src="/IconMalla.png" alt="Icono Guardar" className="w-5 h-5" />
-                        {loading ? 'Guardando...' : 'Guardar Cambios'}
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          cargarMallaUsuario();
-                          setCambiosPendientes(false);
-                        }}
-                        disabled={loading}
-                        className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <img src="/IconRegreso.png" alt="Icono Descartar" className="w-5 h-5" />
-                        Descartar Cambios
-                      </button>
-                    </>
-                  )}
-                </>
               )}
 
-              <button
-                onClick={handleResetMalla}
-                disabled={loading}
-                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
-                {loading ? 'Restableciendo...' : (user && user.role === 'alumno' ? 'Restablecer Progreso' : 'Restablecer')}
-              </button>
-            </div>
-          </div>
+              {/* Botones de control */}
+              <div className="flex flex-wrap gap-3 justify-center mb-6">
+                <button
+                  onClick={handleDownloadPDF}
+                  disabled={loadingPDF}
+                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loadingPDF ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <img src="/IconPdf.png" alt="Icono PDF" className="w-5 h-5" />
+                  )}
+                  {loadingPDF ? 'Generando PDF...' : 'Descargar PDF'}
+                </button>
 
-          {/* Malla Curricular */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png"
-                  alt="Icono Malla"
-                  className="w-5 h-5"
-                />
-                Plan de Estudios
-                {/* <HelpTooltip className="text-white hover:text-yellow-300">
-                  <h3 className="text-blue-700 font-bold text-sm mb-1">Guía de personalización académica</h3>
-                  <p className="text-gray-600 text-xs">
-                    Haz Clic en las asignaturas para cambiar su color
-                  </p>
-                </HelpTooltip> */}
-              </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                {user && user.role === 'alumno'
+                {user && user.role === 'alumno' && (
+                  <>
+                    <button
+                      onClick={cargarMallaUsuario}
+                      disabled={loading}
+                      className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <img src="/IconRegreso.png" alt="Icono Actualizar" className="w-5 h-5" />
+                      {loading ? 'Cargando...' : 'Actualizar Datos'}
+                    </button>
+
+                    {cambiosPendientes && (
+                      <>
+                        <button
+                          onClick={guardarCambiosEnBackend}
+                          disabled={loading}
+                          className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <img src="/IconMalla.png" alt="Icono Guardar" className="w-5 h-5" />
+                          {loading ? 'Guardando...' : 'Guardar Cambios'}
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            cargarMallaUsuario();
+                            setCambiosPendientes(false);
+                          }}
+                          disabled={loading}
+                          className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          <img src="/IconRegreso.png" alt="Icono Descartar" className="w-5 h-5" />
+                          Descartar Cambios
+                        </button>
+                      </>
+                    )}
+                  </>
+                )}
+                {user && user.role === 'alumno' && (
+                  <button
+                    onClick={handleResetMalla}
+                    disabled={loading}
+                    className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <img src="/IconRegreso.png" alt="Icono Restablecer" className="w-5 h-5" />
+                    {loading ? 'Restableciendo...' : (user && user.role === 'alumno' ? 'Restablecer Progreso' : 'Restablecer')}
+                  </button>
+                )}
+              </div>
+            </div>
+            {/* Malla Curricular */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconMalla.png"
+                    alt="Icono Malla"
+                    className="w-5 h-5"
+                  />
+                  Plan de Estudios
+                  <HelpTooltip className="text-white hover:text-yellow-300">
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">
+                      {user && user.role === 'alumno' ? 'Guía para estudiantes' : 'Guía de personalización'}
+                    </h3>
+                    <p className="text-gray-600 text-xs">
+                      {user && user.role === 'alumno'
+                        ? 'Haz clic en las asignaturas azules (inscribibles) o verdes (aprobadas) para cambiar su estado. Las rojas requieren prerrequisitos.'
+                        : 'Haz clic en las asignaturas para cambiar su color y personalizar tu vista.'
+                      }
+                    </p>
+                  </HelpTooltip>
+                </h2>
+                <p className="text-blue-100 text-xs sm:text-sm mt-1">
+                  {/* {user && user.role === 'alumno'
                   ? 'Haz clic en las asignaturas azules o verdes para alternar: Inscribible ↔ Aprobada'
                   : 'Clic en las asignaturas para cambiar su color'
-                }
-              </p>
-            </div>
+                } */}
+                </p>
+              </div>
 
-            <div className="p-4 sm:p-6">
-              <div className="overflow-x-auto">
-                <div className="grid grid-cols-10 min-w-full gap-3">
-                  {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
+              <div className="p-2 sm:p-4">
+                <div className="overflow-x-auto">
+                  <div className="grid grid-cols-10 min-w-max gap-3 mx-auto justify-center">
+                    {[...Array(10)].map((_, i) => renderSemestre(i + 1))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Información adicional */}
-          <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
-                <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
-                {user && user.role === 'alumno' ? 'Mi Progreso Académico' : 'Información del Programa'}
-              </h2>
-              <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                {user && user.role === 'alumno' ? 'Estadísticas personalizadas de tu avance' : 'Detalles del plan de estudios'}
-              </p>
+            {/* Información adicional */}
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 hide-in-pdf">
+                <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <img src="/IconMalla.png" alt="Icono Malla" className="w-5 h-5" />
+                  {user && user.role === 'alumno' ? (
+                    <>
+                      Mi Progreso Académico
+                      <HelpTooltip>
+                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                        <p className="text-gray-600 text-xs">
+                          Aquí puedes ver información del programa de la carrera con relación a tu progreso académico.
+                        </p>
+                      </HelpTooltip>
+                    </>
+                  ) : (
+                    <>
+                      Información del Programa
+                      <HelpTooltip>
+                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes ver aquí?</h3>
+                        <p className="text-gray-600 text-xs">
+                          Aquí puedes ver información del programa de la carrera.
+                        </p>
+                      </HelpTooltip>
+                    </>
+                  )}
+                </h2>
+              </div>
+
+              {user && user.role === 'alumno' ? (
+                // Estadísticas personalizadas para alumnos
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                  <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+                    <p className="font-medium text-green-900">Completadas</p>
+                    <p className="text-green-700 text-lg font-bold">
+                      {asignaturas.filter(a => a.estado === 'completada').length}
+                    </p>
+                    <p className="text-green-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'completada').reduce((acc, a) => acc + a.creditos, 0)} créditos
+                    </p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Inscribibles</p>
+                    <p className="text-blue-700 text-lg font-bold">
+                      {asignaturas.filter(a => a.estado === 'inscribible').length}
+                    </p>
+                    <p className="text-blue-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
+                    </p>
+                  </div>
+                  <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
+                    <p className="font-medium text-red-900">Pendientes</p>
+                    <p className="text-red-700 text-lg font-bold">
+                      {asignaturas.filter(a => a.estado === 'no-inscribible').length}
+                    </p>
+                    <p className="text-red-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'no-inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
+                    </p>
+                  </div>
+                  <div className="bg-purple-50 border border-purple-200 p-3 rounded-lg">
+                    <p className="font-medium text-purple-900">Progreso</p>
+                    <p className="text-purple-700 text-lg font-bold">
+                      {Math.round((asignaturas.filter(a => a.estado === 'completada').length / mallaOriginal.length) * 100)}%
+                    </p>
+                    <p className="text-purple-600 text-xs">
+                      {asignaturas.filter(a => a.estado === 'completada').length}/{mallaOriginal.length} asignaturas
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                // Información general del programa
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Duración</p>
+                    <p className="text-blue-700">10 semestres</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Total Créditos</p>
+                    <p className="text-blue-700">{mallaOriginal.reduce((acc, asig) => acc + asig.creditos, 0)} créditos</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Asignaturas</p>
+                    <p className="text-blue-700">{mallaOriginal.length} asignaturas</p>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
+                    <p className="font-medium text-blue-900">Prácticas</p>
+                    <p className="text-blue-700">2 prácticas profesionales</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {user && user.role === 'alumno' ? (
-              // Estadísticas personalizadas para alumnos
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
-                  <p className="font-medium text-green-900">Completadas</p>
-                  <p className="text-green-700 text-lg font-bold">
-                    {asignaturas.filter(a => a.estado === 'completada').length}
-                  </p>
-                  <p className="text-green-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'completada').reduce((acc, a) => acc + a.creditos, 0)} créditos
-                  </p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Inscribibles</p>
-                  <p className="text-blue-700 text-lg font-bold">
-                    {asignaturas.filter(a => a.estado === 'inscribible').length}
-                  </p>
-                  <p className="text-blue-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
-                  </p>
-                </div>
-                <div className="bg-red-50 border border-red-200 p-3 rounded-lg">
-                  <p className="font-medium text-red-900">Pendientes</p>
-                  <p className="text-red-700 text-lg font-bold">
-                    {asignaturas.filter(a => a.estado === 'no-inscribible').length}
-                  </p>
-                  <p className="text-red-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'no-inscribible').reduce((acc, a) => acc + a.creditos, 0)} créditos
-                  </p>
-                </div>
-                <div className="bg-purple-50 border border-purple-200 p-3 rounded-lg">
-                  <p className="font-medium text-purple-900">Progreso</p>
-                  <p className="text-purple-700 text-lg font-bold">
-                    {Math.round((asignaturas.filter(a => a.estado === 'completada').length / mallaOriginal.length) * 100)}%
-                  </p>
-                  <p className="text-purple-600 text-xs">
-                    {asignaturas.filter(a => a.estado === 'completada').length}/{mallaOriginal.length} asignaturas
-                  </p>
-                </div>
-              </div>
-            ) : (
-              // Información general del programa
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Duración</p>
-                  <p className="text-blue-700">10 semestres</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Total Créditos</p>
-                  <p className="text-blue-700">{mallaOriginal.reduce((acc, asig) => acc + asig.creditos, 0)} créditos</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Asignaturas</p>
-                  <p className="text-blue-700">{mallaOriginal.length} asignaturas</p>
-                </div>
-                <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                  <p className="font-medium text-blue-900">Prácticas</p>
-                  <p className="text-blue-700">2 prácticas profesionales</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Notificación de cambios pendientes */}
+            {/* Notificación de cambios pendientes
           {user && user.role === 'alumno' && cambiosPendientes && (
             <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4 hide-in-pdf">
               <div className="flex items-center gap-2 mb-2">
@@ -809,29 +871,34 @@ const MallaCurricular = () => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
 
-          {/* Mensaje de error */}
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg hide-in-pdf">
-              {error}
-            </div>
-          )}
+            {/* Indicador de carga */}
+            {loading && (
+              <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2 hide-in-pdf">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                Cargando datos de progreso académico...
+              </div>
+            )}
+          </div>
 
-          {/* Indicador de carga */}
-          {loading && (
-            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-2 hide-in-pdf">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-              Cargando datos de progreso académico...
-            </div>
+          <Colores
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onSelect={aplicarColor}
+          />
+
+          {/* Componente Alert */}
+          {alert.show && (
+            <Alert
+              type={alert.type}
+              title={alert.title}
+              message={alert.message}
+              onClose={hideAlert}
+              autoClose={3000}
+            />
           )}
         </div>
-
-        <Colores
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onSelect={aplicarColor}
-        />
       </div>
     </PagGeneral>
   );

@@ -104,7 +104,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno', 'Materia Dos'],
-      semestre: 'III'
+      semestre: 3
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeUndefined();
@@ -116,7 +116,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno', 'Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -129,7 +129,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno', 'Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -142,7 +142,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno', 'Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -155,7 +155,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -167,7 +167,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '34046A',
       creditos: 5,
       prerrequisitos: ['Materia Dos'],
-      semestre: 'V'
+      semestre: 5
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -179,7 +179,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '34046',
       creditos: 9,
       prerrequisitos: ['Materia Tres'],
-      semestre: 'II'
+      semestre: 2
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -191,7 +191,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: 340465,
       creditos: 5,
       prerrequisitos: ['Materia Cuatro'],
-      semestre: 'IV'
+      semestre: 4
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -203,7 +203,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '',
       creditos: 1,
       prerrequisitos: ['Materia Cinco'],
-      semestre: 'IV'
+      semestre: 4
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -215,7 +215,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 'cinco',
       prerrequisitos: ['Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -227,7 +227,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 11,
       prerrequisitos: ['Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -239,7 +239,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5.5,
       prerrequisitos: ['Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -251,7 +251,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: -5,
       prerrequisitos: ['Materia Dos'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -263,7 +263,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: '340464',
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -275,7 +275,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['340464', 'Matemáticas123'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -287,11 +287,11 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['340464', 12345],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
-    expect(error.message).toBe('El nombre solo puede contener letras y espacios');
+    expect(error.message).toBe('El prerrequisito debe ser una cadena de texto');
   });
   it('22. Debe fallar si los prerrequisitos contienen un elemento con 5 caracteres', () => {
     const body = {
@@ -299,7 +299,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Mater'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -311,7 +311,7 @@ describe('Test asignaturaBodyValidation', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Dos', 'Materia Tres', 'Materia Cuatro', 'Materia Cinco'],
-      semestre: 'I'
+      semestre: 1
     };
     const { error } = asignaturaBodyValidation.validate(body);
     expect(error).toBeDefined();
@@ -352,7 +352,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno', 'Materia Dos'],
-      semestre: 'III'
+      semestre: 3
     });
     const savedAsignatura = await asignatura.save();
     expect(savedAsignatura._id).toBeDefined();
@@ -368,7 +368,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -378,7 +378,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate({ validateModifiedOnly: false })).rejects.toThrow(mongoose.Error.ValidationError);
   });
@@ -387,7 +387,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -397,7 +397,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '',
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -407,7 +407,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: 340465,
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -416,7 +416,7 @@ describe('Test Modelo Asignatura', () => {
       nombre: 'Cálculo Diferencial',
       creditos: 5,
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -426,7 +426,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: '',
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -436,7 +436,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 'cinco',
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -445,7 +445,7 @@ describe('Test Modelo Asignatura', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       prerrequisitos: ['Materia Uno'],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -455,7 +455,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: [],
-      semestre: 'I'
+      semestre: 1
     });
     const savedAsignatura = await asignatura.save();
     expect(savedAsignatura.prerrequisitos).toEqual([]);
@@ -466,7 +466,7 @@ describe('Test Modelo Asignatura', () => {
       codigo: '340465',
       creditos: 5,
       prerrequisitos: ['Materia Uno', 12345],
-      semestre: 'I'
+      semestre: 1
     });
     await expect(asignatura.validate()).rejects.toThrow();
   });
@@ -475,7 +475,7 @@ describe('Test Modelo Asignatura', () => {
       nombre: 'Cálculo Diferencial',
       codigo: '340465',
       creditos: 5,
-      semestre: 'I'
+      semestre: 1
     });
     const savedAsignatura = await asignatura.save();
     expect(savedAsignatura.prerrequisitos).toEqual([]);

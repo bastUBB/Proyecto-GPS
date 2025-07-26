@@ -13,17 +13,19 @@ export default function Login() {
     e.preventDefault();
     const { email, password } = data;
     try {
+      console.log("Attempting to log in with:", { email, password });
       const { data: response } = await axios.post('api/auth/login', { email, password });
+      console.log("Login response:", response);
       if (response.error) {
         toast.error(response.error);
       } else {
         // Guardar en localStorage
         localStorage.setItem('token', response.token);
         localStorage.setItem('userData', JSON.stringify(response.user));
-        
+
         // Actualizar el contexto
         setUser(response.user);
-        
+
         setData({ email: "", password: "" });
 
         navigate('/');
@@ -37,11 +39,10 @@ export default function Login() {
   return (
     <div className="w-screen h-screen relative overflow-hidden">
       {/* Imagen de fondo */}
-      <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0"
         style={{
-          backgroundImage: "url('/FondoL.svg')",
-          zIndex: 1
+          backgroundImage: "url('/FondoL.jpg')",
         }}
       />
 

@@ -57,16 +57,16 @@ export const asignaturaBodyValidation = joi.object({
     prerrequisitos: joi.array()
         .items(
             joi.string()
-                .min(6)
+                .min(1)
                 .max(50)
                 .strict()
-                .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
+                .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s0-9,-]+$/)
                 .messages({
-                    'string.empty': 'El nombre no puede estar vacío',
-                    'string.base': 'El nombre debe ser una cadena de texto',
-                    'string.min': 'El nombre debe tener al menos 3 caracteres',
-                    'string.max': 'El nombre no puede tener más de 50 caracteres',
-                    'string.pattern.base': 'El nombre solo puede contener letras y espacios',
+                    'string.empty': 'El prerrequisito no puede estar vacío',
+                    'string.base': 'El prerrequisito debe ser una cadena de texto',
+                    'string.min': 'El prerrequisito debe tener al menos 1 caracter',
+                    'string.max': 'El prerrequisito no puede tener más de 50 caracteres',
+                    'string.pattern.base': 'El prerrequisito solo puede contener letras, números, espacios, comas y guiones',
                 }),
         )
         .min(0)

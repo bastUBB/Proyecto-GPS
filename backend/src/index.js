@@ -12,11 +12,12 @@ dotenv.config();
 
 //Adaptarlo a como esta en servidor
 const app = express();
-const PORT = process.env.PORT || 5500; 
+// const PORT = process.env.PORT || 5500; // Puerto por defecto
 const FRONTEND_URL = process.env.FRONTEND_URL || ['http://localhost:5173'];
-const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:${PORT}`; 
+const BACKEND_URL = process.env.BACKEND_URL || `http://localhost:5500`; 
 const url = new URL(BACKEND_URL);
 const HOST = url.hostname;
+const PORT = url.port;
 
 app.use(
   cors({

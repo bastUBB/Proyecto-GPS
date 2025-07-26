@@ -4,6 +4,8 @@ getAllUsersService,
 getUserService,
 updateUserService,
 deleteUserService,
+buscarProfesorService,
+getAllProfesoresService,
 } from '../services/user.service.js';
 import { userQueryValidation, userBodyValidation, userUpdateBodyValidation } from '../validations/user.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
@@ -19,33 +21,33 @@ export async function createUser(req, res) {
             user.role = "alumno";
         }
         
-        console.log('🔍 Datos recibidos para crear usuario:', user);
+        //console.log('🔍 Datos recibidos para crear usuario:', user);
 
         const { value, error } = userBodyValidation.validate(user);
         
         if (error) {
-            console.log('❌ Error de validación:', error.details);
+            //console.log('❌ Error de validación:', error.details);
             return handleErrorClient(res, 400, "Error de validación", error.message);
         }
 
         if (value.password) {
-            console.log('Encriptando contraseña...');
+            //console.log('Encriptando contraseña...');
             value.password = await hashPassword(value.password);
-            console.log('Contraseña encriptada correctamente');
+            //console.log('Contraseña encriptada correctamente');
         }
 
-        console.log('✅ Datos validados correctamente:', value);
+        //console.log('✅ Datos validados correctamente:', value);
         const [newUser, errorNewUser] = await createUserService(value);
 
         if (errorNewUser) {
-            console.log('❌ Error al crear usuario:', errorNewUser);
+            //console.log('❌ Error al crear usuario:', errorNewUser);
             return handleErrorClient(res, 400, "Error registrando el usuario", errorNewUser);
         }
 
-        console.log('✅ Usuario creado exitosamente:', newUser);
+        //console.log('✅ Usuario creado exitosamente:', newUser);
         handleSuccess(res, 201, "Usuario registrado con éxito", newUser);
     } catch (error) {
-        console.log('💥 Error inesperado:', error);
+        //console.log('💥 Error inesperado:', error);
         handleErrorServer(res, 500, error.message);
     }
 }
@@ -144,3 +146,36 @@ export const getFilterUsers = async (req, res) => {
         handleErrorServer(res, 500, 'Error interno del servidor al obtener usuarios');
     }
 };
+
+export async function buscarProfesor(req, res) {
+    try {
+        const { nombreCompleto } = req.query;
+
+        if (!nombreCompleto) {
+            return handleErrorClient(res, 400, "Error de validación", "El nombre completo es requerido");
+        }
+
+        const [profesor, errorProfesor] = await buscarProfesorService(nombreCompleto);
+
+        if (errorProfesor) {
+            return handleErrorClient(res, 404, "Profesor no encontrado", errorProfesor);
+        }
+
+        handleSuccess(res, 200, "Profesor encontrado", profesor);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+export async function getAllProfesores(req, res) {
+    try {
+        const [profesores, errorProfesores] = await getAllProfesoresService();
+
+        if (errorProfesores) return handleErrorClient(res, 404, "No hay profesores registrados", errorProfesores);
+
+        handleSuccess(res, 200, "Profesores encontrados", profesores);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
