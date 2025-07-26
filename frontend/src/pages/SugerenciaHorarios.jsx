@@ -55,6 +55,10 @@ export default function SugerenciaHorarios() {
   const [combinacionGlobal, setCombinacionGlobal] = useState(null);
   const [profesorActual, setProfesorActual] = useState(0);
 
+  const [modalHoras, setModalHoras] = useState(false);
+  const [profesorHorasActual, setProfesorHorasActual] = useState(null);
+  const [asignaturasHoras, setAsignaturasHoras] = useState([]);
+
   useEffect(() => {
     if (combinacionGlobal) {
       // eslint-disable-next-line
@@ -112,6 +116,50 @@ export default function SugerenciaHorarios() {
     }
   };
 
+  const abrirModalHoras = async (profesor) => {
+    setProfesorHorasActual(profesor);
+    setModalHoras(true);
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:5500/api/combi/profesor/${profesor._id}/asignaturas`,
+        getAuthConfig()
+      );
+      if (response.data && response.data.data) {
+        const asignaturas = (response.data.data.asignaturas || []).map(asig => ({
+          ...asig,
+          horasSemanales: asig.horasSemanales || 0
+        }));
+        setAsignaturasHoras(asignaturas);
+      } else {
+        setAsignaturasHoras([]);
+      }
+    } catch (error) {
+      setAsignaturasHoras([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const guardarHorasSemanales = async (asignaturasConHoras) => {
+    setLoading(true);
+    try {
+      await axios.post(
+        `http://localhost:5500/api/combi/profesor/${profesorHorasActual._id}/asignaturas`,
+        { asignaturas: asignaturasConHoras },
+        getAuthConfig()
+      );
+      setModalHoras(false);
+      setMensaje('Horas semanales guardadas exitosamente');
+      // Recargar profesores para reflejar los cambios
+      await cargarProfesores();
+    } catch (error) {
+      setMensaje('Error al guardar las horas semanales');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Cargar disponibilidad de un profesor específico (para administradores)
   const cargarDisponibilidadProfesorAdmin = async (profesorId) => {
     try {
@@ -155,44 +203,24 @@ export default function SugerenciaHorarios() {
     setLoading(true);
     setMensaje('');
     setCombinacionGlobal(null);
+
+  const datos = profesores.map(profesor => ({
+    profesorId: profesor._id,
+    asignaturas: (profesor.asignaturasImpartidas || [])
+      .filter(asig => asig.horasSemanales > 0)
+      .map(asig => ({
+        codigo: asig.codigo,
+        horasSemanales: asig.horasSemanales
+      }))
+  })).filter(p => p.asignaturas.length > 0);
+
+    console.log('Datos a enviar para generar combinación global:', datos);
+
     try {
-      // Primero obtenemos todos los profesores con sus asignaturas y horas configuradas
-      const responseProfesores = await axios.get('/api/users/filter?role=profesor', getAuthConfig());
-      const profesores = responseProfesores.data?.data || [];
-      
-      // Para cada profesor, obtener sus asignaturas y disponibilidad
-      const profesoresConDatos = await Promise.all(
-        profesores.map(async (profesor) => {
-          try {
-            // Obtener asignaturas del profesor
-            const responseAsignaturas = await axios.get(
-              `http://localhost:5500/api/combi/profesor/${profesor._id}/asignaturas`,
-              getAuthConfig()
-            );
-            
-            // Obtener disponibilidad del profesor
-            const responseDisponibilidad = await axios.get(
-              `/api/disponibilidad?profesorId=${profesor._id}`,
-              getAuthConfig()
-            );
-            
-            const asignaturas = responseAsignaturas.data?.data?.asignaturas || [];
-            const disponibilidad = responseDisponibilidad.data?.data?.bloques || [];
-            
-            return {
-              ...profesor,
-              asignaturas: asignaturas.filter(a => a.horasSemanales), // Solo asignaturas con horas configuradas
-              disponibilidad
-            };
-          } catch (error) {
-            console.warn(`Error al cargar datos del profesor ${profesor.nombres}:`, error);
-            return {
-              ...profesor,
-              asignaturas: [],
-              disponibilidad: []
-            };
-          }
-        })
+      const response = await axios.post(
+        'http://localhost:5500/api/combi/horario/generar-global',
+        datos, // <-- aquí va el arreglo correcto
+        getAuthConfig()
       );
       
       // Filtrar solo profesores que tienen asignaturas con horas configuradas
@@ -803,10 +831,21 @@ export default function SugerenciaHorarios() {
                                 RUT: {profesor.rut}
                               </p>
                             </div>
-                            <div className="text-blue-500">
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
+                            <div className="flex gap-2 items-center">
+                              <button
+                                className="bg-blue-600 text-white px-2 py-1 rounded text-xs"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  abrirModalHoras(profesor);
+                                }}
+                              >
+                                Definir Horas
+                              </button>
+                              <div className="text-blue-500">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -940,11 +979,21 @@ export default function SugerenciaHorarios() {
                     Siguiente →
                   </button>
                 </div>
-                <TablaCombinacionGlobal combinacion={[combinacionGlobal[profesorActual]]} />
+                <TablaCombinacionGlobal combinacion={[combinacionGlobal[profesorActual]]} profesores={profesores} />
               </div>
             )}
           </div>
         </div>
+
+        {modalHoras && (
+          <ModalHorasSemanales
+            profesor={profesorHorasActual}
+            asignaturas={asignaturasHoras}
+            onGuardar={guardarHorasSemanales}
+            onCerrar={() => setModalHoras(false)}
+            loading={loading}
+          />
+        )}
       </PagGeneral>
     );
   }
@@ -1534,7 +1583,7 @@ function agruparCombinacionesPorBloques(combinacionGlobal) {
 }
 
 // Tabla visual para la combinación global
-function TablaCombinacionGlobal({ combinacion }) {
+function TablaCombinacionGlobal({ combinacion, profesores }) {
   // Unimos todos los bloques de todos los profesores para saber qué días y horas mostrar
   const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
   const horasDisponibles = [
@@ -1543,16 +1592,21 @@ function TablaCombinacionGlobal({ combinacion }) {
     "17:10", "18:30", "18:40", "20:00"
   ];
 
-  // Creamos un mapa: [profesorId][dia][hora] = { asignatura, sala, ... }
+  // Creamos un mapa: [profesorId][dia][hora] = { asignatura, ... }
   const bloquesPorProfesor = {};
   combinacion.forEach((prof) => {
     bloquesPorProfesor[prof.profesorId] = {};
     diasSemana.forEach((dia) => {
       bloquesPorProfesor[prof.profesorId][dia] = {};
     });
-    prof.horarios.forEach((h) => {
-      bloquesPorProfesor[prof.profesorId][h.dia] = bloquesPorProfesor[prof.profesorId][h.dia] || {};
-      bloquesPorProfesor[prof.profesorId][h.dia][h.horaInicio] = h;
+    // Recorre asignaturas y sus bloquesAsignados
+    prof.asignaturas.forEach((asig) => {
+      asig.bloquesAsignados.forEach((bloque) => {
+        bloquesPorProfesor[prof.profesorId][bloque.dia][bloque.horaInicio] = {
+          ...bloque,
+          asignatura: asig.codigo
+        };
+      });
     });
   });
 
@@ -1560,13 +1614,17 @@ function TablaCombinacionGlobal({ combinacion }) {
     <div className="overflow-x-auto mb-8">
       {combinacion.map((prof) => (
         <div key={prof.profesorId} className="mb-8">
-          <h4 className="font-semibold text-blue-700 mb-2">{prof.nombreProfesor}</h4>
+          <h4 className="font-semibold text-blue-700 mb-2">
+            {
+              (profesores.find(p => p._id === prof.profesorId)?.nombreCompleto ||
+              profesores.find(p => p._id === prof.profesorId)?.nombres + ' ' + profesores.find(p => p._id === prof.profesorId)?.apellidos ||
+              prof.profesorId)
+            }
+          </h4>
           <table className="w-full border-collapse text-xs mb-4">
             <thead>
               <tr className="bg-blue-50">
-                <th className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">
-                  Hora
-                </th>
+                <th className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">Hora</th>
                 {diasSemana.map((dia) => (
                   <th key={dia} className="border border-blue-200 px-2 py-1 text-blue-900 font-semibold text-xs">
                     {dia.substring(0, 3)}
@@ -1586,9 +1644,15 @@ function TablaCombinacionGlobal({ combinacion }) {
                       <td key={dia + hora} className="border border-blue-200 p-1 min-w-[120px]">
                         {bloque ? (
                           <div className="bg-green-100 rounded p-1 text-xs text-blue-900">
-                            <div className="font-bold">{bloque.asignatura}</div>
-                            <div className="text-blue-700">{prof.nombreProfesor}</div>
-                            <div className="text-blue-500">{bloque.sala}</div>
+                            <div className="font-bold">
+                              {
+                                // Buscar el nombre en las asignaturasImpartidas del profesor
+                                profesores.find(p => p._id === prof.profesorId)
+                                  ?.asignaturasImpartidas?.find(a => a.codigo === bloque.asignatura)?.nombre
+                                || bloque.asignatura
+                              }
+                            </div>
+                            <div className="text-blue-700">{bloque.tipo}</div>
                           </div>
                         ) : (
                           <div className="bg-gray-100 rounded h-6" />
@@ -1602,6 +1666,78 @@ function TablaCombinacionGlobal({ combinacion }) {
           </table>
         </div>
       ))}
+    </div>
+  );
+}
+
+function ModalHorasSemanales({ profesor, asignaturas, onGuardar, onCerrar, loading }) {
+  const [horas, setHoras] = useState(asignaturas);
+
+  useEffect(() => {
+    setHoras(asignaturas);
+  }, [asignaturas]);
+
+  const handleHorasChange = (index, value) => {
+    setHoras(prev =>
+      prev.map((asig, i) =>
+        i === index ? { ...asig, horasSemanales: Number(value) } : asig
+      )
+    );
+  };
+
+  const handleGuardar = () => {
+    onGuardar(horas);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
+        <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-4 rounded-t-lg">
+          <h3 className="text-lg font-semibold">Definir Horas Semanales</h3>
+          <p className="text-blue-100 text-sm mt-1">
+            Profesor: <span className="font-bold">{profesor?.nombreCompleto || `${profesor?.nombres} ${profesor?.apellidos}`}</span>
+          </p>
+        </div>
+        <div className="p-6">
+          {horas.length === 0 ? (
+            <div className="text-center text-gray-500">No tiene asignaturas asignadas</div>
+          ) : (
+            <div className="space-y-4">
+              {horas.map((asig, idx) => (
+                <div key={asig.codigo} className="flex items-center justify-between">
+                  <span className="font-semibold text-blue-900">{asig.nombre || asig.codigo}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.5}
+                    value={asig.horasSemanales}
+                    onChange={e => handleHorasChange(idx, e.target.value)}
+                    className="border border-blue-300 rounded px-2 py-1 w-24"
+                    disabled={loading}
+                  />
+                  <span className="text-xs text-gray-500 ml-2">horas/sem</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
+          <button
+            onClick={onCerrar}
+            disabled={loading}
+            className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleGuardar}
+            disabled={loading}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+          >
+            {loading ? 'Guardando...' : 'Guardar'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
