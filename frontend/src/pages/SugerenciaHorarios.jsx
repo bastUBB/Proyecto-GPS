@@ -3,6 +3,7 @@ import PagGeneral from "../components/PagGeneral";
 import { UserContext } from "../../context/userContext";
 import axios from 'axios';
 import HelpTooltip from "../components/PuntoAyuda";
+import { use } from "react";
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -36,7 +37,18 @@ export default function SugerenciaHorarios() {
   const [modalAsignaturas, setModalAsignaturas] = useState(false);
 
   const [combinacionGlobal, setCombinacionGlobal] = useState(null);
+  const [profesorActual, setProfesorActual] = useState(0);
 
+  useEffect(() => {
+    if (combinacionGlobal) {
+      // eslint-disable-next-line
+      console.log('combinacionGlobal:', combinacionGlobal);
+    }
+  }, [combinacionGlobal]);
+
+  useEffect(() => {
+    setProfesorActual(0);
+  }, [combinacionGlobal]);
 
   // Configurar axios con token de autenticación
   const getAuthConfig = () => {
@@ -477,14 +489,6 @@ export default function SugerenciaHorarios() {
 
   // Vista para administradores - Lista de profesores y disponibilidad
   if (user.role === 'admin' || user.role === 'director') {
-    // DEBUG: Mostrar el contenido de combinacionGlobal en consola y en pantalla
-    useEffect(() => {
-      if (combinacionGlobal) {
-        // eslint-disable-next-line
-        console.log('combinacionGlobal:', combinacionGlobal);
-      }
-    }, [combinacionGlobal]);
-
     return (
       <PagGeneral>
         <div className="min-h-screen from-blue-50 to-cyan-50 p-2 sm:p-4">
@@ -697,21 +701,32 @@ export default function SugerenciaHorarios() {
               </div>
             )} */}
 
-            {/* Mostrar la tabla SOLO si combinacionGlobal existe y tiene datos */}
+            {/* Mostrar solo una tabla de profesor a la vez, con navegación */}
             {combinacionGlobal && Array.isArray(combinacionGlobal) && combinacionGlobal.length > 0 && (
               <div className="mt-8">
                 <h2 className="text-xl font-bold text-blue-900 text-center mb-4">
                   Combinación Global Generada
                 </h2>
-                {/* Mostrar cada variante de tabla */}
-                {agruparCombinacionesPorBloques(combinacionGlobal).map((tabla, idx) => (
-                  <div key={idx} className="mb-10">
-                    <h3 className="text-lg font-semibold text-blue-800 mb-2 text-center">
-                      Variante {idx + 1}
-                    </h3>
-                    <TablaCombinacionGlobal combinacion={tabla} />
-                  </div>
-                ))}
+                <div className="flex justify-center items-center gap-4 my-4">
+                  <button
+                    className="px-4 py-2 bg-blue-200 text-blue-800 rounded disabled:opacity-50"
+                    onClick={() => setProfesorActual((prev) => Math.max(prev - 1, 0))}
+                    disabled={profesorActual === 0}
+                  >
+                    ← Anterior
+                  </button>
+                  <span className="font-semibold text-blue-900">
+                    Profesor {profesorActual + 1} de {combinacionGlobal.length}
+                  </span>
+                  <button
+                    className="px-4 py-2 bg-blue-200 text-blue-800 rounded disabled:opacity-50"
+                    onClick={() => setProfesorActual((prev) => Math.min(prev + 1, combinacionGlobal.length - 1))}
+                    disabled={profesorActual === combinacionGlobal.length - 1}
+                  >
+                    Siguiente →
+                  </button>
+                </div>
+                <TablaCombinacionGlobal combinacion={[combinacionGlobal[profesorActual]]} />
               </div>
             )}
           </div>
