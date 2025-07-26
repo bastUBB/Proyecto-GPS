@@ -9,8 +9,7 @@ import { crearTodosLosRendimientosExistentes } from '../services/rendimientoAsig
 import { crearAsignaturasDocentes } from '../services/asignaturasDocente.service.js';
 import { generarProfesoresSimple } from '../../scripts/extraccionRutsSimple.js';
 import { crearEvaluacionesDocentes } from '../../scripts/creadorEvaluaciones.js';
-//TODO: LUEGO BORRAR
-import { crearRecomendacionInscripcionService } from '../services/inscripcion.service.js';
+// import { crearRecomendacionInscripcionService } from '../services/inscripcion.service.js';
 
 const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
@@ -226,14 +225,14 @@ async function createRecomendacion() {
 }
 
 async function initialSetup() {
-    // await generarProfesoresSimple();
-    // await createInitialUsers();
-    // await createAsignaturas();
-    // await createProfesores();
-    // await createRendimientos();
-    // await createAsignaturasDocentes();
-    // await createEvaluaciones();
-    await createRecomendacion();
+    await generarProfesoresSimple();
+    await createInitialUsers();
+    await createAsignaturas();
+    await createProfesores();
+    await createRendimientos();
+    await createAsignaturasDocentes();
+    await createEvaluaciones();
+    // await createRecomendacion();
 }
 
 export { initialSetup };
