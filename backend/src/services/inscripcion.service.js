@@ -234,6 +234,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
         // Set 1: Excelencia Académica (priorizar % aprobación)
         const excelenciaAcademica = [];
         const procesadosExcelencia = new Set();
+        const datosExcelencia = [];
         
         datosValidos
             .sort((a, b) => b.promedioAprobacion - a.promedioAprobacion)
@@ -248,24 +249,29 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                         cupos: d.cupos,
                         razon: `Alto rendimiento: ${d.promedioAprobacion.toFixed(1)}% aprobación`,
                         puntaje: d.puntaje.toFixed(1),
-                        tipo: 'Excelencia Académica',
-                        detalles: {
-                            porcentajeAprobacion: d.promedioAprobacion.toFixed(1),
-                            promedioInscritos: d.promedioInscritos.toFixed(0),
-                            evaluacionDocente: d.promedioEvaluacion.toFixed(1),
-                            añosImpartidos: d.añosImpartidos,
-                            registrosHistoricos: d.totalRegistrosHistoricos
-                        }
+                        tipo: 'Excelencia Académica'
                     });
+                    datosExcelencia.push(d);
                     procesadosExcelencia.add(claveAsignatura);
                 }
             });
+        
+        // Calcular detalles generales para Excelencia Académica
+        const detallesExcelencia = datosExcelencia.length > 0 ? {
+            porcentajeAprobacionPromedio: (datosExcelencia.reduce((sum, d) => sum + d.promedioAprobacion, 0) / datosExcelencia.length).toFixed(1),
+            promedioInscritosGeneral: (datosExcelencia.reduce((sum, d) => sum + d.promedioInscritos, 0) / datosExcelencia.length).toFixed(0),
+            evaluacionDocentePromedio: (datosExcelencia.reduce((sum, d) => sum + d.promedioEvaluacion, 0) / datosExcelencia.length).toFixed(1),
+            totalAsignaturas: datosExcelencia.length,
+            añosImpartidosPromedio: (datosExcelencia.reduce((sum, d) => sum + d.añosImpartidos, 0) / datosExcelencia.length).toFixed(1),
+            registrosHistoricosTotal: datosExcelencia.reduce((sum, d) => sum + d.totalRegistrosHistoricos, 0)
+        } : null;
         
         // console.log("Excelencia Académica:", JSON.stringify(excelenciaAcademica, null, 2));
 
         // Set 2: Equilibrado (balance entre rendimiento y evaluación)
         const equilibrado = [];
         const procesadosEquilibrado = new Set();
+        const datosEquilibrado = [];
         
         datosValidos
             .sort((a, b) => b.puntaje - a.puntaje)
@@ -280,24 +286,30 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                         cupos: d.cupos,
                         razon: `Balance óptimo: ${d.promedioAprobacion.toFixed(1)}% aprob. + ${d.promedioEvaluacion.toFixed(1)} eval.`,
                         puntaje: d.puntaje.toFixed(1),
-                        tipo: 'Equilibrado',
-                        detalles: {
-                            porcentajeAprobacion: d.promedioAprobacion.toFixed(1),
-                            promedioInscritos: d.promedioInscritos.toFixed(0),
-                            evaluacionDocente: d.promedioEvaluacion.toFixed(1),
-                            añosImpartidos: d.añosImpartidos,
-                            registrosHistoricos: d.totalRegistrosHistoricos
-                        }
+                        tipo: 'Equilibrado'
                     });
+                    datosEquilibrado.push(d);
                     procesadosEquilibrado.add(claveAsignatura);
                 }
             });
+
+        // Calcular detalles generales para Equilibrado
+        const detallesEquilibrado = datosEquilibrado.length > 0 ? {
+            porcentajeAprobacionPromedio: (datosEquilibrado.reduce((sum, d) => sum + d.promedioAprobacion, 0) / datosEquilibrado.length).toFixed(1),
+            promedioInscritosGeneral: (datosEquilibrado.reduce((sum, d) => sum + d.promedioInscritos, 0) / datosEquilibrado.length).toFixed(0),
+            evaluacionDocentePromedio: (datosEquilibrado.reduce((sum, d) => sum + d.promedioEvaluacion, 0) / datosEquilibrado.length).toFixed(1),
+            totalAsignaturas: datosEquilibrado.length,
+            añosImpartidosPromedio: (datosEquilibrado.reduce((sum, d) => sum + d.añosImpartidos, 0) / datosEquilibrado.length).toFixed(1),
+            registrosHistoricosTotal: datosEquilibrado.reduce((sum, d) => sum + d.totalRegistrosHistoricos, 0),
+            puntajePromedio: (datosEquilibrado.reduce((sum, d) => sum + d.puntaje, 0) / datosEquilibrado.length).toFixed(1)
+        } : null;
 
         // console.log("Equilibrado:", JSON.stringify(equilibrado, null, 2));
 
         // Set 3: Mejor Evaluado (priorizar evaluación docente)
         const evaluacionDocente = [];
         const procesadosEvaluacion = new Set();
+        const datosEvaluacion = [];
         
         datosValidos
             .filter(d => d.promedioEvaluacion > 0)
@@ -313,18 +325,22 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                         cupos: d.cupos,
                         razon: `Excelente evaluación: ${d.promedioEvaluacion.toFixed(1)}/7.0`,
                         puntaje: d.puntaje.toFixed(1),
-                        tipo: 'Mejor Evaluado',
-                        detalles: {
-                            porcentajeAprobacion: d.promedioAprobacion.toFixed(1),
-                            promedioInscritos: d.promedioInscritos.toFixed(0),
-                            evaluacionDocente: d.promedioEvaluacion.toFixed(1),
-                            añosImpartidos: d.añosImpartidos,
-                            registrosHistoricos: d.totalRegistrosHistoricos
-                        }
+                        tipo: 'Mejor Evaluado'
                     });
+                    datosEvaluacion.push(d);
                     procesadosEvaluacion.add(claveAsignatura);
                 }
             });
+
+        // Calcular detalles generales para Mejor Evaluado
+        const detallesEvaluacion = datosEvaluacion.length > 0 ? {
+            porcentajeAprobacionPromedio: (datosEvaluacion.reduce((sum, d) => sum + d.promedioAprobacion, 0) / datosEvaluacion.length).toFixed(1),
+            promedioInscritosGeneral: (datosEvaluacion.reduce((sum, d) => sum + d.promedioInscritos, 0) / datosEvaluacion.length).toFixed(0),
+            evaluacionDocentePromedio: (datosEvaluacion.reduce((sum, d) => sum + d.promedioEvaluacion, 0) / datosEvaluacion.length).toFixed(1),
+            totalAsignaturas: datosEvaluacion.length,
+            añosImpartidosPromedio: (datosEvaluacion.reduce((sum, d) => sum + d.añosImpartidos, 0) / datosEvaluacion.length).toFixed(1),
+            registrosHistoricosTotal: datosEvaluacion.reduce((sum, d) => sum + d.totalRegistrosHistoricos, 0)
+        } : null;
 
         // console.log("Evaluación Docente:", JSON.stringify(evaluacionDocente, null, 2));
 
@@ -334,9 +350,18 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
             totalasignaturasInscribibles: asignaturasInscribibles.length,
             totalOpcionesAnalizadas: datosCompletos.length,
             setsRecomendaciones: {
-                excelenciaAcademica,
-                equilibrado,
-                evaluacionDocente
+                excelenciaAcademica: {
+                    recomendaciones: excelenciaAcademica,
+                    detalles: detallesExcelencia
+                },
+                equilibrado: {
+                    recomendaciones: equilibrado,
+                    detalles: detallesEquilibrado
+                },
+                evaluacionDocente: {
+                    recomendaciones: evaluacionDocente,
+                    detalles: detallesEvaluacion
+                }
             },
             resumen: {
                 totalProfesoresAnalizados: [...new Set(datosCompletos.map(d => d.profesor))].length,
@@ -447,8 +472,6 @@ export async function crearInscripcionService(inscripcionData) {
 export async function getInscripcionService(dataInscripcion) {
     try {
 
-        console.log('Datos de inscripción:', dataInscripcion);
-
         const { profesor, asignatura, año } = dataInscripcion;
 
         const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
@@ -462,7 +485,7 @@ export async function getInscripcionService(dataInscripcion) {
         //formatear "año" a año
         const añoFormateado = año.toString();
 
-        console.log(`Año formateado: ${añoFormateado}`);
+        // console.log(`Año formateado: ${añoFormateado}`);
 
         const inscripcion = await Inscripcion.findOne({
             profesor: profesor,
@@ -527,13 +550,7 @@ export async function deleteInscripcionService(dataInscripcion) {
 
 export async function updateInscripcionService(dataInscripcion){
     try {
-        const { id, ...updateData } = dataInscripcion;
 
-        const inscripcion = await Inscripcion.findByIdAndUpdate(id, updateData, { new: true });
-
-        if (!inscripcion) return [null, 'Inscripción no encontrada'];
-
-        return [inscripcion, null];
     } catch (error) {
         console.error('Error al actualizar inscripción:', error);
         return [null, 'Error al actualizar inscripción'];
