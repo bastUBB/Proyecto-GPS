@@ -409,6 +409,19 @@ export async function crearInscripcionService(inscripcionData) {
 
         inscritos += 1;
 
+        console.log("Datos a guardar:", {
+            profesor: profesor,
+            rutAlumnos: rutAlumnos,
+            rutParaEnviar: '',
+            asignatura: asignatura,
+            seccion: inscripcionData.seccion,
+            semestre: inscripcionData.semestre,
+            año: inscripcionData.año,
+            bloques: inscripcionData.bloques,
+            cupos: inscripcionData.cupos,
+            inscritos: inscritos
+        });
+
         const inscripcionNew = new Inscripcion({
             profesor: profesor,
             rutAlumnos: rutAlumnos,
@@ -431,13 +444,98 @@ export async function crearInscripcionService(inscripcionData) {
     }
 }
 
-export async function deleteInscripcionService(inscripcionData){
+export async function getInscripcionService(dataInscripcion) {
     try {
-        const { profesor, asignatura } = inscripcionData;
 
+        console.log('Datos de inscripción:', dataInscripcion);
+
+        const { profesor, asignatura, año } = dataInscripcion;
+
+        const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
+
+        if (!profesorExist) return [null, 'Profesor no encontrado'];
+
+        const asignaturaExist = await Asignatura.findOne({ nombre: asignatura });
+
+        if (!asignaturaExist) return [null, 'Asignatura no encontrada'];
+
+        //formatear "año" a año
+        const añoFormateado = año.toString();
+
+        console.log(`Año formateado: ${añoFormateado}`);
+
+        const inscripcion = await Inscripcion.findOne({
+            profesor: profesor,
+            asignatura: asignatura,
+            año: añoFormateado,
+            semestre: dataInscripcion.semestre,
+            seccion: dataInscripcion.seccion
+         })
+
+        if (!inscripcion) return [null, 'Inscripción no encontrada'];
+
+        return [inscripcion, null];
+    } catch (error) {
+        console.error('Error al obtener inscripción:', error);
+        return [null, 'Error al obtener inscripción'];
+    }
+}
+
+export async function deleteInscripcionService(dataInscripcion) {
+    try {
+        const { profesor, asignatura, rutParaEnviar } = dataInscripcion;  
+
+        const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
+
+        if (!profesorExist) return [null, 'Profesor no encontrado'];
+
+        const asignaturaExist = await Asignatura.findOne({ nombre: asignatura });
+
+        if (!asignaturaExist) return [null, 'Asignatura no encontrada'];
+
+        const userExist = await User.findOne({ rut: rutParaEnviar, role: 'alumno' });
+
+        if (!userExist) return [null, 'Alumno no encontrado'];
+
+        const inscripcion = await Inscripcion.findOne({
+            profesor: profesor,
+            asignatura: asignatura,
+            año: dataInscripcion.año,
+            semestre: dataInscripcion.semestre,
+            seccion: dataInscripcion.seccion
+        });
+
+        if (!inscripcion) return [null, 'Inscripción no encontrada'];
+
+        // Eliminar el rut del array rutAlumnos
+        const rutAlumnosActualizado = inscripcion.rutAlumnos.filter(rut => rut !== rutParaEnviar);
+
+        inscripcion.rutAlumnos = rutAlumnosActualizado;
+
+        // Actualizar el número de inscritos
+        inscripcion.inscritos = rutAlumnosActualizado.length;
+
+        await inscripcion.save();
+
+        return [inscripcion, null];
 
     } catch (error) {
         console.error('Error al eliminar inscripción:', error);
         return [null, 'Error al eliminar inscripción'];
+    }
+}
+
+export async function updateInscripcionService(dataInscripcion){
+    try {
+        const { id, ...updateData } = dataInscripcion;
+
+        const inscripcion = await Inscripcion.findByIdAndUpdate(id, updateData, { new: true });
+
+        if (!inscripcion) return [null, 'Inscripción no encontrada'];
+
+        return [inscripcion, null];
+    } catch (error) {
+        console.error('Error al actualizar inscripción:', error);
+        return [null, 'Error al actualizar inscripción'];
     }
 }

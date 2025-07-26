@@ -79,11 +79,20 @@ export default function Foro() {
   useEffect(() => {
     if (user) {
       if (user.role === 'alumno') {
-        loadDocentes();
-        loadAsignaturas();
+        loadAsignaturas(); // Solo cargar asignaturas inicialmente
+        // Los docentes se cargarán cuando se seleccione una asignatura
       }
     }
   }, [user]);
+
+  // Efecto para cargar docentes cuando cambie la asignatura seleccionada
+  useEffect(() => {
+    if (formData.asignatura && user?.role === 'alumno') {
+      loadDocentes(formData.asignatura);
+      // Limpiar docente seleccionado cuando cambie la asignatura
+      setFormData(prev => ({ ...prev, docente: '' }));
+    }
+  }, [formData.asignatura, user?.role]);
 
   useEffect(() => {
     if (user?.role === 'profesor' && errorEvaluaciones) {
@@ -94,32 +103,114 @@ export default function Foro() {
     }
   }, [errorEvaluaciones, errorAdmin, user?.role]);
 
-  const loadDocentes = async () => {
+  // Función para cargar asignaturas cursadas desde mallaUser
+  const loadAsignaturas = async () => {
     try {
-      const response = await axios.get('/api/users', { //TODO: No deberia tener acceso a todos los usuarios el alumno, crear un servicio que retorne solo profesores
-        headers: getAuthHeaders(),
-        params: { role: 'profesor' }
+      if (!user?.rut) {
+        console.log('No se encontró RUT del usuario');
+        return;
+      }
+
+      const response = await axios.get(`/api/mallaUser/detail?rutUser=${user.rut}`, {
+        headers: getAuthHeaders()
       });
 
-      // Filtrar solo usuarios con rol profesor o docente
-      const docentesFiltrados = (response.data.data || []).filter(usuario =>
-        usuario.role === 'profesor' || usuario.role === 'docente'
-      );
+      // console.log('Respuesta de mallaUser:', response.data.data);
 
-      setDocentes(docentesFiltrados);
+      // console.log('Datos de asignaturasCursadas:', response.data.data.asignaturasCursadas);
+
+      // console.log('Datos de Success:', response.data.data.success);
+
+      if (response.data.data) {
+        // Extraer solo las asignaturas cursadas
+        const asignaturasCursadas = response.data.data.asignaturasCursadas || [];
+
+        // console.log('Asignaturas cursadas:', asignaturasCursadas);
+
+        // Convertir strings a objetos con formato esperado
+        const asignaturasFormateadas = asignaturasCursadas.map((nombre, index) => ({
+          _id: `cursada_${index}`,
+          nombre: nombre
+        }));
+
+        // console.log('Asignaturas formateadas:', asignaturasFormateadas);
+
+        // Eliminar las asignaturas de nombre formacion y electivo
+        const asignaturasFiltradas = asignaturasFormateadas.filter(
+          asig =>
+            !asig.nombre.toLowerCase().includes('formación') &&
+            !asig.nombre.toLowerCase().includes('electivo')
+        );
+        setAsignaturas(asignaturasFiltradas);
+
+        // setAsignaturas(asignaturasFormateadas);
+      } else {
+        showAlert('warning', 'Sin datos', 'No se encontraron asignaturas cursadas para este usuario');
+        setAsignaturas([]);
+      }
     } catch (error) {
-      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar docentes');
+      console.error('Error al cargar asignaturas desde mallaUser:', error);
+      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar asignaturas cursadas');
+      setAsignaturas([]);
     }
   };
 
-  const loadAsignaturas = async () => {
+  // Función para cargar docentes filtrados por asignatura seleccionada
+  const loadDocentes = async (asignaturaSeleccionada = null) => {
     try {
-      const response = await axios.get('/api/asignaturas', {
+      if (!asignaturaSeleccionada) {
+        setDocentes([]);
+        return;
+      }
+
+      const response = await axios.get('/api/asignaturasDocente', {
         headers: getAuthHeaders()
       });
-      setAsignaturas(response.data.data || []);
+
+      // console.log('Respuesta de asignaturasDocente:', response.data.data[0]);
+
+      if (response.data.data) {
+        // Filtrar docentes que enseñan la asignatura seleccionada
+        // console.log('Datos de asignaturasDocente:', response.data.data.length);
+        const docentesFiltrados = response.data.data
+          .filter(asigDoc =>
+            asigDoc.asignaturas &&
+            asigDoc.asignaturas.some(asig =>
+              asig.toLowerCase() === asignaturaSeleccionada.toLowerCase()
+            )
+          )
+          .map(asigDoc => ({
+            _id: asigDoc._id,
+            nombreCompleto: asigDoc.docente,
+            role: 'profesor'
+          }));
+
+        // console.log('Docentes filtrados:', docentesFiltrados);
+
+        // Validar que no se repitan los profesores (mantener formato de objeto)
+        const nombresUnicos = new Set();
+        const docentesUnicos = docentesFiltrados.filter(docente => {
+          if (nombresUnicos.has(docente.nombreCompleto)) {
+            return false;
+          }
+          nombresUnicos.add(docente.nombreCompleto);
+          return true;
+        });
+
+        // console.log('Docentes únicos:', docentesUnicos);
+
+        setDocentes(docentesUnicos);
+
+        if (docentesUnicos.length === 0) {
+          showAlert('info', 'Sin profesores', 'No se encontraron profesores para esta asignatura');
+        }
+      } else {
+        setDocentes([]);
+      }
     } catch (error) {
-      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar asignaturas');
+      console.error('Error al cargar docentes:', error);
+      showAlert('error', 'Error de Carga', error.response?.data?.message || 'Error al cargar docentes');
+      setDocentes([]);
     }
   };
 
@@ -423,26 +514,6 @@ export default function Foro() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      <User className="w-4 h-4 inline mr-1" />
-                      Docente
-                    </label>
-                    <select
-                      value={formData.docente}
-                      onChange={(e) => setFormData({ ...formData, docente: e.target.value })}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required
-                    >
-                      <option value="">Seleccionar docente...</option>
-                      {docentes.map((docente) => (
-                        <option key={docente._id} value={docente.nombreCompleto}>
-                          {docente.nombreCompleto}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       <BookOpen className="w-4 h-4 inline mr-1" />
                       Asignatura
                     </label>
@@ -452,14 +523,56 @@ export default function Foro() {
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       required
                     >
-                      <option value="">Seleccionar asignatura...</option>
+                      <option value="">
+                        {asignaturas.length === 0
+                          ? "Cargando asignaturas cursadas..."
+                          : "Seleccionar asignatura cursada..."
+                        }
+                      </option>
                       {asignaturas.map((asignatura) => (
                         <option key={asignatura._id} value={asignatura.nombre}>
                           {asignatura.nombre}
                         </option>
                       ))}
                     </select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Solo se muestran las asignaturas que has cursado
+                    </p>
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <User className="w-4 h-4 inline mr-1" />
+                      Docente
+                    </label>
+                    <select
+                      value={formData.docente}
+                      onChange={(e) => setFormData({ ...formData, docente: e.target.value })}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                      disabled={!formData.asignatura}
+                    >
+                      <option value="">
+                        {!formData.asignatura
+                          ? "Primero selecciona una asignatura..."
+                          : docentes.length === 0
+                            ? "No hay docentes disponibles para esta asignatura"
+                            : "Seleccionar docente..."
+                        }
+                      </option>
+                      {docentes.map((docente) => (
+                        <option key={docente._id} value={docente.nombreCompleto}>
+                          {docente.nombreCompleto}
+                        </option>
+                      ))}
+                    </select>
+                    {!formData.asignatura && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Selecciona primero una asignatura para ver los docentes disponibles
+                      </p>
+                    )}
+                  </div>
+
                 </div>
 
                 <div>
@@ -628,7 +741,7 @@ export default function Foro() {
                       {evaluacionesAdmin.filter(e => e.estado === 'aprobada').length}
                     </p>
                   </div>
-                  
+
                   <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
                     <div className="flex items-center gap-2 mb-2">
                       <XCircle className="w-5 h-5 text-red-600" />
@@ -638,7 +751,7 @@ export default function Foro() {
                       {evaluacionesAdmin.filter(e => e.estado === 'rechazada').length}
                     </p>
                   </div>
-                  
+
                   <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
                     <div className="flex items-center gap-2 mb-2">
                       <MessageSquare className="w-5 h-5 text-blue-600" />
