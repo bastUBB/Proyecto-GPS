@@ -368,7 +368,7 @@ export async function crearInscripcionService(inscripcionData) {
     try {
         const { profesor, rutParaEnviar, asignatura } = inscripcionData;
 
-        const profesorExist = await User.findOne({ rut: profesor, role: 'profesor' });
+        const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
 
         if (!profesorExist) return [null, 'Profesor no encontrado'];
 
@@ -393,9 +393,12 @@ export async function crearInscripcionService(inscripcionData) {
         // consultar si el array RutAlumnos esta vacio
         let rutAlumnos = [];
         if (inscripcionExist) rutAlumnos = inscripcionExist.rutAlumnos || [];
-
+        
         // consultar si inscritos es 0
+        let inscritos = 0; // <--- Agrega esta línea
         if (inscripcionExist) inscritos = inscripcionExist.inscritos || 0;
+
+        console.log(`Inscripción existente: ${inscritos}`);
 
         // consultar si el rutParaEnviar esta presente en el array de rutAlumnos de inscripcionExist
         if (inscripcionExist && inscripcionExist.rutAlumnos.includes(rutParaEnviar)) {
