@@ -18,13 +18,13 @@ const historialSchema = new mongoose.Schema({
         notaFinal: {
             type: Number,
             required: true,
-            cast: false,
+            cast: true,
         },
         semestre: {
             type: Number,
             required: true,
             enum: [1, 2],
-            cast: false,
+            cast: true,
         },
         estado: {
             type: String,
@@ -43,14 +43,14 @@ const historialSchema = new mongoose.Schema({
                 required: true,
                 min: 1.0,
                 max: 7.0,
-                cast: false,
+                cast: true, // Permitir casting automático de strings a números
             },
             ponderacion: {
                 type: Number,
                 required: true,
                 min: 0,
                 max: 100,
-                cast: false,
+                cast: true, // Permitir casting automático de strings a números
             }
         }]
     }]

@@ -708,7 +708,7 @@ export default function Horario() {
                           <div className="text-xs text-gray-500">
                             <p>📚 {asignaturas.length} asignaturas</p>
                             <p>�‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesores</p>
-                            <p>⭐ Promedio: {asignaturas.length > 0 ? (asignaturas.reduce((sum, a) => sum + parseFloat(a.puntaje), 0) / asignaturas.length).toFixed(1) : '0'}</p>
+                            {/* <p>⭐ Promedio: {asignaturas.length > 0 ? (asignaturas.reduce((sum, a) => sum + parseFloat(a.puntaje), 0) / asignaturas.length).toFixed(1) : '0'}</p> */}
                           </div>
                           {horarioSeleccionado?.tipo === tipo && (
                             <div className="flex items-center text-green-600 text-xs font-medium">
