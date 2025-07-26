@@ -15,6 +15,7 @@ import MallaCurricular from './pages/MallaCurricular'
 import GestionMallaCurricular from './pages/GestionMallaCurricular'
 import SugerenciaHorarios from './pages/SugerenciaHorarios'
 import Foro from './pages/Foro'
+import Notas from './pages/Notas'
 
 const API_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5500'
 axios.defaults.baseURL = API_URL
@@ -65,6 +66,7 @@ function App() {
         <Route path="/gestion-malla" element={<ProtectedRoute><GestionMallaCurricular /></ProtectedRoute>} />
         <Route path="/sugerencia-horarios" element={<ProtectedRoute><SugerenciaHorarios /></ProtectedRoute>} />
         <Route path="/foro" element={<ProtectedRoute><Foro /></ProtectedRoute>} />
+        <Route path="/notas" element={<ProtectedRoute><Notas /></ProtectedRoute>} />
         
         {/* Rutas específicas para admin */}
         <Route path="/gestion-usuarios" element={<ProtectedRoute><GestionUsuarios /></ProtectedRoute>} />
