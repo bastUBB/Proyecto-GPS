@@ -8,11 +8,13 @@ export default function Notas() {
         {
             asignatura: "Matemáticas",
             semestre: "1°",
+            año: "2025",
             nota: 6.3,
         },
         {
             asignatura: "Historia",
             semestre: "1°",
+            año: "2023",
             nota: 3.8,
         }
     ];
@@ -30,6 +32,13 @@ export default function Notas() {
             title: "Semestre",
             render: (item) => (
                 <div className="text-sm text-blue-800">{item.semestre}</div>
+            )
+        },
+        {
+            key: "año",
+            title: "Año",
+            render: (item) => (
+                <div className="text-sm text-blue-800">{item.año}</div>
             )
         },
         {
