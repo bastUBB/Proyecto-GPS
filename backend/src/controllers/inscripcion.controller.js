@@ -1,8 +1,10 @@
 import {
     crearRecomendacionInscripcionService,
-    crearInscripcionService
+    crearInscripcionService,
+    getInscripcionService,
+    deleteInscripcionService
 } from '../services/inscripcion.service.js';
-import { inscripcionBodyValidation } from '../validations/inscripcion.validation.js';
+import { inscripcionQueryValidation, inscripcionBodyValidation } from '../validations/inscripcion.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
 
 export async function crearInscripcion(req, res) {
@@ -34,6 +36,42 @@ export async function crearRecomendacionInscripcion(req, res) {
         if (errorRecomendacion) return handleErrorClient(res, 400, "Error creando la recomendación de inscripción", errorRecomendacion);
 
         handleSuccess(res, 201, "Recomendación de inscripción creada con éxito", recomendacion);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+export async function getInscripcion(req, res) {
+    try {
+        const dataInscripcion = req.query;
+
+        const { error, value } = inscripcionQueryValidation.validate(dataInscripcion);
+
+        if (error) return handleErrorClient(res, 400, "Error de validación", error.message);
+
+        const [inscripcion, errorInscripcion] = await getInscripcionService(value);
+
+        if (errorInscripcion) return handleErrorClient(res, 404, "Inscripción no encontrada", errorInscripcion);
+
+        handleSuccess(res, 200, "Inscripción obtenida con éxito", inscripcion);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+export async function deleteInscripcion(req, res) {
+    try {
+        const dataInscripcion = req.query;
+
+        const { error, value } = inscripcionQueryValidation.validate(dataInscripcion);
+
+        if (error) return handleErrorClient(res, 400, "Error de validación", error.message);
+
+        const [deletedInscripcion, errorDelete] = await deleteInscripcionService(value);
+
+        if (errorDelete) return handleErrorClient(res, 404, "Inscripción no encontrada", errorDelete);
+
+        handleSuccess(res, 200, "Inscripción eliminada con éxito", deletedInscripcion);
     } catch (error) {
         handleErrorServer(res, 500, error.message);
     }
