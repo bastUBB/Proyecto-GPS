@@ -68,6 +68,8 @@ export default function Horario() {
         getAuthConfig()
       );
 
+      // console.log('Recomendaciones cargadas:',response)
+
       if (response.data && response.data.data) {
         setRecomendaciones(response.data.data);
         console.log('Recomendaciones cargadas:', response.data.data);
@@ -227,7 +229,10 @@ export default function Horario() {
   const convertirRecomendacionAHorario = (recomendacionSet, tipoSet) => {
     const horarioConvertido = [];
 
-    recomendacionSet.forEach(recomendacion => {
+    // Verificar si recomendacionSet tiene la propiedad 'recomendaciones'
+    const recomendaciones = recomendacionSet.recomendaciones || recomendacionSet;
+    
+    recomendaciones.forEach(recomendacion => {
       recomendacion.bloques.forEach(bloque => {
         horarioConvertido.push({
           dia: diaMapping[bloque.dia] || bloque.dia,
@@ -693,7 +698,12 @@ export default function Horario() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {Object.entries(recomendaciones.setsRecomendaciones).map(([tipo, asignaturas]) => (
+                    {Object.entries(recomendaciones.setsRecomendaciones).map(([tipo, setData]) => {
+                      // Obtener las recomendaciones del nuevo formato
+                      const asignaturas = setData.recomendaciones || setData;
+                      const detalles = setData.detalles || {};
+                      
+                      return (
                       <div
                         key={tipo}
                         className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.tipo === tipo
@@ -706,9 +716,23 @@ export default function Horario() {
                           <h3 className="font-bold text-green-900 text-sm">{obtenerNombreTipo(tipo)}</h3>
                           <p className="text-gray-600 text-xs">{obtenerDescripcionTipo(tipo)}</p>
                           <div className="text-xs text-gray-500">
-                            <p>📚 {asignaturas.length} asignaturas</p>
-                            <p>�‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesores</p>
-                            {/* <p>⭐ Promedio: {asignaturas.length > 0 ? (asignaturas.reduce((sum, a) => sum + parseFloat(a.puntaje), 0) / asignaturas.length).toFixed(1) : '0'}</p> */}
+                            <p>📚 {asignaturas.length} asignatura{asignaturas.length !== 1 ? 's' : ''}</p>
+                            <p>👨‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesor{[...new Set(asignaturas.map(a => a.profesor))].length !== 1 ? 'es' : ''}</p>
+                            {detalles.porcentajeAprobacionPromedio && (
+                              <p>📈 Aprobación: {parseFloat(detalles.porcentajeAprobacionPromedio).toFixed(1)}%</p>
+                            )}
+                            {detalles.evaluacionDocentePromedio && (
+                              <p>⭐ Evaluación: {parseFloat(detalles.evaluacionDocentePromedio).toFixed(1)}/7.0</p>
+                            )}
+                            {detalles.promedioFinal && (
+                              <p>�� Promedio: {parseFloat(detalles.promedioFinal).toFixed(1)}</p>
+                            )}
+                            {detalles.totalBloques && (
+                              <p>🕒 Bloques: {detalles.totalBloques}</p>
+                            )}
+                            {detalles.totalCreditos && (
+                              <p>🎓 Créditos: {detalles.totalCreditos}</p>
+                            )}
                           </div>
                           {horarioSeleccionado?.tipo === tipo && (
                             <div className="flex items-center text-green-600 text-xs font-medium">
@@ -718,7 +742,8 @@ export default function Horario() {
                           )}
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {horarioSeleccionado && (
@@ -1084,3 +1109,4 @@ export default function Horario() {
     </PagGeneral >
   );
 }
+
