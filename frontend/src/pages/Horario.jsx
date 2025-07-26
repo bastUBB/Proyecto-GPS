@@ -231,7 +231,7 @@ export default function Horario() {
 
     // Verificar si recomendacionSet tiene la propiedad 'recomendaciones'
     const recomendaciones = recomendacionSet.recomendaciones || recomendacionSet;
-    
+
     recomendaciones.forEach(recomendacion => {
       recomendacion.bloques.forEach(bloque => {
         horarioConvertido.push({
@@ -316,8 +316,8 @@ export default function Horario() {
       newErrors.horaFin = 'La hora de fin debe ser posterior a la hora de inicio';
     }
 
-    // Verificar conflictos de horario
-    const tieneConflicto = horarios.some(horario => {
+    // Verificar conflictos de horario - ahora permitir superposición pero advertir
+    const clasesConflicto = horarios.filter(horario => {
       if (horario.dia !== form.dia) return false;
 
       const horarioInicioIndex = hours.indexOf(horario.horaInicio);
@@ -327,12 +327,16 @@ export default function Horario() {
       return !(finIndex <= horarioInicioIndex || inicioIndex >= horarioFinIndex);
     });
 
-    if (tieneConflicto) {
-      newErrors.dia = 'Ya existe una clase en ese horario. Por favor selecciona otro horario.';
+    if (clasesConflicto.length > 0) {
+      // En lugar de error, mostrar advertencia informativa
+      const asignaturasConflicto = clasesConflicto.map(h => h.asignatura).join(', ');
+      newErrors.dia = `ℹ️ Se superpone con: ${asignaturasConflicto}. Las clases se mostrarán juntas.`;
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    // Solo bloquear si hay errores reales (no advertencias informativas)
+    const erroresReales = Object.entries(newErrors).filter(([key, value]) => !value.startsWith('ℹ️'));
+    return erroresReales.length === 0;
   };
 
   const agregarHorario = async (e) => {
@@ -527,8 +531,8 @@ export default function Horario() {
       );
     }
 
-    // Buscar si hay una clase que comience en esta hora
-    const claseInicia = horarios.find(
+    // Buscar todas las clases que comienzan en esta hora
+    const clasesInician = horarios.filter(
       (h) => h.dia === dia && h.horaInicio === hora
     );
 
@@ -541,14 +545,17 @@ export default function Horario() {
       return inicioIndex < horaActualIndex && horaActualIndex <= finIndex;
     });
 
-    if (claseInicia) {
+    if (clasesInician.length > 0) {
+      // Usar la primera clase para calcular el rowSpan (asumiendo que todas tienen la misma duración)
+      const claseReferencia = clasesInician[0];
+
       // Calcular cuántas celdas debe abarcar esta clase dentro de las horas visibles
-      const inicioIndex = hours.indexOf(claseInicia.horaInicio);
-      const finIndex = hours.indexOf(claseInicia.horaFin);
+      const inicioIndex = hours.indexOf(claseReferencia.horaInicio);
+      const finIndex = hours.indexOf(claseReferencia.horaFin);
 
       // En las horas visibles, contar desde inicio hasta fin (inclusivo)
-      const inicioIndexVisible = horasVisibles.indexOf(claseInicia.horaInicio);
-      let finIndexVisible = horasVisibles.indexOf(claseInicia.horaFin);
+      const inicioIndexVisible = horasVisibles.indexOf(claseReferencia.horaInicio);
+      let finIndexVisible = horasVisibles.indexOf(claseReferencia.horaFin);
 
       // Si la hora de fin no está visible, usar la última hora visible
       if (finIndexVisible === -1) {
@@ -558,40 +565,66 @@ export default function Horario() {
       // El rowSpan incluye la hora de fin (+1 para incluir la hora final)
       const rowSpan = finIndexVisible - inicioIndexVisible + 1;
 
-      // Obtener colores para esta asignatura
-      const colores = obtenerColorAsignatura(claseInicia.asignatura);
+      // Si hay múltiples clases, usar un color mixto o degradado
+      let colorClase;
+      if (clasesInician.length === 1) {
+        colorClase = obtenerColorAsignatura(clasesInician[0].asignatura);
+      } else {
+        // Para múltiples clases, usar un color neutro pero distintivo
+        colorClase = {
+          bg: "from-gray-200 to-gray-100",
+          text: "text-gray-900",
+          border: "border-gray-400",
+          sala: "text-gray-700",
+          hora: "text-gray-600"
+        };
+      }
 
       return (
         <td
           key={key}
           rowSpan={Math.max(1, rowSpan)}
-          className={`px-2 py-2 bg-gradient-to-br ${colores.bg} ${colores.text} text-sm relative group align-top border ${colores.border} shadow-sm`}
+          className={`px-2 py-2 bg-gradient-to-br ${colorClase.bg} ${colorClase.text} text-sm relative group align-top border ${colorClase.border} shadow-sm`}
         >
           <div className="space-y-1 h-full flex flex-col justify-center min-h-[80px]">
-            <p className={`font-semibold ${colores.text} break-words leading-tight text-center`}>{claseInicia.asignatura}</p>
-            <p className={`${colores.sala} text-xs font-medium text-center`}>{claseInicia.sala}</p>
-            <p className={`${colores.hora} text-xs text-center`}>
-              {claseInicia.horaInicio} - {claseInicia.horaFin}
-            </p>
-            {/* Mostrar hora original si fue ajustada */}
-            {(claseInicia.horaOriginalInicio && claseInicia.horaOriginalInicio !== claseInicia.horaInicio) && (
-              <p className={`${colores.hora} text-xs text-center opacity-75 italic`}>
-                Original: {claseInicia.horaOriginalInicio} - {claseInicia.horaOriginalFin}
-              </p>
-            )}
-            {claseInicia.profesor && (
-              <p className={`${colores.hora} text-xs text-center font-medium`}>
-                👨‍🏫 {claseInicia.profesor}
-              </p>
-            )}
+            {clasesInician.map((clase, index) => (
+              <div key={index} className={`${index > 0 ? 'border-t border-gray-300 pt-1 mt-1' : ''}`}>
+                <p className={`font-semibold ${colorClase.text} break-words leading-tight text-center text-xs`}>
+                  {clase.asignatura}
+                </p>
+                <p className={`${colorClase.sala} text-xs font-medium text-center`}>{clase.sala}</p>
+                {index === 0 && (
+                  <p className={`${colorClase.hora} text-xs text-center`}>
+                    {clase.horaInicio} - {clase.horaFin}
+                  </p>
+                )}
+                {/* Mostrar hora original si fue ajustada */}
+                {index === 0 && (clase.horaOriginalInicio && clase.horaOriginalInicio !== clase.horaInicio) && (
+                  <p className={`${colorClase.hora} text-xs text-center opacity-75 italic`}>
+                    Original: {clase.horaOriginalInicio} - {clase.horaOriginalFin}
+                  </p>
+                )}
+                {clase.profesor && (
+                  <p className={`${colorClase.hora} text-xs text-center font-medium`}>
+                    👨‍🏫 {clase.profesor}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
-          <button
-            onClick={() => eliminarHorario(horarios.indexOf(claseInicia))}
-            className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg z-10"
-            title="Eliminar"
-          >
-            ×
-          </button>
+          {/* Botones de eliminar para cada clase */}
+          <div className="absolute top-1 right-1 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+            {clasesInician.map((clase, index) => (
+              <button
+                key={index}
+                onClick={() => eliminarHorario(horarios.indexOf(clase))}
+                className="bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs shadow-lg z-10"
+                title={`Eliminar ${clase.asignatura}`}
+              >
+                ×
+              </button>
+            ))}
+          </div>
         </td>
       );
     } else if (claseActiva) {
@@ -638,25 +671,17 @@ export default function Horario() {
               {/* Botón para cargar recomendaciones */}
               <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
                 <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
-                  <h2 className="text-base sm:text-lg font-semibold">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                     Recomendaciones de Horarios Inteligentes
+                    <HelpTooltip>
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Obtén recomendaciones personalizadas basadas en el rendimiento y evaluación de profesores. Si no observas recomendaciones asegúrate de haber seleccionado tus asignaturas aprobadas en la malla y presiona el botón "Generar recomendaciones"
+                      </p>
+                    </HelpTooltip>
                   </h2>
                   <p className="text-blue-100 text-sm mt-1">
-                    Obtén recomendaciones personalizadas basadas en el rendimiento y evaluación de profesores
                   </p>
-                </div>
-
-                <div className="text-center mb-4">
-                  <button
-                    onClick={cargarRecomendaciones}
-                    disabled={loading}
-                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${loading
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl'
-                      }`}
-                  >
-                    {loading ? 'Cargando...' : 'Generar Recomendaciones'}
-                  </button>
                 </div>
 
                 {/* Mostrar información del estudiante si hay recomendaciones */}
@@ -683,18 +708,34 @@ export default function Horario() {
                     </div>
                   </div>
                 )}
+
+                <div className="text-center mb-4">
+                  <button
+                    onClick={cargarRecomendaciones}
+                    disabled={loading}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${loading
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl'
+                      }`}
+                  >
+                    {loading ? 'Cargando...' : 'Generar Recomendaciones'}
+                  </button>
+                </div>
               </div>
 
               {/* Sección de Recomendaciones */}
               {recomendaciones && (
                 <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
                   <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
-                    <h2 className="text-base sm:text-lg font-semibold">
+                    <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                       Tipos de Recomendaciones
+                      <HelpTooltip>
+                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                        <p className="text-gray-600 text-xs">
+                          Aquí puedes seleccionar una combinación horaria que mas te interese, ademas de agregar una clase manual o descargar un pdf, recuerda guardar las inscripciones para tener un seguimiento general de las inscripciones"
+                        </p>
+                      </HelpTooltip>
                     </h2>
-                    <p className="text-purple-100 text-sm mt-1">
-                      Selecciona el tipo de recomendación que prefieras
-                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -702,46 +743,46 @@ export default function Horario() {
                       // Obtener las recomendaciones del nuevo formato
                       const asignaturas = setData.recomendaciones || setData;
                       const detalles = setData.detalles || {};
-                      
+
                       return (
-                      <div
-                        key={tipo}
-                        className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.tipo === tipo
-                          ? 'border-green-500 bg-green-50 shadow-md'
-                          : 'border-gray-200 bg-gray-50 hover:border-green-300'
-                          }`}
-                        onClick={() => seleccionarHorario(tipo)}
-                      >
-                        <div className="space-y-2">
-                          <h3 className="font-bold text-green-900 text-sm">{obtenerNombreTipo(tipo)}</h3>
-                          <p className="text-gray-600 text-xs">{obtenerDescripcionTipo(tipo)}</p>
-                          <div className="text-xs text-gray-500">
-                            <p>📚 {asignaturas.length} asignatura{asignaturas.length !== 1 ? 's' : ''}</p>
-                            <p>👨‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesor{[...new Set(asignaturas.map(a => a.profesor))].length !== 1 ? 'es' : ''}</p>
-                            {detalles.porcentajeAprobacionPromedio && (
-                              <p>📈 Aprobación: {parseFloat(detalles.porcentajeAprobacionPromedio).toFixed(1)}%</p>
-                            )}
-                            {detalles.evaluacionDocentePromedio && (
-                              <p>⭐ Evaluación: {parseFloat(detalles.evaluacionDocentePromedio).toFixed(1)}/7.0</p>
-                            )}
-                            {detalles.promedioFinal && (
-                              <p>�� Promedio: {parseFloat(detalles.promedioFinal).toFixed(1)}</p>
-                            )}
-                            {detalles.totalBloques && (
-                              <p>🕒 Bloques: {detalles.totalBloques}</p>
-                            )}
-                            {detalles.totalCreditos && (
-                              <p>🎓 Créditos: {detalles.totalCreditos}</p>
+                        <div
+                          key={tipo}
+                          className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.tipo === tipo
+                            ? 'border-green-500 bg-green-50 shadow-md'
+                            : 'border-gray-200 bg-gray-50 hover:border-green-300'
+                            }`}
+                          onClick={() => seleccionarHorario(tipo)}
+                        >
+                          <div className="space-y-2">
+                            <h3 className="font-bold text-green-900 text-sm">{obtenerNombreTipo(tipo)}</h3>
+                            <p className="text-gray-600 text-xs">{obtenerDescripcionTipo(tipo)}</p>
+                            <div className="text-xs text-gray-500">
+                              <p>📚 {asignaturas.length} asignaturas</p>
+                              <p>👨‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesores</p>
+                              {detalles.porcentajeAprobacionPromedio && (
+                                <p>📈 Aprobación: {parseFloat(detalles.porcentajeAprobacionPromedio).toFixed(1)}%</p>
+                              )}
+                              {detalles.evaluacionDocentePromedio && (
+                                <p>⭐ Evaluación: {parseFloat(detalles.evaluacionDocentePromedio).toFixed(1)}/7.0</p>
+                              )}
+                              {detalles.promedioFinal && (
+                                <p>📊 Promedio: {parseFloat(detalles.promedioFinal).toFixed(1)}</p>
+                              )}
+                              {detalles.totalBloques && (
+                                <p>🕒 Bloques: {detalles.totalBloques}</p>
+                              )}
+                              {detalles.totalCreditos && (
+                                <p>🎓 Créditos: {detalles.totalCreditos}</p>
+                              )}
+                            </div>
+                            {horarioSeleccionado?.tipo === tipo && (
+                              <div className="flex items-center text-green-600 text-xs font-medium">
+                                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                Seleccionado
+                              </div>
                             )}
                           </div>
-                          {horarioSeleccionado?.tipo === tipo && (
-                            <div className="flex items-center text-green-600 text-xs font-medium">
-                              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                              Seleccionado
-                            </div>
-                          )}
                         </div>
-                      </div>
                       );
                     })}
                   </div>
@@ -781,6 +822,15 @@ export default function Horario() {
                             )}
                           </button>
                           <button
+                            onClick={() => setMostrarPopup(true)}
+                            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Agregar Clase Manual
+                          </button>
+                          <button
                             onClick={descargarHorario}
                             className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
                           >
@@ -813,7 +863,7 @@ export default function Horario() {
             </div>
 
             {/* Botones de acción */}
-            {horarios.length > 0 && (
+            {/* {horarios.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-2 justify-center">
                 <button
                   onClick={descargarHorario}
@@ -848,17 +898,9 @@ export default function Horario() {
                     </>
                   )}
                 </button>
-                <button
-                  onClick={() => setMostrarPopup(true)}
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Agregar Clase Manual
-                </button>
+
               </div>
-            )}
+            )} */}
 
             <div className="p-4 sm:p-6 overflow-x-auto" ref={horarioRef}>
               <table className="w-full min-w-[600px] border-collapse border border-gray-300 table-fixed">
@@ -976,14 +1018,16 @@ export default function Horario() {
                       name="dia"
                       value={form.dia}
                       onChange={handleChange}
-                      className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.dia ? 'border-red-300' : 'border-gray-300'}`}
+                      className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.dia ? (errors.dia.startsWith('ℹ️') ? 'border-blue-300' : 'border-red-300') : 'border-gray-300'
+                        }`}
                     >
                       {days.map((d) => (
                         <option key={d} value={d}>{d}</option>
                       ))}
                     </select>
                     {errors.dia && (
-                      <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <p className={`text-sm mt-1 flex items-center gap-1 ${errors.dia.startsWith('ℹ️') ? 'text-blue-600' : 'text-red-600'
+                        }`}>
                         <AlertCircle className="w-4 h-4" />
                         {errors.dia}
                       </p>
@@ -1109,4 +1153,3 @@ export default function Horario() {
     </PagGeneral >
   );
 }
-
