@@ -489,7 +489,7 @@ export async function crearInscripcionService(inscripcionData) {
             semestre: inscripcionData.semestre,
             año: inscripcionData.año,
             bloques: inscripcionData.bloques,
-            cupo: inscripcionData.cupo,
+            cupo: inscripcionData.cupo || 40, 
             inscritos: inscritos
         });
 
@@ -591,6 +591,55 @@ export async function deleteInscripcionService(dataInscripcion) {
     } catch (error) {
         console.error('Error al eliminar inscripción:', error);
         return [null, 'Error al eliminar inscripción'];
+    }
+}
+
+export async function getInscripcionesPorEstudianteService(rutEstudiante) {
+    try {
+        const inscripciones = await Inscripcion.find({
+            rutAlumnos: { $in: [rutEstudiante] }
+        });
+
+        if (!inscripciones || inscripciones.length === 0) {
+            return [[], null];
+        }
+
+        return [inscripciones, null];
+    } catch (error) {
+        console.error('Error al obtener inscripciones del estudiante:', error);
+        return [null, 'Error al obtener inscripciones del estudiante'];
+    }
+}
+
+export async function eliminarTodasInscripcionesEstudianteService(rutEstudiante) {
+    try {
+        // Buscar todas las inscripciones donde el estudiante esté inscrito
+        const inscripciones = await Inscripcion.find({
+            rutAlumnos: { $in: [rutEstudiante] }
+        });
+
+        if (!inscripciones || inscripciones.length === 0) {
+            return [[], null];
+        }
+
+        const resultados = [];
+
+        for (const inscripcion of inscripciones) {
+            // Eliminar el RUT del estudiante del array rutAlumnos
+            const rutAlumnosActualizado = inscripcion.rutAlumnos.filter(rut => rut !== rutEstudiante);
+            
+            // Actualizar el número de inscritos
+            inscripcion.rutAlumnos = rutAlumnosActualizado;
+            inscripcion.inscritos = rutAlumnosActualizado.length;
+
+            await inscripcion.save();
+            resultados.push(inscripcion);
+        }
+
+        return [resultados, null];
+    } catch (error) {
+        console.error('Error al eliminar inscripciones del estudiante:', error);
+        return [null, 'Error al eliminar inscripciones del estudiante'];
     }
 }
 
