@@ -222,95 +222,9 @@ export default function SugerenciaHorarios() {
         datos, // <-- aquí va el arreglo correcto
         getAuthConfig()
       );
-
-      // Filtrar solo profesores que tienen asignaturas con horas configuradas
-      const profesoresConAsignaturas = profesoresConDatos.filter(p => p.asignaturas.length > 0);
-
-      if (profesoresConAsignaturas.length === 0) {
-        setMensaje('No hay profesores con asignaturas y horas configuradas para generar la combinación');
-        return;
-      }
-
-      // Generar horarios para cada profesor basado en sus horas configuradas
-      const combinacionGenerada = profesoresConAsignaturas.map(profesor => {
-        const horarios = [];
-
-        profesor.asignaturas.forEach(asignatura => {
-          const horasSemanales = asignatura.horasSemanales || 4;
-          const bloquesNecesarios = Math.ceil(horasSemanales / 2); // Cada bloque ≈ 2 horas
-
-          // Convertir disponibilidad a formato de mapa
-          const disponibilidadMapa = {};
-          profesor.disponibilidad.forEach(bloque => {
-            const key = `${bloque.dia}-${bloque.horaInicio}`;
-            disponibilidadMapa[key] = true;
-          });
-
-          let bloquesAsignados = 0;
-          const diasUsados = new Set();
-          let intentos = 0;
-          const maxIntentos = 50;
-
-          while (bloquesAsignados < bloquesNecesarios && intentos < maxIntentos) {
-            intentos++;
-
-            // Buscar días disponibles
-            const diasDisponibles = diasSemana.filter(dia => {
-              return Object.keys(disponibilidadMapa).some(key =>
-                key.startsWith(dia) && disponibilidadMapa[key]
-              );
-            });
-
-            if (diasDisponibles.length === 0) break;
-
-            const diaAleatorio = diasDisponibles[Math.floor(Math.random() * diasDisponibles.length)];
-
-            // Buscar horas disponibles en ese día
-            const horasDelDia = horasDisponibles.filter(hora =>
-              disponibilidadMapa[`${diaAleatorio}-${hora}`]
-            );
-
-            if (horasDelDia.length >= 2) { // Mínimo 2 horas consecutivas
-              const horaInicio = horasDelDia[Math.floor(Math.random() * (horasDelDia.length - 1))];
-              const horaInicioIndex = horasDisponibles.indexOf(horaInicio);
-              const horaFin = horasDisponibles[horaInicioIndex + 1];
-
-              // Verificar que no haya conflictos con otros horarios del mismo profesor
-              const existeConflicto = horarios.some(h =>
-                h.dia === diaAleatorio &&
-                ((h.horaInicio <= horaInicio && h.horaFin > horaInicio) ||
-                  (horaInicio <= h.horaInicio && horaFin > h.horaInicio))
-              );
-
-              if (!existeConflicto) {
-                horarios.push({
-                  asignatura: asignatura.nombreAsignatura || asignatura.nombre,
-                  codigo: asignatura.codigo,
-                  dia: diaAleatorio,
-                  horaInicio,
-                  horaFin,
-                  tipo: 'TEO', // Tipo por defecto
-                  sala: `Sala ${Math.floor(Math.random() * 20) + 1}`,
-                  color: coloresAsignaturas[asignatura.codigo] || '#3B82F6'
-                });
-
-                diasUsados.add(diaAleatorio);
-                bloquesAsignados++;
-              }
-            }
-          }
-        });
-
-        return {
-          profesorId: profesor._id,
-          nombreProfesor: profesor.nombreCompleto || `${profesor.nombres} ${profesor.apellidos}`,
-          horarios
-        };
-      });
-
-      setCombinacionGlobal(combinacionGenerada);
-      setMensaje(`Recomendación generada exitosamente para ${combinacionGenerada.length} profesores`);
-
+      
+      setCombinacionGlobal(response.data?.data || []);
+      setMensaje(`Recomendación generada exitosamente `);
     } catch (error) {
       console.error('Error al generar combinación global:', error);
       setMensaje(error.response?.data?.message || 'Error al generar la recomendación');
