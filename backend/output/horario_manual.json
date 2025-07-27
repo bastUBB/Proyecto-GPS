@@ -210,7 +210,7 @@
     "nombre": "Ondas, Óptica y Física Moderna",
     "codigo": "230035",
     "creditos": 6,
-    "prerrequisitos": ["Electro-magnetismo", "Ecuaciones Diferenciales"],
+    "prerrequisitos": ["Electromagnetismo", "Ecuaciones Diferenciales"],
     "semestre": 5,
     "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
     "area": "Área Ciencias Básicas"
@@ -219,7 +219,7 @@
     "nombre": "Sistemas Digitales",
     "codigo": "410268",
     "creditos": 5,
-    "prerrequisitos": ["Electro-magnetismo"],
+    "prerrequisitos": ["Electromagnetismo"],
     "semestre": 5,
     "ambito": "Ámbito Ciencias Básicas y de la Ingeniería",
     "area": "Área Ciencias de la Ingeniería"
