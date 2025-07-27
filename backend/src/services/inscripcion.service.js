@@ -229,33 +229,87 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
 
         // console.log("Datos válidos:", JSON.stringify(datosValidos, null, 2));
 
-        // 7. Crear 3 sets de recomendaciones
-        
-        // Set 1: Excelencia Académica (priorizar % aprobación)
-        const excelenciaAcademica = [];
-        const procesadosExcelencia = new Set();
-        const datosExcelencia = [];
-        
-        datosValidos
-            .sort((a, b) => b.promedioAprobacion - a.promedioAprobacion)
-            .forEach(d => {
-                const claveAsignatura = d.asignatura;
-                if (!procesadosExcelencia.has(claveAsignatura) && excelenciaAcademica.length < 10) {
-                    excelenciaAcademica.push({
-                        asignatura: d.asignatura,
-                        profesor: d.profesor,
-                        seccion: d.seccion,
-                        bloques: d.bloques,
-                        cupos: d.cupos,
-                        razon: `Alto rendimiento: ${d.promedioAprobacion.toFixed(1)}% aprobación`,
-                        puntaje: d.puntaje.toFixed(1),
-                        tipo: 'Excelencia Académica'
-                    });
-                    datosExcelencia.push(d);
-                    procesadosExcelencia.add(claveAsignatura);
+        // 7. Función para detectar solapamiento de horarios
+        function detectarSolapamiento(bloques1, bloques2) {
+            if (!bloques1 || !bloques2 || !Array.isArray(bloques1) || !Array.isArray(bloques2)) {
+                return false;
+            }
+
+            for (const bloque1 of bloques1) {
+                for (const bloque2 of bloques2) {
+                    // Verificar si es el mismo día
+                    if (bloque1.dia === bloque2.dia) {
+                        // Convertir horas a minutos para comparación más fácil
+                        const inicio1 = convertirHoraAMinutos(bloque1.horaInicio);
+                        const fin1 = convertirHoraAMinutos(bloque1.horaFin);
+                        const inicio2 = convertirHoraAMinutos(bloque2.horaInicio);
+                        const fin2 = convertirHoraAMinutos(bloque2.horaFin);
+
+                        // Verificar solapamiento: A se solapa con B si inicio1 < fin2 && inicio2 < fin1
+                        if (inicio1 < fin2 && inicio2 < fin1) {
+                            return true;
+                        }
+                    }
                 }
-            });
-        
+            }
+            return false;
+        }
+
+        function convertirHoraAMinutos(hora) {
+            if (!hora || typeof hora !== 'string') return 0;
+            const [horas, minutos] = hora.split(':').map(Number);
+            return horas * 60 + minutos;
+        }
+
+        // Función para seleccionar recomendaciones sin solapamiento
+        function seleccionarSinSolapamiento(datosSorted, maxRecomendaciones = 10) {
+            const seleccionadas = [];
+            const procesados = new Set();
+
+            for (const dato of datosSorted) {
+                const claveAsignatura = dato.asignatura;
+
+                // Verificar si ya procesamos esta asignatura
+                if (procesados.has(claveAsignatura)) continue;
+
+                // Verificar si hay solapamiento con asignaturas ya seleccionadas
+                let haySolapamiento = false;
+                for (const seleccionada of seleccionadas) {
+                    if (detectarSolapamiento(dato.bloques, seleccionada.bloques)) {
+                        haySolapamiento = true;
+                        break;
+                    }
+                }
+
+                // Si no hay solapamiento y no hemos alcanzado el máximo, agregar
+                if (!haySolapamiento && seleccionadas.length < maxRecomendaciones) {
+                    seleccionadas.push(dato);
+                    procesados.add(claveAsignatura);
+                }
+            }
+
+            return seleccionadas;
+        }
+
+        // 8. Crear 3 sets de recomendaciones
+
+        // Set 1: Excelencia Académica (priorizar % aprobación)
+        const datosExcelenciaOrdenados = datosValidos
+            .sort((a, b) => b.promedioAprobacion - a.promedioAprobacion);
+
+        const datosExcelencia = seleccionarSinSolapamiento(datosExcelenciaOrdenados, 10);
+
+        const excelenciaAcademica = datosExcelencia.map(d => ({
+            asignatura: d.asignatura,
+            profesor: d.profesor,
+            seccion: d.seccion,
+            bloques: d.bloques,
+            cupos: d.cupos,
+            razon: `Alto rendimiento: ${d.promedioAprobacion.toFixed(1)}% aprobación`,
+            puntaje: d.puntaje.toFixed(1),
+            tipo: 'Excelencia Académica'
+        }));
+
         // Calcular detalles generales para Excelencia Académica
         const detallesExcelencia = datosExcelencia.length > 0 ? {
             porcentajeAprobacionPromedio: (datosExcelencia.reduce((sum, d) => sum + d.promedioAprobacion, 0) / datosExcelencia.length).toFixed(1),
@@ -270,29 +324,21 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
         // console.log("Excelencia Académica:", JSON.stringify(excelenciaAcademica, null, 2));
 
         // Set 2: Equilibrado (balance entre rendimiento y evaluación)
-        const equilibrado = [];
-        const procesadosEquilibrado = new Set();
-        const datosEquilibrado = [];
-        
-        datosValidos
-            .sort((a, b) => b.puntaje - a.puntaje)
-            .forEach(d => {
-                const claveAsignatura = d.asignatura;
-                if (!procesadosEquilibrado.has(claveAsignatura) && equilibrado.length < 10) {
-                    equilibrado.push({
-                        asignatura: d.asignatura,
-                        profesor: d.profesor,
-                        seccion: d.seccion,
-                        bloques: d.bloques,
-                        cupos: d.cupos,
-                        razon: `Balance óptimo: ${d.promedioAprobacion.toFixed(1)}% aprob. + ${d.promedioEvaluacion.toFixed(1)} eval.`,
-                        puntaje: d.puntaje.toFixed(1),
-                        tipo: 'Equilibrado'
-                    });
-                    datosEquilibrado.push(d);
-                    procesadosEquilibrado.add(claveAsignatura);
-                }
-            });
+        const datosEquilibradoOrdenados = datosValidos
+            .sort((a, b) => b.puntaje - a.puntaje);
+
+        const datosEquilibrado = seleccionarSinSolapamiento(datosEquilibradoOrdenados, 10);
+
+        const equilibrado = datosEquilibrado.map(d => ({
+            asignatura: d.asignatura,
+            profesor: d.profesor,
+            seccion: d.seccion,
+            bloques: d.bloques,
+            cupos: d.cupos,
+            razon: `Balance óptimo: ${d.promedioAprobacion.toFixed(1)}% aprob. + ${d.promedioEvaluacion.toFixed(1)} eval.`,
+            puntaje: d.puntaje.toFixed(1),
+            tipo: 'Equilibrado'
+        }));
 
         // Calcular detalles generales para Equilibrado
         const detallesEquilibrado = datosEquilibrado.length > 0 ? {
@@ -311,24 +357,20 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
         // Set 3: Mejor Evaluado (priorizar evaluación docente)
         const datosEvaluacionOrdenados = datosValidos
             .filter(d => d.promedioEvaluacion > 0)
-            .sort((a, b) => b.promedioEvaluacion - a.promedioEvaluacion)
-            .forEach(d => {
-                const claveAsignatura = d.asignatura;
-                if (!procesadosEvaluacion.has(claveAsignatura) && evaluacionDocente.length < 10) {
-                    evaluacionDocente.push({
-                        asignatura: d.asignatura,
-                        profesor: d.profesor,
-                        seccion: d.seccion,
-                        bloques: d.bloques,
-                        cupos: d.cupos,
-                        razon: `Excelente evaluación: ${d.promedioEvaluacion.toFixed(1)}/7.0`,
-                        puntaje: d.puntaje.toFixed(1),
-                        tipo: 'Mejor Evaluado'
-                    });
-                    datosEvaluacion.push(d);
-                    procesadosEvaluacion.add(claveAsignatura);
-                }
-            });
+            .sort((a, b) => b.promedioEvaluacion - a.promedioEvaluacion);
+
+        const datosEvaluacion = seleccionarSinSolapamiento(datosEvaluacionOrdenados, 10);
+
+        const evaluacionDocente = datosEvaluacion.map(d => ({
+            asignatura: d.asignatura,
+            profesor: d.profesor,
+            seccion: d.seccion,
+            bloques: d.bloques,
+            cupos: d.cupos,
+            razon: `Excelente evaluación: ${d.promedioEvaluacion.toFixed(1)}/7.0`,
+            puntaje: d.puntaje.toFixed(1),
+            tipo: 'Mejor Evaluado'
+        }));
 
         // Calcular detalles generales para Mejor Evaluado
         const detallesEvaluacion = datosEvaluacion.length > 0 ? {
@@ -395,7 +437,7 @@ export async function crearInscripcionService(inscripcionData) {
     try {
         const { profesor, rutParaEnviar, asignatura } = inscripcionData;
 
-        console.log("Datos de inscripción (Service):", inscripcionData); 
+        console.log("Datos de inscripción (Service):", inscripcionData);
 
         const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
 
@@ -552,7 +594,7 @@ export async function deleteInscripcionService(dataInscripcion) {
     }
 }
 
-export async function updateInscripcionService(dataInscripcion){
+export async function updateInscripcionService(dataInscripcion) {
     try {
 
     } catch (error) {
