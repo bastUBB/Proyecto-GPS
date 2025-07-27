@@ -204,15 +204,15 @@ export default function SugerenciaHorarios() {
     setMensaje('');
     setCombinacionGlobal(null);
 
-  const datos = profesores.map(profesor => ({
-    profesorId: profesor._id,
-    asignaturas: (profesor.asignaturasImpartidas || [])
-      .filter(asig => asig.horasSemanales > 0)
-      .map(asig => ({
-        codigo: asig.codigo,
-        horasSemanales: asig.horasSemanales
-      }))
-  })).filter(p => p.asignaturas.length > 0);
+    const datos = profesores.map(profesor => ({
+      profesorId: profesor._id,
+      asignaturas: (profesor.asignaturasImpartidas || [])
+        .filter(asig => asig.horasSemanales > 0)
+        .map(asig => ({
+          codigo: asig.codigo,
+          horasSemanales: asig.horasSemanales
+        }))
+    })).filter(p => p.asignaturas.length > 0);
 
     console.log('Datos a enviar para generar combinación global:', datos);
 
@@ -222,8 +222,6 @@ export default function SugerenciaHorarios() {
         datos, // <-- aquí va el arreglo correcto
         getAuthConfig()
       );
-      
-
       
       setCombinacionGlobal(response.data?.data || []);
       setMensaje(`Recomendación generada exitosamente `);
@@ -346,10 +344,10 @@ export default function SugerenciaHorarios() {
     try {
       setLoading(true);
       setMensaje('');
-      
+
       // Usar el nuevo endpoint específico para asignaturas disponibles
       const response = await axios.get('http://localhost:5500/api/combi/asignaturas-disponibles', getAuthConfig());
-      
+
       if (response.data && response.data.data) {
         // Formatear las asignaturas para el modal
         const asignaturasFormateadas = response.data.data.map(asignatura => ({
@@ -359,7 +357,7 @@ export default function SugerenciaHorarios() {
           semestre: asignatura.semestre,
           _id: asignatura._id
         }));
-        
+
         setAsignaturasDisponibles(asignaturasFormateadas);
         console.log('Asignaturas cargadas desde la base de datos:', asignaturasFormateadas);
       } else {
@@ -369,7 +367,7 @@ export default function SugerenciaHorarios() {
       }
     } catch (error) {
       console.error('Error al cargar asignaturas:', error);
-      
+
       if (error.response?.status === 404) {
         setMensaje('No hay asignaturas registradas en el sistema');
         setAsignaturasDisponibles([]);
@@ -377,7 +375,7 @@ export default function SugerenciaHorarios() {
         setMensaje('No tienes autorización para ver las asignaturas');
       } else {
         setMensaje('Error al cargar las asignaturas desde la base de datos');
-        
+
         // Fallback: usar datos simulados solo si es necesario
         const asignaturasSimuladas = [
           { codigo: '620431', nombre: 'INTRODUCCIÓN A LA PROGRAMACIÓN' },
@@ -401,7 +399,7 @@ export default function SugerenciaHorarios() {
       const response = await axios.get(`/api/combi/profesor/${user.id || user._id}/asignaturas`,
         getAuthConfig()
       );
-      
+
       if (response.data && response.data.data) {
         const asignaturas = response.data.data.asignaturas || [];
         setAsignaturasProfesor(asignaturas);
@@ -409,7 +407,7 @@ export default function SugerenciaHorarios() {
         const conHoras = asignaturas.filter(a => a.horasSemanales);
         const sinHoras = asignaturas.filter(a => !a.horasSemanales);
         setAsignaturasConHoras(conHoras);
-        
+
         // Si hay asignaturas sin horas, mostrar modal para configurarlas
         if (sinHoras.length > 0) {
           setAsignaturaParaHoras(sinHoras[0]);
@@ -443,14 +441,14 @@ export default function SugerenciaHorarios() {
         setAsignaturasProfesor(asignaturasConHorasExistentes);
         setMensaje('Asignaturas guardadas exitosamente');
         setModalAsignaturas(false);
-        
+
         // Verificar si hay asignaturas nuevas sin horas configuradas
         const sinHoras = asignaturasConHorasExistentes.filter(a => !a.horasSemanales);
         if (sinHoras.length > 0) {
           setAsignaturaParaHoras(sinHoras[0]);
           setModalHorasAsignatura(true);
         }
-        
+
         setTimeout(() => setMensaje(''), 3000);
       }
     } catch (error) {
@@ -465,9 +463,9 @@ export default function SugerenciaHorarios() {
   const guardarHorasAsignatura = async (asignaturaId, horasSemanales) => {
     try {
       setLoading(true);
-      
+
       // Actualizar la asignatura con las horas configuradas
-      const asignaturasActualizadas = asignaturasProfesor.map(asig => 
+      const asignaturasActualizadas = asignaturasProfesor.map(asig =>
         asig._id === asignaturaId ? { ...asig, horasSemanales } : asig
       );
 
@@ -480,18 +478,18 @@ export default function SugerenciaHorarios() {
 
       if (response.data) {
         setAsignaturasProfesor(asignaturasActualizadas);
-        
+
         // Actualizar asignaturasConHoras
         const asignaturaActualizada = asignaturasActualizadas.find(a => a._id === asignaturaId);
         setAsignaturasConHoras(prev => {
           const filtered = prev.filter(a => a._id !== asignaturaId);
           return [...filtered, asignaturaActualizada];
         });
-        
+
         setMensaje(`Horas configuradas para ${asignaturaParaHoras.nombreAsignatura}`);
         setModalHorasAsignatura(false);
         setAsignaturaParaHoras(null);
-        
+
         setTimeout(() => setMensaje(''), 3000);
       }
     } catch (error) {
@@ -506,7 +504,7 @@ export default function SugerenciaHorarios() {
   const aplicarSugerencia = async (sugerencia) => {
     try {
       setLoading(true);
-      
+
       // Para profesores, podríamos guardar la sugerencia en el backend
       if (user?.role === 'profesor') {
         // Aquí podrías implementar la lógica para enviar la sugerencia al backend
@@ -518,7 +516,7 @@ export default function SugerenciaHorarios() {
         localStorage.setItem("horarioSeleccionado", JSON.stringify(sugerencia.horarios));
         setMensaje(`Horario "${sugerencia.nombre}" aplicado correctamente`);
       }
-      
+
       setTimeout(() => setMensaje(''), 3000);
     } catch (error) {
       console.error('Error al aplicar sugerencia:', error);
@@ -664,10 +662,10 @@ export default function SugerenciaHorarios() {
             {/* Mensajes */}
             {mensaje && (
               <div className={`p-4 rounded-lg text-center ${mensaje.includes('exitosamente') || mensaje.includes('cargado')
-                  ? 'bg-green-100 text-green-700 border border-green-300'
-                  : mensaje.includes('no ha configurado')
-                    ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
-                    : 'bg-red-100 text-red-700 border border-red-300'
+                ? 'bg-green-100 text-green-700 border border-green-300'
+                : mensaje.includes('no ha configurado')
+                  ? 'bg-yellow-100 text-yellow-700 border border-yellow-300'
+                  : 'bg-red-100 text-red-700 border border-red-300'
                 }`}>
                 <div className="flex items-center justify-center gap-2">
                   {mensaje.includes('exitosamente') || mensaje.includes('cargado') ? (
@@ -696,21 +694,24 @@ export default function SugerenciaHorarios() {
               >
                 {loading ? 'Generando...' : 'Generar Recomendación de Horarios'}
               </button>
-            </div>  
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Lista de profesores */}
-              <div className="bg-white rounded-lg shadow-lg border border-blue-200">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-t-lg">
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
                   <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                     </svg>
                     Lista de Profesores ({profesores.length})
+                    <HelpTooltip className="text-white hover:text-yellow-300">
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Elige un profesor para ver su disponibilidad horaria, asignarle horas de clases por semana para cada asignatura y genera las sugerencias para estos profesores.
+                      </p>
+                    </HelpTooltip>
                   </h2>
-                  <p className="text-blue-100 text-xs sm:text-sm mt-1">
-                    Selecciona un profesor para ver su disponibilidad
-                  </p>
                 </div>
 
                 <div className="p-4 sm:p-6 max-h-96 overflow-y-auto">
@@ -733,8 +734,8 @@ export default function SugerenciaHorarios() {
                           key={profesor._id}
                           onClick={() => seleccionarProfesor(profesor)}
                           className={`p-3 border rounded-lg cursor-pointer transition-all duration-200 hover:shadow-md ${profesorSeleccionado?._id === profesor._id
-                              ? 'bg-blue-50 border-blue-500 shadow-md'
-                              : 'bg-gray-50 border-gray-200 hover:bg-blue-50'
+                            ? 'bg-blue-50 border-blue-500 shadow-md'
+                            : 'bg-gray-50 border-gray-200 hover:bg-blue-50'
                             }`}
                         >
                           <div className="flex items-center justify-between">
@@ -772,19 +773,25 @@ export default function SugerenciaHorarios() {
               </div>
 
               {/* Disponibilidad del profesor seleccionado */}
-              <div className="bg-white rounded-lg shadow-lg border border-blue-200">
-                <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white p-3 sm:p-4 rounded-t-lg">
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
                   <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Disponibilidad Horaria
+                    <HelpTooltip className="text-white hover:text-yellow-300">
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes ver aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Aquí puedes visualizar la disponibilidad de cualquier profesor dentro de la semana.
+                      </p>
+                    </HelpTooltip>
                   </h2>
-                  {profesorSeleccionado && (
+                  {/* {profesorSeleccionado && (
                     <p className="text-cyan-100 text-xs sm:text-sm mt-1">
                       {profesorSeleccionado.nombreCompleto || `${profesorSeleccionado.nombres} ${profesorSeleccionado.apellidos}`}
                     </p>
-                  )}
+                  )} */}
                 </div>
 
                 <div className="p-4 sm:p-6">
@@ -828,8 +835,8 @@ export default function SugerenciaHorarios() {
                                   <td key={key} className="border border-blue-200 p-1">
                                     <div
                                       className={`w-full h-6 rounded transition-colors ${isDisponible
-                                          ? 'bg-green-500'
-                                          : 'bg-gray-200'
+                                        ? 'bg-green-500'
+                                        : 'bg-gray-200'
                                         }`}
                                       title={isDisponible ? 'Disponible' : 'No disponible'}
                                     />
@@ -982,8 +989,8 @@ export default function SugerenciaHorarios() {
                                 onClick={() => toggleDisponibilidad(dia, hora)}
                                 disabled={loading}
                                 className={`w-full h-8 rounded transition-colors ${isDisponible
-                                    ? 'bg-green-500 hover:bg-green-600'
-                                    : 'bg-gray-200 hover:bg-gray-300'
+                                  ? 'bg-green-500 hover:bg-green-600'
+                                  : 'bg-gray-200 hover:bg-gray-300'
                                   } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 title={isDisponible ? 'Disponible' : 'No disponible'}
                               />
@@ -1022,17 +1029,20 @@ export default function SugerenciaHorarios() {
             </div>
 
             {/* Asignaturas del Profesor */}
-            <div className="bg-white rounded-lg shadow-lg border border-blue-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-3 sm:p-4">
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
                 <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                   Mis Asignaturas
+                  <HelpTooltip>
+                    <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+                    <p className="text-gray-600 text-xs">
+                      Aquí debes configurar las asignaturas que vas a impartir este semestre.
+                    </p>
+                  </HelpTooltip>
                 </h2>
-                <p className="text-green-100 text-xs sm:text-sm mt-1">
-                  Configura las asignaturas que impartirás este semestre
-                </p>
               </div>
 
               <div className="p-4 sm:p-6">
@@ -1065,7 +1075,7 @@ export default function SugerenciaHorarios() {
                       <div key={index} className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                         <p className="font-semibold text-blue-900">{asignatura.codigo}</p>
                         <p className="text-blue-700 text-sm mb-3">{asignatura.nombre}</p>
-                        
+
                         {/* Mostrar horas configuradas */}
                         {asignatura.horasSemanales ? (
                           <div className="flex items-center justify-between mb-2">
@@ -1371,20 +1381,18 @@ const ModalAsignaturas = ({ asignaturasDisponibles, asignaturasSeleccionadas, on
                 <div
                   key={asignatura.codigo}
                   onClick={() => toggleAsignatura(asignatura)}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${
-                    isSelected
-                      ? 'bg-green-50 border-green-500 shadow-md'
-                      : 'bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-300'
-                  }`}
+                  className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${isSelected
+                    ? 'bg-green-50 border-green-500 shadow-md'
+                    : 'bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-300'
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-gray-900">{asignatura.codigo}</p>
                       <p className="text-sm text-gray-600">{asignatura.nombre}</p>
                     </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      isSelected ? 'bg-green-500 border-green-500' : 'border-gray-300'
-                    }`}>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'bg-green-500 border-green-500' : 'border-gray-300'
+                      }`}>
                       {isSelected && (
                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -1533,8 +1541,8 @@ function TablaCombinacionGlobal({ combinacion, profesores }) {
           <h4 className="font-semibold text-blue-700 mb-2">
             {
               (profesores.find(p => p._id === prof.profesorId)?.nombreCompleto ||
-              profesores.find(p => p._id === prof.profesorId)?.nombres + ' ' + profesores.find(p => p._id === prof.profesorId)?.apellidos ||
-              prof.profesorId)
+                profesores.find(p => p._id === prof.profesorId)?.nombres + ' ' + profesores.find(p => p._id === prof.profesorId)?.apellidos ||
+                prof.profesorId)
             }
           </h4>
           <table className="w-full border-collapse text-xs mb-4">

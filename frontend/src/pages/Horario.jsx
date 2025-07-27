@@ -36,6 +36,8 @@ export default function Horario() {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const horarioRef = useRef(null);
+  const [asignaturasDisponibles, setAsignaturasDisponibles] = useState([]);
+  const [mostrandoSugerencias, setMostrandoSugerencias] = useState(false);
   const [form, setForm] = useState({
     dia: "Lunes",
     horaInicio: "08:10",
@@ -68,9 +70,48 @@ export default function Horario() {
         getAuthConfig()
       );
 
+      // console.log('Recomendaciones cargadas:',response)
+
       if (response.data && response.data.data) {
         setRecomendaciones(response.data.data);
         console.log('Recomendaciones cargadas:', response.data.data);
+        
+        // Extraer asignaturas con su información completa de horarios
+        const asignaturasConHorarios = new Map();
+        if (response.data.data.setsRecomendaciones) {
+          Object.values(response.data.data.setsRecomendaciones).forEach(set => {
+            const recomendaciones = set.recomendaciones || set;
+            recomendaciones.forEach(rec => {
+              if (rec.asignatura && rec.bloques) {
+                const key = `${rec.asignatura}-${rec.profesor}-${rec.seccion}`;
+                
+                if (!asignaturasConHorarios.has(key)) {
+                  // Formatear horarios de los bloques
+                  const horariosFormateados = rec.bloques.map(bloque => {
+                    const diaCompleto = diaMapping[bloque.dia] || bloque.dia;
+                    return `${diaCompleto} ${bloque.horaInicio}-${bloque.horaFin}`;
+                  }).join(', ');
+                  
+                  asignaturasConHorarios.set(key, {
+                    asignatura: rec.asignatura,
+                    profesor: rec.profesor,
+                    seccion: rec.seccion,
+                    horarios: horariosFormateados,
+                    bloques: rec.bloques,
+                    tipo: rec.bloques.map(b => b.tipo).join('/'),
+                    sala: rec.bloques.map(b => b.sala).join(', ')
+                  });
+                }
+              }
+            });
+          });
+        }
+        
+        // Convertir a array y ordenar alfabéticamente por asignatura
+        const asignaturasArray = Array.from(asignaturasConHorarios.values())
+          .sort((a, b) => a.asignatura.localeCompare(b.asignatura));
+        setAsignaturasDisponibles(asignaturasArray);
+        
         setMensaje('Recomendaciones cargadas exitosamente');
         setTimeout(() => setMensaje(''), 3000);
       } else {
@@ -115,10 +156,10 @@ export default function Horario() {
             rutParaEnviar: user.rut,
             asignatura: horario.asignatura,
             seccion: parseInt(horario.seccion) || 1, // Asegurar que sea número
-            // semestre: 1, // Valor por defecto
-            year: new Date().getFullYear().toString(),
+            semestre: 1, // Valor por defecto - primer semestre
+            "año": String(new Date().getFullYear()), // Asegurar que sea string simple
             bloques: [],
-            cupos: 30 // Valor por defecto
+            cupos: 30 // Valor por defecto - singular como en validación
           };
         }
 
@@ -174,7 +215,7 @@ export default function Horario() {
       }
 
       if (errores.length === 0) {
-        setMensaje(`✅ Inscripciones guardadas exitosamente (${resultados.length} asignaturas)`);
+        setMensaje(`✅ Inscripciones guardadas exitosamente (${resultados.length} asignaturas) - Semestre 1, ${new Date().getFullYear()}`);
       } else if (resultados.length > 0) {
         setMensaje(`⚠️ Parcialmente guardado: ${resultados.length} exitosas, ${errores.length} con errores`);
       } else {
@@ -227,7 +268,10 @@ export default function Horario() {
   const convertirRecomendacionAHorario = (recomendacionSet, tipoSet) => {
     const horarioConvertido = [];
 
-    recomendacionSet.forEach(recomendacion => {
+    // Verificar si recomendacionSet tiene la propiedad 'recomendaciones'
+    const recomendaciones = recomendacionSet.recomendaciones || recomendacionSet;
+
+    recomendaciones.forEach(recomendacion => {
       recomendacion.bloques.forEach(bloque => {
         horarioConvertido.push({
           dia: diaMapping[bloque.dia] || bloque.dia,
@@ -290,6 +334,92 @@ export default function Horario() {
         [name]: ''
       }));
     }
+
+    // Manejar sugerencias para el campo asignatura
+    if (name === 'asignatura') {
+      if (value.length > 0 && asignaturasDisponibles.length > 0) {
+        const sugerenciasFiltradas = asignaturasDisponibles.filter(asigInfo =>
+          asigInfo.asignatura.toLowerCase().includes(value.toLowerCase())
+        );
+        setMostrandoSugerencias(sugerenciasFiltradas.length > 0 && value !== '');
+      } else {
+        setMostrandoSugerencias(false);
+      }
+    }
+  };
+
+  const seleccionarAsignatura = (asignaturaInfo) => {
+    console.log('===== INICIO seleccionarAsignatura =====');
+    console.log('Parámetro recibido:', asignaturaInfo);
+    console.log('Tipo:', typeof asignaturaInfo);
+    console.log('Es objeto:', typeof asignaturaInfo === 'object');
+    console.log('No es null:', asignaturaInfo !== null);
+    console.log('Tiene bloques:', asignaturaInfo?.bloques);
+    console.log('Bloques es array:', Array.isArray(asignaturaInfo?.bloques));
+    console.log('========================================');
+    
+    // Si se selecciona una asignatura inscribible con bloques, agregar toda su información
+    if (typeof asignaturaInfo === 'object' && asignaturaInfo !== null && asignaturaInfo.bloques && Array.isArray(asignaturaInfo.bloques) && asignaturaInfo.bloques.length > 0) {
+      console.log('ENTRANDO A RAMA DE AGREGAR COMPLETA');
+      
+      // Crear array con todas las nuevas clases
+      const nuevasClases = asignaturaInfo.bloques.map(bloque => {
+        // Asegurar que tenemos valores válidos
+        const diaFinal = diaMapping[bloque.dia] || bloque.dia || 'Lunes';
+        const horaInicioFinal = bloque.horaInicio && hours.includes(bloque.horaInicio) 
+          ? bloque.horaInicio 
+          : ajustarHoraABloque(bloque.horaInicio || '08:10');
+        const horaFinFinal = bloque.horaFin && hours.includes(bloque.horaFin)
+          ? bloque.horaFin
+          : ajustarHoraABloque(bloque.horaFin || '09:30');
+        
+        return {
+          dia: diaFinal,
+          horaInicio: horaInicioFinal,
+          horaFin: horaFinFinal,
+          asignatura: asignaturaInfo.asignatura || 'Sin nombre',
+          sala: bloque.sala || 'Sin asignar',
+          profesor: asignaturaInfo.profesor || 'Sin asignar',
+          seccion: asignaturaInfo.seccion || '1',
+          tipo: bloque.tipo || 'TEO',
+          horaOriginalInicio: bloque.horaInicio,
+          horaOriginalFin: bloque.horaFin
+        };
+      });
+      
+      console.log('Nuevas clases creadas:', nuevasClases);
+      
+      // Agregar todas las clases de una vez
+      setHorarios(prev => [...prev, ...nuevasClases]);
+      
+      // Cerrar modal después de agregar
+      setMostrarPopup(false);
+      setForm({
+        dia: "Lunes",
+        horaInicio: "08:10",
+        horaFin: "09:30",
+        asignatura: "",
+        sala: ""
+      });
+    } else {
+      console.log('ENTRANDO A RAMA DE SOLO NOMBRE');
+      // Si es solo texto, solo llenar el campo de asignatura
+      const nombreAsignatura = typeof asignaturaInfo === 'string' ? asignaturaInfo : asignaturaInfo?.asignatura || '';
+      console.log('Nombre a usar:', nombreAsignatura);
+      setForm({ ...form, asignatura: nombreAsignatura });
+    }
+    
+    setMostrandoSugerencias(false);
+    
+    // Limpiar error de asignatura si existe
+    if (errors.asignatura) {
+      setErrors(prev => ({
+        ...prev,
+        asignatura: ''
+      }));
+    }
+    
+    console.log('===== FIN seleccionarAsignatura =====');
   };
 
   const validateForm = () => {
@@ -311,8 +441,8 @@ export default function Horario() {
       newErrors.horaFin = 'La hora de fin debe ser posterior a la hora de inicio';
     }
 
-    // Verificar conflictos de horario
-    const tieneConflicto = horarios.some(horario => {
+    // Verificar conflictos de horario - ahora permitir superposición pero advertir
+    const clasesConflicto = horarios.filter(horario => {
       if (horario.dia !== form.dia) return false;
 
       const horarioInicioIndex = hours.indexOf(horario.horaInicio);
@@ -322,12 +452,16 @@ export default function Horario() {
       return !(finIndex <= horarioInicioIndex || inicioIndex >= horarioFinIndex);
     });
 
-    if (tieneConflicto) {
-      newErrors.dia = 'Ya existe una clase en ese horario. Por favor selecciona otro horario.';
+    if (clasesConflicto.length > 0) {
+      // En lugar de error, mostrar advertencia informativa
+      const asignaturasConflicto = clasesConflicto.map(h => h.asignatura).join(', ');
+      newErrors.dia = `ℹ️ Se superpone con: ${asignaturasConflicto}. Las clases se mostrarán juntas.`;
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    // Solo bloquear si hay errores reales (no advertencias informativas)
+    const erroresReales = Object.entries(newErrors).filter(([key, value]) => !value.startsWith('ℹ️'));
+    return erroresReales.length === 0;
   };
 
   const agregarHorario = async (e) => {
@@ -352,6 +486,7 @@ export default function Horario() {
         sala: ""
       });
       setErrors({});
+      setMostrandoSugerencias(false);
       setMostrarPopup(false);
     } finally {
       setSubmitting(false);
@@ -367,6 +502,7 @@ export default function Horario() {
       sala: ""
     });
     setErrors({});
+    setMostrandoSugerencias(false);
     setMostrarPopup(false);
   };
 
@@ -509,8 +645,8 @@ export default function Horario() {
     return hours.slice(0, indiceAMostrar + 1);
   };
 
-  const renderCelda = (dia, hora) => {
-    const key = `${dia}-${hora}`;
+  const renderCelda = (dia, hora, filaIndex = 0) => {
+    const key = `${dia}-${hora}-${filaIndex}`;
     const horasVisibles = obtenerHorasAMostrar();
 
     // Si es una fila de descanso, renderizar celda especial
@@ -522,8 +658,8 @@ export default function Horario() {
       );
     }
 
-    // Buscar si hay una clase que comience en esta hora
-    const claseInicia = horarios.find(
+    // Buscar todas las clases que comienzan en esta hora
+    const clasesInician = horarios.filter(
       (h) => h.dia === dia && h.horaInicio === hora
     );
 
@@ -536,14 +672,17 @@ export default function Horario() {
       return inicioIndex < horaActualIndex && horaActualIndex <= finIndex;
     });
 
-    if (claseInicia) {
+    if (clasesInician.length > 0) {
+      // Usar la primera clase para calcular el rowSpan (asumiendo que todas tienen la misma duración)
+      const claseReferencia = clasesInician[0];
+
       // Calcular cuántas celdas debe abarcar esta clase dentro de las horas visibles
-      const inicioIndex = hours.indexOf(claseInicia.horaInicio);
-      const finIndex = hours.indexOf(claseInicia.horaFin);
+      const inicioIndex = hours.indexOf(claseReferencia.horaInicio);
+      const finIndex = hours.indexOf(claseReferencia.horaFin);
 
       // En las horas visibles, contar desde inicio hasta fin (inclusivo)
-      const inicioIndexVisible = horasVisibles.indexOf(claseInicia.horaInicio);
-      let finIndexVisible = horasVisibles.indexOf(claseInicia.horaFin);
+      const inicioIndexVisible = horasVisibles.indexOf(claseReferencia.horaInicio);
+      let finIndexVisible = horasVisibles.indexOf(claseReferencia.horaFin);
 
       // Si la hora de fin no está visible, usar la última hora visible
       if (finIndexVisible === -1) {
@@ -553,40 +692,66 @@ export default function Horario() {
       // El rowSpan incluye la hora de fin (+1 para incluir la hora final)
       const rowSpan = finIndexVisible - inicioIndexVisible + 1;
 
-      // Obtener colores para esta asignatura
-      const colores = obtenerColorAsignatura(claseInicia.asignatura);
+      // Si hay múltiples clases, usar un color mixto o degradado
+      let colorClase;
+      if (clasesInician.length === 1) {
+        colorClase = obtenerColorAsignatura(clasesInician[0].asignatura);
+      } else {
+        // Para múltiples clases, usar un color neutro pero distintivo
+        colorClase = {
+          bg: "from-gray-200 to-gray-100",
+          text: "text-gray-900",
+          border: "border-gray-400",
+          sala: "text-gray-700",
+          hora: "text-gray-600"
+        };
+      }
 
       return (
         <td
           key={key}
           rowSpan={Math.max(1, rowSpan)}
-          className={`px-2 py-2 bg-gradient-to-br ${colores.bg} ${colores.text} text-sm relative group align-top border ${colores.border} shadow-sm`}
+          className={`px-2 py-2 bg-gradient-to-br ${colorClase.bg} ${colorClase.text} text-sm relative group align-top border ${colorClase.border} shadow-sm`}
         >
           <div className="space-y-1 h-full flex flex-col justify-center min-h-[80px]">
-            <p className={`font-semibold ${colores.text} break-words leading-tight text-center`}>{claseInicia.asignatura}</p>
-            <p className={`${colores.sala} text-xs font-medium text-center`}>{claseInicia.sala}</p>
-            <p className={`${colores.hora} text-xs text-center`}>
-              {claseInicia.horaInicio} - {claseInicia.horaFin}
-            </p>
-            {/* Mostrar hora original si fue ajustada */}
-            {(claseInicia.horaOriginalInicio && claseInicia.horaOriginalInicio !== claseInicia.horaInicio) && (
-              <p className={`${colores.hora} text-xs text-center opacity-75 italic`}>
-                Original: {claseInicia.horaOriginalInicio} - {claseInicia.horaOriginalFin}
-              </p>
-            )}
-            {claseInicia.profesor && (
-              <p className={`${colores.hora} text-xs text-center font-medium`}>
-                👨‍🏫 {claseInicia.profesor}
-              </p>
-            )}
+            {clasesInician.map((clase, index) => (
+              <div key={index} className={`${index > 0 ? 'border-t border-gray-300 pt-1 mt-1' : ''}`}>
+                <p className={`font-semibold ${colorClase.text} break-words leading-tight text-center text-xs`}>
+                  {clase.asignatura}
+                </p>
+                <p className={`${colorClase.sala} text-xs font-medium text-center`}>{clase.sala}</p>
+                {index === 0 && (
+                  <p className={`${colorClase.hora} text-xs text-center`}>
+                    {clase.horaInicio} - {clase.horaFin}
+                  </p>
+                )}
+                {/* Mostrar hora original si fue ajustada */}
+                {index === 0 && (clase.horaOriginalInicio && clase.horaOriginalInicio !== clase.horaInicio) && (
+                  <p className={`${colorClase.hora} text-xs text-center opacity-75 italic`}>
+                    Original: {clase.horaOriginalInicio} - {clase.horaOriginalFin}
+                  </p>
+                )}
+                {clase.profesor && (
+                  <p className={`${colorClase.hora} text-xs text-center font-medium`}>
+                    👨‍🏫 {clase.profesor}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
-          <button
-            onClick={() => eliminarHorario(horarios.indexOf(claseInicia))}
-            className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-lg z-10"
-            title="Eliminar"
-          >
-            ×
-          </button>
+          {/* Botones de eliminar para cada clase */}
+          <div className="absolute top-1 right-1 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+            {clasesInician.map((clase, index) => (
+              <button
+                key={index}
+                onClick={() => eliminarHorario(horarios.indexOf(clase))}
+                className="bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs shadow-lg z-10"
+                title={`Eliminar ${clase.asignatura}`}
+              >
+                ×
+              </button>
+            ))}
+          </div>
         </td>
       );
     } else if (claseActiva) {
@@ -633,25 +798,17 @@ export default function Horario() {
               {/* Botón para cargar recomendaciones */}
               <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
                 <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
-                  <h2 className="text-base sm:text-lg font-semibold">
+                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                     Recomendaciones de Horarios Inteligentes
+                    <HelpTooltip>
+                      <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                      <p className="text-gray-600 text-xs">
+                        Obtén recomendaciones personalizadas basadas en el rendimiento y evaluación de profesores. Si no observas recomendaciones asegúrate de haber seleccionado tus asignaturas aprobadas en la malla y presiona el botón "Generar recomendaciones"
+                      </p>
+                    </HelpTooltip>
                   </h2>
                   <p className="text-blue-100 text-sm mt-1">
-                    Obtén recomendaciones personalizadas basadas en el rendimiento y evaluación de profesores
                   </p>
-                </div>
-
-                <div className="text-center mb-4">
-                  <button
-                    onClick={cargarRecomendaciones}
-                    disabled={loading}
-                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${loading
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl'
-                      }`}
-                  >
-                    {loading ? 'Cargando...' : 'Generar Recomendaciones'}
-                  </button>
                 </div>
 
                 {/* Mostrar información del estudiante si hay recomendaciones */}
@@ -678,94 +835,161 @@ export default function Horario() {
                     </div>
                   </div>
                 )}
+
+                <div className="text-center mb-4">
+                  <button
+                    onClick={cargarRecomendaciones}
+                    disabled={loading}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${loading
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl'
+                      }`}
+                  >
+                    {loading ? 'Cargando...' : 'Generar Recomendaciones'}
+                  </button>
+                </div>
               </div>
 
               {/* Sección de Recomendaciones */}
               {recomendaciones && (
                 <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4">
                   <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
-                    <h2 className="text-base sm:text-lg font-semibold">
+                    <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                       Tipos de Recomendaciones
+                      <HelpTooltip>
+                        <h3 className="text-blue-700 font-bold text-sm mb-1">¿Qué puedes hacer aquí?</h3>
+                        <p className="text-gray-600 text-xs mb-2">
+                          Aquí puedes seleccionar una combinación horaria que más te interese, además de agregar una clase manual o descargar un PDF.
+                        </p>
+                        <p className="text-gray-600 text-xs">
+                          📝 <strong>Paso importante:</strong> Después de seleccionar un horario, haz clic en "Guardar Inscripción" para registrar oficialmente tus asignaturas en la base de datos.
+                        </p>
+                      </HelpTooltip>
                     </h2>
-                    <p className="text-purple-100 text-sm mt-1">
-                      Selecciona el tipo de recomendación que prefieras
-                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {Object.entries(recomendaciones.setsRecomendaciones).map(([tipo, asignaturas]) => (
-                      <div
-                        key={tipo}
-                        className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.tipo === tipo
-                          ? 'border-green-500 bg-green-50 shadow-md'
-                          : 'border-gray-200 bg-gray-50 hover:border-green-300'
-                          }`}
-                        onClick={() => seleccionarHorario(tipo)}
-                      >
-                        <div className="space-y-2">
-                          <h3 className="font-bold text-green-900 text-sm">{obtenerNombreTipo(tipo)}</h3>
-                          <p className="text-gray-600 text-xs">{obtenerDescripcionTipo(tipo)}</p>
-                          <div className="text-xs text-gray-500">
-                            <p>📚 {asignaturas.length} asignaturas</p>
-                            <p>�‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesores</p>
-                            <p>⭐ Promedio: {asignaturas.length > 0 ? (asignaturas.reduce((sum, a) => sum + parseFloat(a.puntaje), 0) / asignaturas.length).toFixed(1) : '0'}</p>
-                          </div>
-                          {horarioSeleccionado?.tipo === tipo && (
-                            <div className="flex items-center text-green-600 text-xs font-medium">
-                              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                              Seleccionado
+                    {Object.entries(recomendaciones.setsRecomendaciones).map(([tipo, setData]) => {
+                      // Obtener las recomendaciones del nuevo formato
+                      const asignaturas = setData.recomendaciones || setData;
+                      const detalles = setData.detalles || {};
+
+                      return (
+                        <div
+                          key={tipo}
+                          className={`p-4 rounded-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-lg ${horarioSeleccionado?.tipo === tipo
+                            ? 'border-green-500 bg-green-50 shadow-md'
+                            : 'border-gray-200 bg-gray-50 hover:border-green-300'
+                            }`}
+                          onClick={() => seleccionarHorario(tipo)}
+                        >
+                          <div className="space-y-2">
+                            <h3 className="font-bold text-green-900 text-sm">{obtenerNombreTipo(tipo)}</h3>
+                            <p className="text-gray-600 text-xs">{obtenerDescripcionTipo(tipo)}</p>
+                            <div className="text-xs text-gray-500">
+                              <p>📚 {asignaturas.length} asignaturas</p>
+                              <p>👨‍🏫 {[...new Set(asignaturas.map(a => a.profesor))].length} profesores</p>
+                              {detalles.porcentajeAprobacionPromedio && (
+                                <p>📈 Aprobación: {parseFloat(detalles.porcentajeAprobacionPromedio).toFixed(1)}%</p>
+                              )}
+                              {detalles.evaluacionDocentePromedio && (
+                                <p>⭐ Evaluación: {parseFloat(detalles.evaluacionDocentePromedio).toFixed(1)}/7.0</p>
+                              )}
+                              {detalles.promedioFinal && (
+                                <p>📊 Promedio: {parseFloat(detalles.promedioFinal).toFixed(1)}</p>
+                              )}
+                              {detalles.totalBloques && (
+                                <p>🕒 Bloques: {detalles.totalBloques}</p>
+                              )}
+                              {detalles.totalCreditos && (
+                                <p>🎓 Créditos: {detalles.totalCreditos}</p>
+                              )}
                             </div>
-                          )}
+                            {horarioSeleccionado?.tipo === tipo && (
+                              <div className="flex items-center text-green-600 text-xs font-medium">
+                                <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                Seleccionado
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {horarioSeleccionado && (
-                    <div className="mt-4 flex flex-wrap gap-2 justify-center">
-                      <button
-                        onClick={limpiarHorario}
-                        className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm"
-                      >
-                        Limpiar Horario
-                      </button>
-                      {horarios.length > 0 && (
-                        <>
+                    <div className="mt-6 space-y-4">
+                      {/* <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                          <h3 className="font-bold text-green-900">
+                            Horario seleccionado: {obtenerNombreTipo(horarioSeleccionado.tipo)}
+                          </h3>
+                        </div>
+                        <p className="text-green-700 text-sm mb-3">
+                          {obtenerDescripcionTipo(horarioSeleccionado.tipo)}
+                        </p>
+                        <p className="text-green-600 text-xs">
+                          📚 {horarios.length} asignatura{horarios.length !== 1 ? 's' : ''} agregada{horarios.length !== 1 ? 's' : ''} al horario
+                        </p>
+                      </div> */}
+
+                      {/* Botones de acción */}
+                      <div className="flex flex-wrap gap-3 justify-center">
+                        {horarios.length > 0 && (
                           <button
                             onClick={guardarInscripcion}
                             disabled={loading}
-                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${loading
+                            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm flex items-center gap-2 ${loading
                               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                              : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
+                              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white transform hover:scale-105'
                               }`}
                           >
                             {loading ? (
                               <>
-                                <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                 </svg>
-                                Guardando...
+                                Guardando Inscripción...
                               </>
                             ) : (
                               <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                                 </svg>
-                                Guardar Inscripción
+                                💾 Guardar Inscripción Oficial
                               </>
                             )}
                           </button>
-                          <button
-                            onClick={descargarHorario}
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Descargar PDF
-                          </button>
-                        </>
-                      )}
+                        )}
+                        
+                        <button
+                          onClick={() => setMostrarPopup(true)}
+                          className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                          Agregar Clase Manual
+                        </button>
+
+                        <button
+                          onClick={descargarHorario}
+                          className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Descargar PDF
+                        </button>
+
+                        <button
+                          onClick={limpiarHorario}
+                          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm"
+                        >
+                          Limpiar Horario
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -788,7 +1012,7 @@ export default function Horario() {
             </div>
 
             {/* Botones de acción */}
-            {horarios.length > 0 && (
+            {/* {horarios.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-2 justify-center">
                 <button
                   onClick={descargarHorario}
@@ -823,17 +1047,9 @@ export default function Horario() {
                     </>
                   )}
                 </button>
-                <button
-                  onClick={() => setMostrarPopup(true)}
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Agregar Clase Manual
-                </button>
+
               </div>
-            )}
+            )} */}
 
             <div className="p-4 sm:p-6 overflow-x-auto" ref={horarioRef}>
               <table className="w-full min-w-[600px] border-collapse border border-gray-300 table-fixed">
@@ -854,7 +1070,7 @@ export default function Horario() {
                 </thead>
                 <tbody>
                   {obtenerHorasAMostrar().map((hora, index) => (
-                    <tr key={hora} className={
+                    <tr key={`${hora}-${index}`} className={
                       hora === "DESCANSO"
                         ? 'bg-gradient-to-r from-gray-50 to-gray-100'
                         : index % 2 === 0 ? 'bg-blue-25' : 'bg-white'
@@ -865,8 +1081,8 @@ export default function Horario() {
                         }`}>
                         {hora === "DESCANSO" ? "" : hora}
                       </td>
-                      {days.map((dia) => {
-                        const celda = renderCelda(dia, hora);
+                      {days.map((dia, diaIndex) => {
+                        const celda = renderCelda(dia, hora, index);
                         return celda;
                       }).filter(celda => celda !== null)}
                     </tr>
@@ -935,7 +1151,14 @@ export default function Horario() {
 
         {/* Popup Modal para agregar clase */}
         {mostrarPopup && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                setMostrandoSugerencias(false);
+              }
+            }}
+          >
             <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <h2 className="text-xl font-bold mb-4 text-gray-900">
@@ -951,14 +1174,16 @@ export default function Horario() {
                       name="dia"
                       value={form.dia}
                       onChange={handleChange}
-                      className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.dia ? 'border-red-300' : 'border-gray-300'}`}
+                      className={`w-full p-2 border rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.dia ? (errors.dia.startsWith('ℹ️') ? 'border-blue-300' : 'border-red-300') : 'border-gray-300'
+                        }`}
                     >
                       {days.map((d) => (
                         <option key={d} value={d}>{d}</option>
                       ))}
                     </select>
                     {errors.dia && (
-                      <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                      <p className={`text-sm mt-1 flex items-center gap-1 ${errors.dia.startsWith('ℹ️') ? 'text-blue-600' : 'text-red-600'
+                        }`}>
                         <AlertCircle className="w-4 h-4" />
                         {errors.dia}
                       </p>
@@ -1029,27 +1254,120 @@ export default function Horario() {
                     )}
                   </div>
 
-                  <div>
+                  <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Asignatura
+                      {asignaturasDisponibles.length > 0 && (
+                        <span className="text-xs text-blue-600 ml-2">
+                          ({asignaturasDisponibles.length} disponibles)
+                        </span>
+                      )}
                     </label>
-                    <input
-                      type="text"
-                      name="asignatura"
-                      value={form.asignatura}
-                      onChange={handleChange}
-                      className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.asignatura ? 'border-red-300' : 'border-gray-300'}`}
-                      placeholder="Ej: Matemáticas, Física, Programación..."
-                    />
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name="asignatura"
+                        value={form.asignatura}
+                        onChange={handleChange}
+                        onFocus={() => {
+                          if (asignaturasDisponibles.length > 0 && form.asignatura === '') {
+                            setMostrandoSugerencias(true);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          // Delay para permitir clicks en sugerencias
+                          setTimeout(() => setMostrandoSugerencias(false), 200);
+                        }}
+                        className={`w-full p-2 border rounded-md bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.asignatura ? 'border-red-300' : 'border-gray-300'}`}
+                        placeholder="Busca una asignatura o escribe una nueva..."
+                        autoComplete="off"
+                      />
+                      
+                      {/* Dropdown de sugerencias */}
+                      {mostrandoSugerencias && asignaturasDisponibles.length > 0 && (
+                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-96 overflow-y-auto">
+                          {asignaturasDisponibles
+                            .filter(asigInfo => asigInfo.asignatura.toLowerCase().includes(form.asignatura.toLowerCase()))
+                            .slice(0, 6) // Limitar a 6 sugerencias para dar más espacio
+                            .map((asignaturaInfo, index) => (
+                              <div key={index} className="border-b border-gray-100 last:border-b-0">
+                                {/* Botón principal para agregar toda la asignatura */}
+                                <button
+                                  type="button"
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    console.log('Botón "Agregar completa" clickeado para:', asignaturaInfo);
+                                    seleccionarAsignatura(asignaturaInfo);
+                                  }}
+                                  className="w-full text-left px-3 py-3 hover:bg-green-50 hover:text-green-900 transition-colors duration-150 border-l-4 border-green-500"
+                                >
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm font-bold text-green-900">{asignaturaInfo.asignatura}</span>
+                                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">📚 Inscribible</span>
+                                      </div>
+                                      <div className="text-xs text-gray-600 space-y-1">
+                                        <p><strong>👨‍🏫 Profesor:</strong> {asignaturaInfo.profesor}</p>
+                                        <p><strong>📋 Sección:</strong> {asignaturaInfo.seccion}</p>
+                                        <p><strong>🕒 Horarios:</strong> {asignaturaInfo.horarios}</p>
+                                        <p><strong>🏛️ Salas:</strong> {asignaturaInfo.sala}</p>
+                                        <p><strong>📖 Tipo:</strong> {asignaturaInfo.tipo}</p>
+                                      </div>
+                                    </div>
+                                    <div className="text-xs text-green-600 font-medium ml-2">
+                                      ➕ Agregar completa
+                                    </div>
+                                  </div>
+                                </button>
+                                
+                                {/* Botón secundario para solo usar el nombre */}
+                                <button
+                                  type="button"
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    console.log('Botón "Solo usar nombre" clickeado para:', asignaturaInfo.asignatura);
+                                    seleccionarAsignatura(asignaturaInfo.asignatura);
+                                  }}
+                                  className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 transition-colors duration-150 border-t border-gray-100"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-xs text-blue-700">
+                                      ✏️ Solo usar nombre "{asignaturaInfo.asignatura}" (personalizar horario)
+                                    </span>
+                                  </div>
+                                </button>
+                              </div>
+                            ))}
+                          
+                          {form.asignatura && !asignaturasDisponibles.some(asigInfo => 
+                            asigInfo.asignatura.toLowerCase().includes(form.asignatura.toLowerCase())
+                          ) && (
+                            <div className="px-3 py-3 text-sm text-gray-500 border-t border-gray-200">
+                              <span className="text-blue-600">💡 Sugerencia:</span> No hay coincidencias. 
+                              Puedes crear una asignatura personalizada escribiendo el nombre.
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    
                     {errors.asignatura && (
                       <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
                         <AlertCircle className="w-4 h-4" />
                         {errors.asignatura}
                       </p>
                     )}
-                    <p className="text-gray-600 text-sm mt-1">
-                      Las clases con el mismo nombre de asignatura tendrán el mismo color automáticamente
-                    </p>
+                    
+                    <div className="text-xs text-gray-600 mt-1 space-y-1">
+                      <p>💡 <strong>Tip:</strong> Escribe para buscar asignaturas inscribibles con horarios completos</p>
+                      <p>➕ <strong>Agregar completa:</strong> Agrega todos los bloques de horario automáticamente</p>
+                      <p>✏️ <strong>Solo nombre:</strong> Usar solo el nombre para personalizar horarios manualmente</p>
+                      {asignaturasDisponibles.length > 0 && (
+                        <p>📋 <strong>Disponibles:</strong> {asignaturasDisponibles.length} opciones con horarios definidos</p>
+                      )}
+                      <p>🎨 Las clases con el mismo nombre tendrán el mismo color automáticamente</p>
+                    </div>
                   </div>
 
                   <div className="flex justify-end gap-3 pt-4">
