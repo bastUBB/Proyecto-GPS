@@ -13,7 +13,8 @@ const asignaturasDocenteSchema = new mongoose.Schema({
     }]
 }, {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
+    strict: true
 });
 
 const asignaturasDocente = mongoose.model('asignaturasDocente', asignaturasDocenteSchema);
