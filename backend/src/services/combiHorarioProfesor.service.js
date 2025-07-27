@@ -1,11 +1,6 @@
 import Disponibilidad from '../models/disponibilidad.model.js';
 import User from '../models/user.model.js';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import mongoose from 'mongoose';
 
 const TOTAL_SALAS = 20;
 const SALAS_DISPONIBLES = Array.from({ length: TOTAL_SALAS }, (_, i) => `Sala ${i + 1}`);
@@ -16,7 +11,7 @@ const TIPOS_BLOQUE = [
     { tipo: 'PRA', nombre: 'Práctico', color: '#F59E0B' }
 ];
 
-const DIAS_SEMANA = ['LU', 'MA', 'MI', 'JU', 'VI'];
+const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
 const HORAS_DISPONIBLES = [
     '08:10', '09:30', '09:40', '11:00', '11:10', '12:30',
@@ -24,26 +19,16 @@ const HORAS_DISPONIBLES = [
     '17:10', '18:30', '18:40', '20:00'
 ];
 
-/**
- * Cargar datos de horarios desde el archivo JSON
- */
-const cargarHorariosExtraidos = () => {
-    try {
-        const filePath = path.join(__dirname, '../../output/horario_extraido.json');
-        const data = fs.readFileSync(filePath, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        console.error('Error al cargar horarios extraídos:', error);
-        return [];
-    }
-};
 
 /**
  * Obtener disponibilidad de un profesor específico
  */
 export const obtenerDisponibilidadProfesor = async (profesorId) => {
     try {
-        const disponibilidad = await Disponibilidad.findOne({ profesor: profesorId }).populate('bloques');
+        // Convierte el string a ObjectId correctamente
+        const objectId = new mongoose.Types.ObjectId(profesorId);
+
+        const disponibilidad = await Disponibilidad.findOne({ profesor: objectId }).populate('bloques');
         
         if (!disponibilidad) {
             return { disponible: false, bloques: [] };
@@ -424,98 +409,89 @@ function normalizarNombre(nombre) {
         .trim();
 }
 
-export const generarCombinacionGlobalService = async () => {
-    try {
-        // 1. Obtener todos los profesores
-        const profesores = await User.find({ role: 'profesor' }).lean();
+/**
+ * Genera una combinación global de horarios para todos los profesores,
+ * asignando bloques según disponibilidad y cantidad de horas semanales requeridas por asignatura.
+ * 
+ * @param {Array} profesoresAsignaturas - [{ profesorId, asignaturas: [{ codigo, horasSemanales }] }]
+ * @returns {Array} combinacionGlobal - [{ profesorId, asignaturas: [{ codigo, bloquesAsignados: [...] }] }]
+ */
+export const generarCombinacionGlobalService = async (profesoresAsignaturas) => {
+    console.log('Solicitud:', profesoresAsignaturas);
+    const combinacionGlobal = [];
 
-        // 2. Cargar disponibilidades de todos los profesores
-        const disponibilidades = {};
-        for (const prof of profesores) {
-            const disp = await Disponibilidad.findOne({ profesor: prof._id }).populate('bloques').lean();
-            disponibilidades[prof._id.toString()] = disp ? disp.bloques : [];
+    for (const profData of profesoresAsignaturas) {
+        const { profesorId, asignaturas } = profData;
+        // Obtener disponibilidad del profesor
+        const disponibilidad = await obtenerDisponibilidadProfesor(profesorId);
+
+        if (!disponibilidad.disponible) {
+            combinacionGlobal.push({
+                profesorId,
+                asignaturas: asignaturas.map(asig => ({
+                    codigo: asig.codigo,
+                    bloquesAsignados: [],
+                    conflicto: 'Sin disponibilidad'
+                }))
+            });
+            continue;
         }
 
-        // 3. Cargar todos los horarios extraídos
-        const horariosExtraidos = cargarHorariosExtraidos();
+        // Copia mutable de bloques disponibles
+        let bloquesDisponibles = [...disponibilidad.bloques];
 
-        // 4. Preparar resultado
-        const resultado = [];
+        // Ordena los bloques por día y hora de inicio
+        bloquesDisponibles.sort((a, b) => {
+            const diaA = DIAS_SEMANA.indexOf(a.dia); // 'LU' = 0, 'MA' = 1, ...
+            const diaB = DIAS_SEMANA.indexOf(b.dia);
+            if (diaA !== diaB) return diaA - diaB;
+            // Luego por hora de inicio
+            const [ha, ma] = a.horaInicio.split(':').map(Number);
+            const [hb, mb] = b.horaInicio.split(':').map(Number);
+            return ha * 60 + ma - (hb * 60 + mb);
+        });
 
-        // 5. Para cada profesor, asignar bloques de sus asignaturas seleccionadas (por nombre)
-        for (const prof of profesores) {
-            // Obtener nombres y códigos de asignaturas seleccionadas por el profesor
-            const nombresAsignaturas = Array.isArray(prof.asignaturasImpartidas)
-                ? prof.asignaturasImpartidas.map(a => (a.nombre || a).toUpperCase().trim())
-                : [];
-            const codigosAsignaturas = Array.isArray(prof.asignaturasImpartidas)
-                ? prof.asignaturasImpartidas.map(a => (a.codigo || a).toString().trim())
-                : [];
+        const asignaturasAsignadas = [];
 
-            // Filtrar horarios del JSON por nombre O código de asignatura
-            const horariosProfesor = horariosExtraidos.filter(
-                h =>
-                    (h.asignatura && nombresAsignaturas.includes(h.asignatura.toUpperCase().trim())) ||
-                    (h.asignaturaCodigo && codigosAsignaturas.includes(h.asignaturaCodigo.toString().trim()))
-            );
+        for (const asignatura of asignaturas) {
+            const bloquesAsignados = [];
+            let horasRestantes = asignatura.horasSemanales;
 
-            // Disponibilidad del profesor
-            const bloquesDisponibles = disponibilidades[prof._id.toString()] || [];
+            // Asignar bloques hasta cubrir las horas requeridas
+            for (const bloque of bloquesDisponibles) {
+                if (horasRestantes <= 0) break;
 
-            // Para evitar conflictos, vamos a ir ocupando los bloques a medida que los asignamos
-            const bloquesOcupados = [];
-
-            const horariosAsignados = [];
-
-            for (const horario of horariosProfesor) {
-                for (const bloque of horario.bloques) {
-                    // Convertir día a formato de disponibilidad
-                    const diaFormateado = convertirDiaFormato(bloque.dia);
-
-                    // Buscar bloque disponible del profesor que calce con este bloque
-                    const disponible = bloquesDisponibles.find(bd =>
-                        bd.dia === diaFormateado &&
-                        estaEnRangoHorario(bloque.horaInicio, bloque.horaFin, bd.horaInicio, bd.horaFin) &&
-                        !bloquesOcupados.some(
-                            bo => bo.dia === diaFormateado &&
-                                ((bo.horaInicio < bloque.horaFin && bo.horaFin > bloque.horaInicio))
-                        )
-                    );
-
-                    if (disponible) {
-                        // Asignar bloque
-                        const salaAsignada = SALAS_DISPONIBLES[Math.floor(Math.random() * SALAS_DISPONIBLES.length)];
-                        horariosAsignados.push({
-                            asignatura: horario.asignatura,
-                            codigo: horario.asignaturaCodigo,
-                            tipo: bloque.tipo,
-                            dia: diaFormateado,
-                            horaInicio: bloque.horaInicio,
-                            horaFin: bloque.horaFin,
-                            sala: salaAsignada,
-                            profesor: prof.nombreCompleto
-                        });
-                        // Marcar bloque como ocupado
-                        bloquesOcupados.push({
-                            dia: diaFormateado,
-                            horaInicio: bloque.horaInicio,
-                            horaFin: bloque.horaFin
-                        });
-                    }
-                    // Si no hay disponibilidad, simplemente no se asigna ese bloque
-                }
+                // Suponiendo cada bloque dura 1.5 horas (ajusta si es diferente)
+                const duracionBloque = 1.5;
+                bloquesAsignados.push({
+                    dia: bloque.dia,
+                    horaInicio: bloque.horaInicio,
+                    horaFin: bloque.horaFin,
+                    tipo: bloque.tipo
+                });
+                horasRestantes -= duracionBloque;
+                console.log('Bloques ordenados:', bloquesDisponibles.map(b => `${b.dia} ${b.horaInicio}`));
             }
 
-            resultado.push({
-                profesorId: prof._id,
-                nombreProfesor: prof.nombreCompleto,
-                horarios: horariosAsignados
+            // Eliminar bloques asignados para evitar solapamientos
+            bloquesDisponibles = bloquesDisponibles.filter(b =>
+                !bloquesAsignados.some(ba =>
+                    ba.dia === b.dia && ba.horaInicio === b.horaInicio && ba.horaFin === b.horaFin
+                )
+            );
+
+            asignaturasAsignadas.push({
+                codigo: asignatura.codigo,
+                bloquesAsignados,
+                conflicto: horasRestantes > 0 ? `Faltan ${horasRestantes.toFixed(1)} horas` : null
             });
         }
 
-        return resultado;    
-    } catch (error) {
-        console.error('Error en generarCombinacionGlobalService:', error);
-        throw error;
+        combinacionGlobal.push({
+            profesorId,
+            asignaturas: asignaturasAsignadas
+        });
     }
+
+    return combinacionGlobal;
 };

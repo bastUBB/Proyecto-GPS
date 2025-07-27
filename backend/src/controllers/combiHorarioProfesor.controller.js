@@ -294,12 +294,10 @@ export const obtenerAsignaturasProfesor = async (req, res) => {
 
 export const generarCombinacionGlobal = async (req, res) => {
   try {
-    // Llama a un servicio que genere la mejor combinación para todos los profesores
-    const resultado = await generarCombinacionGlobalService();
-    res.json({ success: true, data: resultado });
+    const resultado = await generarCombinacionGlobalService(req.body);
+    handleSuccess(res, 200, 'Combinación global generada exitosamente', resultado);
   } catch (error) {
-    // Mejorar el log para ver el error real en consola
     console.error('Error al generar la combinación global:', error);
-    res.status(500).json({ success: false, message: 'Error al generar la combinación global', error: error.message });
+    handleErrorServer(res, 500, 'Error al generar la combinación global');
   }
 };

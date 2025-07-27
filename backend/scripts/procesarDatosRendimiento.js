@@ -117,24 +117,48 @@ const procesarDatosRendimiento = (nombreArchivoExcel = null) => {
                     registro.semestre = romanos[semestreRomano] || 0;
                 }
 
-                // Extraer solo el código (sin la sección)
-                const codigoAsignatura = registro.codigoSeccion.split('-')[0];
+                // Lista de asignaturas de la malla curricular oficial
+                const mallaOficial = [
+                    "Álgebra y Trigonometría", "Introducción a la Ingeniería", "Comunicación Oral y Escrita",
+                    "Introducción a la Programación", "Formación Integral I", "Cálculo Diferencial",
+                    "Química General", "Programación Orientada a Objetos", "Estructuras Discretas para Cs. de la Computación",
+                    "Formación Integral II", "Formación Integral III", "Cálculo Integral", "Álgebra Lineal",
+                    "Física Newtoniana", "Estructura de Datos", "Inglés I", "Administración General",
+                    "Cálculo en Varias Variables", "Ecuaciones Diferenciales", "Electro-magnetismo",
+                    "Modelamiento de Procesos e Información", "Inglés II", "Formación Integral IV",
+                    "Ondas, Óptica y Física Moderna", "Sistemas Digitales", "Fundamentos de las Ciencias de la Computación",
+                    "Teoría de Sistemas", "Inglés III", "Gestión Contable", "Estadística y Probabilidades",
+                    "Economía", "Análisis y Diseño de Algoritmos", "Base de Datos", "Inglés IV",
+                    "Práctica Profesional 1", "Investigación de Operaciones", "Arquitectura de Computadores",
+                    "Administración y Programación de Base de Datos", "Sistemas de Información", "Gestión Estratégica",
+                    "Formación Integral V", "Gestión Presupuestaria y Financiera", "Legislación", "Sistemas Operativos",
+                    "Inteligencia Artificial", "Ingeniería de Software", "Formulación y Evaluación de Proyectos",
+                    "Práctica Profesional 2", "Anteproyecto de Título", "Comunicación de Datos y Redes",
+                    "Electivo Profesional 1", "Electivo Profesional 2", "Electivo Profesional 3",
+                    "Gestión de Proyectos de Software", "Gestión de Recursos Humanos", "Proyecto de Título",
+                    "Seguridad Informática", "Electivo Profesional 4", "Electivo Profesional 5", "Electivo Profesional 6"
+                ];
 
-                // Verificar si es asignatura a excluir (códigos 34* o 35* excepto comunicación oral e inglés)
-                const esCodigoExcluir = codigoAsignatura.startsWith('34') || codigoAsignatura.startsWith('35');
-                const esComunicacionOral = registro.nombreAsignatura.toLowerCase().includes('comunicación oral') ||
-                    registro.nombreAsignatura.toLowerCase().includes('comunicacion oral');
-                const esIngles = registro.nombreAsignatura.toLowerCase().includes('inglés') ||
-                    registro.nombreAsignatura.toLowerCase().includes('ingles') ||
-                    registro.nombreAsignatura.toLowerCase().includes('english');
+                // Función para normalizar nombres de asignaturas para comparación
+                const normalizarNombre = (nombre) => {
+                    return nombre.toLowerCase()
+                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remover acentos
+                        .replace(/[^\w\s]/g, " ") // Reemplazar caracteres especiales con espacios
+                        .replace(/\s+/g, " ") // Múltiples espacios a uno solo
+                        .trim();
+                };
 
-                // Solo excluir si tiene código 34*/35* Y NO es comunicación oral NI inglés
-                const esAsignaturaExcluir = esCodigoExcluir && !esComunicacionOral && !esIngles;
+                // Verificar si la asignatura está en la malla curricular
+                const nombreNormalizado = normalizarNombre(registro.nombreAsignatura);
+                const esAsignaturaMalla = mallaOficial.some(asignaturaMalla => {
+                    const mallaNormalizada = normalizarNombre(asignaturaMalla);
+                    return nombreNormalizado.includes(mallaNormalizada) || mallaNormalizada.includes(nombreNormalizado);
+                });
 
-                if (esAsignaturaExcluir) {
-                    asignaturasExcluidas.push(registro);
-                } else {
+                if (esAsignaturaMalla) {
                     datosCompletos.push(registro);
+                } else {
+                    asignaturasExcluidas.push(registro);
                 }
             }
         }

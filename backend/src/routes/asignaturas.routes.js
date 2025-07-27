@@ -8,11 +8,8 @@ import {
 } from '../controllers/asignaturas.controller.js';
 import { authenticateJWT, authorizeRoles } from "../middlewares/auth.middleware.js";
 
-//TODO: Implementar sistema de autorización
-
 const router = Router();
 
-// Aplicar autenticación JWT a todas las rutas
 router.use(authenticateJWT);
 
 router

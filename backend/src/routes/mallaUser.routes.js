@@ -11,7 +11,6 @@ const router = Router();
 
 router.use(authenticateJWT);
 
-
 router
     .get('/detail', authorizeRoles("administrador", "admin", "alumno"), getMallaUser)
     .post('/', authorizeRoles("administrador", "admin", "alumno"), createMallaUser)
