@@ -64,7 +64,7 @@ export default function Horario() {
 
     try {
       const response = await axios.get(`/api/inscripcion/estudiante/${user.rut}`, getAuthConfig());
-      setTieneInscripcionesBD(response.data && response.data.data && response.data.data.length > 0);
+      setTieneInscripcionesBD(response.data.data.length > 0);
     } catch (error) {
       setTieneInscripcionesBD(false);
     }
@@ -736,7 +736,7 @@ export default function Horario() {
       }
 
       // Descargar el PDF
-      const nombreArchivo = `horario_${nombreCompleto.replace(/\\s+/g, '_')}.pdf`;
+      const nombreArchivo = `horario_${new Date().toLocaleDateString('es-ES').replace(/\\s+/g, '_')}.pdf`;
       pdf.save(nombreArchivo);
 
     } catch (error) {
@@ -1058,167 +1058,92 @@ export default function Horario() {
                     })}
                   </div>
 
-                  {horarioSeleccionado && (
-                    <div className="mt-6 space-y-4">
-                      {/* <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                          <h3 className="font-bold text-green-900">
-                            Horario seleccionado: {obtenerNombreTipo(horarioSeleccionado.tipo)}
-                          </h3>
-                        </div>
-                        <p className="text-green-700 text-sm mb-3">
-                          {obtenerDescripcionTipo(horarioSeleccionado.tipo)}
-                        </p>
-                        <p className="text-green-600 text-xs">
-                          📚 {horarios.length} asignatura{horarios.length !== 1 ? 's' : ''} agregada{horarios.length !== 1 ? 's' : ''} al horario
-                        </p>
-                      </div> */}
+                  {/* Botones de acción principales - aparecen independientemente de la selección */}
+                  <div className="mt-6">
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      {/* Botón Descargar PDF - aparece cuando hay horarios */}
+                      {horarios.length > 0 && (
+                        <button
+                          onClick={descargarHorario}
+                          className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Descargar PDF
+                        </button>
+                      )}
 
-                      {/* Botones de acción */}
-                      <div className="flex flex-wrap gap-3 justify-center">
-                        {/* Botones que aparecen solo cuando hay inscripciones en la BD */}
-                        {tieneInscripcionesBD && (
-                          <>
-                            {/* Botón para cargar inscripciones de la BD */}
-                            <button
-                              onClick={cargarInscripcionesExistentes}
-                              disabled={loading}
-                              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
-                                loading 
-                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                  : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
-                              }`}
-                            >
-                              {loading ? (
-                                <>
-                                  <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                  </svg>
-                                  Cargando...
-                                </>
-                              ) : (
-                                <>
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                  </svg>
-                                  Cargar Inscripciones
-                                </>
-                              )}
-                            </button>
-
-                            {/* Botón limpiar cuando hay inscripciones en BD */}
-                            <button
-                              onClick={limpiarHorario}
-                              disabled={loading}
-                              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
-                                loading 
-                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                  : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
-                              }`}
-                            >
-                              {loading ? (
-                                <>
-                                  <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                  </svg>
-                                  Eliminando...
-                                </>
-                              ) : (
-                                <>
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
-                                  Limpiar Todo
-                                </>
-                              )}
-                            </button>
-                          </>
-                        )}
-
-                        {/* Botones que aparecen cuando se selecciona una recomendación o hay horarios */}
-                        {(horarioSeleccionado || horarios.length > 0) && (
-                          <>
-                            {horarios.length > 0 && (
-                              <button
-                                onClick={guardarInscripcion}
-                                disabled={loading}
-                                className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${loading
-                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                  : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white'
-                                  }`}
-                              >
-                                {loading ? (
-                                  <>
-                                    <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                    </svg>
-                                    Guardando Inscripción...
-                                  </>
-                                ) : (
-                                  <>
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                                    </svg>
-                                    Guardar Inscripción Oficial
-                                  </>
-                                )}
-                              </button>
-                            )}
-                            
-                            <button
-                              onClick={() => setMostrarPopup(true)}
-                              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                            >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      {/* Botón Limpiar Todo - aparece cuando hay inscripciones en BD */}
+                      {tieneInscripcionesBD && (
+                        <button
+                          onClick={limpiarHorario}
+                          disabled={loading}
+                          className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
+                            loading 
+                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                              : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
+                          }`}
+                        >
+                          {loading ? (
+                            <>
+                              <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                               </svg>
-                              Agregar Clase Manual
-                            </button>
-
-                            <button
-                              onClick={descargarHorario}
-                              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                            >
+                              Eliminando...
+                            </>
+                          ) : (
+                            <>
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                               </svg>
-                              Descargar PDF
-                            </button>
+                              Limpiar Todo
+                            </>
+                          )}
+                        </button>
+                      )}
 
-                            {/* Botón limpiar cuando solo hay horarios en vista (sin inscripciones en BD) */}
-                            {!tieneInscripcionesBD && horarios.length > 0 && (
-                              <button
-                                onClick={limpiarHorario}
-                                disabled={loading}
-                                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
-                                  loading 
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
-                                }`}
-                              >
-                                {loading ? (
-                                  <>
-                                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                    </svg>
-                                    Eliminando...
-                                  </>
-                                ) : (
-                                  <>
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                    🗑️ Limpiar Vista
-                                  </>
-                                )}
-                              </button>
-                            )}
-                          </>
-                        )}
-                      </div>
+                      {/* Botón para agregar clase manual - aparece siempre */}
+                      <button
+                        onClick={() => setMostrarPopup(true)}
+                        className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Agregar Clase Manual
+                      </button>
+
+                      {/* Botón guardar inscripción - aparece cuando hay horarios */}
+                      {horarios.length > 0 && (
+                        <button
+                          onClick={guardarInscripcion}
+                          disabled={loading}
+                          className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
+                            loading 
+                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                              : 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white'
+                          }`}
+                        >
+                          {loading ? (
+                            <>
+                              <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                              </svg>
+                              Guardando...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                              </svg>
+                              Guardar Inscripción
+                            </>
+                          )}
+                        </button>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
             </>
@@ -1326,15 +1251,6 @@ export default function Horario() {
                 <h3 className="text-lg font-semibold text-blue-900">
                   Resumen de Clases ({horarios.length} clase{horarios.length !== 1 ? 's' : ''})
                 </h3>
-                <button
-                  onClick={descargarHorario}
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Exportar PDF
-                </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {horarios.map((horario, index) => {

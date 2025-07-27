@@ -99,7 +99,10 @@ jobs:
               # actualizar el código fuente, instalar dependencias y reiniciar servicios
               echo "Actualizando el código fuente..."
               git fetch origin main
+              git checkout main
               git reset --hard origin/main
+              git branch --show-current
+
 
               # instalar dependencias del BACKEND
               echo "Instalando dependencias del backend..."
