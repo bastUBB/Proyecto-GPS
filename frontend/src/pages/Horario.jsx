@@ -38,6 +38,7 @@ export default function Horario() {
   const horarioRef = useRef(null);
   const [asignaturasDisponibles, setAsignaturasDisponibles] = useState([]);
   const [mostrandoSugerencias, setMostrandoSugerencias] = useState(false);
+  const [tieneInscripcionesBD, setTieneInscripcionesBD] = useState(false);
   const [form, setForm] = useState({
     dia: "Lunes",
     horaInicio: "08:10",
@@ -55,6 +56,67 @@ export default function Horario() {
         'Content-Type': 'application/json'
       }
     };
+  };
+
+  // Verificar si hay inscripciones en la BD (sin cargarlas)
+  const verificarInscripcionesBD = async () => {
+    if (!user || user.role !== 'alumno') return;
+
+    try {
+      const response = await axios.get(`/api/inscripcion/estudiante/${user.rut}`, getAuthConfig());
+      setTieneInscripcionesBD(response.data && response.data.data && response.data.data.length > 0);
+    } catch (error) {
+      setTieneInscripcionesBD(false);
+    }
+  };
+
+  // Cargar inscripciones existentes del estudiante
+  const cargarInscripcionesExistentes = async () => {
+    if (!user || user.role !== 'alumno') return;
+
+    try {
+      const response = await axios.get(`/api/inscripcion/estudiante/${user.rut}`, getAuthConfig());
+      
+      if (response.data && response.data.data && response.data.data.length > 0) {
+        const inscripciones = response.data.data;
+        const horariosExistentes = [];
+
+        inscripciones.forEach(inscripcion => {
+          inscripcion.bloques.forEach((bloque, index) => {
+            horariosExistentes.push({
+              id: `${inscripcion._id}-${index}`, // ID único para tracking
+              dia: bloque.dia,
+              horaInicio: ajustarHoraABloque(bloque.horaInicio),
+              horaFin: ajustarHoraABloque(bloque.horaFin),
+              asignatura: inscripcion.asignatura,
+              sala: bloque.sala,
+              profesor: inscripcion.profesor,
+              seccion: inscripcion.seccion,
+              tipo: bloque.tipo,
+              horaOriginalInicio: bloque.horaInicio,
+              horaOriginalFin: bloque.horaFin,
+              inscripcionId: inscripcion._id, // Para poder eliminar después
+              origen: 'bd' // Marca que viene de la base de datos
+            });
+          });
+        });
+
+        setHorarios(horariosExistentes);
+        console.log('Inscripciones existentes cargadas:', horariosExistentes);
+        setMensaje(`📚 Cargadas ${inscripciones.length} inscripciones existentes`);
+        setTieneInscripcionesBD(true); // Hay inscripciones en la BD
+        setTimeout(() => setMensaje(''), 3000);
+      } else {
+        setTieneInscripcionesBD(false); // No hay inscripciones en la BD
+      }
+    } catch (error) {
+      console.error('Error al cargar inscripciones existentes:', error);
+      setTieneInscripcionesBD(false); // Error = asumir que no hay inscripciones
+      if (error.response?.status !== 404) {
+        setMensaje('⚠️ Error al cargar inscripciones existentes');
+        setTimeout(() => setMensaje(''), 3000);
+      }
+    }
   };
 
   // Cargar recomendaciones del backend
@@ -137,9 +199,14 @@ export default function Horario() {
       setLoading(true);
       setMensaje('');
 
+      // IMPORTANTE: Solo se toman en cuenta los horarios que están actualmente en el estado 'horarios'
+      // Si un bloque fue eliminado del horario visual, NO se incluirá en la inscripción
+      console.log('Horarios actuales que se enviarán:', horarios);
+
       // Agrupar horarios por asignatura, profesor y sección
       const inscripcionesPorAsignatura = {};
 
+      // Iterar solo sobre los horarios que están actualmente visibles/seleccionados
       horarios.forEach(horario => {
         const key = `${horario.asignatura}-${horario.profesor}-${horario.seccion}`;
 
@@ -172,6 +239,10 @@ export default function Horario() {
           sala: horario.sala || 'Sin asignar'
         });
       });
+
+      // Log para mostrar exactamente qué inscripciones se van a enviar
+      console.log('📋 Inscripciones agrupadas que se enviarán:', inscripcionesPorAsignatura);
+      console.log(`📊 Total de asignaturas a inscribir: ${Object.keys(inscripcionesPorAsignatura).length}`);
 
       // Enviar cada inscripción al backend
       const resultados = [];
@@ -216,8 +287,10 @@ export default function Horario() {
 
       if (errores.length === 0) {
         setMensaje(`✅ Inscripciones guardadas exitosamente (${resultados.length} asignaturas) - Semestre 1, ${new Date().getFullYear()}`);
+        setTieneInscripcionesBD(true); // Ahora hay inscripciones en la BD
       } else if (resultados.length > 0) {
         setMensaje(`⚠️ Parcialmente guardado: ${resultados.length} exitosas, ${errores.length} con errores`);
+        setTieneInscripcionesBD(true); // Al menos algunas se guardaron
       } else {
         setMensaje(`❌ Error al guardar inscripciones: ${errores.join(', ')}`);
       }
@@ -271,9 +344,10 @@ export default function Horario() {
     // Verificar si recomendacionSet tiene la propiedad 'recomendaciones'
     const recomendaciones = recomendacionSet.recomendaciones || recomendacionSet;
 
-    recomendaciones.forEach(recomendacion => {
-      recomendacion.bloques.forEach(bloque => {
+    recomendaciones.forEach((recomendacion, recIndex) => {
+      recomendacion.bloques.forEach((bloque, bloqueIndex) => {
         horarioConvertido.push({
+          id: `${tipoSet}-${recIndex}-${bloqueIndex}-${Date.now()}`, // ID único para tracking
           dia: diaMapping[bloque.dia] || bloque.dia,
           horaInicio: ajustarHoraABloque(bloque.horaInicio),
           horaFin: ajustarHoraABloque(bloque.horaFin),
@@ -287,7 +361,8 @@ export default function Horario() {
           detalles: recomendacion.detalles,
           tipoRecomendacion: tipoSet,
           horaOriginalInicio: bloque.horaInicio, // Guardar hora original para referencia
-          horaOriginalFin: bloque.horaFin
+          horaOriginalFin: bloque.horaFin,
+          origen: 'recomendacion' // Marca que viene de recomendación
         });
       });
     });
@@ -298,6 +373,8 @@ export default function Horario() {
   // Cargar datos iniciales
   useEffect(() => {
     if (user?.role === 'alumno') {
+      verificarInscripcionesBD(); // Verificar si hay inscripciones
+      cargarInscripcionesExistentes(); // Cargar inscripciones primero
       cargarRecomendaciones();
     }
   }, [user]);
@@ -363,7 +440,7 @@ export default function Horario() {
       console.log('ENTRANDO A RAMA DE AGREGAR COMPLETA');
       
       // Crear array con todas las nuevas clases
-      const nuevasClases = asignaturaInfo.bloques.map(bloque => {
+      const nuevasClases = asignaturaInfo.bloques.map((bloque, index) => {
         // Asegurar que tenemos valores válidos
         const diaFinal = diaMapping[bloque.dia] || bloque.dia || 'Lunes';
         const horaInicioFinal = bloque.horaInicio && hours.includes(bloque.horaInicio) 
@@ -374,6 +451,7 @@ export default function Horario() {
           : ajustarHoraABloque(bloque.horaFin || '09:30');
         
         return {
+          id: `manual-${asignaturaInfo.asignatura}-${index}-${Date.now()}`, // ID único para tracking
           dia: diaFinal,
           horaInicio: horaInicioFinal,
           horaFin: horaFinFinal,
@@ -383,7 +461,8 @@ export default function Horario() {
           seccion: asignaturaInfo.seccion || '1',
           tipo: bloque.tipo || 'TEO',
           horaOriginalInicio: bloque.horaInicio,
-          horaOriginalFin: bloque.horaFin
+          horaOriginalFin: bloque.horaFin,
+          origen: 'manual' // Marca que fue agregado manualmente
         };
       });
       
@@ -441,21 +520,23 @@ export default function Horario() {
       newErrors.horaFin = 'La hora de fin debe ser posterior a la hora de inicio';
     }
 
-    // Verificar conflictos de horario - ahora permitir superposición pero advertir
+    // Verificar conflictos de horario - permitir solapamientos parciales y totales
     const clasesConflicto = horarios.filter(horario => {
       if (horario.dia !== form.dia) return false;
 
       const horarioInicioIndex = hours.indexOf(horario.horaInicio);
       const horarioFinIndex = hours.indexOf(horario.horaFin);
 
-      // Verificar si hay solapamiento
-      return !(finIndex <= horarioInicioIndex || inicioIndex >= horarioFinIndex);
+      // Verificar si hay cualquier tipo de solapamiento (parcial o total)
+      const haySolapamiento = !(finIndex <= horarioInicioIndex || inicioIndex >= horarioFinIndex);
+      
+      return haySolapamiento;
     });
 
     if (clasesConflicto.length > 0) {
-      // En lugar de error, mostrar advertencia informativa
-      const asignaturasConflicto = clasesConflicto.map(h => h.asignatura).join(', ');
-      newErrors.dia = `ℹ️ Se superpone con: ${asignaturasConflicto}. Las clases se mostrarán juntas.`;
+      // Mostrar advertencia informativa para solapamientos
+      const asignaturasConflicto = clasesConflicto.map(h => `${h.asignatura} (${h.horaInicio}-${h.horaFin})`).join(', ');
+      newErrors.dia = `ℹ️ Se superpone con: ${asignaturasConflicto}. Se permitirá el solapamiento parcial.`;
     }
 
     setErrors(newErrors);
@@ -477,7 +558,14 @@ export default function Horario() {
       // Simular una pequeña demora para mostrar el loading
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      setHorarios([...horarios, { ...form }]);
+      // Agregar ID único al horario creado manualmente
+      const nuevoHorario = { 
+        ...form, 
+        id: `formulario-${Date.now()}`, // ID único para tracking
+        origen: 'formulario' // Marca que fue creado desde el formulario
+      };
+      
+      setHorarios([...horarios, nuevoHorario]);
       setForm({
         dia: "Lunes",
         horaInicio: "08:10",
@@ -546,9 +634,51 @@ export default function Horario() {
     }
   };
 
-  const limpiarHorario = () => {
-    setHorarios([]);
-    setHorarioSeleccionado(null);
+  const limpiarHorario = async () => {
+    if (!user || user.role !== 'alumno') {
+      setHorarios([]);
+      setHorarioSeleccionado(null);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setMensaje('🗑️ Eliminando inscripciones...');
+
+      // Eliminar todas las inscripciones del estudiante de la base de datos
+      const response = await axios.delete(`/api/inscripcion/estudiante/${user.rut}`, getAuthConfig());
+      
+      if (response.data) {
+        console.log('Inscripciones eliminadas:', response.data);
+        setMensaje(`✅ ${response.data.data.inscripcionesAfectadas} inscripciones eliminadas de la base de datos`);
+      }
+
+      // Limpiar el horario visual
+      setHorarios([]);
+      setHorarioSeleccionado(null);
+      setTieneInscripcionesBD(false); // Ya no hay inscripciones en la BD
+
+      setTimeout(() => setMensaje(''), 3000);
+
+    } catch (error) {
+      console.error('Error al limpiar inscripciones:', error);
+      
+      // Aun así limpiar la vista
+      setHorarios([]);
+      setHorarioSeleccionado(null);
+      // No cambiar tieneInscripcionesBD aquí porque no sabemos si se eliminaron
+      
+      if (error.response?.status === 404) {
+        setMensaje('ℹ️ No había inscripciones para eliminar');
+        setTieneInscripcionesBD(false); // Si no había nada que eliminar
+      } else {
+        setMensaje('⚠️ Error al eliminar inscripciones de la BD, pero se limpió la vista');
+      }
+      
+      setTimeout(() => setMensaje(''), 3000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const descargarHorario = async () => {
@@ -578,6 +708,9 @@ export default function Horario() {
       pdf.setFont('helvetica', 'bold');
       const titulo = horarioSeleccionado ? horarioSeleccionado.nombre : 'Horario Personalizado';
       pdf.text(titulo, 10, 15);
+      // Que el titulo sea horario_Nombre_Apellido
+      // const nombreCompleto = user ? `${user.nombre} ${user.apellido}` : 'Usuario';
+      // pdf.text(`Horario de ${nombreCompleto}`, 10, 10);
 
       // Añadir información adicional
       pdf.setFontSize(10);
@@ -603,7 +736,7 @@ export default function Horario() {
       }
 
       // Descargar el PDF
-      const nombreArchivo = `horario_${horarioSeleccionado ? horarioSeleccionado.nombre.replace(/\s+/g, '_') : 'personalizado'}.pdf`;
+      const nombreArchivo = `horario_${nombreCompleto.replace(/\\s+/g, '_')}.pdf`;
       pdf.save(nombreArchivo);
 
     } catch (error) {
@@ -647,50 +780,45 @@ export default function Horario() {
 
   const renderCelda = (dia, hora, filaIndex = 0) => {
     const key = `${dia}-${hora}-${filaIndex}`;
-    const horasVisibles = obtenerHorasAMostrar();
 
     // Si es una fila de descanso, renderizar celda especial
     if (hora === "DESCANSO") {
       return (
         <td key={key} className="px-2 py-1 bg-gradient-to-r from-gray-100 to-gray-50 text-gray-500 text-xs text-center align-middle border border-gray-300 min-h-[25px]">
-          <span className="text-gray-400 font-medium">•••</span>
+          {/* Sin contenido para evitar puntos suspensivos */}
         </td>
       );
     }
 
-    // Buscar todas las clases que comienzan en esta hora
+    // Buscar todas las clases que comienzan en esta hora exacta
     const clasesInician = horarios.filter(
       (h) => h.dia === dia && h.horaInicio === hora
     );
 
-    // Buscar si hay una clase activa en esta hora (que haya comenzado antes y aún no termine)
+    // Buscar si hay una clase que ya está ocupando esta celda (clase activa)
     const claseActiva = horarios.find((h) => {
       if (h.dia !== dia) return false;
       const inicioIndex = hours.indexOf(h.horaInicio);
       const finIndex = hours.indexOf(h.horaFin);
       const horaActualIndex = hours.indexOf(hora);
+      // Cambio: ahora incluye la hora de fin (<=) 
       return inicioIndex < horaActualIndex && horaActualIndex <= finIndex;
     });
 
+    // Si hay una clase activa (que empezó antes), esta celda no debe renderizarse
+    if (claseActiva) {
+      return null;
+    }
+
     if (clasesInician.length > 0) {
-      // Usar la primera clase para calcular el rowSpan (asumiendo que todas tienen la misma duración)
+      // Usar la primera clase para calcular el rowSpan
       const claseReferencia = clasesInician[0];
 
-      // Calcular cuántas celdas debe abarcar esta clase dentro de las horas visibles
+      // Calcular rowSpan basado en la duración de la clase - INCLUYE la hora de fin
       const inicioIndex = hours.indexOf(claseReferencia.horaInicio);
       const finIndex = hours.indexOf(claseReferencia.horaFin);
-
-      // En las horas visibles, contar desde inicio hasta fin (inclusivo)
-      const inicioIndexVisible = horasVisibles.indexOf(claseReferencia.horaInicio);
-      let finIndexVisible = horasVisibles.indexOf(claseReferencia.horaFin);
-
-      // Si la hora de fin no está visible, usar la última hora visible
-      if (finIndexVisible === -1) {
-        finIndexVisible = horasVisibles.length;
-      }
-
-      // El rowSpan incluye la hora de fin (+1 para incluir la hora final)
-      const rowSpan = finIndexVisible - inicioIndexVisible + 1;
+      // Cambio: +1 para incluir la hora de fin
+      const rowSpan = Math.max(1, finIndex - inicioIndex + 1);
 
       // Si hay múltiples clases, usar un color mixto o degradado
       let colorClase;
@@ -712,14 +840,19 @@ export default function Horario() {
           key={key}
           rowSpan={Math.max(1, rowSpan)}
           className={`px-2 py-2 bg-gradient-to-br ${colorClase.bg} ${colorClase.text} text-sm relative group align-top border ${colorClase.border} shadow-sm`}
+          style={{
+            maxWidth: '150px',
+            wordWrap: 'break-word',
+            overflow: 'hidden'
+          }}
         >
           <div className="space-y-1 h-full flex flex-col justify-center min-h-[80px]">
             {clasesInician.map((clase, index) => (
               <div key={index} className={`${index > 0 ? 'border-t border-gray-300 pt-1 mt-1' : ''}`}>
-                <p className={`font-semibold ${colorClase.text} break-words leading-tight text-center text-xs`}>
+                <p className={`font-semibold ${colorClase.text} break-words leading-tight text-center text-xs`} style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
                   {clase.asignatura}
                 </p>
-                <p className={`${colorClase.sala} text-xs font-medium text-center`}>{clase.sala}</p>
+                <p className={`${colorClase.sala} text-xs font-medium text-center`} style={{ wordBreak: 'break-word' }}>{clase.sala}</p>
                 {index === 0 && (
                   <p className={`${colorClase.hora} text-xs text-center`}>
                     {clase.horaInicio} - {clase.horaFin}
@@ -732,7 +865,7 @@ export default function Horario() {
                   </p>
                 )}
                 {clase.profesor && (
-                  <p className={`${colorClase.hora} text-xs text-center font-medium`}>
+                  <p className={`${colorClase.hora} text-xs text-center font-medium`} style={{ wordBreak: 'break-word' }}>
                     👨‍🏫 {clase.profesor}
                   </p>
                 )}
@@ -754,13 +887,21 @@ export default function Horario() {
           </div>
         </td>
       );
-    } else if (claseActiva) {
-      // Esta celda está ocupada por una clase que comenzó antes, no renderizar nada
-      return null;
     } else {
-      // Celda vacía
+      // Celda vacía - sin contenido para evitar puntos suspensivos
       return (
-        <td key={key} className="px-2 py-1 bg-white min-h-[40px] align-top border border-gray-200 hover:bg-gray-50 transition-colors duration-150"></td>
+        <td 
+          key={key} 
+          className="px-2 py-1 bg-white min-h-[40px] align-top border border-gray-200 hover:bg-gray-50 transition-colors duration-150"
+          style={{ 
+            minHeight: '40px',
+            maxWidth: '150px',
+            overflow: 'hidden',
+            wordWrap: 'break-word'
+          }}
+        >
+          {/* Celda intencionalmente vacía */}
+        </td>
       );
     }
   };
@@ -936,59 +1077,145 @@ export default function Horario() {
 
                       {/* Botones de acción */}
                       <div className="flex flex-wrap gap-3 justify-center">
-                        {horarios.length > 0 && (
-                          <button
-                            onClick={guardarInscripcion}
-                            disabled={loading}
-                            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-sm flex items-center gap-2 ${loading
-                              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                              : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white transform hover:scale-105'
+                        {/* Botones que aparecen solo cuando hay inscripciones en la BD */}
+                        {tieneInscripcionesBD && (
+                          <>
+                            {/* Botón para cargar inscripciones de la BD */}
+                            <button
+                              onClick={cargarInscripcionesExistentes}
+                              disabled={loading}
+                              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
+                                loading 
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
                               }`}
-                          >
-                            {loading ? (
-                              <>
-                                <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                                Guardando Inscripción...
-                              </>
-                            ) : (
-                              <>
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                                </svg>
-                                💾 Guardar Inscripción Oficial
-                              </>
-                            )}
-                          </button>
+                            >
+                              {loading ? (
+                                <>
+                                  <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                  </svg>
+                                  Cargando...
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                  </svg>
+                                  Cargar Inscripciones
+                                </>
+                              )}
+                            </button>
+
+                            {/* Botón limpiar cuando hay inscripciones en BD */}
+                            <button
+                              onClick={limpiarHorario}
+                              disabled={loading}
+                              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
+                                loading 
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
+                              }`}
+                            >
+                              {loading ? (
+                                <>
+                                  <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                  </svg>
+                                  Eliminando...
+                                </>
+                              ) : (
+                                <>
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                  </svg>
+                                  Limpiar Todo
+                                </>
+                              )}
+                            </button>
+                          </>
                         )}
-                        
-                        <button
-                          onClick={() => setMostrarPopup(true)}
-                          className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                          </svg>
-                          Agregar Clase Manual
-                        </button>
 
-                        <button
-                          onClick={descargarHorario}
-                          className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          Descargar PDF
-                        </button>
+                        {/* Botones que aparecen cuando se selecciona una recomendación o hay horarios */}
+                        {(horarioSeleccionado || horarios.length > 0) && (
+                          <>
+                            {horarios.length > 0 && (
+                              <button
+                                onClick={guardarInscripcion}
+                                disabled={loading}
+                                className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${loading
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                  : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white'
+                                  }`}
+                              >
+                                {loading ? (
+                                  <>
+                                    <svg className="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    Guardando Inscripción...
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                    </svg>
+                                    Guardar Inscripción Oficial
+                                  </>
+                                )}
+                              </button>
+                            )}
+                            
+                            <button
+                              onClick={() => setMostrarPopup(true)}
+                              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                              </svg>
+                              Agregar Clase Manual
+                            </button>
 
-                        <button
-                          onClick={limpiarHorario}
-                          className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm"
-                        >
-                          Limpiar Horario
-                        </button>
+                            <button
+                              onClick={descargarHorario}
+                              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              Descargar PDF
+                            </button>
+
+                            {/* Botón limpiar cuando solo hay horarios en vista (sin inscripciones en BD) */}
+                            {!tieneInscripcionesBD && horarios.length > 0 && (
+                              <button
+                                onClick={limpiarHorario}
+                                disabled={loading}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-md hover:shadow-lg text-sm flex items-center gap-2 ${
+                                  loading 
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
+                                }`}
+                              >
+                                {loading ? (
+                                  <>
+                                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    Eliminando...
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    🗑️ Limpiar Vista
+                                  </>
+                                )}
+                              </button>
+                            )}
+                          </>
+                        )}
                       </div>
                     </div>
                   )}
@@ -1055,13 +1282,14 @@ export default function Horario() {
               <table className="w-full min-w-[600px] border-collapse border border-gray-300 table-fixed">
                 <thead>
                   <tr className="bg-gradient-to-r from-blue-100 to-cyan-100">
-                    <th className="px-3 py-3 text-blue-900 font-bold text-sm border border-blue-300 w-16">
+                    <th className="px-3 py-3 text-blue-900 font-bold text-sm border border-blue-300" style={{ width: '80px' }}>
                       Hora
                     </th>
                     {days.map((dia) => (
                       <th
                         key={dia}
-                        className="px-3 py-3 text-blue-900 font-bold text-sm border border-blue-300 w-1/5"
+                        className="px-3 py-3 text-blue-900 font-bold text-sm border border-blue-300"
+                        style={{ width: `${(100 - 10) / days.length}%` }}
                       >
                         {dia}
                       </th>
@@ -1081,10 +1309,7 @@ export default function Horario() {
                         }`}>
                         {hora === "DESCANSO" ? "" : hora}
                       </td>
-                      {days.map((dia, diaIndex) => {
-                        const celda = renderCelda(dia, hora, index);
-                        return celda;
-                      }).filter(celda => celda !== null)}
+                      {days.map((dia, diaIndex) => renderCelda(dia, hora, index)).filter(celda => celda !== null)}
                     </tr>
                   ))}
                 </tbody>
