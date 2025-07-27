@@ -2,7 +2,8 @@ import {
     crearRecomendacionInscripcionService,
     crearInscripcionService,
     getInscripcionService,
-    deleteInscripcionService
+    deleteInscripcionService,
+    updateInscripcionService
 } from '../services/inscripcion.service.js';
 import { inscripcionQueryValidation, inscripcionBodyValidation } from '../validations/inscripcion.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from '../handlers/responseHandlers.js';
@@ -83,6 +84,30 @@ export async function deleteInscripcion(req, res) {
         if (errorDelete) return handleErrorClient(res, 404, "Inscripción no encontrada", errorDelete);
 
         handleSuccess(res, 200, "Inscripción eliminada con éxito", deletedInscripcion);
+    } catch (error) {
+        handleErrorServer(res, 500, error.message);
+    }
+}
+
+export async function updateInscripcion(req, res) {
+    try {
+        const dataInscripcionQuery = req.query;
+
+        const { error, value } = inscripcionQueryValidation.validate(dataInscripcionQuery);
+
+        if (error) return handleErrorClient(res, 400, "Error de validación", error.message);
+
+        const dataInscripcionBody = req.body;
+
+        const { error: bodyError, value: bodyValue } = inscripcionBodyValidation.validate(dataInscripcionBody);
+
+        if (bodyError) return handleErrorClient(res, 400, "Error de validación", bodyError.message);
+
+        const [updatedInscripcion, errorUpdate] = await updateInscripcionService(value, bodyValue);
+
+        if (errorUpdate) return handleErrorClient(res, 404, "Inscripción no encontrada", errorUpdate);
+
+        handleSuccess(res, 200, "Inscripción actualizada con éxito", updatedInscripcion);
     } catch (error) {
         handleErrorServer(res, 500, error.message);
     }
