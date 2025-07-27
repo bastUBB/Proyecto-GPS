@@ -8,7 +8,8 @@ export default function EditarNotasParcialesModal({
     currentNote,
     currentSemestre,
     notasParciales = [],
-    onSave 
+    onSave,
+    tipo = 'inscribible' // Agregar tipo para saber si es inscribible o cursada
 }) {
     const [semestre, setSemestre] = useState(currentSemestre?.toString() || '1');
     const [parciales, setParciales] = useState([]);
@@ -65,6 +66,24 @@ export default function EditarNotasParcialesModal({
         return !isNaN(num) && num >= 0 && num <= 100;
     };
 
+    // Función para aplicar redondeo académico
+    const aplicarRedondeoAcademico = (nota) => {
+        if (nota >= 3.95 && nota < 4.0) {
+            return 4.0;
+        }
+        return nota;
+    };
+
+    // Función para obtener la nota final para mostrar (con redondeo)
+    const getNotaFinalParaMostrar = () => {
+        return aplicarRedondeoAcademico(notaFinalCalculada);
+    };
+
+    // Función para saber si se aplicó redondeo
+    const seAplicoRedondeo = () => {
+        return notaFinalCalculada >= 3.95 && notaFinalCalculada < 4.0;
+    };
+
     const calcularNotaNecesaria = () => {
         let notaTotal = 0;
         let ponderacionTotal = 0;
@@ -101,7 +120,7 @@ export default function EditarNotasParcialesModal({
             ponderacionCompleta > 0) {
             
             const notaPara40 = ((4.0 * ponderacionCompleta) - (notaTotal * 100)) / ponderacionFaltante;
-            const notaPara395 = ((3.95 * ponderacionCompleta) - (notaTotal * 100)) / ponderacionFaltante;
+            const notaPara395 = ((3.96 * ponderacionCompleta) - (notaTotal * 100)) / ponderacionFaltante;
             
             return {
                 para40: Math.max(1.0, Math.min(7.0, notaPara40)),
@@ -172,7 +191,9 @@ export default function EditarNotasParcialesModal({
 
         setLoading(true);
         try {
-            await onSave(asignatura, notaFinalCalculada.toFixed(2), semestre, parciales);
+            // Enviar la nota final con redondeo académico aplicado
+            const notaFinalParaGuardar = getNotaFinalParaMostrar();
+            await onSave(asignatura, notaFinalParaGuardar.toFixed(2), semestre, parciales);
             onClose();
         } catch (error) {
             console.error('Error al guardar notas parciales:', error);
@@ -217,16 +238,44 @@ export default function EditarNotasParcialesModal({
                         </select>
                     </div>
 
+                    {/* Advertencia para conversión de estado */}
+                    {tipo === 'inscribible' && (
+                        <div className="mb-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                            <h4 className="font-medium text-amber-900 mb-2">
+                                ⚠️ Conversión a Asignatura Cursada
+                            </h4>
+                            <p className="text-sm text-amber-800 mb-2">
+                                Esta asignatura está marcada como <strong>inscribible</strong>. Al guardar las notas parciales, 
+                                se convertirá automáticamente en una asignatura <strong>cursada</strong>.
+                            </p>
+                            <div className="text-xs text-amber-700 bg-amber-100 p-2 rounded">
+                                <p className="mb-1">• Las notas parciales se convertirán en el historial académico formal</p>
+                                <p className="mb-1">• Si la nota final es menor a 4.0, se ajustará automáticamente a 4.0</p>
+                                <p>• Este cambio será permanente una vez guardado</p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Nota final calculada */}
                     <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                         <h4 className="font-medium text-blue-900 mb-2">Nota Final Calculada</h4>
                         <div className={`text-2xl font-bold ${
-                            notaFinalCalculada >= 4 ? 'text-green-600' : 'text-red-600'
+                            getNotaFinalParaMostrar() >= 4 ? 'text-green-600' : 'text-red-600'
                         }`}>
-                            {notaFinalCalculada.toFixed(2)}
+                            {getNotaFinalParaMostrar().toFixed(2)}
                         </div>
+                        {seAplicoRedondeo() && (
+                            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+                                <p className="text-xs text-green-700">
+                                    ✨ <strong>Redondeo académico aplicado</strong>
+                                </p>
+                                <p className="text-xs text-green-600">
+                                    Nota real: {notaFinalCalculada.toFixed(2)} → Nota final: 4.0
+                                </p>
+                            </div>
+                        )}
                         <p className="text-sm text-blue-700">
-                            {notaFinalCalculada >= 4 ? 'Aprobada' : 'Reprobada'}
+                            {getNotaFinalParaMostrar() >= 3.95 ? 'Aprobada' : 'Reprobada'}
                         </p>
                     </div>
 
@@ -240,7 +289,7 @@ export default function EditarNotasParcialesModal({
                                 Con {notaNecesaria.notasCompletas} notas ingresadas, necesitas:
                             </p>
                             <div className="space-y-2">
-                                <div className="flex items-center justify-between">
+                                {/* <div className="flex items-center justify-between">
                                     <span className="text-sm text-yellow-800">Para obtener 4.0 (aprobación cómoda):</span>
                                     <div className="flex items-center gap-2">
                                         <span className={`font-bold text-lg ${
@@ -258,7 +307,7 @@ export default function EditarNotasParcialesModal({
                                             </button>
                                         )}
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className="flex items-center justify-between">
                                     <span className="text-sm text-yellow-800">Para obtener 3.95 (mínimo aprobación):</span>
                                     <div className="flex items-center gap-2">

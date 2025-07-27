@@ -9,7 +9,7 @@ const inscripcionSchema = new mongoose.Schema({
     rutAlumnos: [{
         type: String,
         required: true,
-        unique: true,
+        unique: true, //Borrar
         cast: false
     }],
     rutParaEnviar: {

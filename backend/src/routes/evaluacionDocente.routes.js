@@ -10,7 +10,7 @@ import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware.
 
 const router = Router();
 
-// router.use(authenticateJWT);
+router.use(authenticateJWT);
 
 router
     .get('/detail', authorizeRoles('docente', 'profesor', 'admin', 'director'), getEvaluacionDocente)

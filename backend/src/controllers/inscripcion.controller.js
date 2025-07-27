@@ -12,9 +12,20 @@ export async function crearInscripcion(req, res) {
     try {
         const inscripcionData = req.body;
 
+        console.log('Datos de inscripción recibidos:', inscripcionData);
+
         const { value, error } = inscripcionBodyValidation.validate(inscripcionData);
 
-        if (error) return handleErrorClient(res, 400, "Error de validación", error.message);
+        console.log('Datos de inscripción validados:', value);
+
+        console.log('Error1?', error);
+        
+        if (error) {
+            const mensaje = error.details?.[0]?.message || error.message || "Datos inválidos";
+            return handleErrorClient(res, 400, "Error de validación", mensaje);
+        }
+
+        console.log('Error2?', error);
 
         const [newInscripcion, errorNewInscripcion] = await crearInscripcionService(value);
 

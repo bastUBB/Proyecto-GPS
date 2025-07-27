@@ -172,7 +172,7 @@ const MallaCurricular = () => {
         params: { rutUser: user.rut }
       });
 
-      //console.log('Respuesta del backend (Carga):', response.data);
+      console.log('Respuesta del backend (Carga):', response.data);
       // console.log('Response completo:', response);
       // console.log('Tipo de response.data:', typeof response.data);
       // console.log('response.data.status:', response.data?.status);

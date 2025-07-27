@@ -35,10 +35,10 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
         const profesoresPorAsignatura = {};
         for (const asignatura of asignaturasInscribibles) {
             // console.log(`Buscando profesores para asignatura: ${asignatura}`);
-            const registros = await asignaturasDocente.find({ 
-                asignaturas: { $in: [asignatura] } 
+            const registros = await asignaturasDocente.find({
+                asignaturas: { $in: [asignatura] }
             });
-            
+
             if (registros.length > 0) {
                 // Usar Set para eliminar duplicados
                 const profesoresUnicos = [...new Set(registros.map(r => r.docente))];
@@ -72,12 +72,12 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                 }
 
                 const apellidosProfesor = formatearNombreParaComparacion(profesor);
-                
-                const registrosHorario = horario.filter(h => 
-                    h.asignatura.toUpperCase() === asignatura.toUpperCase() && 
+
+                const registrosHorario = horario.filter(h =>
+                    h.asignatura.toUpperCase() === asignatura.toUpperCase() &&
                     h.docente.toUpperCase().includes(apellidosProfesor)
                 );
-                
+
                 for (const registro of registrosHorario) {
                     datosHorario.push({
                         asignatura: registro.asignatura,
@@ -118,7 +118,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
 
         for (const dato of datosHorario) {
             const claveProfesorAsignatura = `${dato.profesor}|${dato.asignatura}`;
-            
+
             // Evitar calcular el mismo profesor-asignatura múltiples veces
             if (!profesoresAnalizados.has(claveProfesorAsignatura)) {
                 const rendimientosProfesor = await rendimientoAsignatura.find({
@@ -126,14 +126,14 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                     asignatura: dato.asignatura
                     // Sin filtro de sección ni año - todos los registros históricos
                 });
-                
+
                 if (rendimientosProfesor.length > 0) {
-                    const promedioAprobacion = rendimientosProfesor.reduce((sum, r) => 
+                    const promedioAprobacion = rendimientosProfesor.reduce((sum, r) =>
                         sum + parseFloat(r.porcentajeAprob), 0) / rendimientosProfesor.length;
-                    
-                    const promedioInscritos = rendimientosProfesor.reduce((sum, r) => 
+
+                    const promedioInscritos = rendimientosProfesor.reduce((sum, r) =>
                         sum + parseInt(r.totalInscritos), 0) / rendimientosProfesor.length;
-                    
+
                     rendimientos.push({
                         asignatura: dato.asignatura,
                         profesor: dato.profesor,
@@ -142,7 +142,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                         totalRegistrosHistoricos: rendimientosProfesor.length,
                         añosImpartidos: [...new Set(rendimientosProfesor.map(r => r.año))].length
                     });
-                    
+
                     profesoresAnalizados.add(claveProfesorAsignatura);
                 }
             }
@@ -157,7 +157,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
 
         for (const dato of datosHorario) {
             const claveProfesorAsignatura = `${dato.profesor}|${dato.asignatura}`;
-            
+
             // Evitar calcular el mismo profesor-asignatura múltiples veces
             if (!profesoresEvaluados.has(claveProfesorAsignatura)) {
                 const evaluacionesProfesor = await evluacionDocente.find({
@@ -165,18 +165,18 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                     asignatura: dato.asignatura,
                     estado: 'aprobada' // Solo evaluaciones aprobadas
                 });
-                
+
                 if (evaluacionesProfesor.length > 0) {
-                    const promedioEvaluacion = evaluacionesProfesor.reduce((sum, e) => 
+                    const promedioEvaluacion = evaluacionesProfesor.reduce((sum, e) =>
                         sum + parseFloat(e.calificacion), 0) / evaluacionesProfesor.length;
-                    
+
                     evaluaciones.push({
                         asignatura: dato.asignatura,
                         profesor: dato.profesor,
                         promedioEvaluacion: promedioEvaluacion,
                         totalEvaluaciones: evaluacionesProfesor.length
                     });
-                    
+
                     profesoresEvaluados.add(claveProfesorAsignatura);
                 }
             }
@@ -186,31 +186,31 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
 
         // 6. Crear datos completos combinando toda la información
         const datosCompletos = datosHorario.map(dato => {
-            const rendimiento = rendimientos.find(r => 
-                r.asignatura === dato.asignatura && 
+            const rendimiento = rendimientos.find(r =>
+                r.asignatura === dato.asignatura &&
                 r.profesor === dato.profesor
                 // Sin filtro de sección - rendimiento general del profesor
             );
-            
-            const evaluacion = evaluaciones.find(e => 
-                e.asignatura === dato.asignatura && 
+
+            const evaluacion = evaluaciones.find(e =>
+                e.asignatura === dato.asignatura &&
                 e.profesor === dato.profesor
                 // Sin filtro de sección - evaluación general del profesor
             );
-            
+
             // Calcular puntaje compuesto
             const promedioAprobacion = rendimiento?.promedioAprobacion || 0;
             const promedioInscritos = rendimiento?.promedioInscritos || 0;
             const promedioEvaluacion = evaluacion?.promedioEvaluacion || 0;
-            
-            const puntajeRendimiento = rendimiento ? 
+
+            const puntajeRendimiento = rendimiento ?
                 (promedioAprobacion * 0.6 + (promedioInscritos / 50) * 0.2) : 0;
-            
-            const puntajeEvaluacion = evaluacion ? 
+
+            const puntajeEvaluacion = evaluacion ?
                 (promedioEvaluacion / 7) * 100 * 0.4 : 0;
-            
+
             const puntaje = puntajeRendimiento + puntajeEvaluacion;
-            
+
             return {
                 ...dato,
                 promedioAprobacion,
@@ -234,7 +234,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
             if (!bloques1 || !bloques2 || !Array.isArray(bloques1) || !Array.isArray(bloques2)) {
                 return false;
             }
-            
+
             for (const bloque1 of bloques1) {
                 for (const bloque2 of bloques2) {
                     // Verificar si es el mismo día
@@ -244,7 +244,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                         const fin1 = convertirHoraAMinutos(bloque1.horaFin);
                         const inicio2 = convertirHoraAMinutos(bloque2.horaInicio);
                         const fin2 = convertirHoraAMinutos(bloque2.horaFin);
-                        
+
                         // Verificar solapamiento: A se solapa con B si inicio1 < fin2 && inicio2 < fin1
                         if (inicio1 < fin2 && inicio2 < fin1) {
                             return true;
@@ -254,24 +254,24 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
             }
             return false;
         }
-        
+
         function convertirHoraAMinutos(hora) {
             if (!hora || typeof hora !== 'string') return 0;
             const [horas, minutos] = hora.split(':').map(Number);
             return horas * 60 + minutos;
         }
-        
+
         // Función para seleccionar recomendaciones sin solapamiento
         function seleccionarSinSolapamiento(datosSorted, maxRecomendaciones = 10) {
             const seleccionadas = [];
             const procesados = new Set();
-            
+
             for (const dato of datosSorted) {
                 const claveAsignatura = dato.asignatura;
-                
+
                 // Verificar si ya procesamos esta asignatura
                 if (procesados.has(claveAsignatura)) continue;
-                
+
                 // Verificar si hay solapamiento con asignaturas ya seleccionadas
                 let haySolapamiento = false;
                 for (const seleccionada of seleccionadas) {
@@ -280,25 +280,25 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
                         break;
                     }
                 }
-                
+
                 // Si no hay solapamiento y no hemos alcanzado el máximo, agregar
                 if (!haySolapamiento && seleccionadas.length < maxRecomendaciones) {
                     seleccionadas.push(dato);
                     procesados.add(claveAsignatura);
                 }
             }
-            
+
             return seleccionadas;
         }
 
         // 8. Crear 3 sets de recomendaciones
-        
+
         // Set 1: Excelencia Académica (priorizar % aprobación)
         const datosExcelenciaOrdenados = datosValidos
             .sort((a, b) => b.promedioAprobacion - a.promedioAprobacion);
-        
+
         const datosExcelencia = seleccionarSinSolapamiento(datosExcelenciaOrdenados, 10);
-        
+
         const excelenciaAcademica = datosExcelencia.map(d => ({
             asignatura: d.asignatura,
             profesor: d.profesor,
@@ -309,7 +309,7 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
             puntaje: d.puntaje.toFixed(1),
             tipo: 'Excelencia Académica'
         }));
-        
+
         // Calcular detalles generales para Excelencia Académica
         const detallesExcelencia = datosExcelencia.length > 0 ? {
             porcentajeAprobacionPromedio: (datosExcelencia.reduce((sum, d) => sum + d.promedioAprobacion, 0) / datosExcelencia.length).toFixed(1),
@@ -320,15 +320,15 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
             registrosHistoricosTotal: datosExcelencia.reduce((sum, d) => sum + d.totalRegistrosHistoricos, 0),
             sinSolapamientoHorario: true
         } : null;
-        
+
         // console.log("Excelencia Académica:", JSON.stringify(excelenciaAcademica, null, 2));
 
         // Set 2: Equilibrado (balance entre rendimiento y evaluación)
         const datosEquilibradoOrdenados = datosValidos
             .sort((a, b) => b.puntaje - a.puntaje);
-        
+
         const datosEquilibrado = seleccionarSinSolapamiento(datosEquilibradoOrdenados, 10);
-        
+
         const equilibrado = datosEquilibrado.map(d => ({
             asignatura: d.asignatura,
             profesor: d.profesor,
@@ -358,9 +358,9 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
         const datosEvaluacionOrdenados = datosValidos
             .filter(d => d.promedioEvaluacion > 0)
             .sort((a, b) => b.promedioEvaluacion - a.promedioEvaluacion);
-        
+
         const datosEvaluacion = seleccionarSinSolapamiento(datosEvaluacionOrdenados, 10);
-        
+
         const evaluacionDocente = datosEvaluacion.map(d => ({
             asignatura: d.asignatura,
             profesor: d.profesor,
@@ -407,11 +407,11 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
             resumen: {
                 totalProfesoresAnalizados: [...new Set(datosCompletos.map(d => d.profesor))].length,
                 totalAsignaturasDisponibles: [...new Set(datosCompletos.map(d => d.asignatura))].length,
-                promedioAprobacionGeneral: datosValidos.length > 0 ? 
+                promedioAprobacionGeneral: datosValidos.length > 0 ?
                     (datosValidos.reduce((sum, d) => sum + d.promedioAprobacion, 0) / datosValidos.length).toFixed(1) : 0,
                 promedioEvaluacionGeneral: datosValidos.filter(d => d.promedioEvaluacion > 0).length > 0 ?
-                    (datosValidos.filter(d => d.promedioEvaluacion > 0).reduce((sum, d) => sum + d.promedioEvaluacion, 0) / 
-                     datosValidos.filter(d => d.promedioEvaluacion > 0).length).toFixed(1) : 0
+                    (datosValidos.filter(d => d.promedioEvaluacion > 0).reduce((sum, d) => sum + d.promedioEvaluacion, 0) /
+                        datosValidos.filter(d => d.promedioEvaluacion > 0).length).toFixed(1) : 0
             }
         };
 
@@ -436,6 +436,8 @@ export async function crearRecomendacionInscripcionService(rutEstudiante) {
 export async function crearInscripcionService(inscripcionData) {
     try {
         const { profesor, rutParaEnviar, asignatura } = inscripcionData;
+
+        console.log("Datos de inscripción (Service):", inscripcionData);
 
         const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
 
@@ -462,7 +464,7 @@ export async function crearInscripcionService(inscripcionData) {
         // consultar si el array RutAlumnos esta vacio
         let rutAlumnos = [];
         if (inscripcionExist) rutAlumnos = inscripcionExist.rutAlumnos || [];
-        
+
         // consultar si inscritos es 0
         let inscritos = 0; // <--- Agrega esta línea
         if (inscripcionExist) inscritos = inscripcionExist.inscritos || 0;
@@ -487,7 +489,7 @@ export async function crearInscripcionService(inscripcionData) {
             semestre: inscripcionData.semestre,
             año: inscripcionData.año,
             bloques: inscripcionData.bloques,
-            cupos: inscripcionData.cupos,
+            cupo: inscripcionData.cupo,
             inscritos: inscritos
         });
 
@@ -537,7 +539,7 @@ export async function getInscripcionService(dataInscripcion) {
             año: añoFormateado,
             semestre: dataInscripcion.semestre,
             seccion: dataInscripcion.seccion
-         })
+        })
 
         if (!inscripcion) return [null, 'Inscripción no encontrada'];
 
@@ -550,7 +552,7 @@ export async function getInscripcionService(dataInscripcion) {
 
 export async function deleteInscripcionService(dataInscripcion) {
     try {
-        const { profesor, asignatura, rutParaEnviar } = dataInscripcion;  
+        const { profesor, asignatura, rutParaEnviar } = dataInscripcion;
 
         const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
 
@@ -592,57 +594,9 @@ export async function deleteInscripcionService(dataInscripcion) {
     }
 }
 
-export async function updateInscripcionService(query, body){
+export async function updateInscripcionService(dataInscripcion) {
     try {
-        const { profesor, asignatura, rutParaEnviar, año } = query;
 
-        const profesorExist = await User.findOne({ nombreCompleto: profesor, role: 'profesor' });
-
-        if (!profesorExist) return [null, 'Profesor no encontrado'];
-
-        const asignaturaExist = await Asignatura.findOne({ nombre: asignatura });
-
-        if (!asignaturaExist) return [null, 'Asignatura no encontrada'];
-
-        const userExist = await User.findOne({ rut: rutParaEnviar, role: 'alumno' });
-
-        if (!userExist) return [null, 'Alumno no encontrado'];
-
-        const añoFormateado = año.toString();
-
-        const [borrarInscripcion, errorBorrar] = await deleteInscripcionService({
-            profesor: profesor,
-            asignatura: asignatura,
-            rutParaEnviar: rutParaEnviar,
-            año: añoFormateado,
-            semestre: body.semestre,
-            seccion: body.seccion
-        });
-
-        if (errorBorrar) return [null, errorBorrar];
-
-        if (!borrarInscripcion) return [null, 'Inscripción no encontrada para borrar'];
-
-        const { profesor: nuevoProfesor, asignatura: nuevaAsignatura, rutParaEnviar: nuevoRutParaEnviar, año: nuevoAño } = body;
-
-        const nuevoAñoFormateado = nuevoAño.toString();
-
-        const [nuevaInscripcion, errorNuevaInscripcion] = await crearInscripcionService({
-            profesor: nuevoProfesor,
-            asignatura: nuevaAsignatura,
-            rutParaEnviar: nuevoRutParaEnviar,
-            año: nuevoAñoFormateado,
-            semestre: body.semestre,
-            seccion: body.seccion,
-            bloques: body.bloques,
-            cupos: body.cupos
-        });
-
-        if (errorNuevaInscripcion) return [null, errorNuevaInscripcion];
-
-        if (!nuevaInscripcion) return [null, 'No se pudo crear la nueva inscripción'];
-
-        return [nuevaInscripcion, null];
     } catch (error) {
         console.error('Error al actualizar inscripción:', error);
         return [null, 'Error al actualizar inscripción'];

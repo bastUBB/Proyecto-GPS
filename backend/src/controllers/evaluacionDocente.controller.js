@@ -5,10 +5,10 @@ import {
     updateEvaluacionDocenteService,
     deleteEvaluacionDocenteService
 } from '../services/evaluacionDocente.service.js';
-import { 
-    evaluacionDocenteQueryValidation, 
-    evaluacionDocenteBodyValidation, 
-    createEvaluacionAlumnoValidation 
+import {
+    evaluacionDocenteQueryValidation,
+    evaluacionDocenteBodyValidation,
+    createEvaluacionAlumnoValidation
 } from '../validations/evaluacionDocente.validation.js';
 import { handleSuccess, handleErrorClient, handleErrorServer } from "../handlers/responseHandlers.js";
 
@@ -23,7 +23,7 @@ export async function createEvaluacionDocente(req, res) {
         const alumnoNombre = req.user.nombreCompleto;
 
         const { value, error } = createEvaluacionAlumnoValidation.validate(evaluacionData);
-        
+
         if (error) {
             return handleErrorClient(res, 400, "Error de validación", error.message);
         }
@@ -44,12 +44,19 @@ export async function createEvaluacionDocente(req, res) {
 
 export async function getEvaluacionDocente(req, res) {
     try {
-        if (!req.user || !req.user.nombreCompleto) {
+        if (!req.user) {
             return handleErrorClient(res, 401, "Usuario no autenticado", "No se encontró información del usuario en el token");
         }
 
-        const docenteNombre = req.user.nombreCompleto;
-        
+        // Usar nombreCompleto si existe, sino usar nombre completo construido o email como fallback
+        const docenteNombre = req.user.nombreCompleto ||
+            `${req.user.nombre} ${req.user.apellido}`.trim() ||
+            req.user.email;
+
+        if (!docenteNombre) {
+            return handleErrorClient(res, 400, "Datos de usuario incompletos", "No se pudo determinar el nombre del docente");
+        }
+
         const [evaluaciones, error] = await getEvaluacionesByDocenteService(docenteNombre);
 
         if (error) return handleErrorClient(res, 404, "No se encontraron evaluaciones", error);
