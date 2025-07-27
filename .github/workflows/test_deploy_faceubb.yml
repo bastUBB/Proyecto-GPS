@@ -16,14 +16,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.0"
-      
+
+      - name: Iniciar MongoDB
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-version: '6.0'
+
       - name: Instalar dependencias de producción del backend # Instala las dependencias del backend ya que aqui se realizarán los tests
         run: |
           cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
           npm install
 
       - name: Ejecutar pruebas # Ejecuta las pruebas del proyecto
-        run: npm test
+        run: |
+          cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
+          npm test
+        env:
+          MONGO_URI: mongodb+srv://bastianrodriguez2101:Teemoisop123x@cluster0.lqzbrhe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
   # CUIDADO: Las conexiones SSH y OpenVPN pueden ser peligrosas si no se protegen correctamente.
   # Asegúrate de que todas las credenciales estén protegidas usando los secretos del repositorio.
@@ -96,15 +105,27 @@ jobs:
               echo "Instalando dependencias del backend..."
               cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
               npm ci
+              cd ..
 
-               # instalar dependencias del FRONTEND
+              # instalar dependencias del FRONTEND
               echo "=== Instalando y construyendo el frontend... ==="
               cd frontend || { echo "No se pudo acceder al directorio del frontend"; exit 1; }
               npm ci
+              echo "=== Construyendo el frontend... ==="
               npm run build 
-              cd ..
+              cd 
+              echo "=== Removiendo datos anteriores de build... ==="
+              rm -rf /var/www/html/gps/*
+              echo "=== Copiando nuevos archivos al servidor web... ==="
+              cp -r Proyecto-GPS/frontend/dist/* /var/www/html/gps/
+              # Cambiar propietario
+              echo "=== Cambiando permisos de los archivos... ==="
+              chown -R www-data:www-data /var/www/html/gps
+              chmod -R 755 /var/www/html/gps
+              echo "=== Reiniciando Apache... ==="
+              apachectl -k graceful
 
               # 5. Reiniciar servicios con PM2 (asumiendo que ya están configurados)
               echo "=== Reiniciando procesos con PM2... ==="
-              pm2 restart all 
+              pm2 restart all
           EOF

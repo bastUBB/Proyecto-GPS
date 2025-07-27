@@ -6,14 +6,17 @@ import{
     updateHistorial,
     deleteHistorial
 } from '../controllers/historial.controller.js';
+import { authenticateJWT, authorizeRoles } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
+router.use(authenticateJWT);
+
 router
-    .get('/detail', getHistorial)
-    .get('/', getAllHistorial)
-    .post('/', createHistorial)
-    .patch('/detail', updateHistorial)
-    .delete('/detail', deleteHistorial);
+    .get('/detail', authorizeRoles("administrador", "admin", "alumno"), getHistorial)
+    .get('/', authorizeRoles("administrador", "admin"), getAllHistorial)
+    .post('/', authorizeRoles("administrador", "admin", "alumno"), createHistorial)
+    .patch('/detail', authorizeRoles("administrador", "admin", "alumno"), updateHistorial)
+    .delete('/detail', authorizeRoles("administrador", "admin"), deleteHistorial);
 
 export default router;

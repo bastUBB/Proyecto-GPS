@@ -122,7 +122,7 @@ apachectl -k graceful
 ls -la /var/www/html/gps/
 
 # Verificar estado de Apache
-systemctl status apache2
+ps aux | grep apache2
 
 # Ver logs de errores
 tail -f /var/log/apache2/error.log

@@ -125,3 +125,31 @@ export async function deleteUserService(query) {
         return [null, 'Error interno del servidor'];
     }
 }
+
+export async function buscarProfesorService(query) {
+    try {
+        const { nombreCompleto } = query;
+
+        const existingUser = await User.findOne({ nombreCompleto, role: "profesor" });
+
+        if (!existingUser) return [null, 'Profesor no encontrado'];
+
+        return [existingUser, null];
+    } catch (error) {
+        console.error('Error al buscar el profesor:', error);
+        return [null, 'Error interno del servidor'];
+    }
+}
+
+export async function getAllProfesoresService() {
+    try {
+        const profesores = await User.find({ role: "profesor" });
+
+        if (!profesores || profesores.length === 0) return [null, 'No hay profesores registrados'];
+
+        return [profesores, null];
+    } catch (error) {
+        console.error('Error al obtener los profesores:', error);
+        return [null, 'Error interno del servidor'];
+    }
+}

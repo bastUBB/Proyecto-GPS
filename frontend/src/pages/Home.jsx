@@ -10,7 +10,8 @@ import {
   History,
   Settings,
   Clock,
-  PlusCircle
+  PlusCircle,
+  BookOpenCheck
 } from "lucide-react";
 
 export default function Home() {
@@ -33,7 +34,6 @@ export default function Home() {
     // Definir páginas disponibles según el rol
     const getAvailablePages = (role) => {
       const basePages = [
-        { id: "horario", route: "/horario", icon: Calendar, label: "Horario" },
         { id: "malla", route: "/malla", icon: BookOpen, label: "Malla" },
         { id: "foro", route: "/foro", icon: MessageCircle, label: "Foro" },
       ];
@@ -52,6 +52,8 @@ export default function Home() {
         ],
         alumno: [
           ...basePages,
+          { id: "notas", route: "/notas", icon: BookOpenCheck, label: "Notas" },
+          { id: "horario", route: "/horario", icon: Calendar, label: "Horario" }
           // { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
         estudiante: [

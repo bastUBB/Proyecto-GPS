@@ -14,7 +14,7 @@ router.use(authenticateJWT);
 
 router
     .get('/detail', authorizeRoles('docente', 'profesor', 'admin', 'director'), getEvaluacionDocente)
-    .get('/', authorizeRoles('admin', 'director'), getAllEvaluacionesDocente)
+    .get('/', getAllEvaluacionesDocente)
     .post('/', authorizeRoles('alumno'), createEvaluacionDocente)
     .patch('/detail', authorizeRoles('alumno', 'admin', 'director'), updateEvaluacionDocente)
     .delete('/detail', authorizeRoles('admin', 'director'), deleteEvaluacionDocente);

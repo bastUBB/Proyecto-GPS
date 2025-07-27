@@ -13,7 +13,7 @@ const mallaOriginal = [
   { id: 1, nombre: "Álgebra y Trigonometría", creditos: 8, semestre: 1 },
   { id: 2, nombre: "Introducción a la Ingeniería", creditos: 6, semestre: 1 },
   { id: 3, nombre: "Comunicación Oral y Escrita", creditos: 4, semestre: 1 },
-  { id: 4, nombre: "Introducción a la Programación", creditos: 6, semestre: 1 },
+  { id: 4, nombre: "Introducción a la Programación", creditos: 9, semestre: 1 },
   { id: 5, nombre: "Formación Integral I", creditos: 2, semestre: 1 },
   { id: 6, nombre: "Cálculo Diferencial", creditos: 6, semestre: 2 },
   { id: 7, nombre: "Química General", creditos: 8, semestre: 2 },
@@ -29,7 +29,7 @@ const mallaOriginal = [
   { id: 17, nombre: "Administración General", creditos: 3, semestre: 3 },
   { id: 18, nombre: "Cálculo en Varias Variables", creditos: 6, semestre: 4 },
   { id: 19, nombre: "Ecuaciones Diferenciales", creditos: 5, semestre: 4 },
-  { id: 20, nombre: "Electro-magnetismo", creditos: 6, semestre: 4 },
+  { id: 20, nombre: "Electromagnetismo", creditos: 6, semestre: 4 },
   { id: 21, nombre: "Modelamiento de Procesos e Información", creditos: 7, semestre: 4 },
   { id: 22, nombre: "Inglés II", creditos: 4, semestre: 4 },
   { id: 23, nombre: "Formación Integral IV", creditos: 2, semestre: 4 },
@@ -109,6 +109,7 @@ const MallaCurricular = () => {
   const [cambiosPendientes, setCambiosPendientes] = useState(false);
   const [asignaturasCompletadasLocal, setAsignaturasCompletadasLocal] = useState([]);
   const [loadingPDF, setLoadingPDF] = useState(false);
+  const [error, setError] = useState('');
 
   // Funciones helper para alertas
   const showAlert = (type, title, message) => {
@@ -171,7 +172,7 @@ const MallaCurricular = () => {
         params: { rutUser: user.rut }
       });
 
-      //console.log('Respuesta del backend (Carga):', response.data);
+      console.log('Respuesta del backend (Carga):', response.data);
       // console.log('Response completo:', response);
       // console.log('Tipo de response.data:', typeof response.data);
       // console.log('response.data.status:', response.data?.status);
@@ -204,8 +205,8 @@ const MallaCurricular = () => {
   const aplicarEstadosAsignaturas = (mallaData) => {
     // console.log('Aplicando estados con datos del backend:', mallaData);
     // console.log('Asignaturas cursadas del backend:', mallaData.asignaturasCursadas);
-    // console.log('Asignaturas inscribibles del backend:', mallaData.asignaturasInscribibles);
-    // console.log('Asignaturas no inscribibles del backend:', mallaData.asignaturasNoInscribibles);
+    console.log('Asignaturas inscribibles del backend:', mallaData.asignaturasInscribibles);
+    console.log('Asignaturas no inscribibles del backend:', mallaData.asignaturasNoInscribibles);
 
     // Debug: mostrar nombres del frontend
     // console.log('Nombres de asignaturas en el frontend:');
@@ -497,7 +498,7 @@ const MallaCurricular = () => {
           //console.log('No existía malla para eliminar, creando malla inicial');
           crearMallaInicial();
         } else {
-          console.error('Error al eliminar la malla:', error);
+          // console.error('Error al eliminar la malla:', error);
           setError('Error al restablecer la malla del usuario');
           // Aún así, crear malla inicial como fallback
           crearMallaInicial();
@@ -618,8 +619,6 @@ const MallaCurricular = () => {
                   </HelpTooltip>
                 </h2>
               </div>
-
-
 
               {/* Leyenda de colores para alumnos */}
               {user && user.role === 'alumno' && (

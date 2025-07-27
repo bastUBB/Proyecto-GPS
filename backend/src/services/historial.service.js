@@ -6,7 +6,7 @@ export async function createHistorialService(dataHistorial) {
     try {
         const { alumno, asignaturasCursadas } = dataHistorial;
 
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, rol: "alumno" });
+        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
 
         if (!existAlumno) return [null, 'El alumno que desea registrar no existe'];
 
@@ -38,7 +38,7 @@ export async function getHistorialService(query) {
     try {
         const { alumno } = query;
 
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, rol: "alumno" });
+        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
 
         if (!existAlumno) return [null, 'El alumno que desea consultar no existe'];
 
@@ -70,13 +70,13 @@ export async function updateHistorialService(query, body) {
     try {
         const { alumno } = query;
 
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, rol: "alumno" });
+        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
 
         if (!existAlumno) return [null, 'El alumno que desea actualizar no existe'];
 
         const {  alumno: nuevoAlumno, asignaturasCursadas: nuevasAsignaturasCursadas } = body;
 
-        const existNewAlumno = await User.findOne({ nombreCompleto: nuevoAlumno, rol: "alumno" });
+        const existNewAlumno = await User.findOne({ nombreCompleto: nuevoAlumno, role: "alumno" });
 
         if (!existNewAlumno) return [null, 'El nuevo alumno que desea actualizar no existe'];
 
@@ -110,7 +110,7 @@ export async function deleteHistorialService(query) {
     try {
         const { alumno } = query;
 
-        const existAlumno = await User.findOne({ nombreCompleto: alumno, rol: "alumno" });
+        const existAlumno = await User.findOne({ nombreCompleto: alumno, role: "alumno" });
 
         if (!existAlumno) return [null, 'El alumno que desea eliminar no existe'];
 

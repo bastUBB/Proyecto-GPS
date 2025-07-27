@@ -2,12 +2,12 @@
   "metadatos": {
     "descripcion": "Datos de rendimiento académico - Ingeniería Civil en Informática",
     "fuente": "Archivo Excel - Tasas de Aprobación, Reprobación y NCR",
-    "archivoOrigen": "temp_rendimiento_2025-07-21T17-12-41-658Z.xlsx",
-    "fechaProcesamiento": "2025-07-21T17:12:42.511Z",
+    "archivoOrigen": "temp_rendimiento_2025-07-25T02-38-32-895Z.xlsx",
+    "fechaProcesamiento": "2025-07-25T02:38:33.558Z",
     "estadisticas": {
       "totalRegistros": 1073,
-      "registrosPrincipales": 747,
-      "registrosExcluidos": 326,
+      "registrosPrincipales": 540,
+      "registrosExcluidos": 533,
       "años": [
         "2024",
         "2023",
@@ -19,7 +19,7 @@
         1,
         2
       ],
-      "fechaProcesamiento": "2025-07-21T17:12:42.510Z"
+      "fechaProcesamiento": "2025-07-25T02:38:33.557Z"
     }
   },
   "datos": [
@@ -157,15 +157,6 @@
       "porcentajeAprobacion": 50,
       "inscritos": 8,
       "aprobados": 4
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 50,
-      "inscritos": 24,
-      "aprobados": 12
     },
     {
       "año": "2024",
@@ -404,60 +395,6 @@
     {
       "año": "2024",
       "semestre": 1,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 87.5,
-      "inscritos": 40,
-      "aprobados": 35
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 91.7,
-      "inscritos": 24,
-      "aprobados": 22
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 81.5,
-      "inscritos": 27,
-      "aprobados": 22
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620435-2",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 73.7,
-      "inscritos": 19,
-      "aprobados": 14
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620437-1",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 28,
-      "aprobados": 28
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620437-2",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 23,
-      "aprobados": 23
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
       "codigoSeccion": "620438-1",
       "nombreAsignatura": "TEORÍA DE SISTEMAS",
       "porcentajeAprobacion": 90.9,
@@ -481,15 +418,6 @@
       "porcentajeAprobacion": 100,
       "inscritos": 6,
       "aprobados": 6
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 91.2,
-      "inscritos": 34,
-      "aprobados": 31
     },
     {
       "año": "2024",
@@ -544,15 +472,6 @@
       "porcentajeAprobacion": 100,
       "inscritos": 4,
       "aprobados": 4
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 77.5,
-      "inscritos": 40,
-      "aprobados": 31
     },
     {
       "año": "2024",
@@ -616,96 +535,6 @@
       "porcentajeAprobacion": 62.5,
       "inscritos": 40,
       "aprobados": 25
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 3,
-      "aprobados": 3
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620530-2",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 88.2,
-      "inscritos": 17,
-      "aprobados": 15
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 96.6,
-      "inscritos": 29,
-      "aprobados": 28
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 95.8,
-      "inscritos": 24,
-      "aprobados": 23
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620627-1",
-      "nombreAsignatura": "HERRAMIENTAS DE LA CALIDAD Y MEJORA CONTINUA",
-      "porcentajeAprobacion": 96.8,
-      "inscritos": 31,
-      "aprobados": 30
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620636-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS REDES",
-      "porcentajeAprobacion": 100,
-      "inscritos": 29,
-      "aprobados": 29
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620637-1",
-      "nombreAsignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-      "porcentajeAprobacion": 92.3,
-      "inscritos": 13,
-      "aprobados": 12
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620639-1",
-      "nombreAsignatura": "INTRODUCCION A LA REALIDAD VIRTUAL",
-      "porcentajeAprobacion": 64.3,
-      "inscritos": 14,
-      "aprobados": 9
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620645-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS APLICACIONES DE ALGORITMOS DE MACHINE LEARNING Y DEEP LEARNING",
-      "porcentajeAprobacion": 100,
-      "inscritos": 14,
-      "aprobados": 14
-    },
-    {
-      "año": "2024",
-      "semestre": 1,
-      "codigoSeccion": "620646-1",
-      "nombreAsignatura": "BASES DE DATOS NO RELACIONALES (NOSQL)",
-      "porcentajeAprobacion": 92.9,
-      "inscritos": 14,
-      "aprobados": 13
     },
     {
       "año": "2024",
@@ -836,24 +665,6 @@
     {
       "año": "2024",
       "semestre": 2,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 78.8,
-      "inscritos": 33,
-      "aprobados": 26
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "230034-2",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 70,
-      "inscritos": 30,
-      "aprobados": 21
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 45.5,
@@ -913,15 +724,6 @@
       "porcentajeAprobacion": 90.3,
       "inscritos": 31,
       "aprobados": 28
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "340460-1",
-      "nombreAsignatura": "INGLÉS DE NIVEL SUPERIOR",
-      "porcentajeAprobacion": 100,
-      "inscritos": 3,
-      "aprobados": 3
     },
     {
       "año": "2024",
@@ -989,60 +791,6 @@
     {
       "año": "2024",
       "semestre": 2,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 62.2,
-      "inscritos": 45,
-      "aprobados": 28
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 47.8,
-      "inscritos": 46,
-      "aprobados": 22
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 98.1,
-      "inscritos": 54,
-      "aprobados": 53
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620434-2",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 92.2,
-      "inscritos": 51,
-      "aprobados": 47
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 50,
-      "inscritos": 28,
-      "aprobados": 14
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620435-2",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 48,
-      "inscritos": 25,
-      "aprobados": 12
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
       "codigoSeccion": "620436-1",
       "nombreAsignatura": "MODELAMIENTO DE PROCESOS E INFORMACIÓN",
       "porcentajeAprobacion": 100,
@@ -1084,15 +832,6 @@
       "porcentajeAprobacion": 92.2,
       "inscritos": 51,
       "aprobados": 47
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 77.8,
-      "inscritos": 45,
-      "aprobados": 35
     },
     {
       "año": "2024",
@@ -1160,15 +899,6 @@
     {
       "año": "2024",
       "semestre": 2,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 72.9,
-      "inscritos": 48,
-      "aprobados": 35
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
       "codigoSeccion": "620458-1",
       "nombreAsignatura": "GESTIÓN DE PROYECTOS DE SOFTWARE",
       "porcentajeAprobacion": 100,
@@ -1223,110 +953,11 @@
     {
       "año": "2024",
       "semestre": 2,
-      "codigoSeccion": "620530-2",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 10,
-      "aprobados": 10
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
       "codigoSeccion": "620599-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 92.6,
       "inscritos": 27,
       "aprobados": 25
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620605-1",
-      "nombreAsignatura": "BIOINFORMÁTICA Y BIOLOGÍA COMPUTACIONAL",
-      "porcentajeAprobacion": 100,
-      "inscritos": 13,
-      "aprobados": 13
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 17,
-      "aprobados": 17
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620637-1",
-      "nombreAsignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-      "porcentajeAprobacion": 93.3,
-      "inscritos": 15,
-      "aprobados": 14
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620637-2",
-      "nombreAsignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620639-1",
-      "nombreAsignatura": "INTRODUCCION A LA REALIDAD VIRTUAL",
-      "porcentajeAprobacion": 77.3,
-      "inscritos": 22,
-      "aprobados": 17
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620645-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS APLICACIONES DE ALGORITMOS DE MACHINE LEARNING Y DEEP LEARNING",
-      "porcentajeAprobacion": 92.9,
-      "inscritos": 14,
-      "aprobados": 13
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620648-1",
-      "nombreAsignatura": "GESTIÓN DEL EMPRENDIMIENTO",
-      "porcentajeAprobacion": 96.3,
-      "inscritos": 27,
-      "aprobados": 26
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620649-1",
-      "nombreAsignatura": "INTRODUCCIÓN AL DESARROLLO DE APLICACIONES ANDROID EN KOTLIN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2024",
-      "semestre": 2,
-      "codigoSeccion": "620649-2",
-      "nombreAsignatura": "INTRODUCCIÓN AL DESARROLLO DE APLICACIONES ANDROID EN KOTLIN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
     },
     {
       "año": "2023",
@@ -1475,15 +1106,6 @@
     {
       "año": "2023",
       "semestre": 1,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 85,
-      "inscritos": 40,
-      "aprobados": 34
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 83.3,
@@ -1543,15 +1165,6 @@
       "porcentajeAprobacion": 100,
       "inscritos": 23,
       "aprobados": 23
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "340460-1",
-      "nombreAsignatura": "INGLÉS DE NIVEL SUPERIOR",
-      "porcentajeAprobacion": 0,
-      "inscritos": 1,
-      "aprobados": 0
     },
     {
       "año": "2023",
@@ -1736,51 +1349,6 @@
     {
       "año": "2023",
       "semestre": 1,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 45.7,
-      "inscritos": 35,
-      "aprobados": 16
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 65,
-      "inscritos": 40,
-      "aprobados": 26
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620435-2",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 50,
-      "inscritos": 18,
-      "aprobados": 9
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620437-1",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 96.7,
-      "inscritos": 30,
-      "aprobados": 29
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620437-2",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 90.5,
-      "inscritos": 21,
-      "aprobados": 19
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
       "codigoSeccion": "620438-1",
       "nombreAsignatura": "TEORÍA DE SISTEMAS",
       "porcentajeAprobacion": 77.8,
@@ -1804,15 +1372,6 @@
       "porcentajeAprobacion": 78.9,
       "inscritos": 19,
       "aprobados": 15
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 75,
-      "inscritos": 16,
-      "aprobados": 12
     },
     {
       "año": "2023",
@@ -1889,15 +1448,6 @@
     {
       "año": "2023",
       "semestre": 1,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 76.7,
-      "inscritos": 30,
-      "aprobados": 23
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
       "codigoSeccion": "620457-1",
       "nombreAsignatura": "COMUNICACIÓN DE DATOS Y REDES",
       "porcentajeAprobacion": 89.7,
@@ -1957,96 +1507,6 @@
       "porcentajeAprobacion": 76.5,
       "inscritos": 34,
       "aprobados": 26
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620605-1",
-      "nombreAsignatura": "BIOINFORMÁTICA Y BIOLOGÍA COMPUTACIONAL",
-      "porcentajeAprobacion": 80,
-      "inscritos": 15,
-      "aprobados": 12
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 100,
-      "inscritos": 16,
-      "aprobados": 16
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620611-2",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 100,
-      "inscritos": 18,
-      "aprobados": 18
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 25,
-      "aprobados": 25
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620625-1",
-      "nombreAsignatura": "AUDITORÍA DE SISTEMAS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 18,
-      "aprobados": 18
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620627-1",
-      "nombreAsignatura": "HERRAMIENTAS DE LA CALIDAD Y MEJORA CONTINUA",
-      "porcentajeAprobacion": 96.4,
-      "inscritos": 28,
-      "aprobados": 27
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620636-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS REDES",
-      "porcentajeAprobacion": 100,
-      "inscritos": 21,
-      "aprobados": 21
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620637-1",
-      "nombreAsignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-      "porcentajeAprobacion": 90.5,
-      "inscritos": 21,
-      "aprobados": 19
-    },
-    {
-      "año": "2023",
-      "semestre": 1,
-      "codigoSeccion": "620641-1",
-      "nombreAsignatura": "CRIPTOGRAFÍA APLICADA",
-      "porcentajeAprobacion": 92,
-      "inscritos": 25,
-      "aprobados": 23
     },
     {
       "año": "2023",
@@ -2186,15 +1646,6 @@
     {
       "año": "2023",
       "semestre": 2,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 85.4,
-      "inscritos": 48,
-      "aprobados": 41
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 82.4,
@@ -2236,15 +1687,6 @@
       "porcentajeAprobacion": 100,
       "inscritos": 35,
       "aprobados": 35
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "340460-1",
-      "nombreAsignatura": "INGLÉS DE NIVEL SUPERIOR",
-      "porcentajeAprobacion": 0,
-      "inscritos": 1,
-      "aprobados": 0
     },
     {
       "año": "2023",
@@ -2312,65 +1754,11 @@
     {
       "año": "2023",
       "semestre": 2,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
       "codigoSeccion": "620431-1",
       "nombreAsignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
       "porcentajeAprobacion": 100,
       "inscritos": 1,
       "aprobados": 1
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 52.5,
-      "inscritos": 40,
-      "aprobados": 21
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 28.2,
-      "inscritos": 39,
-      "aprobados": 11
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 87,
-      "inscritos": 46,
-      "aprobados": 40
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620434-2",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 97.3,
-      "inscritos": 37,
-      "aprobados": 36
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 47.2,
-      "inscritos": 36,
-      "aprobados": 17
     },
     {
       "año": "2023",
@@ -2416,15 +1804,6 @@
       "porcentajeAprobacion": 96.4,
       "inscritos": 55,
       "aprobados": 53
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 82.5,
-      "inscritos": 40,
-      "aprobados": 33
     },
     {
       "año": "2023",
@@ -2492,15 +1871,6 @@
     {
       "año": "2023",
       "semestre": 2,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 76.3,
-      "inscritos": 38,
-      "aprobados": 29
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
       "codigoSeccion": "620472-1",
       "nombreAsignatura": "ANTEPROYECTO DE TITULO",
       "porcentajeAprobacion": 85.7,
@@ -2546,110 +1916,11 @@
     {
       "año": "2023",
       "semestre": 2,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 8,
-      "aprobados": 8
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 100,
-      "inscritos": 23,
-      "aprobados": 23
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620533-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LA COMPUTACIÓN FÍSICA MEDIANTE DISPOSITIVOS ARDUINO",
-      "porcentajeAprobacion": 95,
-      "inscritos": 20,
-      "aprobados": 19
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
       "codigoSeccion": "620599-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 86.7,
       "inscritos": 15,
       "aprobados": 13
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620605-1",
-      "nombreAsignatura": "BIOINFORMÁTICA Y BIOLOGÍA COMPUTACIONAL",
-      "porcentajeAprobacion": 100,
-      "inscritos": 4,
-      "aprobados": 4
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620607-1",
-      "nombreAsignatura": "SEGURIDAD CIBERNÉTICA Y HACKING ÉTICO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 22,
-      "aprobados": 22
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620627-1",
-      "nombreAsignatura": "HERRAMIENTAS DE LA CALIDAD Y MEJORA CONTINUA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 20,
-      "aprobados": 20
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620636-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS REDES",
-      "porcentajeAprobacion": 100,
-      "inscritos": 17,
-      "aprobados": 17
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620637-1",
-      "nombreAsignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-      "porcentajeAprobacion": 100,
-      "inscritos": 9,
-      "aprobados": 9
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620639-1",
-      "nombreAsignatura": "INTRODUCCION A LA REALIDAD VIRTUAL",
-      "porcentajeAprobacion": 81.3,
-      "inscritos": 16,
-      "aprobados": 13
-    },
-    {
-      "año": "2023",
-      "semestre": 2,
-      "codigoSeccion": "620645-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS APLICACIONES DE ALGORITMOS DE MACHINE LEARNING Y DEEP LEARNING",
-      "porcentajeAprobacion": 100,
-      "inscritos": 24,
-      "aprobados": 24
     },
     {
       "año": "2022",
@@ -2798,15 +2069,6 @@
     {
       "año": "2022",
       "semestre": 1,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 61.5,
-      "inscritos": 13,
-      "aprobados": 8
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 68,
@@ -2866,15 +2128,6 @@
       "porcentajeAprobacion": 84.4,
       "inscritos": 32,
       "aprobados": 27
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "340460-1",
-      "nombreAsignatura": "INGLÉS DE NIVEL SUPERIOR",
-      "porcentajeAprobacion": 100,
-      "inscritos": 4,
-      "aprobados": 4
     },
     {
       "año": "2022",
@@ -2996,33 +2249,6 @@
     {
       "año": "2022",
       "semestre": 1,
-      "codigoSeccion": "613059-1",
-      "nombreAsignatura": "TALLER INTEGRADO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "613060-1",
-      "nombreAsignatura": "METODOLOGÍA DE LA INVESTIGACIÓN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 0,
-      "inscritos": 1,
-      "aprobados": 0
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
       "codigoSeccion": "620431-1",
       "nombreAsignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
       "porcentajeAprobacion": 84.8,
@@ -3077,51 +2303,6 @@
     {
       "año": "2022",
       "semestre": 1,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 22.7,
-      "inscritos": 22,
-      "aprobados": 5
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 85.7,
-      "inscritos": 49,
-      "aprobados": 42
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620435-2",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 50,
-      "inscritos": 12,
-      "aprobados": 6
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620437-1",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 83.8,
-      "inscritos": 37,
-      "aprobados": 31
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620437-2",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 66.7,
-      "inscritos": 21,
-      "aprobados": 14
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
       "codigoSeccion": "620438-1",
       "nombreAsignatura": "TEORÍA DE SISTEMAS",
       "porcentajeAprobacion": 85.3,
@@ -3136,15 +2317,6 @@
       "porcentajeAprobacion": 90.5,
       "inscritos": 42,
       "aprobados": 38
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 64.5,
-      "inscritos": 31,
-      "aprobados": 20
     },
     {
       "año": "2022",
@@ -3230,15 +2402,6 @@
     {
       "año": "2022",
       "semestre": 1,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 100,
-      "inscritos": 26,
-      "aprobados": 26
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
       "codigoSeccion": "620457-1",
       "nombreAsignatura": "COMUNICACIÓN DE DATOS Y REDES",
       "porcentajeAprobacion": 100,
@@ -3293,24 +2456,6 @@
     {
       "año": "2022",
       "semestre": 1,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 90.5,
-      "inscritos": 21,
-      "aprobados": 19
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620589-1",
-      "nombreAsignatura": "METODOLOGÍA DE LA INVESTIGACIÓN",
-      "porcentajeAprobacion": 57.1,
-      "inscritos": 7,
-      "aprobados": 4
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
       "codigoSeccion": "620591-1",
       "nombreAsignatura": "TÓPICOS AVANZADOS DE INGENIERÍA DE SOFTWARE",
       "porcentajeAprobacion": 60,
@@ -3320,65 +2465,11 @@
     {
       "año": "2022",
       "semestre": 1,
-      "codigoSeccion": "620607-1",
-      "nombreAsignatura": "SEGURIDAD CIBERNÉTICA Y HACKING ÉTICO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 10,
-      "aprobados": 10
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 100,
-      "inscritos": 13,
-      "aprobados": 13
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620611-2",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 95.5,
-      "inscritos": 22,
-      "aprobados": 21
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 91.3,
-      "inscritos": 23,
-      "aprobados": 21
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
       "codigoSeccion": "620623-1",
       "nombreAsignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN EN R",
       "porcentajeAprobacion": 90.5,
       "inscritos": 21,
       "aprobados": 19
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620625-1",
-      "nombreAsignatura": "AUDITORÍA DE SISTEMAS",
-      "porcentajeAprobacion": 96.4,
-      "inscritos": 28,
-      "aprobados": 27
-    },
-    {
-      "año": "2022",
-      "semestre": 1,
-      "codigoSeccion": "620628-1",
-      "nombreAsignatura": "ALGORITMOS Y ESTRUCTURAS DE DATOS AVANZADAS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 6,
-      "aprobados": 6
     },
     {
       "año": "2022",
@@ -3509,15 +2600,6 @@
     {
       "año": "2022",
       "semestre": 2,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 71.1,
-      "inscritos": 45,
-      "aprobados": 32
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 44.4,
@@ -3559,15 +2641,6 @@
       "porcentajeAprobacion": 93.1,
       "inscritos": 29,
       "aprobados": 27
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "340460-1",
-      "nombreAsignatura": "INGLÉS DE NIVEL SUPERIOR",
-      "porcentajeAprobacion": 50,
-      "inscritos": 4,
-      "aprobados": 2
     },
     {
       "año": "2022",
@@ -3635,15 +2708,6 @@
     {
       "año": "2022",
       "semestre": 2,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 0,
-      "inscritos": 1,
-      "aprobados": 0
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
       "codigoSeccion": "620431-1",
       "nombreAsignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
       "porcentajeAprobacion": 70,
@@ -3662,60 +2726,6 @@
     {
       "año": "2022",
       "semestre": 2,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 60.5,
-      "inscritos": 38,
-      "aprobados": 23
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 75.7,
-      "inscritos": 37,
-      "aprobados": 28
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620433-3",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 84.6,
-      "inscritos": 13,
-      "aprobados": 11
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 97.8,
-      "inscritos": 46,
-      "aprobados": 45
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620434-2",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 97.7,
-      "inscritos": 43,
-      "aprobados": 42
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 71.4,
-      "inscritos": 14,
-      "aprobados": 10
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
       "codigoSeccion": "620436-1",
       "nombreAsignatura": "MODELAMIENTO DE PROCESOS E INFORMACIÓN",
       "porcentajeAprobacion": 100,
@@ -3730,15 +2740,6 @@
       "porcentajeAprobacion": 89.5,
       "inscritos": 38,
       "aprobados": 34
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620437-1",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
     },
     {
       "año": "2022",
@@ -3775,15 +2776,6 @@
       "porcentajeAprobacion": 81.1,
       "inscritos": 37,
       "aprobados": 30
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 64.9,
-      "inscritos": 57,
-      "aprobados": 37
     },
     {
       "año": "2022",
@@ -3829,15 +2821,6 @@
       "porcentajeAprobacion": 56.3,
       "inscritos": 32,
       "aprobados": 18
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 68.9,
-      "inscritos": 45,
-      "aprobados": 31
     },
     {
       "año": "2022",
@@ -3896,128 +2879,11 @@
     {
       "año": "2022",
       "semestre": 2,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 22,
-      "aprobados": 22
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
       "codigoSeccion": "620599-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 100,
       "inscritos": 7,
       "aprobados": 7
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620600-1",
-      "nombreAsignatura": "GESTIÓN DE LA AUDITORÍA INFORMÁTICA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 4,
-      "aprobados": 4
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620605-1",
-      "nombreAsignatura": "BIOINFORMÁTICA Y BIOLOGÍA COMPUTACIONAL",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 94.7,
-      "inscritos": 19,
-      "aprobados": 18
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 23,
-      "aprobados": 23
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620625-1",
-      "nombreAsignatura": "AUDITORÍA DE SISTEMAS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 24,
-      "aprobados": 24
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620627-1",
-      "nombreAsignatura": "HERRAMIENTAS DE LA CALIDAD Y MEJORA CONTINUA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 13,
-      "aprobados": 13
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620634-1",
-      "nombreAsignatura": "EMPRENDIMIENTO CON BASE TECNOLÓGICA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 17,
-      "aprobados": 17
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620635-1",
-      "nombreAsignatura": "TRANSFORMACIÓN PARA LA MEJORA CONTINUA",
-      "porcentajeAprobacion": 88.2,
-      "inscritos": 17,
-      "aprobados": 15
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620636-1",
-      "nombreAsignatura": "INTRODUCCIÓN A LAS REDES",
-      "porcentajeAprobacion": 100,
-      "inscritos": 19,
-      "aprobados": 19
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620637-1",
-      "nombreAsignatura": "INTEGRACIÓN DE SERVICIOS EN RED",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2022",
-      "semestre": 2,
-      "codigoSeccion": "620639-1",
-      "nombreAsignatura": "INTRODUCCION A LA REALIDAD VIRTUAL",
-      "porcentajeAprobacion": 100,
-      "inscritos": 24,
-      "aprobados": 24
     },
     {
       "año": "2021",
@@ -4198,15 +3064,6 @@
       "porcentajeAprobacion": 0,
       "inscritos": 1,
       "aprobados": 0
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 96.8,
-      "inscritos": 31,
-      "aprobados": 30
     },
     {
       "año": "2021",
@@ -4409,24 +3266,6 @@
     {
       "año": "2021",
       "semestre": 1,
-      "codigoSeccion": "620032-1",
-      "nombreAsignatura": "HABILITACIÓN PROFESIONAL",
-      "porcentajeAprobacion": 100,
-      "inscritos": 2,
-      "aprobados": 2
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 71.4,
-      "inscritos": 7,
-      "aprobados": 5
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
       "codigoSeccion": "620431-1",
       "nombreAsignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
       "porcentajeAprobacion": 80.6,
@@ -4481,56 +3320,11 @@
     {
       "año": "2021",
       "semestre": 1,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 27.3,
-      "inscritos": 22,
-      "aprobados": 6
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 0,
-      "inscritos": 1,
-      "aprobados": 0
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 42.9,
-      "inscritos": 7,
-      "aprobados": 3
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 91.2,
-      "inscritos": 68,
-      "aprobados": 62
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
       "codigoSeccion": "620436-1",
       "nombreAsignatura": "MODELAMIENTO DE PROCESOS E INFORMACIÓN",
       "porcentajeAprobacion": 83.3,
       "inscritos": 12,
       "aprobados": 10
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620437-1",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 93.6,
-      "inscritos": 78,
-      "aprobados": 73
     },
     {
       "año": "2021",
@@ -4549,15 +3343,6 @@
       "porcentajeAprobacion": 94.4,
       "inscritos": 36,
       "aprobados": 34
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 78.8,
-      "inscritos": 33,
-      "aprobados": 26
     },
     {
       "año": "2021",
@@ -4625,15 +3410,6 @@
     {
       "año": "2021",
       "semestre": 1,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 78.3,
-      "inscritos": 23,
-      "aprobados": 18
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
       "codigoSeccion": "620457-1",
       "nombreAsignatura": "COMUNICACIÓN DE DATOS Y REDES",
       "porcentajeAprobacion": 100,
@@ -4679,33 +3455,6 @@
     {
       "año": "2021",
       "semestre": 1,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 7,
-      "aprobados": 7
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 93.3,
-      "inscritos": 15,
-      "aprobados": 14
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620550-1",
-      "nombreAsignatura": "GESTIÓN DE LA AUDITORÍA INFORMÁTICA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
       "codigoSeccion": "620571-1",
       "nombreAsignatura": "TÓPICOS AVANZADOS EN INGENIERÍA DE SOFTWARE",
       "porcentajeAprobacion": 100,
@@ -4724,56 +3473,11 @@
     {
       "año": "2021",
       "semestre": 1,
-      "codigoSeccion": "620589-1",
-      "nombreAsignatura": "METODOLOGÍA DE LA INVESTIGACIÓN",
-      "porcentajeAprobacion": 80,
-      "inscritos": 5,
-      "aprobados": 4
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
       "codigoSeccion": "620599-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 90.9,
       "inscritos": 11,
       "aprobados": 10
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620607-1",
-      "nombreAsignatura": "SEGURIDAD CIBERNÉTICA Y HACKING ÉTICO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620609-1",
-      "nombreAsignatura": "TALLER DE IMPLEMENTING SQL SERVER",
-      "porcentajeAprobacion": 93.3,
-      "inscritos": 15,
-      "aprobados": 14
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620610-1",
-      "nombreAsignatura": "INTRODUCCIÓN AL DESARROLLO DE APLICACIONES WEB CON REACT JS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 17,
-      "aprobados": 17
-    },
-    {
-      "año": "2021",
-      "semestre": 1,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 92.3,
-      "inscritos": 13,
-      "aprobados": 12
     },
     {
       "año": "2021",
@@ -4913,15 +3617,6 @@
     {
       "año": "2021",
       "semestre": 2,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 95.7,
-      "inscritos": 47,
-      "aprobados": 45
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 78.9,
@@ -5030,65 +3725,11 @@
     {
       "año": "2021",
       "semestre": 2,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 50,
-      "inscritos": 2,
-      "aprobados": 1
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
       "codigoSeccion": "620431-1",
       "nombreAsignatura": "INTRODUCCIÓN A LA PROGRAMACIÓN",
       "porcentajeAprobacion": 63.6,
       "inscritos": 11,
       "aprobados": 7
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 73.7,
-      "inscritos": 38,
-      "aprobados": 28
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 82.9,
-      "inscritos": 41,
-      "aprobados": 34
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 90.5,
-      "inscritos": 42,
-      "aprobados": 38
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620434-2",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 84.1,
-      "inscritos": 44,
-      "aprobados": 37
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 66.7,
-      "inscritos": 9,
-      "aprobados": 6
     },
     {
       "año": "2021",
@@ -5143,24 +3784,6 @@
       "porcentajeAprobacion": 92.3,
       "inscritos": 39,
       "aprobados": 36
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 71.2,
-      "inscritos": 59,
-      "aprobados": 42
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620449-2",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 66.7,
-      "inscritos": 15,
-      "aprobados": 10
     },
     {
       "año": "2021",
@@ -5237,24 +3860,6 @@
     {
       "año": "2021",
       "semestre": 2,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 86.1,
-      "inscritos": 36,
-      "aprobados": 31
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620456-2",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 87.5,
-      "inscritos": 8,
-      "aprobados": 7
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
       "codigoSeccion": "620472-1",
       "nombreAsignatura": "ANTEPROYECTO DE TITULO",
       "porcentajeAprobacion": 90.9,
@@ -5300,24 +3905,6 @@
     {
       "año": "2021",
       "semestre": 2,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 19,
-      "aprobados": 19
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 100,
-      "inscritos": 14,
-      "aprobados": 14
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
       "codigoSeccion": "620557-1",
       "nombreAsignatura": "TÓPICOS AVANZADOS EN BASE DE DATOS",
       "porcentajeAprobacion": 100,
@@ -5327,74 +3914,11 @@
     {
       "año": "2021",
       "semestre": 2,
-      "codigoSeccion": "620576-1",
-      "nombreAsignatura": "SISTEMAS DE RECOMENDACIÓN: UNA APLICACIÓN DE MACHINE LEARNING",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
       "codigoSeccion": "620599-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 100,
       "inscritos": 9,
       "aprobados": 9
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620600-1",
-      "nombreAsignatura": "GESTIÓN DE LA AUDITORÍA INFORMÁTICA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 15,
-      "aprobados": 15
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620607-1",
-      "nombreAsignatura": "SEGURIDAD CIBERNÉTICA Y HACKING ÉTICO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 14,
-      "aprobados": 14
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620609-1",
-      "nombreAsignatura": "TALLER DE IMPLEMENTING SQL SERVER",
-      "porcentajeAprobacion": 80,
-      "inscritos": 20,
-      "aprobados": 16
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 100,
-      "inscritos": 17,
-      "aprobados": 17
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620618-1",
-      "nombreAsignatura": "GESTIÓN DE RIESGOS TECNOLÓGICOS",
-      "porcentajeAprobacion": 100,
-      "inscritos": 11,
-      "aprobados": 11
-    },
-    {
-      "año": "2021",
-      "semestre": 2,
-      "codigoSeccion": "620619-1",
-      "nombreAsignatura": "COMPUTACIÓN HETEROGÉNEA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 3,
-      "aprobados": 3
     },
     {
       "año": "2020",
@@ -5539,15 +4063,6 @@
       "porcentajeAprobacion": 65.2,
       "inscritos": 23,
       "aprobados": 15
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 86.4,
-      "inscritos": 44,
-      "aprobados": 38
     },
     {
       "año": "2020",
@@ -5732,24 +4247,6 @@
     {
       "año": "2020",
       "semestre": 1,
-      "codigoSeccion": "620032-1",
-      "nombreAsignatura": "HABILITACIÓN PROFESIONAL",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620186-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
       "codigoSeccion": "620188-1",
       "nombreAsignatura": "BASE DE DATOS II",
       "porcentajeAprobacion": 100,
@@ -5763,15 +4260,6 @@
       "nombreAsignatura": "DESARROLLO DE SISTEMAS DE INFORMACIÓN",
       "porcentajeAprobacion": 100,
       "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 20,
-      "inscritos": 5,
       "aprobados": 1
     },
     {
@@ -5831,60 +4319,6 @@
     {
       "año": "2020",
       "semestre": 1,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 59.3,
-      "inscritos": 27,
-      "aprobados": 16
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 28.6,
-      "inscritos": 7,
-      "aprobados": 2
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 92.7,
-      "inscritos": 41,
-      "aprobados": 38
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620435-2",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 61.5,
-      "inscritos": 26,
-      "aprobados": 16
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620437-1",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 97.4,
-      "inscritos": 39,
-      "aprobados": 38
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620437-2",
-      "nombreAsignatura": "FUNDAMENTOS DE CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 92.3,
-      "inscritos": 39,
-      "aprobados": 36
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
       "codigoSeccion": "620438-1",
       "nombreAsignatura": "TEORÍA DE SISTEMAS",
       "porcentajeAprobacion": 100,
@@ -5899,15 +4333,6 @@
       "porcentajeAprobacion": 97.5,
       "inscritos": 40,
       "aprobados": 39
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 63.6,
-      "inscritos": 11,
-      "aprobados": 7
     },
     {
       "año": "2020",
@@ -5993,15 +4418,6 @@
     {
       "año": "2020",
       "semestre": 1,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 61.5,
-      "inscritos": 13,
-      "aprobados": 8
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
       "codigoSeccion": "620457-1",
       "nombreAsignatura": "COMUNICACIÓN DE DATOS Y REDES",
       "porcentajeAprobacion": 96,
@@ -6047,24 +4463,6 @@
     {
       "año": "2020",
       "semestre": 1,
-      "codigoSeccion": "620530-2",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 10,
-      "aprobados": 10
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 70,
-      "inscritos": 10,
-      "aprobados": 7
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
       "codigoSeccion": "620579-1",
       "nombreAsignatura": "ALGORÍTMOS Y ESTRUCTURA DE DATOS AVANZADOS",
       "porcentajeAprobacion": 100,
@@ -6074,83 +4472,11 @@
     {
       "año": "2020",
       "semestre": 1,
-      "codigoSeccion": "620589-1",
-      "nombreAsignatura": "METODOLOGÍA DE LA INVESTIGACIÓN",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
       "codigoSeccion": "620591-1",
       "nombreAsignatura": "TÓPICOS AVANZADOS DE INGENIERÍA DE SOFTWARE",
       "porcentajeAprobacion": 100,
       "inscritos": 1,
       "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620600-1",
-      "nombreAsignatura": "GESTIÓN DE LA AUDITORÍA INFORMÁTICA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 10,
-      "aprobados": 10
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620604-1",
-      "nombreAsignatura": "ARQUITECTURA ORIENTADA A MICROSERVICIOS",
-      "porcentajeAprobacion": 90,
-      "inscritos": 10,
-      "aprobados": 9
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620607-1",
-      "nombreAsignatura": "SEGURIDAD CIBERNÉTICA Y HACKING ÉTICO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 10,
-      "aprobados": 10
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620609-1",
-      "nombreAsignatura": "TALLER DE IMPLEMENTING SQL SERVER",
-      "porcentajeAprobacion": 100,
-      "inscritos": 12,
-      "aprobados": 12
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620610-1",
-      "nombreAsignatura": "INTRODUCCIÓN AL DESARROLLO DE APLICACIONES WEB CON REACT JS",
-      "porcentajeAprobacion": 90,
-      "inscritos": 10,
-      "aprobados": 9
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 100,
-      "inscritos": 11,
-      "aprobados": 11
-    },
-    {
-      "año": "2020",
-      "semestre": 1,
-      "codigoSeccion": "620614-1",
-      "nombreAsignatura": "TALLER DE IMPLEMENTACIÓN DE SQL SERVER",
-      "porcentajeAprobacion": 0,
-      "inscritos": 1,
-      "aprobados": 0
     },
     {
       "año": "2020",
@@ -6299,24 +4625,6 @@
     {
       "año": "2020",
       "semestre": 2,
-      "codigoSeccion": "230034-1",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 83.3,
-      "inscritos": 36,
-      "aprobados": 30
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "230034-2",
-      "nombreAsignatura": "ELECTROMAGNETISMO",
-      "porcentajeAprobacion": 72,
-      "inscritos": 25,
-      "aprobados": 18
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
       "codigoSeccion": "230035-1",
       "nombreAsignatura": "ONDAS, ÓPTICA Y FÍSICA MODERNA",
       "porcentajeAprobacion": 71.4,
@@ -6416,15 +4724,6 @@
     {
       "año": "2020",
       "semestre": 2,
-      "codigoSeccion": "620194-1",
-      "nombreAsignatura": "TALLER DESARROLLO PROYECTO",
-      "porcentajeAprobacion": 0,
-      "inscritos": 3,
-      "aprobados": 0
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
       "codigoSeccion": "620391-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 100,
@@ -6448,60 +4747,6 @@
       "porcentajeAprobacion": 100,
       "inscritos": 1,
       "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620433-1",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 78.3,
-      "inscritos": 46,
-      "aprobados": 36
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620433-2",
-      "nombreAsignatura": "PROGRAMACIÓN ORIENTADA AL OBJETO",
-      "porcentajeAprobacion": 77.1,
-      "inscritos": 48,
-      "aprobados": 37
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620434-1",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 93.5,
-      "inscritos": 31,
-      "aprobados": 29
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620434-2",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 96.9,
-      "inscritos": 32,
-      "aprobados": 31
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620434-3",
-      "nombreAsignatura": "ESTRUCTURAS DISCRETAS PARA CIENCIAS DE LA COMPUTACIÓN",
-      "porcentajeAprobacion": 96.2,
-      "inscritos": 26,
-      "aprobados": 25
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620435-1",
-      "nombreAsignatura": "ESTRUCTURAS DE DATOS",
-      "porcentajeAprobacion": 80,
-      "inscritos": 25,
-      "aprobados": 20
     },
     {
       "año": "2020",
@@ -6560,15 +4805,6 @@
     {
       "año": "2020",
       "semestre": 2,
-      "codigoSeccion": "620449-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL I",
-      "porcentajeAprobacion": 73.9,
-      "inscritos": 46,
-      "aprobados": 34
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
       "codigoSeccion": "620453-1",
       "nombreAsignatura": "SISTEMAS OPERATIVOS",
       "porcentajeAprobacion": 91.7,
@@ -6592,15 +4828,6 @@
       "porcentajeAprobacion": 60.5,
       "inscritos": 38,
       "aprobados": 23
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620456-1",
-      "nombreAsignatura": "PRÁCTICA PROFESIONAL II",
-      "porcentajeAprobacion": 65.4,
-      "inscritos": 26,
-      "aprobados": 17
     },
     {
       "año": "2020",
@@ -6641,33 +4868,6 @@
     {
       "año": "2020",
       "semestre": 2,
-      "codigoSeccion": "620530-1",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 60,
-      "inscritos": 5,
-      "aprobados": 3
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620530-2",
-      "nombreAsignatura": "TALLER DE SISTEMAS EMPRESARIALES I",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620531-1",
-      "nombreAsignatura": "TALLER DE DESARROLLO AVANZADO DE APLICACIONES WEB",
-      "porcentajeAprobacion": 100,
-      "inscritos": 14,
-      "aprobados": 14
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
       "codigoSeccion": "620557-1",
       "nombreAsignatura": "TÓPICOS AVANZADOS EN BASE DE DATOS",
       "porcentajeAprobacion": 100,
@@ -6677,74 +4877,11 @@
     {
       "año": "2020",
       "semestre": 2,
-      "codigoSeccion": "620576-1",
-      "nombreAsignatura": "SISTEMAS DE RECOMENDACIÓN: UNA APLICACIÓN DE MACHINE LEARNING",
-      "porcentajeAprobacion": 75,
-      "inscritos": 4,
-      "aprobados": 3
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
       "codigoSeccion": "620599-1",
       "nombreAsignatura": "SISTEMAS DE INFORMACIÓN Y ORGANIZACIÓN",
       "porcentajeAprobacion": 80,
       "inscritos": 5,
       "aprobados": 4
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620600-1",
-      "nombreAsignatura": "GESTIÓN DE LA AUDITORÍA INFORMÁTICA",
-      "porcentajeAprobacion": 100,
-      "inscritos": 1,
-      "aprobados": 1
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620604-1",
-      "nombreAsignatura": "ARQUITECTURA ORIENTADA A MICROSERVICIOS",
-      "porcentajeAprobacion": 81.8,
-      "inscritos": 11,
-      "aprobados": 9
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620607-1",
-      "nombreAsignatura": "SEGURIDAD CIBERNÉTICA Y HACKING ÉTICO",
-      "porcentajeAprobacion": 100,
-      "inscritos": 13,
-      "aprobados": 13
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620609-1",
-      "nombreAsignatura": "TALLER DE IMPLEMENTING SQL SERVER",
-      "porcentajeAprobacion": 88.9,
-      "inscritos": 9,
-      "aprobados": 8
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620610-1",
-      "nombreAsignatura": "INTRODUCCIÓN AL DESARROLLO DE APLICACIONES WEB CON REACT JS",
-      "porcentajeAprobacion": 93.3,
-      "inscritos": 15,
-      "aprobados": 14
-    },
-    {
-      "año": "2020",
-      "semestre": 2,
-      "codigoSeccion": "620611-1",
-      "nombreAsignatura": "CIBERDEFENSA Y ANÁLISIS FORENSE",
-      "porcentajeAprobacion": 93.8,
-      "inscritos": 16,
-      "aprobados": 15
     }
   ]
 }
