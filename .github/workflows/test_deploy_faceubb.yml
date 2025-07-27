@@ -32,7 +32,7 @@ jobs:
           cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
           npm test
         env:
-          MONGODB_URI_TEST: mongodb+srv://bastianrodriguez2101:Teemoisop123x@cluster0.lqzbrhe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+          MONGODB_URI: mongodb+srv://bastianrodriguez2101:Teemoisop123x@cluster0.lqzbrhe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
   # CUIDADO: Las conexiones SSH y OpenVPN pueden ser peligrosas si no se protegen correctamente.
   # Asegúrate de que todas las credenciales estén protegidas usando los secretos del repositorio.
