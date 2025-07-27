@@ -16,7 +16,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.0"
-      
+
+      - name: Iniciar MongoDB
+        uses: supercharge/mongodb-github-action@1.11.0
+        with:
+          mongodb-version: '6.0'
+
       - name: Instalar dependencias de producción del backend # Instala las dependencias del backend ya que aqui se realizarán los tests
         run: |
           cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
@@ -26,6 +31,8 @@ jobs:
         run: |
           cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
           npm test
+        env:
+          MONGODB_URI_TEST: ${{ secrets.MONGODB_URI_TEST }}
 
   # CUIDADO: Las conexiones SSH y OpenVPN pueden ser peligrosas si no se protegen correctamente.
   # Asegúrate de que todas las credenciales estén protegidas usando los secretos del repositorio.
