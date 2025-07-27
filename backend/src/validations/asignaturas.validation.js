@@ -10,9 +10,10 @@ export const asignaturaQueryValidation = joi.object({
             'string.empty': 'El código no puede estar vacío',
             'string.base': 'El código debe ser una cadena de texto',
             'string.length': 'El código debe tener exactamente 6 caracteres',
-            'string.pattern.base': 'El código debe ser un número válido de 6 dígitos',
+            'string.pattern.base': 'El código debe una cadena de texto válida de 6 dígitos',
         }),
-})
+})  
+    .and('codigo')
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales',
@@ -27,7 +28,6 @@ export const asignaturaBodyValidation = joi.object({
         .strict()
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/)
         .messages({
-            'string.empty': 'El nombre no puede estar vacío',
             'string.base': 'El nombre debe ser una cadena de texto',
             'string.min': 'El nombre debe tener al menos 3 caracteres',
             'string.max': 'El nombre no puede tener más de 50 caracteres',
@@ -40,9 +40,8 @@ export const asignaturaBodyValidation = joi.object({
         .pattern(/^(?!00)\d{2}(?!0{4})\d{4}$/)
         .messages({
             'string.base': 'El código debe ser una cadena de texto',
-            'string.empty': 'El código no puede estar vacío',
             'string.length': 'El código debe tener exactamente 6 caracteres',
-            'string.pattern.base': 'El código debe ser un dígito válido de 6 caracteres',
+            'string.pattern.base': 'El código debe una cadena de texto válida de 6 dígitos',
         }),
     creditos: joi.number()
         .min(1)
@@ -62,25 +61,22 @@ export const asignaturaBodyValidation = joi.object({
                 .strict()
                 .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s0-9,-]+$/)
                 .messages({
-                    'string.empty': 'El prerrequisito no puede estar vacío',
+                    'string.empty': 'El prerrequisito debe tener al menos 1 caracter',
                     'string.base': 'El prerrequisito debe ser una cadena de texto',
                     'string.min': 'El prerrequisito debe tener al menos 1 caracter',
                     'string.max': 'El prerrequisito no puede tener más de 50 caracteres',
                     'string.pattern.base': 'El prerrequisito solo puede contener letras, números, espacios, comas y guiones',
                 }),
         )
-        .min(0)
         .max(3)
         .messages({
             'array.base': 'Los prerrequisitos deben ser un arreglo',
             'array.max': 'Debe tener como máximo 3 prerrequisitos',
-            'array.min': 'Debe tener al menos 0 prerrequisitos'
         }),
     semestre: joi.number()
         .min(1)
         .max(10)
         .integer()
-        .strict()
         .messages({
             'number.base': 'El semestre debe ser un número',
             'number.min': 'El semestre debe ser al menos 1',
@@ -88,13 +84,11 @@ export const asignaturaBodyValidation = joi.object({
             'number.integer': 'El semestre debe ser un número entero',
         }),
     ambito: joi.string()
-        .valid('Ámbito Competencias Genéricas', 'Ámbito Ciencias Básicas y de la Ingeniería', 'Ámbito Ingeniería Aplicada')
         .trim()
         .strict()
+        .valid('Ámbito Competencias Genéricas', 'Ámbito Ciencias Básicas y de la Ingeniería', 'Ámbito Ingeniería Aplicada')
         .messages({
-            'string.empty': 'El ámbito no puede estar vacío',
-            'string.base': 'El ámbito debe ser una cadena de texto',
-            'any.only': 'El ámbito debe ser uno de los siguientes: Ámbito Competencias Genéricas, Ámbito Ciencias Básicas y de la Ingeniería o Ámbito Ingeniería Aplicada',
+            'any.only': 'El ámbito debe ser una cadena de texto y una de las siguientes palabras: Ámbito Competencias Genéricas, Ámbito Ciencias Básicas y de la Ingeniería o Ámbito Ingeniería Aplicada',
         }),
     area: joi.string()
         .valid('Área Form. Integral Profesional', 'Área Ciencias Básicas', 'Área Ciencias de la Ingeniería', 
@@ -103,9 +97,7 @@ export const asignaturaBodyValidation = joi.object({
         .trim()
         .strict()
         .messages({
-            'string.empty': 'El área no puede estar vacío',
-            'string.base': 'El área debe ser una cadena de texto',
-            'any.only': 'El área debe ser uno de los siguientes: Área Form. Integral Profesional, Área Ciencias Básicas, Área Ciencias de la Ingeniería, Área Ingeniería de Software y Base de Datos, Área de Sistemas Computacionales, Área de Gestión Informática o Una de las áreas anteriores',
+            'any.only': 'El área debe ser una cadena de texto y una de las siguientes palabras: Área Form. Integral Profesional, Área Ciencias Básicas, Área Ciencias de la Ingeniería, Área Ingeniería de Software y Base de Datos, Área de Sistemas Computacionales, Área de Gestión Informática o Una de las áreas anteriores',
         }),
 })
     .or(
@@ -114,10 +106,11 @@ export const asignaturaBodyValidation = joi.object({
         'creditos',
         'prerrequisitos',
         'semestre', 
-        'ambito'
+        'ambito',
+        'area'
     )
     .unknown(false)
     .messages({
         'object.unknown': 'No se permiten propiedades adicionales',
-        'object.missing': 'Debe proporcionar al menos uno de los campos: nombre, código, créditos, prerrequisitos, semestre o ámbito',
+        'object.missing': 'Debe proporcionar al menos uno de los campos: nombre, código, créditos, prerrequisitos, semestre, ámbito o área',
     });

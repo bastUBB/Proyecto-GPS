@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-//TODO: Considerar ambito y área, y horas
-
 const asignaturaSchema = new mongoose.Schema({
     nombre: {
         type: String,
