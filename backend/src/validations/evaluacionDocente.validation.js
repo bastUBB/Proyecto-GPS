@@ -4,6 +4,7 @@ export const evaluacionDocenteQueryValidation = joi.object({
     _id: joi.string()
         .pattern(/^[0-9a-fA-F]{24}$/)
         .messages({
+            'string.base': 'El ID debe ser una cadena de texto',
             'string.pattern.base': 'El ID debe ser un ObjectId válido de MongoDB',
         }),
     docente: joi.string()
@@ -11,7 +12,6 @@ export const evaluacionDocenteQueryValidation = joi.object({
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .messages({
-            'string.empty': 'El campo docente no puede estar vacío',
             'string.base': 'El campo docente debe ser una cadena de texto',
             'string.min': 'El campo docente debe tener al menos 5 caracteres',
             'string.max': 'El campo docente no puede tener más de 100 caracteres',
@@ -22,7 +22,6 @@ export const evaluacionDocenteQueryValidation = joi.object({
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .messages({
-            'string.empty': 'El campo alumno no puede estar vacío',
             'string.base': 'El campo alumno debe ser una cadena de texto',
             'string.min': 'El campo alumno debe tener al menos 5 caracteres',
             'string.max': 'El campo alumno no puede tener más de 100 caracteres',
@@ -33,7 +32,6 @@ export const evaluacionDocenteQueryValidation = joi.object({
         .max(100)
         .pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$/)
         .messages({
-            'string.empty': 'El campo asignatura no puede estar vacío',
             'string.base': 'El campo asignatura debe ser una cadena de texto',
             'string.min': 'El campo asignatura debe tener al menos 3 caracteres',
             'string.max': 'El campo asignatura no puede tener más de 100 caracteres',
@@ -45,15 +43,26 @@ export const evaluacionDocenteQueryValidation = joi.object({
             const [day, month, year] = value.split('-').map(Number);
             const inputDate = new Date(year, month - 1, day);
             const minDate = new Date(2024, 0, 1);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
             if (inputDate < minDate) {
                 return helpers.error('date.min', { limit: '01-01-2024' });
             }
+            if (inputDate > today) {
+                return helpers.error('date.max', { limit: 'hoy' });
+            }
             return value;
         })
+        .strict()
         .messages({
             'date.base': 'La fecha debe ser una fecha válida',
             'date.min': 'La fecha debe ser posterior al 01-01-2024',
+            'date.max': 'La fecha no puede ser futura',
+            'string.base': 'La fecha debe ser una cadena de texto',
+            'string.min': 'La fecha debe ser posterior al 01-01-2024',
+            'string.max': 'La fecha no puede tener más de 10 caracteres',
+            'string.pattern.base': 'La fecha debe tener el formato DD-MM-AAAA',
         }),
 })
     .or('_id', 'docente', 'alumno', 'asignatura')
@@ -72,7 +81,7 @@ export const evaluacionDocenteBodyValidation = joi.object({
         .messages({
             'string.empty': 'El campo docente no puede estar vacío',
             'string.base': 'El campo docente debe ser una cadena de texto',
-            'string.min': 'El campo docente debe tener al menos 3 caracteres',
+            'string.min': 'El campo docente debe tener al menos 15 caracteres',
             'string.max': 'El campo docente no puede tener más de 50 caracteres',
             'string.pattern.base': 'El campo docente solo puede contener letras y espacios',
             'any.required': 'El campo docente es obligatorio',
@@ -106,11 +115,11 @@ export const evaluacionDocenteBodyValidation = joi.object({
     visibilidad: joi.string()
         .valid('Anónima', 'Pública')
         .trim()
-        .lowercase()
+        .strict()
         .messages({
             'string.empty': 'El campo visibilidad no puede estar vacío',
             'string.base': 'El campo visibilidad debe ser una cadena de texto',
-            'any.only': 'El campo visibilidad debe ser "Anonima" o "Publica"',
+            'any.only': 'El campo visibilidad debe ser una cadena de texto y ser "Anónima" o "Pública"',
             'any.required': 'El campo visibilidad es obligatorio',
         }),
     fecha: joi.string()
@@ -127,6 +136,7 @@ export const evaluacionDocenteBodyValidation = joi.object({
             return value;
         })
         .messages({
+            'string.base': 'El campo fecha debe ser una cadena de texto',
             'date.base': 'La fecha debe ser una fecha válida',
             'date.min': 'La fecha debe ser posterior al 01-01-2024',
             'any.required': 'El campo fecha es obligatorio',
@@ -145,10 +155,12 @@ export const evaluacionDocenteBodyValidation = joi.object({
     calificacion: joi.number()
         .min(1)
         .max(7)
+        .integer()
         .messages({
             'number.base': 'La calificación debe ser un número',
             'number.min': 'La calificación debe ser al menos 1',
             'number.max': 'La calificación no puede ser más de 7',
+            'number.integer': 'La calificación debe ser un número entero',
         }),
     estado: joi.string()
         .valid('pendiente', 'aprobada', 'rechazada')
