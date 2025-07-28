@@ -4,7 +4,7 @@ import { UserContext } from "../../context/userContext";
 import axios from 'axios';
 import HelpTooltip from "../components/PuntoAyuda";
 import ModalConfiguracionHoras from "../components/ModalConfiguracionHoras";
-import { use } from "react";
+
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -122,7 +122,7 @@ export default function SugerenciaHorarios() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:5500/api/combi/profesor/${profesor._id}/asignaturas`,
+        `/api/combi/profesor/${profesor._id}/asignaturas`,
         getAuthConfig()
       );
       if (response.data && response.data.data) {
@@ -145,7 +145,7 @@ export default function SugerenciaHorarios() {
     setLoading(true);
     try {
       await axios.post(
-        `http://localhost:5500/api/combi/profesor/${profesorHorasActual._id}/asignaturas`,
+        `/api/combi/profesor/${profesorHorasActual._id}/asignaturas`,
         { asignaturas: asignaturasConHoras },
         getAuthConfig()
       );
@@ -218,7 +218,7 @@ export default function SugerenciaHorarios() {
 
     try {
       const response = await axios.post(
-        'http://localhost:5500/api/combi/horario/generar-global',
+        '/api/combi/horario/generar-global',
         datos, // <-- aquí va el arreglo correcto
         getAuthConfig()
       );
@@ -346,7 +346,7 @@ export default function SugerenciaHorarios() {
       setMensaje('');
 
       // Usar el nuevo endpoint específico para asignaturas disponibles
-      const response = await axios.get('http://localhost:5500/api/combi/asignaturas-disponibles', getAuthConfig());
+      const response = await axios.get('/api/combi/asignaturas-disponibles', getAuthConfig());
 
       if (response.data && response.data.data) {
         // Formatear las asignaturas para el modal
@@ -432,7 +432,7 @@ export default function SugerenciaHorarios() {
       });
 
       const response = await axios.post(
-        `http://localhost:5500/api/combi/profesor/${user.id || user._id}/asignaturas`,
+        `/api/combi/profesor/${user.id || user._id}/asignaturas`,
         { asignaturas: asignaturasConHorasExistentes },
         getAuthConfig()
       );
@@ -471,7 +471,7 @@ export default function SugerenciaHorarios() {
 
       // Guardar en el backend
       const response = await axios.post(
-        `http://localhost:5500/api/combi/profesor/${user.id || user._id}/asignaturas`,
+        `/api/combi/profesor/${user.id || user._id}/asignaturas`,
         { asignaturas: asignaturasActualizadas },
         getAuthConfig()
       );
