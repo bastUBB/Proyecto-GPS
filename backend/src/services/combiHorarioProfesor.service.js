@@ -454,70 +454,82 @@ export const generarCombinacionGlobalService = async (profesoresAsignaturas) => 
         const asignaturasAsignadas = [];
 
     for (const asignatura of asignaturas) {
-        const bloquesAsignados = [];
         let horasRestantes = asignatura.horasSemanales;
-        let sumaHoras = 0;
-        let bloques120 = 0; // bloques de 1:20
-        let bloques10 = 0;  // bloques de 10 min
+        let bloquesAsignados = [];
 
-        for (let i = 0; i < bloquesDisponibles.length && horasRestantes > 0; i++) {
-            const bloque = bloquesDisponibles[i];
-            const [hi, mi] = bloque.horaInicio.split(':').map(Number);
-            const [hf, mf] = bloque.horaFin.split(':').map(Number);
-            const duracionBloque = ((hf * 60 + mf) - (hi * 60 + mi)) / 60;
+        while (horasRestantes > 0) {
+            // Buscar el índice del primer bloque disponible de 1:20h
+            let inicioSecuencia = -1;
+            for (let i = 0; i < bloquesDisponibles.length; i++) {
+                const bloque = bloquesDisponibles[i];
+                const [hi, mi] = bloque.horaInicio.split(':').map(Number);
+                const [hf, mf] = bloque.horaFin.split(':').map(Number);
+                const duracion = ((hf * 60 + mf) - (hi * 60 + mi)) / 60;
+                if (duracion >= 1.3 && duracion <= 1.4) {
+                    inicioSecuencia = i;
+                    break;
+                }
+            }
+            if (inicioSecuencia === -1) break; // No hay más bloques de inicio válidos
 
-            let color = null;
-            // Bloque de 10 minutos
-            if (duracionBloque <= 0.2) {
-                color = 'gray';
-                bloques10++;
-            } else if (duracionBloque >= 1.3 && duracionBloque <= 1.4) {
-                bloques120++;
+            // Intentar armar una secuencia de hasta 5 bloques consecutivos
+            let secuencia = [];
+            let sumaHorasSecuencia = 0;
+            let bloquesEnSecuencia = 0;
+            let i = inicioSecuencia;
+            while (
+                i < bloquesDisponibles.length &&
+                bloquesEnSecuencia < 5 &&
+                sumaHorasSecuencia < horasRestantes
+            ) {
+                const bloque = bloquesDisponibles[i];
+                // Si no es el primero, debe ser consecutivo al anterior
+                if (
+                    secuencia.length > 0 &&
+                    !(bloque.dia === secuencia[secuencia.length - 1].dia &&
+                    bloque.horaInicio === secuencia[secuencia.length - 1].horaFin)
+                ) {
+                    break;
+                }
+                const [hi, mi] = bloque.horaInicio.split(':').map(Number);
+                const [hf, mf] = bloque.horaFin.split(':').map(Number);
+                const duracion = ((hf * 60 + mf) - (hi * 60 + mi)) / 60;
+
+                let color = null;
+                if (duracion <= 0.2) color = 'gray';
+
+                secuencia.push({
+                    dia: bloque.dia,
+                    horaInicio: bloque.horaInicio,
+                    horaFin: bloque.horaFin,
+                    tipo: bloque.tipo,
+                    color
+                });
+                sumaHorasSecuencia += duracion;
+                bloquesEnSecuencia++;
+                i++;
             }
 
-            bloquesAsignados.push({
-                dia: bloque.dia,
-                horaInicio: bloque.horaInicio,
-                horaFin: bloque.horaFin,
-                tipo: bloque.tipo,
-                color
-            });
-
-            horasRestantes -= duracionBloque;
-            sumaHoras += duracionBloque;
-
-            // Lógica de corte según tus reglas
-            // 1.5h: 1x1:20 + 1x10min
-            if (asignatura.horasSemanales === 1.5 && bloques120 === 1 && bloques10 === 1) break;
-            // 2h: 1x1:20 + 1x10min + 1x1:20 (el último amarillo)
-            if (asignatura.horasSemanales === 2 && bloques120 === 2 && bloques10 === 1) break;
-            // 2.5h: 2x1:20 + 1x10min
-            if (asignatura.horasSemanales === 2.5 && bloques120 === 2 && bloques10 === 1) break;
-            // 3h: 2x1:20 + 2x10min
-            if (asignatura.horasSemanales === 3 && bloques120 === 2 && bloques10 === 2) break;
-            // 3.5h: 3x1:20 + 2x10min (el último amarillo)
-            if (asignatura.horasSemanales === 3.5 && bloques120 === 3 && bloques10 === 2) break;
-            // 4h: 3x1:20 + 2x10min + 1x1:20
-            if (asignatura.horasSemanales === 4 && bloques120 === 4 && bloques10 === 2) break;
+            // Solo asignar si la secuencia tiene al menos 2 bloques
+            if (secuencia.length >= 2) {
+                bloquesAsignados = bloquesAsignados.concat(secuencia);
+                horasRestantes -= sumaHorasSecuencia;
+                // Eliminar los bloques usados de bloquesDisponibles
+                bloquesDisponibles = bloquesDisponibles.filter(b =>
+                    !secuencia.some(ba =>
+                        ba.dia === b.dia && ba.horaInicio === b.horaInicio && ba.horaFin === b.horaFin
+                    )
+                );
+            } else {
+                // No se puede asignar más bloques válidos
+                break;
+            }
         }
 
-        // Colorear el último bloque según reglas para 2h y 3.5h
-        if (asignatura.horasSemanales === 2 && bloquesAsignados.length >= 3) {
-            bloquesAsignados[bloquesAsignados.length - 1].color = 'yellow';
+        // Si solo queda un bloque suelto, no lo asignes
+        if (bloquesAsignados.length === 1) {
+            bloquesAsignados.length = 0;
         }
-        if (asignatura.horasSemanales === 3.5 && bloquesAsignados.length >= 5) {
-            bloquesAsignados[bloquesAsignados.length - 1].color = 'yellow';
-        }
-        if (asignatura.horasSemanales === 4 && bloquesAsignados.length >= 6) {
-            bloquesAsignados[bloquesAsignados.length - 1].color = 'yellow';
-        }
-
-        // Eliminar bloques asignados para evitar solapamientos
-        bloquesDisponibles = bloquesDisponibles.filter(b =>
-            !bloquesAsignados.some(ba =>
-                ba.dia === b.dia && ba.horaInicio === b.horaInicio && ba.horaFin === b.horaFin
-            )
-        );
 
         asignaturasAsignadas.push({
             codigo: asignatura.codigo,
