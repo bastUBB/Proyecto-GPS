@@ -53,7 +53,6 @@ export const subirDisponibilidad = async (req, res) => {
         let disponibilidadValida = true;
 
         for (const dia in bloquesPorDia) {
-            // Ordenar por hora de inicio
             const bloquesDia = bloquesPorDia[dia].sort((a, b) => {
                 const [ha, ma] = a.horaInicio.split(':').map(Number);
                 const [hb, mb] = b.horaInicio.split(':').map(Number);
@@ -62,32 +61,35 @@ export const subirDisponibilidad = async (req, res) => {
 
             let i = 0;
             while (i < bloquesDia.length) {
-                // Calcular duración del bloque actual
+                // Validar que el bloque actual es de 1:20h
                 const bloqueActual = bloquesDia[i];
                 const [hi, mi] = bloqueActual.horaInicio.split(':').map(Number);
                 const [hf, mf] = bloqueActual.horaFin.split(':').map(Number);
                 const duracion = ((hf * 60 + mf) - (hi * 60 + mi)) / 60;
 
-                // Debe comenzar con bloque de 1:20h
                 if (!(duracion >= 1.3 && duracion <= 1.4)) {
                     disponibilidadValida = false;
                     break;
                 }
 
-                // Debe haber al menos un siguiente bloque consecutivo
-                if (i + 1 >= bloquesDia.length) {
-                    disponibilidadValida = false;
-                    break;
+                // Buscar cuántos bloques consecutivos hay a partir de aquí
+                let j = i + 1;
+                let consecutivos = 1;
+                while (
+                    j < bloquesDia.length &&
+                    bloquesDia[j - 1].horaFin === bloquesDia[j].horaInicio
+                ) {
+                    consecutivos++;
+                    j++;
                 }
-                const siguiente = bloquesDia[i + 1];
-                if (bloqueActual.horaFin !== siguiente.horaInicio) {
+
+                if (consecutivos < 2) {
                     disponibilidadValida = false;
                     break;
                 }
 
-                // Avanza al siguiente par (puedes permitir secuencias más largas si quieres)
-                i += 2;
-                // Si quieres permitir secuencias más largas, puedes hacer un while interno aquí
+                // Avanza al siguiente grupo de bloques
+                i += consecutivos;
             }
             if (!disponibilidadValida) break;
         }
