@@ -15,9 +15,7 @@ const asignaturasPath = path.resolve('output/horario_manual.json');
 const asignaturasRaw = fs.readFileSync(asignaturasPath);
 const Asignaturas = JSON.parse(asignaturasRaw);
 
-const profesoresPath = path.resolve('output/profesores_sin_rut.json');
-const profesoresRaw = fs.readFileSync(profesoresPath);
-const Profesores = JSON.parse(profesoresRaw).profesores;
+// La lectura de profesores se mueve a la función createProfesores()
 
 // Cargar datos de rendimiento
 const datosRendimientoPath = path.resolve('output/datos_rendimiento.json');
@@ -151,6 +149,18 @@ async function createAsignaturas() {
 
 async function createProfesores() {
     try {
+        // Leer el archivo de profesores después de que se haya generado
+        const profesoresPath = path.resolve('output/profesores_sin_rut.json');
+        
+        // Verificar si el archivo existe
+        if (!fs.existsSync(profesoresPath)) {
+            console.log('Archivo profesores_sin_rut.json no encontrado. Asegúrate de que generarProfesoresSimple() se haya ejecutado correctamente.');
+            return;
+        }
+        
+        const profesoresRaw = fs.readFileSync(profesoresPath);
+        const Profesores = JSON.parse(profesoresRaw).profesores;
+        
         if (!Profesores || Profesores.length === 0) {
             console.log('No hay profesores en el JSON para crear.');
             return;
@@ -225,13 +235,13 @@ async function createRecomendacion() {
 }
 
 async function initialSetup() {
-    // await generarProfesoresSimple();
-    // await createInitialUsers();
-    // await createAsignaturas();
-    // await createProfesores();
-    // await createRendimientos();
-    // await createAsignaturasDocentes();
-    // await createEvaluaciones();
+    await generarProfesoresSimple();
+    await createInitialUsers();
+    await createAsignaturas();
+    await createProfesores();
+    await createRendimientos();
+    await createAsignaturasDocentes();
+    await createEvaluaciones();
     await createRecomendacion();
 }
 

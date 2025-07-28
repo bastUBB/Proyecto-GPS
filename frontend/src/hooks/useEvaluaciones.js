@@ -34,7 +34,15 @@ export const useEvaluaciones = (userRole, authToken) => {
             setNuevasEvaluaciones(nuevas);
         } catch (error) {
             console.error('Error al cargar evaluaciones:', error);
-            setError(error.response?.data?.message || 'Error de conexión al cargar evaluaciones');
+            
+            // Si es error de autenticación, no establecer el error para evitar bucles
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                setError('Sesión expirada o sin permisos para ver evaluaciones');
+                setEvaluaciones([]);
+                setNuevasEvaluaciones(0);
+            } else {
+                setError(error.response?.data?.message || 'Error de conexión al cargar evaluaciones');
+            }
         } finally {
             setLoading(false);
         }

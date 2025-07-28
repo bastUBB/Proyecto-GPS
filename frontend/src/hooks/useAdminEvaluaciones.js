@@ -22,7 +22,7 @@ export const useAdminEvaluaciones = (userRole, token) => {
       
       setEvaluaciones(response.data.data || []);
     } catch (error) {
-      console.error('Error al cargar evaluaciones:', error);
+      console.error('Error al cargar evaluaciones admin:', error);
       setError(error.response?.data?.message || 'Error de conexión al cargar evaluaciones');
     } finally {
       setLoading(false);
