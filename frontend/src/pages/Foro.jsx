@@ -642,8 +642,9 @@ export default function Foro() {
           )}
 
           {user.role === 'profesor' && (
-            <div className="space-y-4" onClick={() => nuevasEvaluaciones > 0 && marcarComoLeidas()}>
-              {/* <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
+            <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+              <div className="space-y-4" onClick={() => nuevasEvaluaciones > 0 && marcarComoLeidas()}>
+                {/* <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                   <h3 className="font-semibold text-green-800">Evaluaciones Recibidas</h3>
@@ -653,62 +654,63 @@ export default function Foro() {
                 </p>
               </div> */}
 
-              {evaluaciones.length > 0 && <EvaluacionStats evaluaciones={evaluaciones} />}
+                {evaluaciones.length > 0 && <EvaluacionStats evaluaciones={evaluaciones} />}
 
-              {loadingEvaluaciones ? (
-                <div className="text-center py-8">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  <p className="mt-2 text-gray-600">Cargando evaluaciones...</p>
-                </div>
-              ) : evaluaciones.length === 0 ? (
-                <div className="text-center py-8">
-                  <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg">Aún no tienes evaluaciones.</p>
-                  <p className="text-gray-400 text-sm mt-2">
-                    Las evaluaciones aparecerán aquí cuando los estudiantes las envíen.
-                  </p>
-                </div>
-              ) : (
-                evaluaciones.map((evaluacion) => (
-                  <div
-                    key={evaluacion._id}
-                    className="bg-white p-6 rounded-lg shadow-md border border-gray-200 relative"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <BookOpen className="w-4 h-4 text-blue-600" />
-                          <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <User className="w-4 h-4 text-gray-600" />
-                          <span className="text-gray-700">
-                            {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : evaluacion.alumno}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <div className="flex items-center gap-1 mb-1">
-                          {renderStars(evaluacion.calificacion)}
-                          <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-sm text-gray-500">
-                          <Calendar className="w-3 h-3" />
-                          {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border-t pt-4">
-                      <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
-                    </div>
-
-                    <div className="mt-3 text-xs text-gray-500 uppercase tracking-wide">
-                      {evaluacion.visibilidad}
-                    </div>
+                {loadingEvaluaciones ? (
+                  <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <p className="mt-2 text-gray-600">Cargando evaluaciones...</p>
                   </div>
-                ))
-              )}
+                ) : evaluaciones.length === 0 ? (
+                  <div className="text-center py-8">
+                    <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">Aún no tienes evaluaciones.</p>
+                    <p className="text-gray-400 text-sm mt-2">
+                      Las evaluaciones aparecerán aquí cuando los estudiantes las envíen.
+                    </p>
+                  </div>
+                ) : (
+                  evaluaciones.map((evaluacion) => (
+                    <div
+                      key={evaluacion._id}
+                      className="bg-white p-6 rounded-lg shadow-md border border-gray-200 relative"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <BookOpen className="w-4 h-4 text-blue-600" />
+                            <span className="font-semibold text-lg">{evaluacion.asignatura}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <User className="w-4 h-4 text-gray-600" />
+                            <span className="text-gray-700">
+                              {evaluacion.visibilidad === 'Anónima' ? 'Alumno Anónimo' : evaluacion.alumno}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <div className="flex items-center gap-1 mb-1">
+                            {renderStars(evaluacion.calificacion)}
+                            <span className="ml-2 font-semibold text-lg">{evaluacion.calificacion}/7</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-sm text-gray-500">
+                            <Calendar className="w-3 h-3" />
+                            {new Date(evaluacion.fecha).toLocaleDateString('es-ES')}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="border-t pt-4">
+                        <p className="text-gray-800 leading-relaxed">{evaluacion.texto}</p>
+                      </div>
+
+                      <div className="mt-3 text-xs text-gray-500 uppercase tracking-wide">
+                        {evaluacion.visibilidad}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           )}
 

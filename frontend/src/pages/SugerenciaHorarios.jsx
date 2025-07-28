@@ -329,10 +329,22 @@ export default function SugerenciaHorarios() {
         setMensaje('Solo los profesores pueden configurar disponibilidad');
       } else if (error.response?.status === 400) {
         // Mostrar detalles del error de validación
-        const errorDetails = error.response?.data?.details || error.response?.data?.message;
-        setMensaje(`Error de validación: ${Array.isArray(errorDetails) ? errorDetails.join(', ') : errorDetails}`);
-      } else {
-        setMensaje(error.response?.data?.message || 'Error al guardar la disponibilidad');
+        let errorDetails = error.response?.data?.details || error.response?.data?.message;
+        if (Array.isArray(errorDetails)) {
+          errorDetails = errorDetails.map(d =>
+            typeof d === 'string'
+              ? d
+              : d.message || JSON.stringify(d)
+          ).join(', ');
+        } else if (typeof errorDetails === 'object' && errorDetails !== null) {
+          // Si es un objeto vacío o sin mensaje, mostrar mensaje personalizado
+          if (Object.keys(errorDetails).length === 0 || !errorDetails.message) {
+            errorDetails = null;
+          } else {
+            errorDetails = errorDetails.message;
+          }
+        }
+        setMensaje(`Error de validación: ${errorDetails || 'Debe seleccionar al menos dos bloques seguidos comenzando por uno de 1:20 horas.'}`);
       }
     } finally {
       setLoading(false);

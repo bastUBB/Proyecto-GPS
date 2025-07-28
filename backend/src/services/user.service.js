@@ -78,10 +78,12 @@ export async function updateUserService(query, body) {
             return [null, 'El correo electrónico que desea ingresar ya se encuentra registrado con otro usuario'];
         }
         
-        if (nuevaPassword) {
-            const matchPassword = await comparePassword(nuevaPassword, existingUser.password);
-            if (!matchPassword) return [null, "La contraseña no coincide"];
-        }
+        // if (nuevaPassword) {
+        //     const matchPassword = await comparePassword(nuevaPassword, existingUser.password);
+        //     if (!matchPassword) return [null, "La contraseña no coincide"];
+        // }
+
+        // QUIERO ACTUALIZAR LA CONTRASEÑA; NO QUIERO COMPARARLA
 
         await User.updateOne(
             { rut: existingUser.rut },
