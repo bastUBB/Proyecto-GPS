@@ -33,6 +33,21 @@ export async function asignarAsignaturas(asignaturasCursadas) {
 
         // Función para verificar prerrequisitos de prácticas
         const verificarPrerrequisitosEspeciales = (asig) => {
+            // Verificar prerrequisitos para Anteproyecto
+            if (asig.nombre.toLowerCase().includes('anteproyecto')) {
+                // Calcular créditos totales de las asignaturas cursadas
+                const asignaturasCursadasCompletas = malla.filter(asigMalla => 
+                    cursadasSet.has(asigMalla.nombre?.toLowerCase())
+                );
+                const creditosTotales = asignaturasCursadasCompletas.reduce((total, asigMalla) => 
+                    total + (asigMalla.creditos || 0), 0
+                );
+                
+                const tieneCreditos = creditosTotales >= 240;
+                //console.log(`${asig.nombre}: Créditos totales: ${creditosTotales}, Requeridos: 240, Cumple: ${tieneCreditos}`);
+                return tieneCreditos;
+            }
+
             // Verificar prerrequisitos para Formaciones Integrales IV y V
             if (asig.nombre.toLowerCase().includes('formación integral iv') || 
                 asig.nombre.toLowerCase().includes('formación integral 4')) {
