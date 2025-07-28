@@ -32,7 +32,7 @@ jobs:
           cd backend || { echo "No se pudo acceder al directorio del backend"; exit 1; }
           npm test
         env:
-          MONGO_URI: mongodb+srv://bastianrodriguez2101:Teemoisop123x@cluster0.lqzbrhe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+          MONGO_URI: ${{ secrets.MONGO_URI }} # Usa la URI de MongoDB almacenada en los secretos del repositorio
 
   # CUIDADO: Las conexiones SSH y OpenVPN pueden ser peligrosas si no se protegen correctamente.
   # Asegúrate de que todas las credenciales estén protegidas usando los secretos del repositorio.
