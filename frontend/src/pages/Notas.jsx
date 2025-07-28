@@ -19,11 +19,11 @@ export default function Notas() {
     const [editingCurrentSemestre, setEditingCurrentSemestre] = useState(null);
     const [editingTipo, setEditingTipo] = useState(null);
     const [editingNotasParciales, setEditingNotasParciales] = useState([]);
-    const [alert, setAlert] = useState({ 
-        type: '', 
-        title: '', 
-        message: '', 
-        isVisible: false 
+    const [alert, setAlert] = useState({
+        type: '',
+        title: '',
+        message: '',
+        isVisible: false
     });
 
     // Funciones helper para alertas
@@ -143,7 +143,7 @@ export default function Notas() {
     useEffect(() => {
         const loadData = async () => {
             if (!user) return;
-            
+
             setLoading(true);
             try {
                 const [asignaturasCursadas, asignaturasInscribibles, historialData] = await Promise.all([
@@ -169,7 +169,7 @@ export default function Notas() {
     // Función para refrescar datos desde el servidor
     const refreshData = async () => {
         if (!user) return;
-        
+
         try {
             const [asignaturasCursadas, asignaturasInscribibles, historialData] = await Promise.all([
                 loadAsignaturasCursadas(),
@@ -207,7 +207,7 @@ export default function Notas() {
             if (!isInscribible && notaFloat < 4.0) {
                 // Si es un cambio de estado y la nota es menor a 4.0, reemplazar automáticamente
                 if (cambioAEstadoCursada) {
-                    showAlert('warning', 'Nota Ajustada', 
+                    showAlert('warning', 'Nota Ajustada',
                         `La asignatura cambió a estado "cursada". Nota ajustada de ${notaFloat.toFixed(2)} a 4.0 (mínimo aprobación)`);
                     // Continuar con nota = 4.0
                     nota = '4.0';
@@ -220,7 +220,7 @@ export default function Notas() {
             // Preparar datos para el historial
             const updatedHistorial = [...historial];
             const existingIndex = updatedHistorial.findIndex(h => h.asignatura === asignatura);
-            
+
             // Convertir notas parciales a números y validar estructura
             let notasParcialesFinales = (notasParciales || []).map(parcial => ({
                 evaluacion: parcial.evaluacion,
@@ -230,14 +230,14 @@ export default function Notas() {
 
             // Si cambió de inscribible a cursada, convertir las notas parciales en historial formal
             if (cambioAEstadoCursada && notasParcialesFinales.length > 0) {
-                showAlert('info', 'Conversión de Estado', 
+                showAlert('info', 'Conversión de Estado',
                     'Las notas parciales se han convertido en el historial formal de la asignatura cursada');
                 // Las notas parciales se mantienen como están, pero ahora representan el historial formal
             } else if (nowIsCursada) {
                 // Si es cursada pero no había notas parciales previas, limpiar las notas parciales
                 notasParcialesFinales = [];
             }
-            
+
             const asignaturaHistorial = {
                 asignatura: asignatura,
                 notaFinal: parseFloat(nota), // Usar la nota final (posiblemente ajustada)
@@ -295,7 +295,7 @@ export default function Notas() {
 
             if (response.data.status) {
                 if (cambioAEstadoCursada) {
-                    showAlert('success', 'Estado Actualizado', 
+                    showAlert('success', 'Estado Actualizado',
                         'La asignatura ha sido marcada como cursada y las notas parciales se han convertido en historial académico formal');
                 } else {
                     showAlert('success', 'Nota Guardada', 'La nota se ha guardado correctamente');
@@ -339,16 +339,14 @@ export default function Notas() {
             title: "Asignatura",
             render: (item) => (
                 <div className="flex flex-col">
-                    <div className={`text-sm font-medium ${
-                        item.tipo === 'cursada' ? 'text-green-800' : 'text-blue-800'
-                    }`}>
+                    <div className={`text-sm font-medium ${item.tipo === 'cursada' ? 'text-green-800' : 'text-blue-800'
+                        }`}>
                         {item.asignatura}
                     </div>
-                    <div className={`text-xs px-2 py-1 rounded-full inline-block w-fit ${
-                        item.tipo === 'cursada' 
-                            ? 'bg-green-100 text-green-700' 
+                    <div className={`text-xs px-2 py-1 rounded-full inline-block w-fit ${item.tipo === 'cursada'
+                            ? 'bg-green-100 text-green-700'
                             : 'bg-blue-100 text-blue-700'
-                    }`}>
+                        }`}>
                         {item.tipo === 'cursada' ? 'Cursada' : 'Inscribible'}
                     </div>
                 </div>
@@ -376,10 +374,9 @@ export default function Notas() {
             align: "center",
             render: (item) => (
                 <div className="flex items-center justify-center gap-2">
-                    <div className={`text-sm font-semibold ${
-                        item.nota === null ? "text-gray-400" : 
-                        item.nota >= 4 ? "text-green-600" : "text-red-600"
-                    }`}>
+                    <div className={`text-sm font-semibold ${item.nota === null ? "text-gray-400" :
+                            item.nota >= 4 ? "text-green-600" : "text-red-600"
+                        }`}>
                         {item.nota === null ? "Sin nota" : item.nota.toFixed(1)}
                     </div>
                     {item.tipo === 'inscribible' && item.notasParciales.length > 0 && (
@@ -399,28 +396,30 @@ export default function Notas() {
         }
     ];
 
-        return loading ? (
-            <PagGeneral>
-                <div className="flex items-center justify-center h-full bg-white rounded-lg">
-                    <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-                </div>
-            </PagGeneral>
-        ) : (
-            <PagGeneral>
-                <div className="p-4 sm:p-6 lg:p-8 bg-transparent">
-                    <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
-                        {/* Encabezado */}
-                        <div className="text-center space-y-1 sm:space-y-2 mb-6">
-                            <h1 className="text-xl sm:text-3xl font-bold text-blue-900">Mis Notas</h1>
-                            <p className="text-sm sm:text-base text-blue-700">
-                                Visualiza y edita tu rendimiento académico
-                            </p>
-                        </div>
+    return loading ? (
+        <PagGeneral>
+            <div className="flex items-center justify-center h-full bg-white rounded-lg">
+                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+            </div>
+        </PagGeneral>
+    ) : (
+        <PagGeneral>
+            <div className="p-4 sm:p-6 lg:p-8 bg-transparent">
+                <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+                    {/* Encabezado */}
+                    <div className="text-center space-y-1 sm:space-y-2 mb-6">
+                        <h1 className="text-xl sm:text-3xl font-bold text-blue-900">Mis Notas</h1>
+                        <p className="text-sm sm:text-base text-blue-700">
+                            Visualiza y edita tu rendimiento académico
+                        </p>
+                    </div>
 
-                        {/* Estadísticas de rendimiento */}
-                        {asignaturas.length > 0 && (
-                            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen de Rendimiento</h3>
+                    {/* Estadísticas de rendimiento */}
+                    {asignaturas.length > 0 && (
+                        <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-2 rounded-lg mb-4">
+                                <h3 className="text-lg font-semibold text-white mb-4">Resumen de Rendimiento</h3>
+                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                     <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                                         <div className="flex items-center gap-2 mb-2">
@@ -434,12 +433,12 @@ export default function Notas() {
                                             Promedio: {
                                                 asignaturas
                                                     .filter(a => a.tipo === 'cursada' && a.nota !== null)
-                                                    .length > 0 
+                                                    .length > 0
                                                     ? (asignaturas
                                                         .filter(a => a.tipo === 'cursada' && a.nota !== null)
-                                                        .reduce((sum, a) => sum + a.nota, 0) / 
-                                                       asignaturas.filter(a => a.tipo === 'cursada' && a.nota !== null).length
-                                                      ).toFixed(2)
+                                                        .reduce((sum, a) => sum + a.nota, 0) /
+                                                        asignaturas.filter(a => a.tipo === 'cursada' && a.nota !== null).length
+                                                    ).toFixed(2)
                                                     : 'N/A'
                                             }
                                         </p>
@@ -466,9 +465,9 @@ export default function Notas() {
                                                 asignaturas.filter(a => a.nota !== null).length > 0
                                                     ? (asignaturas
                                                         .filter(a => a.nota !== null)
-                                                        .reduce((sum, a) => sum + a.nota, 0) / 
-                                                       asignaturas.filter(a => a.nota !== null).length
-                                                      ).toFixed(2)
+                                                        .reduce((sum, a) => sum + a.nota, 0) /
+                                                        asignaturas.filter(a => a.nota !== null).length
+                                                    ).toFixed(2)
                                                     : 'N/A'
                                             }
                                         </p>
@@ -492,18 +491,18 @@ export default function Notas() {
                             </div>
                         )}
 
-                        {/* Tabla de asignaturas con notas */}
-                        <TablaGestion
-                            data={asignaturas}
-                            columns={columns}
-                            title="Mis Calificaciones"
-                            icon={<BookOpenCheck className="w-5 h-5" />}
-                            searchPlaceholder="Buscar asignaturas..."
-                            emptyMessage="No hay asignaturas cursadas registradas"
-                            itemsPerPage={10}
-                            showActions={false}
-                        />
-                    </div>
+                            {/* Tabla de asignaturas con notas */}
+                            <TablaGestion
+                                data={asignaturas}
+                                columns={columns}
+                                title="Mis Calificaciones"
+                                icon={<BookOpenCheck className="w-5 h-5" />}
+                                searchPlaceholder="Buscar asignaturas..."
+                                emptyMessage="No hay asignaturas cursadas registradas"
+                                itemsPerPage={10}
+                                showActions={false}
+                            />
+                        </div>
 
                     {/* Componente de Alerta */}
                     <Alert
@@ -538,6 +537,6 @@ export default function Notas() {
                         />
                     )}
                 </div>
-            </PagGeneral>
-        );
+        </PagGeneral>
+    );
 }
