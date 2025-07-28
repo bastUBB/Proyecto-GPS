@@ -34,7 +34,6 @@ export default function Home() {
     // Definir páginas disponibles según el rol
     const getAvailablePages = (role) => {
       const basePages = [
-        { id: "horario", route: "/horario", icon: Calendar, label: "Horario" },
         { id: "malla", route: "/malla", icon: BookOpen, label: "Malla" },
         { id: "foro", route: "/foro", icon: MessageCircle, label: "Foro" },
       ];
@@ -46,7 +45,6 @@ export default function Home() {
           { id: "excel", route: "/subida-excel", icon: FileSpreadsheet, label: "Excel" },
           { id: "gestion-malla", route: "/gestion-malla", icon: Settings, label: "Gestión Malla" },
           { id: "sugerencias", route: "/sugerencia-horarios", icon: Clock, label: "Sugerencias" },
-          { id: "notas", route: "/notas", icon: BookOpenCheck, label: "Notas" },
         ],
         profesor: [
           ...basePages,
@@ -54,7 +52,8 @@ export default function Home() {
         ],
         alumno: [
           ...basePages,
-          { id: "notas", route: "/notas", icon: BookOpenCheck, label: "Notas" }
+          { id: "notas", route: "/notas", icon: BookOpenCheck, label: "Notas" },
+          { id: "horario", route: "/horario", icon: Calendar, label: "Horario" }
           // { id: "historial", route: "/historial", icon: History, label: "Historial" },
         ],
         estudiante: [

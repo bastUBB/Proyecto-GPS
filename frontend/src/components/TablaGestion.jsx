@@ -92,7 +92,7 @@ const TablaGestion = ({
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-md">
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-blue-50">

@@ -195,22 +195,55 @@ export default function Notas() {
             const isInscribible = asignaturaData?.tipo === 'inscribible';
             const notaFloat = parseFloat(nota);
 
+            // Verificar si la asignatura existía previamente en el historial
+            const existingAsignatura = historial.find(h => h.asignatura === asignatura);
+            const wasInscribible = existingAsignatura?.estado === 'inscribible';
+            const nowIsCursada = !isInscribible; // Si no es inscribible, es cursada
+
+            // Detectar cambio de inscribible a cursada
+            const cambioAEstadoCursada = wasInscribible && nowIsCursada;
+
             // Validar nota mínima para asignaturas cursadas (aprobadas)
             if (!isInscribible && notaFloat < 4.0) {
-                showAlert('error', 'Nota Inválida', 'Las asignaturas cursadas deben tener nota mínima de 4.0 (aprobada)');
-                return;
+                // Si es un cambio de estado y la nota es menor a 4.0, reemplazar automáticamente
+                if (cambioAEstadoCursada) {
+                    showAlert('warning', 'Nota Ajustada', 
+                        `La asignatura cambió a estado "cursada". Nota ajustada de ${notaFloat.toFixed(2)} a 4.0 (mínimo aprobación)`);
+                    // Continuar con nota = 4.0
+                    nota = '4.0';
+                } else {
+                    showAlert('error', 'Nota Inválida', 'Las asignaturas cursadas deben tener nota mínima de 4.0 (aprobada)');
+                    return;
+                }
             }
 
             // Preparar datos para el historial
             const updatedHistorial = [...historial];
             const existingIndex = updatedHistorial.findIndex(h => h.asignatura === asignatura);
             
+            // Convertir notas parciales a números y validar estructura
+            let notasParcialesFinales = (notasParciales || []).map(parcial => ({
+                evaluacion: parcial.evaluacion,
+                nota: parseFloat(parcial.nota), // Convertir string a número
+                ponderacion: parseInt(parcial.ponderacion) // Asegurar que sea entero
+            }));
+
+            // Si cambió de inscribible a cursada, convertir las notas parciales en historial formal
+            if (cambioAEstadoCursada && notasParcialesFinales.length > 0) {
+                showAlert('info', 'Conversión de Estado', 
+                    'Las notas parciales se han convertido en el historial formal de la asignatura cursada');
+                // Las notas parciales se mantienen como están, pero ahora representan el historial formal
+            } else if (nowIsCursada) {
+                // Si es cursada pero no había notas parciales previas, limpiar las notas parciales
+                notasParcialesFinales = [];
+            }
+            
             const asignaturaHistorial = {
                 asignatura: asignatura,
-                notaFinal: notaFloat,
+                notaFinal: parseFloat(nota), // Usar la nota final (posiblemente ajustada)
                 semestre: parseInt(semestre),
                 estado: isInscribible ? 'inscribible' : 'cursada',
-                notasParciales: notasParciales || []
+                notasParciales: notasParcialesFinales
             };
 
             if (existingIndex >= 0) {
@@ -219,12 +252,23 @@ export default function Notas() {
                 updatedHistorial.push(asignaturaHistorial);
             }
 
+            // Asegurar que todas las asignaturas tengan semestre definido
+            const historialValidado = updatedHistorial.map(asig => ({
+                ...asig,
+                semestre: asig.semestre || 1, // Usar semestre 1 como default si no está definido
+                notasParciales: (asig.notasParciales || []).map(parcial => ({
+                    evaluacion: parcial.evaluacion,
+                    nota: typeof parcial.nota === 'string' ? parseFloat(parcial.nota) : parcial.nota,
+                    ponderacion: typeof parcial.ponderacion === 'string' ? parseInt(parcial.ponderacion) : parcial.ponderacion
+                }))
+            }));
+
             const historialData = {
                 alumno: user.nombreCompleto,
-                asignaturasCursadas: updatedHistorial
+                asignaturasCursadas: historialValidado
             };
 
-            console.log('Datos a enviar:', historialData);
+            console.log('Datos a enviar (validados):', JSON.stringify(historialData, null, 2));
 
             let response;
             try {
@@ -234,20 +278,28 @@ export default function Notas() {
                     { headers: getAuthHeaders() }
                 );
 
-                // console.log('Historial actualizado:', response.data);
+                console.log('Historial actualizado:', response.data);
             } catch (updateError) {
+                console.log('Error en PATCH, intentando POST:', updateError.response?.data);
                 // Si falla la actualización (ej: no existe), crear uno nuevo
                 if (updateError.response?.status === 404) {
                     response = await axios.post('/api/historial', historialData, {
                         headers: getAuthHeaders()
                     });
+                    console.log('Historial creado:', response.data);
                 } else {
+                    console.error('Error en PATCH:', updateError.response?.data);
                     throw updateError;
                 }
             }
 
             if (response.data.status) {
-                showAlert('success', 'Nota Guardada', 'La nota se ha guardado correctamente');
+                if (cambioAEstadoCursada) {
+                    showAlert('success', 'Estado Actualizado', 
+                        'La asignatura ha sido marcada como cursada y las notas parciales se han convertido en historial académico formal');
+                } else {
+                    showAlert('success', 'Nota Guardada', 'La nota se ha guardado correctamente');
+                }
                 setModalOpen(false);
                 setEditingAsignatura(null);
                 setEditingCurrentNote(null);
@@ -481,6 +533,7 @@ export default function Notas() {
                             currentNote={editingCurrentNote}
                             currentSemestre={editingCurrentSemestre}
                             notasParciales={editingNotasParciales}
+                            tipo={editingTipo}
                             onSave={saveNote}
                         />
                     )}
