@@ -880,7 +880,7 @@ export default function SugerenciaHorarios() {
 
             {/* Mostrar solo una tabla de profesor a la vez, con navegación */}
             {combinacionGlobal && Array.isArray(combinacionGlobal) && combinacionGlobal.length > 0 && (
-              <div className="mt-8">
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
                 <h2 className="text-xl font-bold text-blue-900 text-center mb-4">
                   Recomendación de Horarios Generada
                 </h2>
@@ -903,7 +903,7 @@ export default function SugerenciaHorarios() {
                     Siguiente →
                   </button>
                 </div>
-                <TablaCombinacionGlobal combinacion={[combinacionGlobal[profesorActual]]} profesores={profesores} />
+                  <TablaCombinacionGlobal combinacion={[combinacionGlobal[profesorActual]]} profesores={profesores} />
               </div>
             )}
           </div>
