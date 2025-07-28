@@ -42,6 +42,65 @@ export const subirDisponibilidad = async (req, res) => {
             return handleErrorClient(res, 403, 'Solo los profesores pueden subir disponibilidad');
         }
 
+        // --- VALIDACIÓN DE BLOQUES SEGUIDOS Y PRIMER BLOQUE DE 1:20 ---
+        // Agrupar bloques por día
+        const bloquesPorDia = {};
+        for (const bloque of value.bloques) {
+            if (!bloquesPorDia[bloque.dia]) bloquesPorDia[bloque.dia] = [];
+            bloquesPorDia[bloque.dia].push(bloque);
+        }
+
+        let disponibilidadValida = true;
+
+        for (const dia in bloquesPorDia) {
+            // Ordenar por hora de inicio
+            const bloquesDia = bloquesPorDia[dia].sort((a, b) => {
+                const [ha, ma] = a.horaInicio.split(':').map(Number);
+                const [hb, mb] = b.horaInicio.split(':').map(Number);
+                return ha * 60 + ma - (hb * 60 + mb);
+            });
+
+            let i = 0;
+            while (i < bloquesDia.length) {
+                // Calcular duración del bloque actual
+                const bloqueActual = bloquesDia[i];
+                const [hi, mi] = bloqueActual.horaInicio.split(':').map(Number);
+                const [hf, mf] = bloqueActual.horaFin.split(':').map(Number);
+                const duracion = ((hf * 60 + mf) - (hi * 60 + mi)) / 60;
+
+                // Debe comenzar con bloque de 1:20h
+                if (!(duracion >= 1.3 && duracion <= 1.4)) {
+                    disponibilidadValida = false;
+                    break;
+                }
+
+                // Debe haber al menos un siguiente bloque consecutivo
+                if (i + 1 >= bloquesDia.length) {
+                    disponibilidadValida = false;
+                    break;
+                }
+                const siguiente = bloquesDia[i + 1];
+                if (bloqueActual.horaFin !== siguiente.horaInicio) {
+                    disponibilidadValida = false;
+                    break;
+                }
+
+                // Avanza al siguiente par (puedes permitir secuencias más largas si quieres)
+                i += 2;
+                // Si quieres permitir secuencias más largas, puedes hacer un while interno aquí
+            }
+            if (!disponibilidadValida) break;
+        }
+
+        if (!disponibilidadValida) {
+            return handleErrorClient(
+                res,
+                400,
+                "Cada secuencia de bloques debe tener al menos 2 bloques consecutivos comenzando por uno de duración 1:20 horas. No se permiten bloques sueltos."
+            );
+        }
+        // --- FIN VALIDACIÓN ---
+
         // Guardar disponibilidad
         const disponibilidad = await guardarDisponibilidad(profesorId, value.bloques);
         
