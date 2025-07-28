@@ -103,7 +103,31 @@ export default function GestionUsuarios() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        let processedValue = value;
+
+        // Formateo automático para RUT (solo números, K y guión)
+        if (name === 'rut') {
+            processedValue = formatearRUT(value);
+        }
+        
+        // Validación en tiempo real para nombre (solo letras y espacios)
+        if (name === 'nombreCompleto') {
+            processedValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+        }
+
+        // Validación en tiempo real para contraseña (solo letras y números)
+        if (name === 'password') {
+            processedValue = value.replace(/[^a-zA-Z0-9]/g, '');
+        }
+
+        // Validación en tiempo real para email (eliminar espacios)
+        if (name === 'email') {
+            processedValue = value.trim();
+        }
+
+        setFormData(prev => ({ ...prev, [name]: processedValue }));
+        
+        // Limpiar error cuando el usuario empiece a corregir
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -116,34 +140,105 @@ export default function GestionUsuarios() {
     const validateUserData = (data) => {
         const newErrors = {};
 
+        // Validar nombre completo (15-50 caracteres, solo letras y espacios)
         if (!data.nombreCompleto.trim()) {
-            newErrors.nombreCompleto = 'El nombre es obligatorio';
+            newErrors.nombreCompleto = 'El nombre completo es obligatorio';
+        } else if (data.nombreCompleto.trim().length < 15) {
+            newErrors.nombreCompleto = 'El nombre debe tener al menos 15 caracteres';
+        } else if (data.nombreCompleto.trim().length > 50) {
+            newErrors.nombreCompleto = 'El nombre no puede exceder 50 caracteres';
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(data.nombreCompleto.trim())) {
+            newErrors.nombreCompleto = 'El nombre solo puede contener letras y espacios';
         }
 
+        // Validar email (15-50 caracteres, dominios específicos)
         if (!data.email.trim()) {
             newErrors.email = 'El email es obligatorio';
-        } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-            newErrors.email = 'El email no es válido';
+        } else if (data.email.trim().length < 15) {
+            newErrors.email = 'El email debe tener al menos 15 caracteres';
+        } else if (data.email.trim().length > 50) {
+            newErrors.email = 'El email no puede exceder 50 caracteres';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+            newErrors.email = 'Ingrese un email válido';
+        } else if (!/@(ubiobio\.cl|alumnos\.ubiobio\.cl)$/.test(data.email.trim())) {
+            newErrors.email = 'El email debe finalizar en @ubiobio.cl o @alumnos.ubiobio.cl';
         }
 
+        // Validar RUT (formato xxxxxxxx-x, sin puntos)
         if (!data.rut.trim()) {
             newErrors.rut = 'El RUT es obligatorio';
-        } else if (!/^[0-9]{7,8}-[0-9kK]$/.test(data.rut)) {
-            newErrors.rut = 'El RUT debe tener el formato 12345678-9';
+        } else {
+            const rutLimpio = data.rut.trim().toUpperCase();
+            
+            // Verificar formato básico (solo formato sin puntos)
+            if (!/^[0-9]{7,8}-[0-9kK]$/.test(rutLimpio)) {
+                newErrors.rut = 'Formato de RUT inválido. Use: 12345678-9 (sin puntos)';
+            } else {
+                // Validar dígito verificador
+                const rutSinFormato = rutLimpio.replace('-', '');
+                const cuerpo = rutSinFormato.slice(0, -1);
+                const dv = rutSinFormato.slice(-1);
+                
+                if (!validarDigitoVerificador(cuerpo, dv)) {
+                    newErrors.rut = 'RUT inválido: dígito verificador incorrecto';
+                }
+            }
         }
 
+        // Validar contraseña (6-26 caracteres, solo letras y números)
         if (!editingUser && !data.password) {
-            newErrors.password = 'La contraseña es obligatoria';
-        } else if (data.password && data.password.length < 6) {
-            newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+            newErrors.password = 'La contraseña es obligatoria para usuarios nuevos';
+        } else if (data.password) {
+            if (data.password.length < 6) {
+                newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+            } else if (data.password.length > 26) {
+                newErrors.password = 'La contraseña no puede exceder 26 caracteres';
+            } else if (!/^[a-zA-Z0-9]+$/.test(data.password)) {
+                newErrors.password = 'La contraseña solo puede contener letras y números';
+            }
         }
 
+        // Validar rol
+        const rolesValidos = ['admin', 'profesor', 'estudiante', 'director', 'alumno', 'jefeDepartamento'];
         if (!data.role) {
             newErrors.role = 'El rol es obligatorio';
+        } else if (!rolesValidos.includes(data.role)) {
+            newErrors.role = 'Seleccione un rol válido';
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
+    };
+
+    // Función para validar dígito verificador del RUT
+    const validarDigitoVerificador = (rut, dv) => {
+        let suma = 0;
+        let multiplicador = 2;
+        
+        for (let i = rut.length - 1; i >= 0; i--) {
+            suma += parseInt(rut.charAt(i)) * multiplicador;
+            multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+        }
+        
+        const resto = suma % 11;
+        const dvCalculado = resto < 2 ? resto : 11 - resto;
+        
+        return dv.toUpperCase() === (dvCalculado === 10 ? 'K' : dvCalculado.toString());
+    };
+
+    // Función para formatear RUT automáticamente (sin puntos)
+    const formatearRUT = (rut) => {
+        // Eliminar todo excepto números y K
+        const rutLimpio = rut.replace(/[^0-9kK]/g, '');
+        
+        if (rutLimpio.length <= 1) return rutLimpio;
+        
+        // Separar cuerpo y dígito verificador
+        const cuerpo = rutLimpio.slice(0, -1);
+        const dv = rutLimpio.slice(-1);
+        
+        // Formatear solo con guión (sin puntos)
+        return cuerpo + '-' + dv.toUpperCase();
     };
 
     const handleSubmit = async (e, userData = null) => {
@@ -153,12 +248,21 @@ export default function GestionUsuarios() {
         const dataToUse = userData || formData;
         
         // Validar datos
-        if (!validateUserData(dataToUse)) return;
+        if (!validateUserData(dataToUse)) {
+            const allErrors = Object.values(errors).join('\n|');
+            showAlert('error', 'Error de validación', `[${allErrors}]` || 'Por favor, corrige los errores en el formulario');
+            return;
+        }
 
         setSubmitting(true);
         try {
             const token = localStorage.getItem('token');
             const dataToSend = { ...dataToUse };
+
+            // Limpiar y formatear datos antes de enviar
+            dataToSend.nombreCompleto = dataToSend.nombreCompleto.trim();
+            dataToSend.email = dataToSend.email.trim().toLowerCase();
+            dataToSend.rut = dataToSend.rut.trim().toUpperCase();
 
             if (editingUser && !dataToSend.password) {
                 delete dataToSend.password;
@@ -172,6 +276,7 @@ export default function GestionUsuarios() {
                         'Content-Type': 'application/json'
                     }
                 });
+                showAlert('success', 'Usuario Actualizado', `Usuario ${dataToSend.nombreCompleto} actualizado exitosamente`);
             } else {
                 // Crear nuevo usuario
                 await axios.post('/api/users', dataToSend, {
@@ -180,16 +285,40 @@ export default function GestionUsuarios() {
                         'Content-Type': 'application/json'
                     }
                 });
+                showAlert('success', 'Usuario Creado', `Usuario ${dataToSend.nombreCompleto} creado exitosamente`);
             }
 
             setShowModal(false);
             resetForm();
             loadUsers();
-            showAlert('success', 'Usuario Guardado', 'Usuario guardado exitosamente');
         } catch (error) {
             console.error('Error al guardar usuario:', error);
-            const errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error al guardar usuario';
-            showAlert('error', 'Error al guardar', errorMessage);
+            
+            let errorMessage = 'Error al guardar usuario';
+            let errorTitle = 'Error al guardar';
+            
+            if (error.response?.status === 400) {
+                const responseMessage = error.response?.data?.message || '';
+                if (responseMessage.includes('rut')) {
+                    errorTitle = 'RUT Duplicado';
+                    errorMessage = 'Ya existe un usuario con este RUT';
+                } else if (responseMessage.includes('email')) {
+                    errorTitle = 'Email Duplicado';
+                    errorMessage = 'Ya existe un usuario con este email';
+                } else {
+                    errorMessage = error.response?.data?.details || responseMessage || 'Datos inválidos';
+                }
+            } else if (error.response?.status === 401) {
+                errorTitle = 'Sin Autorización';
+                errorMessage = 'No tienes permisos para realizar esta acción';
+            } else if (error.response?.status === 403) {
+                errorTitle = 'Acceso Denegado';
+                errorMessage = 'No tienes permisos suficientes';
+            } else {
+                errorMessage = error.response?.data?.details || error.response?.data?.message || 'Error interno del servidor';
+            }
+            
+            showAlert('error', errorTitle, errorMessage);
         } finally {
             setSubmitting(false);
         }
