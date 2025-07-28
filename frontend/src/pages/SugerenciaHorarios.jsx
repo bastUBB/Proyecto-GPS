@@ -4,7 +4,7 @@ import { UserContext } from "../../context/userContext";
 import axios from 'axios';
 import HelpTooltip from "../components/PuntoAyuda";
 import ModalConfiguracionHoras from "../components/ModalConfiguracionHoras";
-import { use } from "react";
+
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
@@ -122,7 +122,7 @@ export default function SugerenciaHorarios() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:5500/api/combi/profesor/${profesor._id}/asignaturas`,
+        `/api/combi/profesor/${profesor._id}/asignaturas`,
         getAuthConfig()
       );
       if (response.data && response.data.data) {
@@ -145,7 +145,7 @@ export default function SugerenciaHorarios() {
     setLoading(true);
     try {
       await axios.post(
-        `http://localhost:5500/api/combi/profesor/${profesorHorasActual._id}/asignaturas`,
+        `/api/combi/profesor/${profesorHorasActual._id}/asignaturas`,
         { asignaturas: asignaturasConHoras },
         getAuthConfig()
       );
@@ -218,11 +218,11 @@ export default function SugerenciaHorarios() {
 
     try {
       const response = await axios.post(
-        'http://localhost:5500/api/combi/horario/generar-global',
+        '/api/combi/horario/generar-global',
         datos, // <-- aquí va el arreglo correcto
         getAuthConfig()
       );
-      
+
       setCombinacionGlobal(response.data?.data || []);
       setMensaje(`Recomendación generada exitosamente `);
     } catch (error) {
@@ -346,7 +346,7 @@ export default function SugerenciaHorarios() {
       setMensaje('');
 
       // Usar el nuevo endpoint específico para asignaturas disponibles
-      const response = await axios.get('http://localhost:5500/api/combi/asignaturas-disponibles', getAuthConfig());
+      const response = await axios.get('/api/combi/asignaturas-disponibles', getAuthConfig());
 
       if (response.data && response.data.data) {
         // Formatear las asignaturas para el modal
@@ -432,7 +432,7 @@ export default function SugerenciaHorarios() {
       });
 
       const response = await axios.post(
-        `http://localhost:5500/api/combi/profesor/${user.id || user._id}/asignaturas`,
+        `/api/combi/profesor/${user.id || user._id}/asignaturas`,
         { asignaturas: asignaturasConHorasExistentes },
         getAuthConfig()
       );
@@ -471,7 +471,7 @@ export default function SugerenciaHorarios() {
 
       // Guardar en el backend
       const response = await axios.post(
-        `http://localhost:5500/api/combi/profesor/${user.id || user._id}/asignaturas`,
+        `/api/combi/profesor/${user.id || user._id}/asignaturas`,
         { asignaturas: asignaturasActualizadas },
         getAuthConfig()
       );
@@ -696,11 +696,12 @@ export default function SugerenciaHorarios() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
               {/* Lista de profesores */}
-              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+                {/* Encabezado */}
                 <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <h2 className="text-lg font-semibold flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                     </svg>
@@ -713,8 +714,7 @@ export default function SugerenciaHorarios() {
                     </HelpTooltip>
                   </h2>
                 </div>
-
-                <div className="p-4 sm:p-6 max-h-96 overflow-y-auto">
+                <div className="overflow-y-auto max-h-[450px]">
                   {loading && !profesorSeleccionado ? (
                     <div className="text-center py-4">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -773,9 +773,10 @@ export default function SugerenciaHorarios() {
               </div>
 
               {/* Disponibilidad del profesor seleccionado */}
-              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6 hide-in-pdf">
+              <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 sm:p-6">
+                {/* Encabezado */}
                 <div className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-3 sm:p-4 rounded-lg mb-4">
-                  <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+                  <h2 className="text-lg font-semibold flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -794,7 +795,7 @@ export default function SugerenciaHorarios() {
                   )} */}
                 </div>
 
-                <div className="p-4 sm:p-6">
+                <div className="overflow-y-auto max-h-[450px]">
                   {!profesorSeleccionado ? (
                     <div className="text-center py-8">
                       <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1365,40 +1366,43 @@ const ModalAsignaturas = ({ asignaturasDisponibles, asignaturasSeleccionadas, on
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
-        <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-4">
-          <h3 className="text-lg font-semibold">Gestionar Asignaturas</h3>
-          <p className="text-green-100 text-sm mt-1">
-            Selecciona las asignaturas que impartirás este semestre
-          </p>
+      <div className="bg-white rounded-lg shadow-lg border border-blue-200 p-4 max-h-[80vh] overflow-hidden">
+        <div className="bg-gradient-to-r from-green-500 to-blue-500 text-white p-3 sm:p-4 rounded-lg mb-4 text-center">
+          <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+            Gestionar Asignaturas
+            <HelpTooltip>
+              <h3 className="text-blue-700 font-bold text-sm mb-1">¿Que puedes hacer aquí?</h3>
+              <p className="text-gray-600 text-xs">
+                Aquí puedes seleccionar las asignaturas que impartirás este semestre.
+              </p>
+            </HelpTooltip>
+          </h2>
         </div>
 
         <div className="p-6 overflow-y-auto max-h-96">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {asignaturasDisponibles.map((asignatura) => {
               const isSelected = seleccionadas.find(a => a.codigo === asignatura.codigo);
               return (
-                <div
+                                <div
                   key={asignatura.codigo}
                   onClick={() => toggleAsignatura(asignatura)}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all duration-200 ${isSelected
+                  className={`p-2 border rounded-lg cursor-pointer transition-all duration-200 flex flex-col items-center gap-2 ${isSelected
                     ? 'bg-green-50 border-green-500 shadow-md'
                     : 'bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-300'
                     }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-gray-900">{asignatura.codigo}</p>
-                      <p className="text-sm text-gray-600">{asignatura.nombre}</p>
-                    </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'bg-green-500 border-green-500' : 'border-gray-300'
-                      }`}>
-                      {isSelected && (
-                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
+                  <div className="flex flex-col items-center">
+                    <p className="font-semibold text-gray-900 text-center">{(asignatura.codigo).trim()}</p>
+                    <p className="text-sm text-gray-600 text-center">{asignatura.nombre}</p>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'bg-green-500 border-green-500' : 'border-gray-300'
+                    }`}>
+                    {isSelected && (
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
                   </div>
                 </div>
               );
