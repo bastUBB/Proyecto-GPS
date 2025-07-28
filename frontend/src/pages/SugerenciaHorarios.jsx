@@ -4,7 +4,6 @@ import { UserContext } from "../../context/userContext";
 import axios from 'axios';
 import HelpTooltip from "../components/PuntoAyuda";
 import ModalConfiguracionHoras from "../components/ModalConfiguracionHoras";
-import { use } from "react";
 
 const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 const horasDisponibles = [
